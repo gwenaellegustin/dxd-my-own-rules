@@ -35,8 +35,9 @@
   --color-icon-default: #1e1e1e;
   --color-icon-on-brand: #f5f5f5;
 
-  // Damage legend markers on the car diagram
+  // Damage: legend symbols, and marks drawn on the car diagram (red so they stand out)
   --color-damage-marker: #757575;
+  --color-damage-mark: #e02424;
 
   // ---- Typography ---------------------------------------------------------
   --font-family-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;

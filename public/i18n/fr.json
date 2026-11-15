@@ -26,7 +26,8 @@
     "km": "km",
     "notDesignedYet": "Cette page n'a pas encore été conçue.",
     "clear": "Effacer",
-    "showOptions": "Afficher les options"
+    "showOptions": "Afficher les options",
+    "cancel": "Annuler"
   },
   "worksheets": {
     "title": "Fiches de travail",
@@ -43,7 +44,7 @@
     "vehicle": "Véhicule",
     "date": "Date",
     "kilometers": "Kilomètres",
-    "hours": "Remarques",
+    "hours": "Heures",
     "comments": "Observations et conseils",
     "createInvoice": "Créer la facture"
   },
@@ -52,13 +53,15 @@
     "scratch": "Rayure",
     "impact": "Impact",
     "remove": "Supprimer",
-    "diagramAlt": "Schéma du véhicule : choisissez un type de dégât dans la légende, puis cliquez sur le véhicule pour le marquer"
+    "diagramAlt": "Schéma du véhicule : choisissez un type de dégât dans la légende, puis cliquez sur le véhicule pour le marquer",
+    "tools": "Type de dégât à marquer sur le véhicule"
   },
   "line": {
     "planned": "Prévu",
     "done": "Fait",
     "addNote": "Ajouter une note",
-    "note": "Note"
+    "note": "Note",
+    "remove": "Supprimer la ligne"
   },
   "transcript": {
     "title": "Transcriptions",
@@ -123,5 +126,12 @@
       "winterTyres": "D'hiver",
       "summerTyres": "D'été"
     }
+  },
+  "section": {
+    "summary": "{{planned}} prévu(s) · {{done}} fait(s)"
+  },
+  "carryOver": {
+    "title": "Quels éléments doivent être reportés à la prochaine intervention ?",
+    "count": "{{count}} élément(s) reporté(s)"
   }
 }

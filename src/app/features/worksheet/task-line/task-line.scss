@@ -66,20 +66,8 @@
   min-height: var(--control-height);
 }
 
-// Small dot on the pencil when a note exists but is hidden
-.line__note-toggle {
-  position: relative;
-
-  &--has-note::after {
-    content: '';
-    position: absolute;
-    top: var(--space-200);
-    right: var(--space-200);
-    width: var(--space-200);
-    height: var(--space-200);
-    border-radius: var(--radius-full);
-    background: var(--color-background-brand);
-  }
+.line__note-toggle--hidden {
+  visibility: hidden;
 }
 
 .line__details {

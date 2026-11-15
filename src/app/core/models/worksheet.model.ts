@@ -32,6 +32,8 @@ export interface Worksheet {
   damages: Damage[];
   /** Keyed by TemplateLine.id */
   lines: Record<string, LineState>;
+  /** Line keys planned but not done, to carry over to the next intervention (set when invoicing) */
+  carryOver?: string[];
 }
 
 export const emptyLineState = (): LineState => ({

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon, IconName } from '../../../shared/icon/icon';
 import { AutoGrow } from '../../../shared/auto-grow/auto-grow';
 import { Clearable } from '../../../shared/clearable/clearable';
+import { BulletList } from '../../../shared/bullet-list/bullet-list';
 import { Combobox } from '../../../shared/combobox/combobox';
 import { ClientService } from '../../../core/services/client.service';
 import { Damage, DamageType, Worksheet } from '../../../core/models/worksheet.model';
@@ -19,7 +19,7 @@ interface DamageLegend {
 /** Top of the work area: general information + damage diagram. */
 @Component({
   selector: 'app-worksheet-details',
-  imports: [RouterLink, TranslatePipe, Icon, AutoGrow, Clearable, Combobox],
+  imports: [TranslatePipe, Icon, AutoGrow, BulletList, Clearable, Combobox],
   templateUrl: './worksheet-details.html',
   styleUrl: './worksheet-details.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +31,7 @@ export class WorksheetDetails {
   readonly fieldChange = output<Partial<Pick<Worksheet, EditableField>>>();
   readonly damageAdd = output<Damage>();
   readonly damageRemove = output<number>();
+  readonly createInvoice = output<void>();
 
   protected readonly legend: DamageLegend[] = [
     { type: 'bump', labelKey: 'damage.bump', icon: 'damage-bump' },

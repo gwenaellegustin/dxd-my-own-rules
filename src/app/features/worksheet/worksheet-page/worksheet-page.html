@@ -16,21 +16,61 @@
         (fieldChange)="store.update(ws.id, $event)"
         (damageAdd)="store.addDamage(ws.id, $event)"
         (damageRemove)="store.removeDamage(ws.id, $event)"
+        (createInvoice)="createInvoice(ws)"
       />
 
       @for (section of store.template()?.sections ?? []; track section.id) {
-        <section class="section">
-          <h2 class="text-heading">{{ section.titleKey | translate }}</h2>
-          @for (line of section.lines; track line.id) {
-            <app-task-line
-              [line]="line"
-              [state]="lineState(ws, line.id)"
-              (stateChange)="store.updateLine(ws.id, line.id, $event)"
-            />
-          }
+        @let collapsed = isCollapsed(section.id);
+        <section class="section" [class.section--collapsed]="collapsed">
+          <!-- Only the title and its arrow toggle the section, not the whole row -->
+          <div class="section__header">
+            <h2 class="section__heading">
+              <button
+                type="button"
+                class="section__toggle"
+                [attr.aria-expanded]="!collapsed"
+                [attr.aria-controls]="'section-' + section.id"
+                (click)="toggleSection(section.id)"
+              >
+                <span class="text-heading">{{ section.titleKey | translate }}</span>
+                <app-icon name="chevron-down" class="section__chevron" />
+              </button>
+            </h2>
+            @if (collapsed) {
+              @let progress = sectionProgress(ws, section);
+              <span class="section__summary text-secondary">
+                {{ 'section.summary' | translate: progress }}
+              </span>
+            }
+          </div>
+          <!-- Hidden rather than removed, so the lines keep their state (open notes…) -->
+          <div class="section__lines" [id]="'section-' + section.id" [hidden]="collapsed">
+            @for (line of section.lines; track line.id) {
+              <!-- A repeatable line ("Other") can appear several times -->
+              @for (key of store.lineInstanceIds(ws, line); track key; let last = $last) {
+                <!-- The trailing empty instance is the "new line" field: nothing to delete -->
+                <app-task-line
+                  [line]="line"
+                  [state]="lineState(ws, key)"
+                  [removable]="!!line.repeatable && !last"
+                  (stateChange)="store.updateLine(ws.id, key, $event)"
+                  (remove)="store.removeLine(ws.id, key)"
+                />
+              }
+            }
+          </div>
         </section>
       }
     </div>
+
+    <!-- Before the invoice: choose the planned-but-not-done items to carry over -->
+    @if (carryOverGroups(); as groups) {
+      <app-carry-over-dialog
+        [groups]="groups"
+        (confirmed)="confirmCarryOver(ws, $event)"
+        (cancelled)="carryOverGroups.set(null)"
+      />
+    }
   } @empty {
     @if (store.loaded()) {
       <p class="work-area__empty text-secondary">{{ 'worksheets.empty' | translate }}</p>

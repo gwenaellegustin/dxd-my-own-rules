@@ -38,23 +38,24 @@
     <label class="field">
       <span class="field__label">{{ 'worksheet.hours' | translate }}</span>
       <app-clearable>
-        <textarea #clearTarget class="textarea" appAutoGrow [value]="ws.hours" (input)="update('hours', $event)"></textarea>
+        <textarea #clearTarget class="textarea" appAutoGrow appBulletList [value]="ws.hours" (input)="update('hours', $event)"></textarea>
       </app-clearable>
     </label>
-    <a
+    <button
+      type="button"
       class="icon-button icon-button--primary"
-      routerLink="/invoices"
       [attr.aria-label]="'worksheet.createInvoice' | translate"
       [attr.title]="'worksheet.createInvoice' | translate"
+      (click)="createInvoice.emit()"
     >
       <app-icon name="invoice" />
-    </a>
+    </button>
   </div>
 
   <label class="field">
     <span class="field__label">{{ 'worksheet.comments' | translate }}</span>
     <app-clearable>
-      <textarea #clearTarget class="textarea" appAutoGrow [value]="ws.comments" (input)="update('comments', $event)"></textarea>
+      <textarea #clearTarget class="textarea" appAutoGrow appBulletList [value]="ws.comments" (input)="update('comments', $event)"></textarea>
     </app-clearable>
   </label>
 </div>
@@ -80,13 +81,14 @@
     }
   </div>
 
-  <figcaption class="damage__legend">
+  <figcaption class="damage__legend" role="radiogroup" [attr.aria-label]="'damage.tools' | translate">
     @for (item of legend; track item.type) {
       <button
         type="button"
         class="damage__legend-item"
         [class.damage__legend-item--active]="activeDamage() === item.type"
-        [attr.aria-pressed]="activeDamage() === item.type"
+        role="radio"
+        [attr.aria-checked]="activeDamage() === item.type"
         (click)="toggleDamage(item.type)"
       >
         <app-icon [name]="item.icon" size="small" />

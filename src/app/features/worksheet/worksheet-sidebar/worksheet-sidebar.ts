@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon } from '../../../shared/icon/icon';
 import { Clearable } from '../../../shared/clearable/clearable';
 import { Worksheet, WorksheetStatus } from '../../../core/models/worksheet.model';
+import { VehicleBrandService } from '../../../core/services/vehicle-brand.service';
 
 interface WorksheetGroup {
   status: WorksheetStatus;
@@ -22,6 +23,8 @@ interface WorksheetGroup {
   host: { '[class.is-open]': 'open()' },
 })
 export class WorksheetSidebar {
+  protected readonly brands = inject(VehicleBrandService);
+
   readonly worksheets = input.required<Worksheet[]>();
   readonly selectedId = input<string | null>(null);
   readonly open = input(true);

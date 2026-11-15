@@ -135,6 +135,18 @@ button {
   height: var(--control-height);
   line-height: var(--line-height-single);
 
+  // Number fields: no spin arrows (Firefox shows them permanently)
+  &[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+  }
+
   &--small {
     width: var(--control-width-small);
   }
@@ -176,6 +188,18 @@ button {
     transform: translateY(-50%);
     pointer-events: none;
   }
+
+  // Firefox always draws its own calendar button (it cannot be hidden and is what
+  // opens the picker): keep it and hide ours to avoid a double icon
+  @supports (-moz-appearance: none) {
+    .input {
+      padding-right: var(--space-400);
+    }
+
+    > app-icon {
+      display: none;
+    }
+  }
 }
 
 // Height follows the content (see AutoGrow directive): no scrollbar, no resize handle
@@ -200,6 +224,17 @@ button {
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
+
+  // Long labels (e.g. in dialogs) wrap, the box stays on the first line
+  &--wrap {
+    align-items: flex-start;
+    gap: var(--space-200);
+    white-space: normal;
+
+    input {
+      margin-top: calc((1em * var(--line-height-body) - var(--checkbox-size)) / 2);
+    }
+  }
 
   input {
     appearance: none;
@@ -231,11 +266,6 @@ button {
         color: var(--color-icon-on-brand);
       }
     }
-  }
-
-  // Round checkbox (multi-select options inside a line, e.g. Small / Medium / Big)
-  &--round input[type='checkbox'] {
-    border-radius: var(--radius-full);
   }
 
   input[type='radio'] {
@@ -277,6 +307,36 @@ button {
     background: var(--color-background-brand);
     border: var(--stroke-border) solid var(--color-border-brand);
     color: var(--color-icon-on-brand);
+
+    &:hover {
+      background: var(--color-background-brand-hover);
+    }
+  }
+}
+
+// Text buttons (dialogs, forms)
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-200);
+  min-height: var(--control-height);
+  padding: var(--space-300) var(--space-400);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  background: var(--color-background-default);
+  color: var(--color-text-default);
+  line-height: var(--line-height-single);
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+
+  &--primary {
+    border-color: var(--color-border-brand);
+    background: var(--color-background-brand);
+    color: var(--color-text-on-brand);
 
     &:hover {
       background: var(--color-background-brand-hover);

@@ -47,6 +47,10 @@ src/
   `clients.json`), `appAutoGrow` makes a textarea grow with its content.
 - **Icons** are [Google Material Symbols](https://fonts.google.com/icons) (`<app-icon name="…">`) and take the
   current text color. To add one, map it in `shared/icon/icon.ts` and add it to `icon_names` in `index.html`.
+- **Brand logos** (`public/images/brands/`) come from [Simple Icons](https://simpleicons.org) and are
+  listed in `mock-api/vehicle-brands.json` (with aliases, e.g. "vw" → Volkswagen). A worksheet card
+  shows the logo when its vehicle matches a brand, otherwise the status icon. Logos are trademarks
+  of their owners.
 - **No hard-coded data** — everything comes from `public/mock-api/*.json` through `ApiService`.
   Point `API_BASE_URL` (`core/api/api.config.ts`) to the real backend when it exists.
   The worksheet content (sections, lines, options) is described in `worksheet-template.json`.
@@ -55,12 +59,19 @@ src/
   The French texts reuse the wording of the garage's paper worksheet.
   To add a language: add `xx.json` and its code to `SUPPORTED_LANGUAGES` (`language.service.ts`).
 
-## Line behaviour (from the Figma prototype)
+## Line behaviour
 
-- The pencil button opens the note field.
-- *Planned* and *Done* toggle independently; checking *Done* closes the note.
+- The note button opens the note field; it is hidden while the field is shown.
+- An empty note field closes when you click outside it.
+- "Create the invoice" first lists the lines planned but not done, all checked: the checked ones
+  are kept in `worksheet.carryOver` for the next intervention, then the invoice page opens.
+- "Other" lines (free text) have no note; as soon as one is filled, a new empty "Other" line
+  appears under it (template lines with `"repeatable": true`). In place of the note button they
+  have a delete button that removes the line (not shown on the trailing empty line). Typing the
+  first character in an empty "Other" line checks *Planned* (it can be unchecked afterwards).
+- *Planned* and *Done* toggle independently; the note stays visible.
+- Radio groups hold 0 or 1 value: clicking the selected option clears it.
 - Background: white (not planned) → blue (planned) → green (done).
-- A dot on the pencil shows that a hidden note exists.
 
 ## Responsive
 

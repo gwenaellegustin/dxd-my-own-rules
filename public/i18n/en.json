@@ -26,7 +26,8 @@
     "km": "km",
     "notDesignedYet": "This page has not been designed yet.",
     "clear": "Clear",
-    "showOptions": "Show options"
+    "showOptions": "Show options",
+    "cancel": "Cancel"
   },
   "worksheets": {
     "title": "Worksheets",
@@ -52,13 +53,15 @@
     "scratch": "Scratch",
     "impact": "Impact",
     "remove": "Remove",
-    "diagramAlt": "Car diagram: select a damage type in the legend, then click on the car to mark it"
+    "diagramAlt": "Car diagram: select a damage type in the legend, then click on the car to mark it",
+    "tools": "Damage type to mark on the car"
   },
   "line": {
     "planned": "Planned",
     "done": "Done",
     "addNote": "Add a note",
-    "note": "Note"
+    "note": "Note",
+    "remove": "Remove the line"
   },
   "transcript": {
     "title": "Transcripts",
@@ -123,5 +126,12 @@
       "winterTyres": "Winter",
       "summerTyres": "Summer"
     }
+  },
+  "section": {
+    "summary": "{{planned}} planned · {{done}} done"
+  },
+  "carryOver": {
+    "title": "Which items should be carried over to the next intervention?",
+    "count": "{{count}} item(s) carried over"
   }
 }

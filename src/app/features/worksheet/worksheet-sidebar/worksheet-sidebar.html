@@ -42,7 +42,12 @@
               [attr.aria-current]="worksheet.id === selectedId() ? 'true' : null"
               (click)="selectWorksheet.emit(worksheet.id)"
             >
-              <app-icon [name]="worksheet.status === 'open' ? 'lift' : 'bill'" size="xlarge" />
+              <!-- Known brand: its logo. Otherwise a car, on the lift while the worksheet is open -->
+              @if (brands.brandOf(worksheet.vehicle); as brand) {
+                <span class="card__logo" aria-hidden="true" [style.mask-image]="'url(' + brand.logo + ')'"></span>
+              } @else {
+                <app-icon [name]="worksheet.status === 'open' ? 'lift' : 'car'" size="xlarge" />
+              }
               <span class="card__body">
                 <span class="card__title">
                   @if (worksheet.vehicle || worksheet.client) {
@@ -51,7 +56,9 @@
                     {{ 'worksheets.untitled' | translate }}
                   }
                 </span>
-                <span class="card__date">{{ worksheet.date | date: 'dd.MM.yyyy' }}</span>
+                @if (worksheet.date) {
+                  <span class="card__date">{{ worksheet.date | date: 'dd.MM.yyyy' }}</span>
+                }
               </span>
             </button>
           }

@@ -2,7 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
-import { WorksheetTemplate } from '../models/worksheet-template.model';
+import { TemplateLine, WorksheetTemplate } from '../models/worksheet-template.model';
 import {
   Damage,
   LineState,
@@ -81,6 +81,14 @@ export class WorksheetStore {
     }));
   }
 
+  /** Removes a line instance (repeatable "Other" lines) */
+  removeLine(id: string, lineId: string): void {
+    this.patch(id, (worksheet) => {
+      const { [lineId]: _removed, ...lines } = worksheet.lines;
+      return { ...worksheet, lines };
+    });
+  }
+
   addDamage(id: string, damage: Damage): void {
     this.patch(id, (worksheet) => ({ ...worksheet, damages: [...worksheet.damages, damage] }));
   }
@@ -94,6 +102,25 @@ export class WorksheetStore {
 
   lineState(worksheet: Worksheet, lineId: string): LineState {
     return worksheet.lines[lineId] ?? emptyLineState();
+  }
+
+  /**
+   * State keys under which a template line is displayed.
+   * A repeatable line ("Other") shows every stored instance (`id`, `id~2`, `id~3`…)
+   * plus a new empty one as soon as the last instance has a value.
+   */
+  lineInstanceIds(worksheet: Worksheet, line: TemplateLine): string[] {
+    if (!line.repeatable) return [line.id];
+    const index = (key: string) => (key === line.id ? 1 : Number(key.slice(line.id.length + 1)));
+    const ids = Object.keys(worksheet.lines)
+      .filter((key) => key === line.id || (key.startsWith(`${line.id}~`) && index(key) > 1))
+      .sort((a, b) => index(a) - index(b));
+    if (ids.length === 0) return [line.id];
+    const last = ids[ids.length - 1];
+    const lastFilled = Object.values(this.lineState(worksheet, last).values).some((value) =>
+      Array.isArray(value) ? value.length > 0 : !!value,
+    );
+    return lastFilled ? [...ids, `${line.id}~${index(last) + 1}`] : ids;
   }
 
   private patch(id: string, fn: (worksheet: Worksheet) => Worksheet): void {

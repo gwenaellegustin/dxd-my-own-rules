@@ -1,0 +1,37 @@
+<dialog
+  #dialog
+  class="dialog"
+  aria-labelledby="carry-over-title"
+  (cancel)="$event.preventDefault(); cancelled.emit()"
+  (click)="onDialogClick($event)"
+>
+  <form class="dialog__box" (submit)="$event.preventDefault(); confirm()">
+    <h2 id="carry-over-title" class="text-subheading">{{ 'carryOver.title' | translate }}</h2>
+
+    <div class="dialog__body">
+      @for (group of groups(); track group.sectionTitleKey) {
+        <fieldset class="dialog__group">
+          <legend class="dialog__legend">{{ group.sectionTitleKey | translate }}</legend>
+          @for (item of group.items; track item.key) {
+            <label class="choice choice--wrap">
+              <input type="checkbox" [checked]="selected().has(item.key)" (change)="toggle(item.key)" />
+              @if (item.titleKey) {
+                {{ item.titleKey | translate }}
+              } @else {
+                {{ item.text }}
+              }
+            </label>
+          }
+        </fieldset>
+      }
+    </div>
+
+    <div class="dialog__actions">
+      <span class="dialog__count text-secondary">
+        {{ 'carryOver.count' | translate: { count: selectedCount() } }}
+      </span>
+      <button type="button" class="button" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
+      <button type="submit" class="button button--primary">{{ 'worksheet.createInvoice' | translate }}</button>
+    </div>
+  </form>
+</dialog>

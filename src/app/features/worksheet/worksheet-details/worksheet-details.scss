@@ -76,22 +76,23 @@
   width: var(--icon-size-small);
   height: var(--icon-size-small);
   transform: translate(-50%, -50%);
-  color: var(--color-damage-marker);
+  color: var(--color-damage-mark);
 }
 
+// Damage tool selector: 0 or 1 tool active; the active one marks the diagram on click
 .damage__legend {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: var(--space-400);
+  gap: var(--space-200);
 }
 
 .damage__legend-item {
   display: inline-flex;
   align-items: center;
   gap: var(--space-100);
-  padding: 0 var(--space-100);
-  border-radius: var(--radius-100);
+  padding: var(--space-050) var(--space-200);
+  border-radius: var(--radius-full);
   color: var(--color-text-default);
 
   // Only the marker uses the damage color, the label keeps the text color
@@ -103,7 +104,13 @@
     background: var(--color-background-hover);
   }
 
-  &--active {
-    background: var(--color-background-tertiary);
+  &--active,
+  &--active:hover {
+    background: var(--color-background-brand);
+    color: var(--color-text-on-brand);
+
+    app-icon {
+      color: var(--color-icon-on-brand);
+    }
   }
 }

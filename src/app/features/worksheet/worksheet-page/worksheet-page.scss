@@ -64,6 +64,49 @@
   gap: var(--space-200);
 }
 
+.section__heading {
+  margin: 0;
+}
+
+.section__header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-200);
+}
+
+.section__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-100) 0;
+  border-radius: var(--radius-100);
+  text-align: left;
+}
+
+.section__chevron {
+  transition: transform var(--transition-fast);
+
+  .section--collapsed & {
+    transform: rotate(-90deg);
+  }
+}
+
+.section__summary {
+  font-size: var(--font-size-medium);
+  font-weight: var(--font-weight-regular);
+}
+
+.section__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
 .backdrop {
   display: none;
 

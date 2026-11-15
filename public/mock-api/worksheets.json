@@ -6,8 +6,8 @@
     "vehicle": "Kia",
     "date": "2026-11-06",
     "kilometers": "119",
-    "hours": "20h → 21h / 11h → 12h / 13h15 →",
-    "comments": "Niv. d'huile au mini avant la vidange !\n225/45 R17 été → saison\nFrein AR → expertise",
+    "hours": "• 20h → 21h\n• 11h → 12h\n• 13h15 →",
+    "comments": "• Niv. d'huile au mini avant la vidange !\n• 225/45 R17 été → saison\n• Frein AR → expertise",
     "damages": [],
     "lines": {
       "service": {
@@ -16,9 +16,7 @@
         "note": "+ (sans les bougies)",
         "values": {
           "km": "120000",
-          "size": [
-            "big"
-          ]
+          "size": "big"
         }
       },
       "wheelChange": {

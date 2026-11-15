@@ -9,16 +9,29 @@
   </div>
 
   <div class="line__status">
-    <button
-      type="button"
-      class="icon-button line__note-toggle"
-      [class.line__note-toggle--has-note]="hasHiddenNote()"
-      [attr.aria-label]="'line.addNote' | translate"
-      [attr.aria-expanded]="noteOpen()"
-      (click)="openNote()"
-    >
-      <app-icon name="edit" />
-    </button>
+    @if (canHaveNote()) {
+      <!-- Hidden (space kept for alignment) while the note is shown -->
+      <button
+        type="button"
+        class="icon-button line__note-toggle"
+        [class.line__note-toggle--hidden]="noteOpen()"
+        [attr.aria-label]="'line.addNote' | translate"
+        (click)="openNote()"
+      >
+        <app-icon name="note" />
+      </button>
+    } @else {
+      <!-- "Other" lines: delete instead of note (hidden on the trailing empty line) -->
+      <button
+        type="button"
+        class="icon-button line__note-toggle"
+        [class.line__note-toggle--hidden]="!removable()"
+        [attr.aria-label]="'line.remove' | translate"
+        (click)="remove.emit()"
+      >
+        <app-icon name="delete" />
+      </button>
+    }
     <label class="choice">
       <input type="checkbox" [checked]="state().planned" (change)="togglePlanned()" />
       {{ 'line.planned' | translate }}
@@ -48,6 +61,7 @@
       [value]="state().note"
       [attr.aria-label]="'line.note' | translate"
       (input)="updateNote($any($event.target).value)"
+      (blur)="closeNoteIfEmpty()"
     ></textarea>
   </app-clearable>
 }
@@ -78,7 +92,7 @@
               type="radio"
               [name]="groupName(field)"
               [checked]="isChecked(field, option.value)"
-              (change)="setValue(field, option.value)"
+              (click)="toggleRadio(field, option.value)"
             />
             {{ option.labelKey | translate }}
           </label>
@@ -88,7 +102,7 @@
     @case ('checkbox') {
       <span class="line__options">
         @for (option of field.options; track option.value) {
-          <label class="choice" [class.choice--round]="field.round">
+          <label class="choice">
             <input
               type="checkbox"
               [checked]="isChecked(field, option.value)"

@@ -16,8 +16,7 @@
             { "id": "km", "type": "number", "placeholderKey": "common.km" },
             {
               "id": "size",
-              "type": "checkbox",
-              "round": true,
+              "type": "radio",
               "options": [
                 { "value": "small", "labelKey": "template.options.small" },
                 { "value": "medium", "labelKey": "template.options.medium" },
@@ -121,6 +120,7 @@
         },
         {
           "id": "labourOther",
+          "repeatable": true,
           "fields": [{ "id": "text", "type": "textarea", "placeholderKey": "common.other" }]
         }
       ]
@@ -135,6 +135,7 @@
         { "id": "cabinAirFilter", "titleKey": "template.parts.cabinAirFilter" },
         {
           "id": "partsOther",
+          "repeatable": true,
           "fields": [{ "id": "text", "type": "textarea", "placeholderKey": "common.other" }]
         }
       ]
@@ -170,6 +171,7 @@
         },
         {
           "id": "fluidsOther",
+          "repeatable": true,
           "fields": [{ "id": "text", "type": "textarea", "placeholderKey": "common.other" }]
         }
       ]
@@ -197,6 +199,7 @@
         },
         {
           "id": "variousOther",
+          "repeatable": true,
           "fields": [{ "id": "text", "type": "textarea", "placeholderKey": "common.other" }]
         }
       ]
