@@ -2,12 +2,14 @@
 
 <div class="work-area"><ng-content /></div>
 
-<app-transcript-panel
-  class="transcript"
-  [messages]="transcript.messages()"
-  [open]="transcriptOpen()"
-  (openChange)="transcriptOpen.set($event)"
-/>
+@if (withTranscript()) {
+  <app-transcript-panel
+    class="transcript"
+    [messages]="transcript.messages()"
+    [open]="transcriptOpen()"
+    (openChange)="transcriptOpen.set($event)"
+  />
+}
 
 <!-- Tablet: clicking outside an open overlay panel closes it -->
 @if (sidebarOpen() || transcriptOpen()) {

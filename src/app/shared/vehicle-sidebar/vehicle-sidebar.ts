@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon, IconName } from '../icon/icon';
 import { Clearable } from '../clearable/clearable';
-import { VehicleBrandService } from '../../core/services/vehicle-brand.service';
+import { VehicleLogo } from '../vehicle-logo/vehicle-logo';
 
 /** One card of the list: a vehicle and its client (a worksheet, an invoice…) */
 export interface VehicleCard {
@@ -13,7 +13,11 @@ export interface VehicleCard {
   /** ISO date (yyyy-MM-dd) shown under the title, if any */
   date: string | null;
   /** Without a brand logo: show the vehicle on the lift (work in progress) instead of a car */
-  onLift?: boolean;
+  lifted?: boolean;
+  /** Cards that are not a vehicle (e.g. a client): own title, second line and icon */
+  title?: string;
+  subtitle?: string;
+  icon?: IconName;
 }
 
 export interface VehicleCardGroup {
@@ -29,15 +33,13 @@ export interface VehicleCardGroup {
  */
 @Component({
   selector: 'app-vehicle-sidebar',
-  imports: [DatePipe, TranslatePipe, Icon, Clearable],
+  imports: [DatePipe, TranslatePipe, Icon, Clearable, VehicleLogo],
   templateUrl: './vehicle-sidebar.html',
   styleUrl: './vehicle-sidebar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '[class.is-open]': 'open()' },
 })
 export class VehicleSidebar {
-  protected readonly brands = inject(VehicleBrandService);
-
   readonly titleKey = input.required<string>();
   /** Icon of the panel button (open and collapsed) */
   readonly icon = input.required<IconName>();
@@ -62,8 +64,12 @@ export class VehicleSidebar {
     return this.groups()
       .map((group) => ({
         ...group,
-        cards: group.cards.filter((card) => !query || `${card.vehicle} ${card.client}`.toLowerCase().includes(query)),
+        cards: group.cards.filter((card) => !query || searchText(card).includes(query)),
       }))
       .filter((group) => group.cards.length > 0);
   });
 }
+
+/** What the search looks in: vehicle, client, title and second line */
+const searchText = (card: VehicleCard): string =>
+  [card.vehicle, card.client, card.title, card.subtitle].filter(Boolean).join(' ').toLowerCase();

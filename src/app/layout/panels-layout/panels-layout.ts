@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 import { TranscriptService } from '../../core/services/transcript.service';
 import { TranscriptPanel } from '../transcript-panel/transcript-panel';
 
@@ -22,9 +22,13 @@ const DESKTOP_QUERY = '(min-width: 1200px)';
   templateUrl: './panels-layout.html',
   styleUrl: './panels-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '[class.no-transcript]': '!withTranscript()' },
 })
 export class PanelsLayout {
   protected readonly transcript = inject(TranscriptService);
+
+  /** The transcript panel on the right (not on every page) */
+  readonly withTranscript = input(true);
 
   private readonly isDesktop = () => matchMedia(DESKTOP_QUERY).matches;
   readonly sidebarOpen = signal(this.isDesktop());

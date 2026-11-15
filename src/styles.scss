@@ -530,3 +530,28 @@ button {
     display: revert !important;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Invoice status chip: <span class="status-chip status-chip--open|sent|paid">
+// ---------------------------------------------------------------------------
+
+.status-chip {
+  display: inline-block;
+  padding: var(--space-100) var(--space-300);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-single);
+  white-space: nowrap;
+
+  &--open {
+    background: var(--color-background-invoice-open);
+  }
+
+  &--sent {
+    background: var(--color-background-invoice-sent);
+  }
+
+  &--paid {
+    background: var(--color-background-invoice-paid);
+  }
+}

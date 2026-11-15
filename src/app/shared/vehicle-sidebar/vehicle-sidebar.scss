@@ -45,15 +45,6 @@
   }
 }
 
-.card__logo {
-  flex: none;
-  width: var(--icon-size-xlarge);
-  height: var(--icon-size-xlarge);
-  // Monochrome logo drawn in the current color, like the icons
-  background-color: currentColor;
-  mask: center / contain no-repeat;
-}
-
 .card__body {
   flex: 1;
   min-width: 0;

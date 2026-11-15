@@ -34,11 +34,13 @@ src/
     core/          models, API access, services (worksheet & invoice stores, language, user…)
     layout/        application header, panels layout (left panel | work area | transcript),
                    transcript panel (common to the whole app)
-    shared/        icon, vehicle sidebar (cards list), modal dialog, money pipe, form helpers
+    shared/        icon, vehicle logo, vehicle sidebar (cards list), modal dialog, money pipe,
+                   form helpers
     features/
       worksheet/   worksheet page: details, task line, carry-over & vehicle info dialogs
       invoice/     invoice page and invoice document
-      clients/, shopping-list/   empty pages (not designed yet)
+      clients/     clients page (vehicles, open worksheets, invoices)
+      shopping-list/   empty page (not designed yet)
 ```
 
 ## Conventions
@@ -94,6 +96,15 @@ tips*, editable from the invoice while it is open. Invoicing clears the undo his
 - Buttons under the invoice: *Save as PDF* (always; the browser print dialog, the print styles keep
   only the invoice and show plain values), *Mark as sent* (open: payment term from that day),
   *Mark as paid* (sent).
+
+## Clients page
+
+- Same layout, without the transcript panel (`[withTranscript]="false"` on `app-panels-layout`).
+- Left: the clients (name, town). Right: the client's address, its vehicles, its open worksheets
+  and its invoices (total and status open / sent / paid); each row links to the worksheet or
+  invoice.
+- Vehicle tiles (brand logo, plate) filter the worksheets and invoices; all are selected when a
+  client is opened.
 
 ## Line behaviour
 

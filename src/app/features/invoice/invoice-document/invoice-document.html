@@ -5,7 +5,7 @@
   <header class="invoice__head">
     <img class="invoice__logo" src="images/logo.png" [alt]="company().name" />
     <div class="invoice__client">
-      <span class="invoice__status invoice__status--{{ inv.status }}">{{ 'invoice.status.' + inv.status | translate }}</span>
+      <span class="status-chip status-chip--{{ inv.status }} invoice__status">{{ 'invoice.status.' + inv.status | translate }}</span>
       @if (ws?.client; as client) {
         <address class="invoice__address">
           <span class="text-strong">{{ client }}</span>

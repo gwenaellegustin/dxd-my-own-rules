@@ -196,5 +196,15 @@
     "send": "Mark as sent",
     "savePdf": "Save as PDF",
     "markPaid": "Mark as paid"
+  },
+  "clients": {
+    "title": "Clients",
+    "empty": "No client.",
+    "vehicles": "Vehicles",
+    "vehiclesHint": "Select a vehicle to show or hide its worksheets and invoices.",
+    "openWorksheets": "Open worksheets",
+    "invoices": "Invoices",
+    "noWorksheet": "No open worksheet.",
+    "noInvoice": "No invoice."
   }
 }

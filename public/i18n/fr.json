@@ -196,5 +196,15 @@
     "send": "Marquer comme envoyée",
     "savePdf": "Enregistrer en PDF",
     "markPaid": "Marquer comme payée"
+  },
+  "clients": {
+    "title": "Clients",
+    "empty": "Aucun client.",
+    "vehicles": "Véhicules",
+    "vehiclesHint": "Sélectionnez un véhicule pour afficher ou masquer ses fiches de travail et factures.",
+    "openWorksheets": "Fiches de travail ouvertes",
+    "invoices": "Factures",
+    "noWorksheet": "Aucune fiche de travail ouverte.",
+    "noInvoice": "Aucune facture."
   }
 }

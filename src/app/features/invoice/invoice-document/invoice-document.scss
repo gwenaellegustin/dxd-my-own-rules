@@ -23,6 +23,7 @@
   }
 }
 
+// Status chip (global .status-chip): for the app only, not on paper
 .invoice__status {
   @media print {
     display: none;
@@ -47,25 +48,6 @@
   align-items: flex-end;
   gap: var(--space-200);
   text-align: right;
-}
-
-.invoice__status {
-  padding: var(--space-100) var(--space-300);
-  border-radius: var(--radius-pill);
-  font-size: var(--font-size-small);
-  line-height: var(--line-height-single);
-
-  &--open {
-    background: var(--color-background-invoice-open);
-  }
-
-  &--sent {
-    background: var(--color-background-invoice-sent);
-  }
-
-  &--paid {
-    background: var(--color-background-invoice-paid);
-  }
 }
 
 // Vehicle, plate, kilometers, rate, date: label column + value column

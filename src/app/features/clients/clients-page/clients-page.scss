@@ -1,0 +1,133 @@
+// The page is only a wrapper: the shared layout is the element that fills the screen
+:host {
+  display: contents;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-800);
+  max-width: var(--invoice-max-width);
+  padding: var(--space-400);
+}
+
+.client {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+}
+
+.client__address {
+  font-style: normal;
+  color: var(--color-text-secondary);
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+// Vehicle tiles: a hidden checkbox each; checked = its worksheets and invoices are shown
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--vehicle-tile-min-width), 1fr));
+  gap: var(--space-200);
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-300);
+  padding: var(--space-400);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  color: var(--color-icon-default);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+
+  &:has(input:focus-visible) {
+    outline: var(--stroke-focus) solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  // Not shown: dimmed
+  &:not(.tile--checked) {
+    color: var(--color-text-tertiary);
+
+    .tile__body * {
+      color: var(--color-text-tertiary);
+    }
+  }
+
+  // Shown: strong border (like the selected card of the side panel)
+  &--checked {
+    border: var(--stroke-focus) solid var(--color-border-strong);
+    padding: calc(var(--space-400) - var(--stroke-focus) + var(--stroke-border));
+  }
+}
+
+.tile__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// Checkbox look of the tile (the real checkbox is visually hidden)
+.tile__check {
+  flex: none;
+  display: grid;
+  place-content: center;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  border: var(--stroke-border) solid var(--color-border-strong);
+  border-radius: var(--radius-100);
+
+  .tile--checked & {
+    background: var(--color-background-brand);
+    border-color: var(--color-background-brand);
+    color: var(--color-icon-on-brand);
+  }
+}
+
+// One worksheet or invoice: a link to it
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-300);
+  padding: var(--space-300) var(--space-400);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  color: var(--color-icon-default);
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+
+  @container work-area (max-width: 480px) {
+    flex-wrap: wrap;
+  }
+}
+
+.row__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text-default);
+}
+
+.row__amount {
+  color: var(--color-text-default);
+  white-space: nowrap;
+}

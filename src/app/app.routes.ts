@@ -20,7 +20,11 @@ export const routes: Routes = [
   },
   {
     path: 'clients',
-    loadComponent: () => import('./features/clients/clients-page').then((m) => m.ClientsPage),
+    loadComponent: () => import('./features/clients/clients-page/clients-page').then((m) => m.ClientsPage),
+  },
+  {
+    path: 'clients/:id',
+    loadComponent: () => import('./features/clients/clients-page/clients-page').then((m) => m.ClientsPage),
   },
   {
     path: 'shopping-list',

@@ -17,6 +17,15 @@
   }
 }
 
+// Without transcript, the side panel rail takes the whole toolbar on mobile
+:host(.no-transcript) {
+  @include bp.mobile {
+    grid-template-areas:
+      'sidebar sidebar'
+      'main main';
+  }
+}
+
 // Slot of the projected side panel: a one-cell grid, so the panel fills it at every size
 .sidebar {
   order: 1;

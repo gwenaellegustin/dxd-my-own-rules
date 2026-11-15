@@ -44,26 +44,25 @@
               [attr.aria-current]="card.id === selectedId() ? 'true' : null"
               (click)="selectCard.emit(card.id)"
             >
-              <!-- Brand logo when known. Otherwise the vehicle on the lift (work in progress),
-                   else a car or a motorcycle (brand "kind") -->
-              @let brand = brands.brandOf(card.vehicle);
-              @if (brand?.logo; as logo) {
-                <span class="card__logo" aria-hidden="true" [style.mask-image]="'url(' + logo + ')'"></span>
+              <!-- A card without vehicle (e.g. a client) shows its own icon -->
+              @if (card.icon; as icon) {
+                <app-icon [name]="icon" size="xlarge" />
               } @else {
-                <app-icon
-                  [name]="card.onLift ? 'lift' : brand?.kind === 'motorcycle' ? 'motorcycle' : 'car'"
-                  size="xlarge"
-                />
+                <app-vehicle-logo [vehicle]="card.vehicle" [lifted]="!!card.lifted" />
               }
               <span class="card__body">
                 <span class="card__title">
-                  @if (card.vehicle || card.client) {
+                  @if (card.title) {
+                    {{ card.title }}
+                  } @else if (card.vehicle || card.client) {
                     {{ card.vehicle }}@if (card.vehicle && card.client) { - }{{ card.client }}
                   } @else {
                     {{ untitledKey() | translate }}
                   }
                 </span>
-                @if (card.date) {
+                @if (card.subtitle) {
+                  <span class="card__date">{{ card.subtitle }}</span>
+                } @else if (card.date) {
                   <span class="card__date">{{ card.date | date: 'dd.MM.yyyy' }}</span>
                 }
               </span>

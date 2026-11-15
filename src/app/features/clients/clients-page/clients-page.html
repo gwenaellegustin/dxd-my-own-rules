@@ -1,0 +1,86 @@
+<app-panels-layout #layout [withTranscript]="false">
+  <app-vehicle-sidebar
+    sidebar
+    titleKey="clients.title"
+    icon="person"
+    emptyKey="clients.empty"
+    [groups]="cardGroups()"
+    [selectedId]="client()?.id ?? null"
+    [open]="layout.sidebarOpen()"
+    (openChange)="layout.sidebarOpen.set($event)"
+    (selectCard)="select($event)"
+  />
+
+  @if (client(); as c) {
+    <div class="content">
+      <header class="client">
+        <h2 class="text-heading">{{ c.name }}</h2>
+        <address class="client__address">{{ c.address.street }}, {{ c.address.postcode }} {{ c.address.city }}</address>
+      </header>
+
+      <!-- Vehicles: each tile shows / hides the worksheets and invoices of that vehicle -->
+      <section class="block" aria-labelledby="client-vehicles">
+        <h3 class="text-subheading" id="client-vehicles">{{ 'clients.vehicles' | translate }}</h3>
+        <p class="text-secondary text-small">{{ 'clients.vehiclesHint' | translate }}</p>
+        <div class="tiles">
+          @for (vehicle of vehicles(); track vehicle.name) {
+            @let checked = selected().has(vehicle.name);
+            <label class="tile" [class.tile--checked]="checked">
+              <input class="visually-hidden" type="checkbox" [checked]="checked" (change)="toggleVehicle(vehicle.name)" />
+              <app-vehicle-logo [vehicle]="vehicle.name" />
+              <span class="tile__body">
+                <span class="text-strong">{{ vehicle.name }}</span>
+                @if (vehicle.plate) {
+                  <span class="text-secondary text-small">{{ vehicle.plate }}</span>
+                }
+              </span>
+              <span class="tile__check" aria-hidden="true">
+                @if (checked) {
+                  <app-icon name="check" size="small" />
+                }
+              </span>
+            </label>
+          }
+        </div>
+      </section>
+
+      <section class="block" aria-labelledby="client-worksheets">
+        <h3 class="text-subheading" id="client-worksheets">{{ 'clients.openWorksheets' | translate }}</h3>
+        @for (worksheet of openWorksheets(); track worksheet.id) {
+          <a class="row" [routerLink]="['/worksheets', worksheet.id]">
+            <app-vehicle-logo [vehicle]="worksheet.vehicle" [lifted]="true" />
+            <span class="row__main">
+              <span class="text-strong">{{ worksheet.vehicle }}</span>
+              @if (worksheet.date) {
+                <span class="text-secondary">{{ worksheet.date | date: 'dd.MM.yyyy' }}</span>
+              }
+            </span>
+            <app-icon name="chevron-right" />
+          </a>
+        } @empty {
+          <p class="text-secondary">{{ 'clients.noWorksheet' | translate }}</p>
+        }
+      </section>
+
+      <section class="block" aria-labelledby="client-invoices">
+        <h3 class="text-subheading" id="client-invoices">{{ 'clients.invoices' | translate }}</h3>
+        @for (row of clientInvoices(); track row.invoice.id) {
+          <a class="row" [routerLink]="['/invoices', row.invoice.id]">
+            <app-vehicle-logo [vehicle]="row.vehicle" />
+            <span class="row__main">
+              <span class="text-strong">{{ 'invoice.number' | translate: { number: row.invoice.number } }}</span>
+              <span class="text-secondary">{{ row.vehicle }} · {{ row.invoice.date | date: 'dd.MM.yyyy' }}</span>
+            </span>
+            <span class="row__amount">{{ invoices.company()?.currency }} {{ row.total | money }}</span>
+            <span class="status-chip status-chip--{{ row.invoice.status }}">
+              {{ 'invoice.status.' + row.invoice.status | translate }}
+            </span>
+            <app-icon name="chevron-right" />
+          </a>
+        } @empty {
+          <p class="text-secondary">{{ 'clients.noInvoice' | translate }}</p>
+        }
+      </section>
+    </div>
+  }
+</app-panels-layout>
