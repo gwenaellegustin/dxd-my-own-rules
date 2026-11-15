@@ -18,7 +18,7 @@ import { Icon } from '../../../shared/icon/icon';
 import { AutoGrow } from '../../../shared/auto-grow/auto-grow';
 import { Clearable } from '../../../shared/clearable/clearable';
 import { LineField, TemplateLine } from '../../../core/models/worksheet-template.model';
-import { LineFieldValue, LineState } from '../../../core/models/worksheet.model';
+import { LineFieldValue, LineState, hasLineValues } from '../../../core/models/worksheet.model';
 
 /**
  * "Line" component of the Figma file (component set "Line", node 3007:6666).
@@ -79,10 +79,7 @@ export class TaskLine implements OnInit {
    */
   protected removeIfEmpty(): void {
     if (this.canHaveNote() || !this.removable()) return;
-    const empty = Object.values(this.state().values).every((value) =>
-      Array.isArray(value) ? value.length === 0 : !value,
-    );
-    if (empty) this.remove.emit();
+    if (!hasLineValues(this.state())) this.remove.emit();
   }
 
   protected togglePlanned(): void {
@@ -93,11 +90,8 @@ export class TaskLine implements OnInit {
     this.stateChange.emit({ done: !this.state().done });
   }
 
-  /** Typing the first character of a note marks the line as planned (it can be unchecked after) */
   protected updateNote(note: string): void {
-    const changes: Partial<LineState> = { note };
-    if (!this.state().planned && this.state().note.trim() === '' && note.trim() !== '') changes.planned = true;
-    this.stateChange.emit(changes);
+    this.stateChange.emit(this.planIfFirstText({ note }, this.state().note, note));
   }
 
   protected value(field: LineField): LineFieldValue {
@@ -111,11 +105,17 @@ export class TaskLine implements OnInit {
 
   protected setValue(field: LineField, value: LineFieldValue): void {
     const changes: Partial<LineState> = { values: { ...this.state().values, [field.id]: value } };
-    // "Other" lines: typing the first text marks the line as planned (it can be unchecked after)
-    if (!this.canHaveNote() && !this.state().planned && !this.value(field) && !!value) {
-      changes.planned = true;
-    }
-    this.stateChange.emit(changes);
+    // On "Other" lines the free text plays the role of the note
+    this.stateChange.emit(this.canHaveNote() ? changes : this.planIfFirstText(changes, this.value(field), value));
+  }
+
+  /**
+   * Typing the first text of a note (or of an "Other" line) marks the line as planned;
+   * it can be unchecked afterwards and is not checked again while text remains.
+   */
+  private planIfFirstText(changes: Partial<LineState>, before: LineFieldValue, after: LineFieldValue): Partial<LineState> {
+    const hasText = (value: LineFieldValue) => typeof value === 'string' && value.trim() !== '';
+    return !this.state().planned && !hasText(before) && hasText(after) ? { ...changes, planned: true } : changes;
   }
 
   /** Radio group: 0 or 1 value. Clicking the selected option clears the group. */

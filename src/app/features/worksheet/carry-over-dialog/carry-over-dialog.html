@@ -1,10 +1,4 @@
-<dialog
-  #dialog
-  class="dialog"
-  aria-labelledby="carry-over-title"
-  (cancel)="$event.preventDefault(); cancelled.emit()"
-  (click)="onDialogClick($event)"
->
+<dialog class="dialog" aria-labelledby="carry-over-title" appModalDialog (dismiss)="cancelled.emit()">
   <form class="dialog__box" (submit)="$event.preventDefault(); confirm()">
     <h2 id="carry-over-title" class="text-subheading">{{ 'carryOver.title' | translate }}</h2>
 

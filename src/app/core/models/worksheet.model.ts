@@ -46,3 +46,7 @@ export const emptyLineState = (): LineState => ({
   note: '',
   values: {},
 });
+
+/** True when at least one field of the line holds a value (text, option…) */
+export const hasLineValues = (state: LineState): boolean =>
+  Object.values(state.values).some((value) => (Array.isArray(value) ? value.length > 0 : !!value));

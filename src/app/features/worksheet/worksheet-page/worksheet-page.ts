@@ -110,8 +110,8 @@ export class WorksheetPage {
             .map((key) => ({
               key,
               titleKey: line.titleKey,
-              // "Other" lines have no title: show their free text
-              text: line.titleKey ? undefined : String(this.lineState(worksheet, key).values['text'] ?? ''),
+              // "Other" lines have no title: show their free text (first field of the line)
+              text: line.titleKey ? undefined : String(this.lineState(worksheet, key).values[line.fields?.[0]?.id ?? ''] ?? ''),
             })),
         ),
       }))
@@ -130,6 +130,15 @@ export class WorksheetPage {
     this.store.update(worksheet.id, { carryOver });
     this.carryOverGroups.set(null);
     this.router.navigate(['/invoices']);
+  }
+
+  /** Field edits; typing in a text field is grouped into one undo step */
+  protected updateWorksheet(id: string, changes: Partial<Omit<Worksheet, 'id' | 'lines'>>): void {
+    this.store.update(id, changes, { typing: isTextEditing() });
+  }
+
+  protected updateLine(id: string, key: string, changes: Partial<LineState>): void {
+    this.store.updateLine(id, key, changes, { typing: isTextEditing() });
   }
 
   /**
@@ -153,4 +162,11 @@ export class WorksheetPage {
     this.sidebarOpen.set(false);
     this.transcriptOpen.set(false);
   }
+}
+
+/** True while the user types in a text field (not a checkbox, radio or button) */
+function isTextEditing(): boolean {
+  const element = document.activeElement;
+  if (element instanceof HTMLTextAreaElement) return true;
+  return element instanceof HTMLInputElement && !['checkbox', 'radio', 'button', 'submit'].includes(element.type);
 }

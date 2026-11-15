@@ -13,7 +13,7 @@
     <div class="work-area__content">
       <app-worksheet-details
         [worksheet]="ws"
-        (fieldChange)="store.update(ws.id, $event)"
+        (fieldChange)="updateWorksheet(ws.id, $event)"
         (damageAdd)="store.addDamage(ws.id, $event)"
         (damageRemove)="store.removeDamage(ws.id, $event)"
         (createInvoice)="createInvoice(ws)"
@@ -53,7 +53,7 @@
                   [line]="line"
                   [state]="lineState(ws, key)"
                   [removable]="!!line.repeatable && !last"
-                  (stateChange)="store.updateLine(ws.id, key, $event)"
+                  (stateChange)="updateLine(ws.id, key, $event)"
                   (remove)="store.removeLine(ws.id, key)"
                 />
               }

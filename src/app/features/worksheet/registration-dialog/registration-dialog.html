@@ -1,10 +1,4 @@
-<dialog
-  #dialog
-  class="dialog dialog--wide"
-  aria-labelledby="registration-title"
-  (cancel)="$event.preventDefault(); closed.emit()"
-  (click)="onDialogClick($event)"
->
+<dialog class="dialog dialog--wide" aria-labelledby="registration-title" appModalDialog (dismiss)="closed.emit()">
   <div class="dialog__box">
     <h2 id="registration-title" class="text-subheading">{{ 'registration.title' | translate }}</h2>
 

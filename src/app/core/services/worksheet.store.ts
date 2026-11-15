@@ -19,6 +19,11 @@ import {
  * Every edit is recorded for undo / redo (Ctrl+Z / Ctrl+Y, see WorksheetPage).
  * Typing in one field is grouped into one step, like in a text editor.
  */
+/** `typing`: the edit comes from typing in a text field (grouped into one undo step) */
+export interface EditOptions {
+  typing?: boolean;
+}
+
 /** Edits kept in the undo history */
 const HISTORY_LIMIT = 100;
 /** Keystrokes in the same field closer than this make one undo step */
@@ -81,16 +86,18 @@ export class WorksheetStore {
       damages: [],
       lines: {},
     };
-    this.record('create');
+    this.record();
     this._worksheets.update((list) => [worksheet, ...list]);
     return worksheet;
   }
 
-  update(id: string, changes: Partial<Omit<Worksheet, 'id' | 'lines'>>): void {
-    this.patch(id, (worksheet) => ({ ...worksheet, ...changes }), `${id}:${Object.keys(changes).sort()}`);
+  update(id: string, changes: Partial<Omit<Worksheet, 'id' | 'lines'>>, options: EditOptions = {}): void {
+    const typingKey = options.typing ? `${id}:${Object.keys(changes).sort()}` : undefined;
+    this.patch(id, (worksheet) => ({ ...worksheet, ...changes }), typingKey);
   }
 
-  updateLine(id: string, lineId: string, changes: Partial<LineState>): void {
+  updateLine(id: string, lineId: string, changes: Partial<LineState>, options: EditOptions = {}): void {
+    const typingKey = options.typing ? `${id}:${lineId}:${Object.keys(changes).sort()}` : undefined;
     this.patch(
       id,
       (worksheet) => ({
@@ -100,7 +107,7 @@ export class WorksheetStore {
           [lineId]: { ...this.lineState(worksheet, lineId), ...changes },
         },
       }),
-      `${id}:${lineId}:${Object.keys(changes).sort()}`,
+      typingKey,
     );
   }
 
@@ -166,28 +173,21 @@ export class WorksheetStore {
 
   /**
    * Saves the current state before an edit.
-   * Typing in a text field (same field, keystrokes close together) extends the current step
-   * instead of adding one per character; clicks (checkbox, radio, button) are always one step.
+   * Typing (`typingKey` = the edited field) extends the current step while it goes on in the same
+   * field, instead of adding one step per character; any other edit is always one step.
    */
-  private record(key: string): void {
+  private record(typingKey?: string): void {
     const now = Date.now();
-    const typing = isTyping();
-    const sameTyping = typing && this.lastEdit?.key === key && now - this.lastEdit.time < TYPING_GROUP_MS;
-    this.lastEdit = typing ? { key, time: now } : null;
+    const sameTyping =
+      typingKey !== undefined && this.lastEdit?.key === typingKey && now - this.lastEdit.time < TYPING_GROUP_MS;
+    this.lastEdit = typingKey !== undefined ? { key: typingKey, time: now } : null;
     this.redoStack.set([]);
     if (sameTyping) return;
     this.undoStack.update((stack) => [...stack, this._worksheets()].slice(-HISTORY_LIMIT));
   }
 
-  private patch(id: string, fn: (worksheet: Worksheet) => Worksheet, key = 'edit'): void {
-    this.record(key);
+  private patch(id: string, fn: (worksheet: Worksheet) => Worksheet, typingKey?: string): void {
+    this.record(typingKey);
     this._worksheets.update((list) => list.map((worksheet) => (worksheet.id === id ? fn(worksheet) : worksheet)));
   }
-}
-
-/** True when the edit comes from typing in a text field (not a checkbox / radio / button) */
-function isTyping(): boolean {
-  const element = document.activeElement;
-  if (element instanceof HTMLTextAreaElement) return true;
-  return element instanceof HTMLInputElement && !['checkbox', 'radio', 'button', 'submit'].includes(element.type);
 }
