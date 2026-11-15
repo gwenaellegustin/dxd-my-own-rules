@@ -284,21 +284,43 @@ button {
 // Leave room for the clear (cross) button of <app-clearable>
 .clearable > .input,
 .clearable > .textarea {
-  width: 100%;
   padding-right: calc(var(--space-200) + var(--icon-size-large) + var(--space-200));
 }
 
-// Search input (pill shaped, with search icon)
+// Fixed-width inputs get wider so the button doesn't eat the typing area
+.clearable > .input--small {
+  width: calc(var(--control-width-small) + var(--icon-size-large));
+}
+
+.clearable > .input--medium {
+  width: calc(var(--control-width-medium) + var(--icon-size-large));
+}
+
+// Search input (pill shaped, with search icon; the clear button sits left of it)
 .search {
   position: relative;
   width: 100%;
 
-  .input {
-    border-radius: var(--radius-full);
-    padding-right: calc(var(--space-400) * 2 + var(--icon-size-small));
+  .clearable {
+    width: 100%;
   }
 
-  app-icon {
+  .input {
+    width: 100%;
+    border-radius: var(--radius-full);
+    padding-right: calc(var(--space-400) * 2 + var(--icon-size-small) + var(--icon-size-large));
+  }
+
+  .clearable__button {
+    right: calc(var(--space-400) + var(--icon-size-small) + var(--space-100));
+  }
+
+  // Native clear button replaced by <app-clearable>
+  input::-webkit-search-cancel-button {
+    appearance: none;
+  }
+
+  > app-icon {
     position: absolute;
     right: var(--space-400);
     top: 50%;

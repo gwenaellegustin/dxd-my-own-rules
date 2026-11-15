@@ -24,7 +24,9 @@
     "other": "Autre",
     "ellipsis": "...",
     "km": "km",
-    "notDesignedYet": "Cette page n'a pas encore été conçue."
+    "notDesignedYet": "Cette page n'a pas encore été conçue.",
+    "clear": "Effacer",
+    "showOptions": "Afficher les options"
   },
   "worksheets": {
     "title": "Fiches de travail",

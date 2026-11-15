@@ -21,13 +21,19 @@
   }
 }
 
+// Label stays aligned with its row neighbour; the invoice button sits at the bottom
 .hours {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: var(--space-200);
 
   .field {
     flex: 1;
+    align-self: stretch;
+  }
+
+  .icon-button {
+    align-self: flex-end;
   }
 }
 

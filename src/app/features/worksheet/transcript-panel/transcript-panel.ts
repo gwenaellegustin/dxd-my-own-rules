@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output, signal } f
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon } from '../../../shared/icon/icon';
+import { Clearable } from '../../../shared/clearable/clearable';
 import { TranscriptMessage } from '../../../core/models/transcript.model';
 
 interface TranscriptDay {
@@ -12,7 +13,7 @@ interface TranscriptDay {
 /** "Transcript" component set (Default = collapsed, Opened). */
 @Component({
   selector: 'app-transcript-panel',
-  imports: [DatePipe, TranslatePipe, Icon],
+  imports: [DatePipe, TranslatePipe, Icon, Clearable],
   templateUrl: './transcript-panel.html',
   styleUrl: './transcript-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

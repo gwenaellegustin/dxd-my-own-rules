@@ -3,12 +3,20 @@
 <div class="fields">
   <label class="field">
     <span class="field__label">{{ 'worksheet.client' | translate }}</span>
-    <input class="input" type="text" [value]="ws.client" (input)="update('client', $event)" />
+    <app-combobox
+      [value]="ws.client"
+      [options]="clients.clientNames()"
+      (valueChange)="fieldChange.emit({ client: $event })"
+    />
   </label>
 
   <label class="field">
     <span class="field__label">{{ 'worksheet.vehicle' | translate }}</span>
-    <input class="input" type="text" [value]="ws.vehicle" (input)="update('vehicle', $event)" />
+    <app-combobox
+      [value]="ws.vehicle"
+      [options]="clients.vehiclesFor(ws.client)"
+      (valueChange)="fieldChange.emit({ vehicle: $event })"
+    />
   </label>
 
   <label class="field">
@@ -18,13 +26,17 @@
 
   <label class="field">
     <span class="field__label">{{ 'worksheet.kilometers' | translate }}</span>
-    <input class="input" type="text" inputmode="numeric" [value]="ws.kilometers" (input)="update('kilometers', $event)" />
+    <app-clearable>
+      <input #clearTarget class="input" type="text" inputmode="numeric" [value]="ws.kilometers" (input)="update('kilometers', $event)" />
+    </app-clearable>
   </label>
 
   <div class="hours">
     <label class="field">
       <span class="field__label">{{ 'worksheet.hours' | translate }}</span>
-      <textarea class="textarea" appAutoGrow [value]="ws.hours" (input)="update('hours', $event)"></textarea>
+      <app-clearable>
+        <textarea #clearTarget class="textarea" appAutoGrow [value]="ws.hours" (input)="update('hours', $event)"></textarea>
+      </app-clearable>
     </label>
     <a
       class="icon-button icon-button--primary"
@@ -38,7 +50,9 @@
 
   <label class="field">
     <span class="field__label">{{ 'worksheet.comments' | translate }}</span>
-    <textarea class="textarea" appAutoGrow [value]="ws.comments" (input)="update('comments', $event)"></textarea>
+    <app-clearable>
+      <textarea #clearTarget class="textarea" appAutoGrow [value]="ws.comments" (input)="update('comments', $event)"></textarea>
+    </app-clearable>
   </label>
 </div>
 

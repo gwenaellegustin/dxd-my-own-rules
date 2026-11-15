@@ -39,14 +39,17 @@
 }
 
 @if (noteOpen()) {
-  <textarea
-    #noteField
-    class="textarea textarea--single-line line__note"
-    appAutoGrow
-    [value]="state().note"
-    [attr.aria-label]="'line.note' | translate"
-    (input)="updateNote($any($event.target).value)"
-  ></textarea>
+  <app-clearable class="line__note">
+    <textarea
+      #noteField
+      #clearTarget
+      class="textarea textarea--single-line"
+      appAutoGrow
+      [value]="state().note"
+      [attr.aria-label]="'line.note' | translate"
+      (input)="updateNote($any($event.target).value)"
+    ></textarea>
+  </app-clearable>
 }
 
 <ng-template #fieldTpl let-field>
@@ -55,14 +58,17 @@
       <span class="line__title">{{ field.labelKey | translate }}</span>
     }
     @case ('textarea') {
-      <textarea
-        class="textarea textarea--single-line line__free-text"
-        appAutoGrow
-        [value]="value(field) ?? ''"
-        [placeholder]="(field.placeholderKey ?? '') | translate"
-        [attr.aria-label]="(field.placeholderKey ?? '') | translate"
-        (input)="setValue(field, $any($event.target).value)"
-      ></textarea>
+      <app-clearable class="line__free-text">
+        <textarea
+          #clearTarget
+          class="textarea textarea--single-line"
+          appAutoGrow
+          [value]="value(field) ?? ''"
+          [placeholder]="(field.placeholderKey ?? '') | translate"
+          [attr.aria-label]="(field.placeholderKey ?? '') | translate"
+          (input)="setValue(field, $any($event.target).value)"
+        ></textarea>
+      </app-clearable>
     }
     @case ('radio') {
       <span class="line__options" role="radiogroup">
@@ -93,18 +99,29 @@
         }
       </span>
     }
-    @default {
+    @case ('date') {
       <input
-        class="input"
-        [class.input--small]="(field.size ?? 'small') === 'small' && field.type !== 'date'"
-        [class.input--medium]="field.size === 'medium'"
-        [class.line__date]="field.type === 'date'"
-        [type]="field.type"
+        class="input line__date"
+        type="date"
         [value]="value(field) ?? ''"
-        [placeholder]="(field.placeholderKey ?? '') | translate"
-        [attr.aria-label]="((field.placeholderKey ?? line().titleKey) ?? '') | translate"
+        [attr.aria-label]="(line().titleKey ?? '') | translate"
         (input)="setValue(field, $any($event.target).value)"
       />
+    }
+    @default {
+      <app-clearable>
+        <input
+          #clearTarget
+          class="input"
+          [class.input--small]="(field.size ?? 'small') === 'small'"
+          [class.input--medium]="field.size === 'medium'"
+          [type]="field.type"
+          [value]="value(field) ?? ''"
+          [placeholder]="(field.placeholderKey ?? '') | translate"
+          [attr.aria-label]="((field.placeholderKey ?? line().titleKey) ?? '') | translate"
+          (input)="setValue(field, $any($event.target).value)"
+        />
+      </app-clearable>
     }
   }
 </ng-template>

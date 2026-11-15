@@ -14,7 +14,7 @@ import { Icon } from '../icon/icon';
  * Clearing dispatches a native `input` event, so the field's own (input)
  * handler (store update, auto-grow…) runs exactly as if the user typed.
  *
- * Usage: <app-clearable><input class="input" #field ... /></app-clearable>
+ * Usage: <app-clearable><input class="input" #clearTarget ... /></app-clearable>
  */
 @Component({
   selector: 'app-clearable',
@@ -36,7 +36,6 @@ import { Icon } from '../icon/icon';
   `,
   host: {
     class: 'clearable',
-    '[class.clearable--multiline]': 'multiline',
     '(input)': 'refresh()',
   },
   styles: `
@@ -66,13 +65,11 @@ import { Icon } from '../icon/icon';
   `,
 })
 export class Clearable implements AfterContentInit {
-  private readonly field = contentChild.required<ElementRef<HTMLInputElement | HTMLTextAreaElement>>('field');
+  private readonly field = contentChild.required<ElementRef<HTMLInputElement | HTMLTextAreaElement>>('clearTarget');
 
   protected readonly hasValue = signal(false);
-  protected multiline = false;
 
   ngAfterContentInit(): void {
-    this.multiline = this.field().nativeElement instanceof HTMLTextAreaElement;
     // [value] bindings are applied after content init: read once they are set
     queueMicrotask(() => this.refresh());
   }

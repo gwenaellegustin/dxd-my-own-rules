@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon, IconName } from '../../../shared/icon/icon';
 import { AutoGrow } from '../../../shared/auto-grow/auto-grow';
+import { Clearable } from '../../../shared/clearable/clearable';
+import { Combobox } from '../../../shared/combobox/combobox';
+import { ClientService } from '../../../core/services/client.service';
 import { Damage, DamageType, Worksheet } from '../../../core/models/worksheet.model';
 
 type EditableField = 'client' | 'vehicle' | 'date' | 'kilometers' | 'hours' | 'comments';
@@ -16,12 +19,14 @@ interface DamageLegend {
 /** Top of the work area: general information + damage diagram. */
 @Component({
   selector: 'app-worksheet-details',
-  imports: [RouterLink, TranslatePipe, Icon, AutoGrow],
+  imports: [RouterLink, TranslatePipe, Icon, AutoGrow, Clearable, Combobox],
   templateUrl: './worksheet-details.html',
   styleUrl: './worksheet-details.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorksheetDetails {
+  protected readonly clients = inject(ClientService);
+
   readonly worksheet = input.required<Worksheet>();
   readonly fieldChange = output<Partial<Pick<Worksheet, EditableField>>>();
   readonly damageAdd = output<Damage>();

@@ -12,6 +12,7 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL', {
 
 export const API_ENDPOINTS = {
   currentUser: 'current-user.json',
+  clients: 'clients.json',
   worksheetTemplate: 'worksheet-template.json',
   worksheets: 'worksheets.json',
   transcripts: 'transcripts.json',

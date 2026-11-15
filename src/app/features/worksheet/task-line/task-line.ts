@@ -13,6 +13,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon } from '../../../shared/icon/icon';
 import { AutoGrow } from '../../../shared/auto-grow/auto-grow';
+import { Clearable } from '../../../shared/clearable/clearable';
 import { LineField, TemplateLine } from '../../../core/models/worksheet-template.model';
 import { LineFieldValue, LineState } from '../../../core/models/worksheet.model';
 
@@ -28,7 +29,7 @@ import { LineFieldValue, LineState } from '../../../core/models/worksheet.model'
  */
 @Component({
   selector: 'app-task-line',
-  imports: [NgTemplateOutlet, TranslatePipe, Icon, AutoGrow],
+  imports: [NgTemplateOutlet, TranslatePipe, Icon, AutoGrow, Clearable],
   templateUrl: './task-line.html',
   styleUrl: './task-line.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
