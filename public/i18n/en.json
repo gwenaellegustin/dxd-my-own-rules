@@ -1,0 +1,125 @@
+{
+  "app": {
+    "name": "Garage"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "worksheet": "Worksheet",
+    "invoice": "Invoice",
+    "clients": "Clients",
+    "shoppingList": "Shopping list",
+    "badgeCount": "{{count}} items"
+  },
+  "account": {
+    "menu": "Account menu",
+    "language": "Language"
+  },
+  "languages": {
+    "en": "English",
+    "fr": "Français"
+  },
+  "common": {
+    "search": "Search",
+    "collapse": "Collapse panel",
+    "other": "Other",
+    "ellipsis": "...",
+    "km": "km",
+    "notDesignedYet": "This page has not been designed yet."
+  },
+  "worksheets": {
+    "title": "Worksheets",
+    "new": "New worksheet",
+    "untitled": "New worksheet",
+    "empty": "No worksheet",
+    "groups": {
+      "toBeBilled": "To be billed",
+      "invoiced": "Invoiced"
+    }
+  },
+  "worksheet": {
+    "client": "Client",
+    "vehicle": "Car",
+    "date": "Date",
+    "kilometers": "Kilometers",
+    "hours": "Hours",
+    "comments": "Comments and tips",
+    "createInvoice": "Create the invoice"
+  },
+  "damage": {
+    "bump": "Bump",
+    "scratch": "Scratch",
+    "impact": "Impact",
+    "remove": "Remove",
+    "diagramAlt": "Car diagram: select a damage type in the legend, then click on the car to mark it"
+  },
+  "line": {
+    "planned": "Planned",
+    "done": "Done",
+    "addNote": "Add a note",
+    "note": "Note"
+  },
+  "transcript": {
+    "title": "Transcripts",
+    "rail": "Transcript",
+    "empty": "No message"
+  },
+  "template": {
+    "labour": {
+      "title": "Labour",
+      "pickup": "Pickup of the vehicle at home or at work",
+      "service": "Service",
+      "wheelChange": "Wheel change and tyre pressure check",
+      "tyreFitting": "Tyre removal, fitting and balancing of",
+      "tyreFittingSuffix": "new tyres",
+      "inspectionPreparation": "Vehicle inspection preparation (full check, handbrake cable tension adjustment, headlight alignment) + chassis and engine wash",
+      "technicalInspection": "Presenting the vehicle for its technical inspection",
+      "brakes": "Brake replacement — discs and pads",
+      "brakeCalipers": "Free seized brake calipers + clean and grease guides and brake pad supports",
+      "alignment": "Axle alignment check and adjustment + road test"
+    },
+    "parts": {
+      "title": "Parts",
+      "drainPlugWasher": "Drain plug washer",
+      "oilFilter": "Oil filter",
+      "airFilter": "Air filter",
+      "cabinAirFilter": "Cabin air filter"
+    },
+    "fluids": {
+      "title": "Fluids",
+      "engineOil": "Engine oil",
+      "engineOilPlaceholder": "...W...",
+      "engineCoolant": "Engine coolant −35°C",
+      "washerFluid": "Windshield washer fluid",
+      "brakeFluid": "Brake fluid",
+      "brakeFluidPlaceholder": "DOT 4"
+    },
+    "various": {
+      "title": "Various",
+      "smallSupplies": "Small supplies (spray, grease, screws, etc.) + waste disposal",
+      "courtesyCar": "Courtesy car",
+      "lightCleaning": "Light cleaning"
+    },
+    "options": {
+      "small": "Small",
+      "medium": "Medium",
+      "big": "Big",
+      "winter": "Winter",
+      "summer": "Summer",
+      "under10Years": "Under 10 years old",
+      "over10Years": "Over 10 years old",
+      "front": "Front",
+      "rear": "Rear",
+      "brakePadWearIndicator": "Brake pad wear indicator",
+      "alloyRims": "Alloy rims",
+      "lowProfile": "Low profile",
+      "tpmsSensor": "TPMS sensor",
+      "runFlat": "Run-flat",
+      "largeSize": "Large size",
+      "interior": "Interior",
+      "exterior": "Exterior",
+      "windshield": "Windshield",
+      "winterTyres": "Winter",
+      "summerTyres": "Summer"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+<app-worksheet-sidebar
+  class="sidebar"
+  [worksheets]="store.worksheets()"
+  [selectedId]="worksheet()?.id ?? null"
+  [open]="sidebarOpen()"
+  (openChange)="sidebarOpen.set($event)"
+  (selectWorksheet)="select($event)"
+  (createWorksheet)="create()"
+/>
+
+<div class="work-area">
+  @for (ws of displayed(); track ws.id) {
+    <div class="work-area__content">
+      <app-worksheet-details
+        [worksheet]="ws"
+        (fieldChange)="store.update(ws.id, $event)"
+        (damageAdd)="store.addDamage(ws.id, $event)"
+        (damageRemove)="store.removeDamage(ws.id, $event)"
+      />
+
+      @for (section of store.template()?.sections ?? []; track section.id) {
+        <section class="section">
+          <h2 class="text-heading">{{ section.titleKey | translate }}</h2>
+          @for (line of section.lines; track line.id) {
+            <app-task-line
+              [line]="line"
+              [state]="lineState(ws, line.id)"
+              (stateChange)="store.updateLine(ws.id, line.id, $event)"
+            />
+          }
+        </section>
+      }
+    </div>
+  } @empty {
+    @if (store.loaded()) {
+      <p class="work-area__empty text-secondary">{{ 'worksheets.empty' | translate }}</p>
+    }
+  }
+</div>
+
+<app-transcript-panel
+  class="transcript"
+  [messages]="transcript.messages()"
+  [open]="transcriptOpen()"
+  (openChange)="transcriptOpen.set($event)"
+/>
+
+<!-- Tablet: clicking outside an open overlay panel closes it -->
+@if (sidebarOpen() || transcriptOpen()) {
+  <div class="backdrop" (click)="closeOverlays()"></div>
+}

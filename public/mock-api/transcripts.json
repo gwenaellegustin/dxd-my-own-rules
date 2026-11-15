@@ -1,0 +1,15 @@
+[
+  {
+    "id": "msg-1",
+    "userId": "user-1",
+    "text": "Work began at 7:45 a.m. on Fabrice's car",
+    "timestamp": "2026-11-06T07:55:00",
+    "worksheetId": "ws-1006"
+  },
+  {
+    "id": "msg-2",
+    "text": "“7:45 a.m.” added to the notes on Kia's last worksheet - Fabrice",
+    "timestamp": "2026-11-06T07:55:02",
+    "worksheetId": "ws-1006"
+  }
+]

@@ -1,0 +1,57 @@
+@use 'side-panel';
+
+@include side-panel.side-panel(right);
+
+.day {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+  padding: var(--space-200);
+  background: var(--color-background-secondary);
+}
+
+.day__date {
+  font-size: var(--font-size-medium);
+  font-weight: var(--font-weight-strong);
+  line-height: var(--line-height-body);
+  text-align: center;
+}
+
+.message {
+  display: flex;
+  border-radius: var(--radius-200);
+}
+
+// "AI Chat -> User message"
+.message--user {
+  flex-direction: column;
+  padding: var(--space-150) var(--space-200);
+}
+
+.message__bubble {
+  padding: var(--space-150) var(--space-200);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+}
+
+.message__time {
+  padding: 0 var(--space-100);
+  text-align: right;
+}
+
+// "AI Chat -> Chat Response"
+.message--assistant {
+  align-items: flex-start;
+  gap: var(--space-200);
+  color: var(--color-icon-default);
+
+  p {
+    flex: 1;
+    color: var(--color-text-default);
+  }
+}
+
+.empty {
+  padding: var(--space-400);
+}

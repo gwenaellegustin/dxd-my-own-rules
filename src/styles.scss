@@ -1,0 +1,308 @@
+@use 'tokens';
+
+// ---------------------------------------------------------------------------
+// Base
+// ---------------------------------------------------------------------------
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-medium);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  color: var(--color-text-default);
+  background: var(--color-background-secondary);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+:focus-visible {
+  outline: var(--stroke-focus) solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+// ---------------------------------------------------------------------------
+// Typography
+// ---------------------------------------------------------------------------
+
+.text-heading {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-heading);
+  font-weight: var(--font-weight-strong);
+  line-height: var(--line-height-heading);
+  letter-spacing: var(--letter-spacing-heading);
+}
+
+.text-subheading {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-subheading);
+  font-weight: var(--font-weight-strong);
+  line-height: var(--line-height-heading);
+}
+
+.text-strong {
+  font-weight: var(--font-weight-strong);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-small {
+  font-size: var(--font-size-small);
+}
+
+// ---------------------------------------------------------------------------
+// Form controls (Input Field, Textarea Field, Date Picker, Checkbox, Radio)
+// ---------------------------------------------------------------------------
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  min-width: 0;
+}
+
+.field__label {
+  font-size: var(--font-size-medium);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-300) var(--space-400);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  color: var(--color-text-default);
+  font-size: var(--font-size-medium);
+
+  &::placeholder {
+    color: var(--color-text-tertiary);
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-border-strong);
+    box-shadow: 0 0 0 1px var(--color-border-strong);
+  }
+}
+
+.input {
+  height: var(--control-height);
+  line-height: var(--line-height-single);
+
+  &--small {
+    width: var(--control-width-small);
+  }
+
+  &--medium {
+    width: var(--control-width-medium);
+  }
+
+  // Native date picker: keep the Figma calendar icon, hide the browser one
+  &[type='date'] {
+    position: relative;
+    padding-right: calc(var(--space-400) * 2 + var(--icon-size-small));
+    background-image: url('/icons/calendar.svg');
+    background-repeat: no-repeat;
+    background-position: right var(--space-400) center;
+    background-size: var(--icon-size-small);
+
+    &::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset: 0;
+      width: auto;
+      height: auto;
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+}
+
+// Height follows the content (see AutoGrow directive): no scrollbar, no resize handle
+.textarea {
+  display: block;
+  min-height: var(--textarea-height);
+  line-height: var(--line-height-body);
+  overflow: hidden;
+  resize: none;
+
+  &--single-line {
+    min-height: var(--control-height);
+    padding-block: var(--space-200);
+  }
+}
+
+// Checkbox & radio — "Checkbox Field" / "Radio Field" of the design system
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-100);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+
+  input {
+    appearance: none;
+    flex: none;
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
+    margin: 0;
+    display: grid;
+    place-content: center;
+    background: var(--color-background-default);
+    border: var(--stroke-border) solid var(--color-border-strong);
+    cursor: pointer;
+  }
+
+  input[type='checkbox'] {
+    border-radius: var(--radius-100);
+
+    &:checked {
+      background-color: var(--color-background-brand);
+      border-color: var(--color-background-brand);
+
+      &::after {
+        content: '';
+        width: var(--checkbox-size);
+        height: var(--checkbox-size);
+        background-color: var(--color-icon-on-brand);
+        mask: url('/icons/check.svg') center / contain no-repeat;
+      }
+    }
+  }
+
+  // Round checkbox (multi-select options inside a line, e.g. Small / Medium / Big)
+  &--round input[type='checkbox'] {
+    border-radius: var(--radius-full);
+  }
+
+  input[type='radio'] {
+    border-radius: var(--radius-full);
+
+    &:checked::after {
+      content: '';
+      width: calc(var(--checkbox-size) / 2);
+      height: calc(var(--checkbox-size) / 2);
+      border-radius: var(--radius-full);
+      background: var(--color-background-brand);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Buttons
+// ---------------------------------------------------------------------------
+
+.icon-button {
+  flex: none;
+  display: inline-grid;
+  place-content: center;
+  width: var(--control-height);
+  height: var(--control-height);
+  border-radius: var(--radius-pill);
+  color: var(--color-icon-default);
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+
+  &--primary {
+    width: calc(var(--control-height) + var(--space-100));
+    height: calc(var(--control-height) + var(--space-100));
+    background: var(--color-background-brand);
+    border: var(--stroke-border) solid var(--color-border-brand);
+    color: var(--color-icon-on-brand);
+
+    &:hover {
+      background: var(--color-background-brand-hover);
+    }
+  }
+}
+
+.button-subtle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-200);
+  padding: var(--space-300);
+  border-radius: var(--radius-200);
+  color: var(--color-text-neutral);
+  line-height: var(--line-height-single);
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+}
+
+// Leave room for the clear (cross) button of <app-clearable>
+.clearable > .input,
+.clearable > .textarea {
+  width: 100%;
+  padding-right: calc(var(--space-200) + var(--icon-size-large) + var(--space-200));
+}
+
+// Search input (pill shaped, with search icon)
+.search {
+  position: relative;
+  width: 100%;
+
+  .input {
+    border-radius: var(--radius-full);
+    padding-right: calc(var(--space-400) * 2 + var(--icon-size-small));
+  }
+
+  app-icon {
+    position: absolute;
+    right: var(--space-400);
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+}

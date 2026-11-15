@@ -1,0 +1,115 @@
+:host {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-600);
+
+  @container work-area (max-width: 760px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.fields {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-200);
+
+  @container work-area (max-width: 480px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.hours {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-200);
+
+  .field {
+    flex: 1;
+  }
+}
+
+.damage {
+  flex: none;
+  width: var(--damage-diagram-width);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+
+  @container work-area (max-width: 760px) {
+    width: 100%;
+    max-width: calc(var(--damage-diagram-width) * 1.5);
+    align-self: center;
+  }
+}
+
+.damage__diagram {
+  position: relative;
+  background: var(--color-background-default);
+
+  img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 348 / 246;
+    object-fit: cover;
+    user-select: none;
+  }
+
+  &--placing {
+    cursor: crosshair;
+  }
+}
+
+.damage__marker {
+  position: absolute;
+  display: grid;
+  place-content: center;
+  width: var(--icon-size-small);
+  height: var(--icon-size-small);
+  transform: translate(-50%, -50%);
+  color: var(--color-damage-marker);
+
+  &--bump {
+    border: var(--stroke-focus) solid var(--color-damage-marker);
+    border-radius: var(--radius-full);
+  }
+}
+
+.damage__legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-400);
+}
+
+.damage__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-100);
+  padding: 0 var(--space-100);
+  border-radius: var(--radius-100);
+  color: var(--color-text-default);
+
+  // Only the marker uses the damage color, the label keeps the text color
+  app-icon {
+    color: var(--color-damage-marker);
+  }
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+
+  &--active {
+    background: var(--color-background-tertiary);
+  }
+}
+
+.damage__bump-icon {
+  width: var(--icon-size-small);
+  height: var(--icon-size-small);
+  border: var(--stroke-focus) solid var(--color-damage-marker);
+  border-radius: var(--radius-full);
+}

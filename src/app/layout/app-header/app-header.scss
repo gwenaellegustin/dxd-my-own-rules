@@ -1,0 +1,150 @@
+@use 'breakpoints' as bp;
+
+:host {
+  position: relative;
+  z-index: var(--z-menu);
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-400);
+  height: var(--header-height);
+  padding: var(--space-400);
+  background: var(--color-background-default);
+  border-bottom: var(--stroke-border) solid var(--color-border-default);
+
+  @include bp.mobile {
+    gap: var(--space-200);
+    padding: var(--space-400) var(--space-300);
+  }
+}
+
+.logo {
+  display: inline-flex;
+  color: var(--color-icon-default);
+}
+
+.nav {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-100);
+  // On narrow screens the pills scroll horizontally instead of wrapping
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: var(--space-100) 0;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.nav__pill {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-200);
+  border-radius: var(--radius-200);
+  color: var(--color-text-default);
+  line-height: var(--line-height-single);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--transition-fast);
+
+  &:hover,
+  &--active {
+    background: var(--color-background-brand-subtle);
+  }
+}
+
+// Notification badge overlapping the top-right corner of the pill
+.nav__badge {
+  display: inline-grid;
+  place-content: center;
+  min-width: var(--badge-size);
+  height: var(--badge-size);
+  margin: calc(var(--space-200) * -1) calc(var(--space-200) * -1) 0 0;
+  align-self: flex-start;
+  padding: 0 var(--space-100);
+  border-radius: var(--radius-full);
+  background: var(--color-background-brand);
+  color: var(--color-text-on-brand);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-strong);
+  line-height: var(--line-height-single);
+}
+
+// EN | FR segmented switch
+.language {
+  flex: none;
+  display: flex;
+  padding: var(--space-050);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+}
+
+.language__option {
+  min-width: var(--avatar-size);
+  padding: var(--space-100) var(--space-200);
+  border-radius: var(--radius-100);
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-single);
+  color: var(--color-text-secondary);
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+
+  &--active,
+  &--active:hover {
+    background: var(--color-background-brand);
+    color: var(--color-text-on-brand);
+    font-weight: var(--font-weight-strong);
+  }
+}
+
+.account {
+  position: relative;
+  flex: none;
+}
+
+.account__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+  height: var(--avatar-size);
+  border-radius: var(--radius-200);
+  color: var(--color-icon-default);
+}
+
+.account__avatar {
+  display: grid;
+  place-content: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  border-radius: var(--radius-200);
+  background: var(--color-background-brand);
+  color: var(--color-text-on-brand);
+}
+
+.account__menu {
+  position: absolute;
+  top: calc(100% + var(--space-200));
+  right: 0;
+  min-width: 200px;
+  padding: var(--space-200);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  box-shadow: var(--shadow-overlay);
+}
+
+.account__name {
+  padding: var(--space-200);
+  font-weight: var(--font-weight-strong);
+}

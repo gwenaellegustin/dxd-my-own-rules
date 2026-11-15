@@ -1,0 +1,108 @@
+// ---------------------------------------------------------------------------
+// Design tokens — single source of truth for the visual language.
+//
+// The current values are a greyscale WIREFRAME taken from the Figma
+// "Simple Design System" file. To apply the final brand, only change the
+// values below: every component reads these variables, none hard-codes them.
+// ---------------------------------------------------------------------------
+
+:root {
+  // ---- Colors: backgrounds ------------------------------------------------
+  --color-background-default: #ffffff;
+  --color-background-secondary: #f5f5f5;
+  --color-background-tertiary: #d9d9d9;
+  --color-background-hover: #f5f5f5;
+  --color-background-brand: #2c2c2c;
+  --color-background-brand-hover: #1e1e1e;
+  --color-background-brand-subtle: #f5f5f5;
+
+  // Line status backgrounds (Labour / Parts / Fluids / Various lines)
+  --color-background-status-planned: #f1f6fd;
+  --color-background-status-done: #ebffee;
+
+  // ---- Colors: borders ----------------------------------------------------
+  --color-border-default: #d9d9d9;
+  --color-border-strong: #757575;
+  --color-border-brand: #2c2c2c;
+  --color-focus-ring: #2c2c2c;
+
+  // ---- Colors: text & icons -----------------------------------------------
+  --color-text-default: #1e1e1e;
+  --color-text-secondary: #757575;
+  --color-text-tertiary: #b3b3b3;
+  --color-text-neutral: #303030;
+  --color-text-on-brand: #f5f5f5;
+  --color-icon-default: #1e1e1e;
+  --color-icon-on-brand: #f5f5f5;
+
+  // Damage legend markers on the car diagram
+  --color-damage-marker: #757575;
+
+  // ---- Typography ---------------------------------------------------------
+  --font-family-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-family-heading: var(--font-family-body);
+
+  --font-size-small: 14px;
+  --font-size-medium: 16px;
+  --font-size-subheading: 20px;
+  --font-size-heading: 24px;
+
+  --font-weight-regular: 400;
+  --font-weight-strong: 600;
+
+  --line-height-single: 1;
+  --line-height-body: 1.4;
+  --line-height-heading: 1.2;
+  --letter-spacing-heading: -0.02em;
+
+  // ---- Spacing scale ------------------------------------------------------
+  --space-0: 0;
+  --space-050: 2px;
+  --space-100: 4px;
+  --space-150: 6px;
+  --space-200: 8px;
+  --space-300: 12px;
+  --space-400: 16px;
+  --space-600: 24px;
+  --space-800: 32px;
+
+  // ---- Radius -------------------------------------------------------------
+  --radius-100: 4px;
+  --radius-200: 8px;
+  --radius-pill: 32px;
+  --radius-full: 9999px;
+
+  // ---- Strokes ------------------------------------------------------------
+  --stroke-border: 1px;
+  --stroke-focus: 2px;
+
+  // ---- Sizes --------------------------------------------------------------
+  --icon-size-small: 16px;
+  --icon-size-medium: 20px;
+  --icon-size-large: 24px;
+  --icon-size-xlarge: 32px;
+
+  --control-height: 40px;
+  --control-width-small: 120px;
+  --control-width-medium: 200px;
+  --textarea-height: 80px;
+  --checkbox-size: 16px;
+  --badge-size: 20px;
+  --avatar-size: 32px;
+
+  // ---- Layout -------------------------------------------------------------
+  --header-height: 64px;
+  --panel-width: 300px; // left sidebar & transcript when open
+  --rail-width: 76px; // left sidebar & transcript when collapsed
+  --damage-diagram-width: 348px;
+
+  // ---- Elevation & motion -------------------------------------------------
+  --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.12);
+  --overlay-backdrop: rgb(0 0 0 / 0.24);
+  --transition-fast: 120ms ease;
+
+  // ---- Stacking -----------------------------------------------------------
+  --z-sticky: 10;
+  --z-overlay: 100;
+  --z-menu: 200;
+}

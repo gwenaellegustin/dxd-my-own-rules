@@ -1,0 +1,51 @@
+<a class="logo" routerLink="/worksheets" [attr.aria-label]="'app.name' | translate">
+  <app-icon name="lift" size="xlarge" />
+</a>
+
+<nav class="nav" [attr.aria-label]="'nav.label' | translate">
+  @for (item of navItems; track item.path) {
+    <a class="nav__pill" [routerLink]="item.path" routerLinkActive="nav__pill--active" ariaCurrentWhenActive="page">
+      {{ item.labelKey | translate }}
+      @if (item.badge?.(); as count) {
+        <span class="nav__badge" [attr.aria-label]="'nav.badgeCount' | translate: { count }">{{ count }}</span>
+      }
+    </a>
+  }
+</nav>
+
+<div class="language" role="group" [attr.aria-label]="'account.language' | translate">
+  @for (lang of language.languages; track lang) {
+    <button
+      type="button"
+      class="language__option"
+      [class.language__option--active]="language.current() === lang"
+      [attr.aria-pressed]="language.current() === lang"
+      [attr.aria-label]="'languages.' + lang | translate"
+      (click)="language.use(lang)"
+    >
+      {{ lang | uppercase }}
+    </button>
+  }
+</div>
+
+<div class="account">
+  <button
+    type="button"
+    class="account__trigger"
+    [attr.aria-expanded]="menuOpen()"
+    aria-haspopup="menu"
+    [attr.aria-label]="'account.menu' | translate"
+    (click)="menuOpen.set(!menuOpen())"
+  >
+    <span class="account__avatar">{{ user.initials() }}</span>
+    <app-icon name="chevron-down" size="small" />
+  </button>
+
+  @if (menuOpen()) {
+    <div class="account__menu" role="menu">
+      @if (user.currentUser(); as currentUser) {
+        <p class="account__name">{{ currentUser.firstName }} {{ currentUser.lastName }}</p>
+      }
+    </div>
+  }
+</div>

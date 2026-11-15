@@ -1,0 +1,125 @@
+{
+  "app": {
+    "name": "Garage"
+  },
+  "nav": {
+    "label": "Navigation principale",
+    "worksheet": "Fiche de travail",
+    "invoice": "Facture",
+    "clients": "Clients",
+    "shoppingList": "Liste d'achats",
+    "badgeCount": "{{count}} articles"
+  },
+  "account": {
+    "menu": "Menu du compte",
+    "language": "Langue"
+  },
+  "languages": {
+    "en": "English",
+    "fr": "Français"
+  },
+  "common": {
+    "search": "Rechercher",
+    "collapse": "Replier le panneau",
+    "other": "Autre",
+    "ellipsis": "...",
+    "km": "km",
+    "notDesignedYet": "Cette page n'a pas encore été conçue."
+  },
+  "worksheets": {
+    "title": "Fiches de travail",
+    "new": "Nouvelle fiche",
+    "untitled": "Nouvelle fiche",
+    "empty": "Aucune fiche",
+    "groups": {
+      "toBeBilled": "À facturer",
+      "invoiced": "Facturées"
+    }
+  },
+  "worksheet": {
+    "client": "Client",
+    "vehicle": "Véhicule",
+    "date": "Date",
+    "kilometers": "Kilomètres",
+    "hours": "Remarques",
+    "comments": "Observations et conseils",
+    "createInvoice": "Créer la facture"
+  },
+  "damage": {
+    "bump": "Bosse",
+    "scratch": "Rayure",
+    "impact": "Impact",
+    "remove": "Supprimer",
+    "diagramAlt": "Schéma du véhicule : choisissez un type de dégât dans la légende, puis cliquez sur le véhicule pour le marquer"
+  },
+  "line": {
+    "planned": "Prévu",
+    "done": "Fait",
+    "addNote": "Ajouter une note",
+    "note": "Note"
+  },
+  "transcript": {
+    "title": "Transcriptions",
+    "rail": "Transcription",
+    "empty": "Aucun message"
+  },
+  "template": {
+    "labour": {
+      "title": "Main d'œuvre",
+      "pickup": "Prise en charge du véhicule au domicile ou sur le lieu de travail",
+      "service": "Service",
+      "wheelChange": "Pose des roues et contrôle de la pression des pneus",
+      "tyreFitting": "Démontage + montage et équilibrage de",
+      "tyreFittingSuffix": "pneus",
+      "inspectionPreparation": "Préparation expertise (contrôle complet, réglage tension câble frein à main, réglage des feux) + lavage châssis et moteur",
+      "technicalInspection": "Présentation du véhicule au contrôle technique",
+      "brakes": "Remplacé frein",
+      "brakeCalipers": "Dégrippé étrier de frein + nettoyé et graissé, guides et appuis des plaquettes",
+      "alignment": "Contrôle et réglage de la géométrie de l'essieu + essai"
+    },
+    "parts": {
+      "title": "Pièces",
+      "drainPlugWasher": "Joint du bouchon de vidange",
+      "oilFilter": "Filtre à huile",
+      "airFilter": "Filtre à air",
+      "cabinAirFilter": "Filtre à pollen"
+    },
+    "fluids": {
+      "title": "Liquides",
+      "engineOil": "Huile moteur",
+      "engineOilPlaceholder": "...W...",
+      "engineCoolant": "Antigel moteur −35°C",
+      "washerFluid": "Lave-glace",
+      "brakeFluid": "Liquide de frein",
+      "brakeFluidPlaceholder": "DOT 4"
+    },
+    "various": {
+      "title": "Divers",
+      "smallSupplies": "Petites fournitures (spray, graisse, vis, etc.) + élimination des déchets",
+      "courtesyCar": "Véhicule de prêt",
+      "lightCleaning": "Petit lavage"
+    },
+    "options": {
+      "small": "Petit",
+      "medium": "Moyen",
+      "big": "Grand",
+      "winter": "Hiver",
+      "summer": "Été",
+      "under10Years": "Vhc - 10a",
+      "over10Years": "Vhc + 10a",
+      "front": "Avant",
+      "rear": "Arrière",
+      "brakePadWearIndicator": "Indicateur d'usure des plaquettes",
+      "interior": "Intérieur",
+      "exterior": "Extérieur",
+      "windshield": "Pare-brise",
+      "alloyRims": "Jantes alu",
+      "lowProfile": "Taille basse",
+      "tpmsSensor": "Capteur TPMS",
+      "runFlat": "RunF",
+      "largeSize": "Grande dim.",
+      "winterTyres": "D'hiver",
+      "summerTyres": "D'été"
+    }
+  }
+}

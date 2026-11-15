@@ -1,0 +1,94 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+  padding: var(--space-200) var(--space-400);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  transition: background-color var(--transition-fast);
+}
+
+:host(.line--planned) {
+  background: var(--color-background-status-planned);
+}
+
+:host(.line--done) {
+  background: var(--color-background-status-done);
+}
+
+.line__first {
+  display: flex;
+  align-items: center;
+  gap: var(--space-400);
+
+  @container work-area (max-width: 560px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-200);
+  }
+}
+
+.line__description {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-200);
+}
+
+.line__title {
+  font-weight: var(--font-weight-strong);
+}
+
+.line__options {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-200);
+}
+
+.line__date {
+  width: auto;
+  min-width: calc(var(--control-width-small) + var(--space-800));
+}
+
+.line__free-text {
+  flex: 1;
+}
+
+.line__status {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-200);
+  min-height: var(--control-height);
+}
+
+// Small dot on the pencil when a note exists but is hidden
+.line__note-toggle {
+  position: relative;
+
+  &--has-note::after {
+    content: '';
+    position: absolute;
+    top: var(--space-200);
+    right: var(--space-200);
+    width: var(--space-200);
+    height: var(--space-200);
+    border-radius: var(--radius-full);
+    background: var(--color-background-brand);
+  }
+}
+
+.line__details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-200);
+}
+
+.line__note {
+  width: 100%;
+}

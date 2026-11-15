@@ -1,0 +1,17 @@
+// Breakpoints cannot be CSS custom properties (media queries don't support them),
+// so they live here as SCSS variables. Use with: @use 'breakpoints' as bp;
+
+$mobile-max: 639px; // phones
+$tablet-max: 1199px; // tablets & small laptops: side panels overlay the work area
+
+@mixin mobile {
+  @media (max-width: $mobile-max) {
+    @content;
+  }
+}
+
+@mixin tablet-down {
+  @media (max-width: $tablet-max) {
+    @content;
+  }
+}
