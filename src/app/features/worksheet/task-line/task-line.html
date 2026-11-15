@@ -1,3 +1,5 @@
+<!-- Invoiced worksheet: every control of the line is disabled at once -->
+<fieldset class="line__lock" [disabled]="locked()">
 <div class="line__first">
   <div class="line__description">
     @if (line().titleKey; as titleKey) {
@@ -14,7 +16,7 @@
       <button
         type="button"
         class="icon-button line__note-toggle"
-        [class.line__note-toggle--hidden]="noteOpen()"
+        [class.line__note-toggle--hidden]="noteOpen() || locked()"
         [attr.aria-label]="'line.addNote' | translate"
         (click)="openNote()"
       >
@@ -25,7 +27,7 @@
       <button
         type="button"
         class="icon-button line__note-toggle"
-        [class.line__note-toggle--hidden]="!removable()"
+        [class.line__note-toggle--hidden]="!removable() || locked()"
         [attr.aria-label]="'line.remove' | translate"
         (click)="remove.emit()"
       >
@@ -143,3 +145,4 @@
     }
   }
 </ng-template>
+</fieldset>

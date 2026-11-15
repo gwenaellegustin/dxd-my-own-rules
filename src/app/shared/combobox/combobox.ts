@@ -20,6 +20,7 @@ let nextId = 0;
 export class Combobox {
   readonly value = input('');
   readonly options = input<string[]>([]);
+  readonly disabled = input(false);
   readonly valueChange = output<string>();
 
   protected readonly listId = `combobox-list-${nextId++}`;

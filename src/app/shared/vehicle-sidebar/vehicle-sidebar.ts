@@ -1,0 +1,69 @@
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Icon, IconName } from '../icon/icon';
+import { Clearable } from '../clearable/clearable';
+import { VehicleBrandService } from '../../core/services/vehicle-brand.service';
+
+/** One card of the list: a vehicle and its client (a worksheet, an invoice…) */
+export interface VehicleCard {
+  id: string;
+  vehicle: string;
+  client: string;
+  /** ISO date (yyyy-MM-dd) shown under the title, if any */
+  date: string | null;
+  /** Without a brand logo: show the vehicle on the lift (work in progress) instead of a car */
+  onLift?: boolean;
+}
+
+export interface VehicleCardGroup {
+  id: string;
+  /** Translation key of the group heading; the first group (open items) has none in the design */
+  titleKey: string | null;
+  cards: VehicleCard[];
+}
+
+/**
+ * Left side panel listing vehicle cards by group, with a search ("Left sidebar" component set
+ * of the Figma file: Default / selected card / Closed). Used for worksheets and invoices.
+ */
+@Component({
+  selector: 'app-vehicle-sidebar',
+  imports: [DatePipe, TranslatePipe, Icon, Clearable],
+  templateUrl: './vehicle-sidebar.html',
+  styleUrl: './vehicle-sidebar.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '[class.is-open]': 'open()' },
+})
+export class VehicleSidebar {
+  protected readonly brands = inject(VehicleBrandService);
+
+  readonly titleKey = input.required<string>();
+  /** Icon of the panel button (open and collapsed) */
+  readonly icon = input.required<IconName>();
+  readonly groups = input.required<VehicleCardGroup[]>();
+  readonly selectedId = input<string | null>(null);
+  readonly open = input(true);
+  /** Label of the "New…" button; no button when null */
+  readonly newLabelKey = input<string | null>(null);
+  readonly emptyKey = input.required<string>();
+  /** Shown on a card without vehicle nor client */
+  readonly untitledKey = input<string>('worksheets.untitled');
+
+  readonly selectCard = output<string>();
+  readonly create = output<void>();
+  readonly openChange = output<boolean>();
+
+  protected readonly query = signal('');
+
+  /** Groups filtered by the search; empty groups are hidden */
+  protected readonly visibleGroups = computed(() => {
+    const query = this.query().trim().toLowerCase();
+    return this.groups()
+      .map((group) => ({
+        ...group,
+        cards: group.cards.filter((card) => !query || `${card.vehicle} ${card.client}`.toLowerCase().includes(query)),
+      }))
+      .filter((group) => group.cards.length > 0);
+  });
+}

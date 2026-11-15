@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon, IconName } from '../../../shared/icon/icon';
 import { AutoGrow } from '../../../shared/auto-grow/auto-grow';
@@ -7,6 +7,7 @@ import { BulletList } from '../../../shared/bullet-list/bullet-list';
 import { Combobox } from '../../../shared/combobox/combobox';
 import { RegistrationDialog } from '../registration-dialog/registration-dialog';
 import { ClientService } from '../../../core/services/client.service';
+import { isLocked } from '../../../core/services/worksheet.store';
 import { Damage, DamageType, Worksheet } from '../../../core/models/worksheet.model';
 
 type EditableField = 'client' | 'vehicle' | 'registrationImage' | 'registrationNote' | 'date' | 'kilometers' | 'hours' | 'comments';
@@ -33,6 +34,8 @@ export class WorksheetDetails {
   readonly damageAdd = output<Damage>();
   readonly damageRemove = output<number>();
   readonly createInvoice = output<void>();
+  /** Invoiced worksheet: show its invoice */
+  readonly openInvoice = output<void>();
 
   protected readonly legend: DamageLegend[] = [
     { type: 'bump', labelKey: 'damage.bump', icon: 'damage-bump' },
@@ -42,6 +45,9 @@ export class WorksheetDetails {
 
   /** Damage type selected in the legend; clicking the diagram then places a marker */
   protected readonly activeDamage = signal<DamageType | null>(null);
+
+  /** Invoiced worksheet: read-only (its invoice can still be opened, its vehicle info viewed) */
+  protected readonly locked = computed(() => isLocked(this.worksheet()));
 
   /** Registration document (carte grise) dialog */
   protected readonly registrationOpen = signal(false);

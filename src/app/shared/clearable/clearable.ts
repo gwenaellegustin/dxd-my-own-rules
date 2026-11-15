@@ -82,7 +82,9 @@ export class Clearable implements AfterContentInit {
   }
 
   protected refresh(): void {
-    this.hasValue.set(this.field().nativeElement.value !== '');
+    // No ✕ on a field that cannot be edited
+    const field = this.field().nativeElement;
+    this.hasValue.set(field.value !== '' && !field.disabled && !field.readOnly);
   }
 
   protected clear(): void {

@@ -1,0 +1,51 @@
+<app-panels-layout #layout>
+  <app-vehicle-sidebar
+    sidebar
+    titleKey="invoices.title"
+    icon="invoice"
+    emptyKey="invoices.empty"
+    [groups]="cardGroups()"
+    [selectedId]="invoice()?.id ?? null"
+    [open]="layout.sidebarOpen()"
+    (openChange)="layout.sidebarOpen.set($event)"
+    (selectCard)="select($event)"
+  />
+
+  @if (invoice(); as inv) {
+    @if (store.company(); as company) {
+      <div class="content">
+        @let ws = worksheets.getById(inv.worksheetId);
+        <app-invoice-document
+          [invoice]="inv"
+          [worksheet]="ws"
+          [plate]="ws ? clients.plateOf(ws.client, ws.vehicle) : ''"
+          [address]="ws ? clients.byName(ws.client)?.address : undefined"
+          [company]="company"
+          [sections]="worksheets.template()?.sections ?? []"
+          (itemChange)="changeItem(inv.id, $event)"
+          (rateChange)="store.setRate(inv.id, $event)"
+          (observationChange)="worksheets.updateComments(inv.worksheetId, $event)"
+        />
+        <div class="actions no-print">
+          <button type="button" class="button" (click)="saveAsPdf(inv, ws?.client)">
+            <app-icon name="pdf" size="small" />
+            {{ 'invoice.savePdf' | translate }}
+          </button>
+          @if (inv.status === 'open') {
+            <button type="button" class="button button--primary" (click)="store.send(inv.id)">
+              <app-icon name="send" size="small" />
+              {{ 'invoice.send' | translate }}
+            </button>
+          } @else if (inv.status === 'sent') {
+            <button type="button" class="button button--primary" (click)="store.markPaid(inv.id)">
+              <app-icon name="check" size="small" />
+              {{ 'invoice.markPaid' | translate }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+  } @else if (loaded()) {
+    <p class="empty text-secondary">{{ 'invoices.empty' | translate }}</p>
+  }
+</app-panels-layout>

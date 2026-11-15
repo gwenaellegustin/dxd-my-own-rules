@@ -1,50 +1,6 @@
-@use 'breakpoints' as bp;
-
+// The page is only a wrapper: the shared layout is the element that fills the screen
 :host {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  display: flex;
-
-  // Mobile: the two collapsed rails form a toolbar above the work area
-  @include bp.mobile {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      'sidebar transcript'
-      'main main';
-  }
-}
-
-.sidebar {
-  order: 1;
-
-  @include bp.mobile {
-    grid-area: sidebar;
-  }
-}
-
-.work-area {
-  order: 2;
-  flex: 1;
-  min-width: 0;
-  overflow-y: auto;
-  background: var(--color-background-secondary);
-  // Children adapt to the space left by the side panels, not to the viewport
-  container: work-area / inline-size;
-
-  @include bp.mobile {
-    grid-area: main;
-  }
-}
-
-.transcript {
-  order: 3;
-
-  @include bp.mobile {
-    grid-area: transcript;
-  }
+  display: contents;
 }
 
 .work-area__content {
@@ -107,14 +63,12 @@
   }
 }
 
-.backdrop {
-  display: none;
-
-  @include bp.tablet-down {
-    display: block;
-    position: absolute;
-    inset: 0;
-    z-index: calc(var(--z-overlay) - 1);
-    background: var(--overlay-backdrop);
-  }
+// Invoiced worksheet: tells why nothing can be edited
+.locked-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-300) var(--space-400);
+  border-radius: var(--radius-200);
+  background: var(--color-background-tertiary);
 }

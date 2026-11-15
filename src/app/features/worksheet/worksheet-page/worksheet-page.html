@@ -1,22 +1,33 @@
-<app-worksheet-sidebar
-  class="sidebar"
-  [worksheets]="store.worksheets()"
-  [selectedId]="worksheet()?.id ?? null"
-  [open]="sidebarOpen()"
-  (openChange)="sidebarOpen.set($event)"
-  (selectWorksheet)="select($event)"
-  (createWorksheet)="create()"
-/>
+<app-panels-layout #layout>
+  <app-vehicle-sidebar
+    sidebar
+    titleKey="worksheets.title"
+    icon="tool"
+    newLabelKey="worksheets.new"
+    emptyKey="worksheets.empty"
+    [groups]="cardGroups()"
+    [selectedId]="worksheet()?.id ?? null"
+    [open]="layout.sidebarOpen()"
+    (openChange)="layout.sidebarOpen.set($event)"
+    (selectCard)="select($event)"
+    (create)="create()"
+  />
 
-<div class="work-area">
   @for (ws of displayed(); track ws.id) {
     <div class="work-area__content">
+      @if (ws.status === 'invoiced') {
+        <p class="locked-notice" role="status">
+          <app-icon name="receipt" size="small" />
+          {{ 'worksheet.lockedNotice' | translate }}
+        </p>
+      }
       <app-worksheet-details
         [worksheet]="ws"
         (fieldChange)="updateWorksheet(ws.id, $event)"
         (damageAdd)="store.addDamage(ws.id, $event)"
         (damageRemove)="store.removeDamage(ws.id, $event)"
         (createInvoice)="createInvoice(ws)"
+        (openInvoice)="openInvoice(ws)"
       />
 
       @for (section of store.template()?.sections ?? []; track section.id) {
@@ -53,6 +64,7 @@
                   [line]="line"
                   [state]="lineState(ws, key)"
                   [removable]="!!line.repeatable && !last"
+                  [locked]="ws.status === 'invoiced'"
                   (stateChange)="updateLine(ws.id, key, $event)"
                   (remove)="store.removeLine(ws.id, key)"
                 />
@@ -76,16 +88,4 @@
       <p class="work-area__empty text-secondary">{{ 'worksheets.empty' | translate }}</p>
     }
   }
-</div>
-
-<app-transcript-panel
-  class="transcript"
-  [messages]="transcript.messages()"
-  [open]="transcriptOpen()"
-  (openChange)="transcriptOpen.set($event)"
-/>
-
-<!-- Tablet: clicking outside an open overlay panel closes it -->
-@if (sidebarOpen() || transcriptOpen()) {
-  <div class="backdrop" (click)="closeOverlays()"></div>
-}
+</app-panels-layout>

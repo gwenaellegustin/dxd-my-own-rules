@@ -1,0 +1,21 @@
+{
+  "name": "AM conseils",
+  "tagline": "Qualité, confiance, amabilité",
+  "currency": "CHF",
+  "vatRate": 8.1,
+  "vatNumber": "CHE-361.969.386",
+  "paymentTermDays": 30,
+  "hourlyRates": [
+    { "id": "standard", "nameKey": "invoice.rates.standard", "price": 110 },
+    { "id": "loyalty", "nameKey": "invoice.rates.loyalty", "price": 100 }
+  ],
+  "defaultRateId": "standard",
+  "contact": {
+    "person": "Dany PETER",
+    "phone": "079/555.96.69",
+    "email": "auto.moto.conseils@gmail.com",
+    "website": "www.am-conseils.ch",
+    "workshop": "Ch. des Assenges 17a, 1142 Pampigny",
+    "office": "Ch. des Assenges 15a, 1142 Pampigny"
+  }
+}

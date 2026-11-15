@@ -12,7 +12,11 @@ export const routes: Routes = [
   },
   {
     path: 'invoices',
-    loadComponent: () => import('./features/invoice/invoice-page').then((m) => m.InvoicePage),
+    loadComponent: () => import('./features/invoice/invoice-page/invoice-page').then((m) => m.InvoicePage),
+  },
+  {
+    path: 'invoices/:id',
+    loadComponent: () => import('./features/invoice/invoice-page/invoice-page').then((m) => m.InvoicePage),
   },
   {
     path: 'clients',

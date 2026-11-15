@@ -3,6 +3,7 @@
     {
       "id": "labour",
       "titleKey": "template.labour.title",
+      "invoiceUnit": "hour",
       "lines": [
         {
           "id": "pickup",
@@ -128,6 +129,7 @@
     {
       "id": "parts",
       "titleKey": "template.parts.title",
+      "invoiceUnit": "piece",
       "lines": [
         { "id": "drainPlugWasher", "titleKey": "template.parts.drainPlugWasher" },
         { "id": "oilFilter", "titleKey": "template.parts.oilFilter" },
@@ -143,6 +145,7 @@
     {
       "id": "fluids",
       "titleKey": "template.fluids.title",
+      "invoiceUnit": "litre",
       "lines": [
         {
           "id": "engineOil",
@@ -179,6 +182,7 @@
     {
       "id": "various",
       "titleKey": "template.various.title",
+      "invoiceUnit": "flatRate",
       "lines": [
         { "id": "smallSupplies", "titleKey": "template.various.smallSupplies" },
         { "id": "courtesyCar", "titleKey": "template.various.courtesyCar" },

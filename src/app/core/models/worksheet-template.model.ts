@@ -1,3 +1,5 @@
+import { InvoiceUnit } from './invoice.model';
+
 /**
  * The worksheet template describes WHICH lines a worksheet contains
  * (Labour, Parts, Fluids, Various...). It is configuration data served by
@@ -46,6 +48,8 @@ export interface TemplateLine {
 export interface TemplateSection {
   id: string;
   titleKey: string;
+  /** How the items of this section are counted on the invoice (hours, pieces…) */
+  invoiceUnit: InvoiceUnit;
   lines: TemplateLine[];
 }
 

@@ -48,6 +48,8 @@ export class TaskLine implements OnInit {
   readonly stateChange = output<Partial<LineState>>();
   /** "Other" lines: show the delete button */
   readonly removable = input(false);
+  /** Invoiced worksheet: the line is read-only */
+  readonly locked = input(false);
   readonly remove = output<void>();
 
   private readonly injector = inject(Injector);

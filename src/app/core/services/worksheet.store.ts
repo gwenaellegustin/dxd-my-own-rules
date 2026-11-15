@@ -50,7 +50,7 @@ export class WorksheetStore {
   readonly loaded = this._loaded.asReadonly();
 
   readonly byStatus = computed(() => {
-    const groups: Record<WorksheetStatus, Worksheet[]> = { open: [], toBeBilled: [], invoiced: [] };
+    const groups: Record<WorksheetStatus, Worksheet[]> = { open: [], invoiced: [] };
     for (const worksheet of this._worksheets()) groups[worksheet.status].push(worksheet);
     return groups;
   });
@@ -94,6 +94,16 @@ export class WorksheetStore {
   update(id: string, changes: Partial<Omit<Worksheet, 'id' | 'lines'>>, options: EditOptions = {}): void {
     const typingKey = options.typing ? `${id}:${Object.keys(changes).sort()}` : undefined;
     this.patch(id, (worksheet) => ({ ...worksheet, ...changes }), typingKey);
+    // Once invoiced, the worksheet is locked: undo must not bring it back to open
+    if (changes.status === 'invoiced') this.clearHistory();
+  }
+
+  /**
+   * Observations and tips of the invoice = comments of its (invoiced) worksheet: the only field
+   * still editable, from the invoice while it is open
+   */
+  updateComments(id: string, comments: string): void {
+    this.patch(id, (worksheet) => ({ ...worksheet, comments }), undefined, { evenInvoiced: true });
   }
 
   updateLine(id: string, lineId: string, changes: Partial<LineState>, options: EditOptions = {}): void {
@@ -140,15 +150,17 @@ export class WorksheetStore {
    * plus a trailing empty one to type a new line.
    * A stored instance whose text was cleared stays in place (it is removed when its field
    * loses focus while empty, see TaskLine), so clearing never makes a line disappear.
+   * An invoiced worksheet is locked: no empty line to type a new one.
    */
   lineInstanceIds(worksheet: Worksheet, line: TemplateLine): string[] {
     if (!line.repeatable) return [line.id];
+    const locked = isLocked(worksheet);
     const index = (key: string) => (key === line.id ? 1 : Number(key.slice(line.id.length + 1)));
     const ids = Object.keys(worksheet.lines)
       .filter((key) => key === line.id || (key.startsWith(`${line.id}~`) && index(key) > 1))
       .sort((a, b) => index(a) - index(b));
-    if (ids.length === 0) return [line.id];
-    return [...ids, `${line.id}~${index(ids[ids.length - 1]) + 1}`];
+    if (ids.length === 0) return locked ? [] : [line.id];
+    return locked ? ids : [...ids, `${line.id}~${index(ids[ids.length - 1]) + 1}`];
   }
 
   /** Restores the state before the last edit */
@@ -186,8 +198,25 @@ export class WorksheetStore {
     this.undoStack.update((stack) => [...stack, this._worksheets()].slice(-HISTORY_LIMIT));
   }
 
-  private patch(id: string, fn: (worksheet: Worksheet) => Worksheet, typingKey?: string): void {
+  private clearHistory(): void {
+    this.undoStack.set([]);
+    this.redoStack.set([]);
+    this.lastEdit = null;
+  }
+
+  /** Applies an edit; an invoiced worksheet is locked (only `updateComments` may change it) */
+  private patch(
+    id: string,
+    fn: (worksheet: Worksheet) => Worksheet,
+    typingKey?: string,
+    { evenInvoiced = false } = {},
+  ): void {
+    const target = this.getById(id);
+    if (!target || (isLocked(target) && !evenInvoiced)) return;
     this.record(typingKey);
     this._worksheets.update((list) => list.map((worksheet) => (worksheet.id === id ? fn(worksheet) : worksheet)));
   }
 }
+
+/** An invoiced worksheet can no longer be edited */
+export const isLocked = (worksheet: Worksheet): boolean => worksheet.status === 'invoiced';

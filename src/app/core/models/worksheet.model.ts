@@ -1,4 +1,5 @@
-export type WorksheetStatus = 'open' | 'toBeBilled' | 'invoiced';
+/** open: work in progress → invoiced: its invoice exists (open, sent or paid) */
+export type WorksheetStatus = 'open' | 'invoiced';
 
 export type LineFieldValue = string | string[] | null;
 

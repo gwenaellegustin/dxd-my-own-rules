@@ -130,6 +130,23 @@ button {
     // Inset: drawn inside the border, so a scrolling container (dialog, panel) never clips it
     box-shadow: inset 0 0 0 1px var(--color-border-strong);
   }
+
+  // Read-only (e.g. invoiced worksheet): greyed, the text stays readable
+  &:disabled {
+    background: var(--color-background-disabled);
+    color: var(--color-text-default);
+    cursor: default;
+  }
+}
+
+// Disabled checkbox / radio: no hand cursor, dimmed box
+.choice:has(input:disabled) {
+  cursor: default;
+
+  input {
+    cursor: default;
+    opacity: var(--opacity-disabled);
+  }
 }
 
 .input {
@@ -470,4 +487,46 @@ button {
 // Dialog showing a document (registration): wider
 .dialog--wide {
   width: min(var(--dialog-width-wide), calc(100vw - var(--space-800)));
+}
+
+// ---------------------------------------------------------------------------
+// Print ("Save as PDF" on an invoice): only the work area content is printed
+// ---------------------------------------------------------------------------
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  app-header,
+  app-vehicle-sidebar,
+  app-transcript-panel,
+  .backdrop,
+  .no-print {
+    display: none !important;
+  }
+
+  // The app fills the screen and scrolls inside: let the content flow over the pages instead
+  html,
+  body,
+  app-root,
+  .app-main,
+  app-panels-layout,
+  .work-area {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: var(--color-background-default) !important;
+  }
+}
+
+// Read-only copies of form values, shown only on paper (the form controls are .no-print)
+.print-only {
+  display: none !important;
+}
+
+@media print {
+  .print-only {
+    display: revert !important;
+  }
 }

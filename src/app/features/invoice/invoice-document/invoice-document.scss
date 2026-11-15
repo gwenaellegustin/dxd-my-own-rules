@@ -1,0 +1,255 @@
+// The invoice is a "sheet of paper" centred in the work area
+.invoice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-600);
+  width: 100%;
+  max-width: var(--invoice-max-width);
+  margin-inline: auto;
+  padding: var(--space-800);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+
+  @container work-area (max-width: 560px) {
+    padding: var(--space-400);
+  }
+
+  // On paper: no frame, the page margins are enough; the status is for the app only
+  @media print {
+    max-width: none;
+    padding: 0;
+    border: 0;
+  }
+}
+
+.invoice__status {
+  @media print {
+    display: none;
+  }
+}
+
+.invoice__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-400);
+}
+
+.invoice__logo {
+  width: var(--invoice-logo-size);
+  height: var(--invoice-logo-size);
+}
+
+.invoice__client {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-200);
+  text-align: right;
+}
+
+.invoice__status {
+  padding: var(--space-100) var(--space-300);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-single);
+
+  &--open {
+    background: var(--color-background-invoice-open);
+  }
+
+  &--sent {
+    background: var(--color-background-invoice-sent);
+  }
+
+  &--paid {
+    background: var(--color-background-invoice-paid);
+  }
+}
+
+// Vehicle, plate, kilometers, rate, date: label column + value column
+.invoice__facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-200) var(--space-600);
+  margin: 0;
+
+  > div {
+    display: contents;
+  }
+
+  dt {
+    color: var(--color-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.invoice__rate {
+  height: auto;
+  padding-block: var(--space-100);
+}
+
+.invoice__address {
+  display: flex;
+  flex-direction: column;
+  font-style: normal;
+}
+
+// One table per section, columns like the paper invoice
+.items {
+  width: 100%;
+  border-collapse: collapse;
+
+  // On paper, a section is not split over two pages
+  @media print {
+    break-inside: avoid;
+  }
+
+  th,
+  td {
+    padding: var(--space-150) var(--space-200);
+    vertical-align: baseline;
+  }
+
+  th {
+    font-weight: var(--font-weight-regular);
+    border-bottom: var(--stroke-border) solid var(--color-text-default);
+  }
+
+  th.items__description {
+    font-weight: var(--font-weight-strong);
+    text-align: left;
+  }
+
+  // Narrow work area: the description takes the full row, the numbers go under it
+  @container work-area (max-width: 560px) {
+    thead th:not(.items__description) {
+      display: none;
+    }
+
+    tr {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-bottom: var(--stroke-border) solid var(--color-border-default);
+    }
+
+    td.items__description,
+    th.items__description {
+      grid-column: 1 / -1;
+    }
+
+    td.items__number {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+
+      &::before {
+        content: attr(data-label);
+        font-size: var(--font-size-small);
+        color: var(--color-text-secondary);
+      }
+    }
+  }
+}
+
+.items__description {
+  width: 100%;
+}
+
+.items__number {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.items__input {
+  width: var(--invoice-number-input-width);
+  height: auto;
+  padding: var(--space-100) var(--space-200);
+  text-align: right;
+}
+
+// Quantity input + its unit (h), kept on one line
+.items__field {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-100);
+}
+
+// Narrow work area: the inputs share the width of their column
+@container work-area (max-width: 560px) {
+  .items__field,
+  .items__input {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+// Totals aligned on the amount column
+// Row gap only: the label pads itself, so the line above "Total" is not cut between columns
+.totals {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  row-gap: var(--space-200);
+  margin: 0;
+  margin-left: auto;
+  min-width: min(100%, var(--invoice-totals-width));
+
+  // On paper, net / VAT / total stay on the same page
+  @media print {
+    break-inside: avoid;
+  }
+
+  > div {
+    display: contents;
+  }
+
+  dt,
+  dd {
+    margin: 0;
+  }
+
+  dt {
+    padding-right: var(--space-600);
+  }
+
+  dd {
+    text-align: right;
+  }
+}
+
+.totals__total {
+  dt,
+  dd {
+    padding-top: var(--space-200);
+    border-top: var(--stroke-border) solid var(--color-text-default);
+    font-weight: var(--font-weight-strong);
+  }
+}
+
+// Kept even when empty: room to write the observations and tips
+.invoice__observation {
+  display: flex;
+  gap: var(--space-400);
+  min-height: var(--invoice-observation-min-height);
+
+  @container work-area (max-width: 560px) {
+    flex-direction: column;
+    gap: var(--space-100);
+  }
+}
+
+.invoice__observation-field {
+  flex: 1;
+  min-width: 0;
+  align-self: flex-start;
+}
+
+// Bullet lines of the worksheet "Comments and tips"
+.invoice__observation-text {
+  flex: 1;
+  white-space: pre-line;
+}

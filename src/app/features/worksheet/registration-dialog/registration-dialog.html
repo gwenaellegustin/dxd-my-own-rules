@@ -24,6 +24,8 @@
             draggable="false"
           />
         </button>
+      } @else if (locked()) {
+        <p class="text-secondary">{{ 'registration.none' | translate }}</p>
       } @else {
         <!-- No document yet: drop a photo or click to choose one (kept in memory, no backend yet) -->
         <label
@@ -53,6 +55,7 @@
             class="textarea registration__note"
             appAutoGrow
             [value]="note()"
+            [disabled]="locked()"
             (input)="noteChange.emit($any($event.target).value)"
           ></textarea>
         </app-clearable>

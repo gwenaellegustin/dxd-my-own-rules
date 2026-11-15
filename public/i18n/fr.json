@@ -36,7 +36,6 @@
     "untitled": "Nouvelle fiche",
     "empty": "Aucune fiche",
     "groups": {
-      "toBeBilled": "À facturer",
       "invoiced": "Facturées"
     }
   },
@@ -47,7 +46,9 @@
     "kilometers": "Kilomètres",
     "hours": "Heures",
     "comments": "Observations et conseils",
-    "createInvoice": "Créer la facture"
+    "createInvoice": "Créer la facture",
+    "openInvoice": "Ouvrir la facture",
+    "lockedNotice": "Facturée : cette fiche de travail ne peut plus être modifiée."
   },
   "registration": {
     "open": "Infos du véhicule",
@@ -57,7 +58,8 @@
     "zoomIn": "Agrandir",
     "zoomOut": "Réduire",
     "upload": "Déposez une photo de la carte grise ici, ou cliquez pour en choisir une",
-    "uploadHint": "Prototype : la photo est gardée jusqu’au rechargement de la page"
+    "uploadHint": "Prototype : la photo est gardée jusqu’au rechargement de la page",
+    "none": "Pas de carte grise pour ce véhicule."
   },
   "damage": {
     "bump": "Bosse",
@@ -147,5 +149,52 @@
     "doneCount": "{{count}} fait(s)",
     "uncheckAll": "Tout décocher",
     "checkAll": "Tout cocher"
+  },
+  "invoices": {
+    "title": "Factures",
+    "empty": "Aucune facture pour le moment.",
+    "groups": {
+      "sent": "Envoyées",
+      "paid": "Payées"
+    }
+  },
+  "invoice": {
+    "number": "Facture N° {{number}}",
+    "status": {
+      "open": "Ouverte",
+      "sent": "Envoyée",
+      "paid": "Payée"
+    },
+    "vehicle": "Véhicule",
+    "plate": "Plaque",
+    "kilometers": "Kilomètres",
+    "hourlyRate": "Tarif horaire",
+    "date": "Date",
+    "columns": {
+      "quantity": "Quantité",
+      "price": "Prix",
+      "discount": "%Remise",
+      "amount": "Montant"
+    },
+    "units": {
+      "hour": "h",
+      "flatRate": "Forfait"
+    },
+    "rates": {
+      "standard": "Standard",
+      "loyalty": "Fidélité"
+    },
+    "totalNet": "Total net {{currency}}",
+    "vat": "TVA {{rate}}%",
+    "total": "Total",
+    "paymentTerm": "Paiement net à {{days}} jours à partir du {{date}}",
+    "paymentTermOpen": "Paiement net à {{days}} jours à partir de l'envoi",
+    "observation": "Observation et conseil",
+    "contact": "Contact",
+    "workshop": "Atelier",
+    "office": "Bureau",
+    "send": "Marquer comme envoyée",
+    "savePdf": "Enregistrer en PDF",
+    "markPaid": "Marquer comme payée"
   }
 }

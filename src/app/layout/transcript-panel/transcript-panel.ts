@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Icon } from '../../../shared/icon/icon';
-import { Clearable } from '../../../shared/clearable/clearable';
-import { TranscriptMessage } from '../../../core/models/transcript.model';
+import { Icon } from '../../shared/icon/icon';
+import { Clearable } from '../../shared/clearable/clearable';
+import { TranscriptMessage } from '../../core/models/transcript.model';
 
 interface TranscriptDay {
   date: string;

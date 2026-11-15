@@ -1,0 +1,26 @@
+// The page is only a wrapper: the shared layout is the element that fills the screen
+:host {
+  display: contents;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+  padding: var(--space-400);
+}
+
+// Under the invoice, aligned with its right edge
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-200);
+  width: 100%;
+  max-width: var(--invoice-max-width);
+  margin-inline: auto;
+}
+
+.empty {
+  padding: var(--space-400);
+}

@@ -12,11 +12,22 @@ export class ClientService {
 
   readonly clientNames = computed(() => this.clients().map((client) => client.name));
 
-  /** Vehicles of the given client, or every known vehicle when the client is unknown */
+  /** Vehicle names of the given client, or every known vehicle when the client is unknown */
   vehiclesFor(clientName: string): string[] {
-    const name = clientName.trim().toLowerCase();
-    const client = this.clients().find((c) => c.name.toLowerCase() === name);
+    const client = this.byName(clientName);
     const vehicles = client ? client.vehicles : this.clients().flatMap((c) => c.vehicles);
-    return [...new Set(vehicles)].sort((a, b) => a.localeCompare(b));
+    return [...new Set(vehicles.map((vehicle) => vehicle.name))].sort((a, b) => a.localeCompare(b));
+  }
+
+  /** Licence plate of a client's vehicle; empty when the vehicle is not known */
+  plateOf(clientName: string, vehicleName: string): string {
+    const name = vehicleName.trim().toLowerCase();
+    return this.byName(clientName)?.vehicles.find((vehicle) => vehicle.name.toLowerCase() === name)?.plate ?? '';
+  }
+
+  /** Client with this name (worksheets refer to clients by name), if known */
+  byName(clientName: string): Client | undefined {
+    const name = clientName.trim().toLowerCase();
+    return this.clients().find((client) => client.name.toLowerCase() === name);
   }
 }

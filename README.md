@@ -31,12 +31,14 @@ src/
   styles/          _tokens.scss (CSS variables), _breakpoints.scss, _side-panel.scss
   styles.scss      base styles and shared form controls
   app/
-    core/          models, API access, services (store, language, user…)
-    layout/        application header
-    shared/        icon, placeholder page
+    core/          models, API access, services (worksheet & invoice stores, language, user…)
+    layout/        application header, panels layout (left panel | work area | transcript),
+                   transcript panel (common to the whole app)
+    shared/        icon, vehicle sidebar (cards list), modal dialog, money pipe, form helpers
     features/
-      worksheet/   worksheet page: sidebar, details, task line, transcript
-      invoice/, clients/, shopping-list/   empty pages (not designed yet)
+      worksheet/   worksheet page: details, task line, carry-over & vehicle info dialogs
+      invoice/     invoice page and invoice document
+      clients/, shopping-list/   empty pages (not designed yet)
 ```
 
 ## Conventions
@@ -62,6 +64,36 @@ src/
   English is the default; the EN / FR switch (top right) changes it and the choice is remembered.
   The French texts reuse the wording of the garage's paper worksheet.
   To add a language: add `xx.json` and its code to `SUPPORTED_LANGUAGES` (`language.service.ts`).
+
+## Statuses
+
+- **Worksheet**: *open* (work in progress, car on the lift) → *invoiced* (its invoice exists).
+- **Invoice**: *open* (being prepared) → *sent* → *paid*.
+
+"Create the invoice" on a worksheet creates its open invoice from the done lines (one item per
+line, counted in the unit of its section: `invoiceUnit` in `worksheet-template.json`), marks the
+worksheet invoiced and opens the invoice.
+
+An **invoiced worksheet is read-only** (the store refuses its edits, the fields are disabled and a
+notice says why); its button becomes *Open invoice*. The only exception is *Observations and
+tips*, editable from the invoice while it is open. Invoicing clears the undo history.
+
+## Invoice page
+
+- Left panel: open invoices on top, then *Sent* and *Paid* (newest first). The transcript stays
+  on the right, as on the worksheet page.
+- The invoice follows the garage's paper invoice: vehicle, plate, kilometers, hourly rate, one
+  table per section (quantity, price, % discount, amount), net total, VAT, total (rounded to
+  5 centimes), payment term and observations.
+- Vehicle, client, kilometers and *Observations and tips* come from the worksheet (its
+  *Comments and tips*). VAT, payment term, hourly rates and contact details are in
+  `company.json`.
+- The client address and the vehicle plate come from `clients.json` (each vehicle has its plate).
+- Open invoices are editable: hourly rate (list of the rates of `company.json`; the labour lines
+  take its price), quantity, price, discount, observations. Sent and paid ones are read-only.
+- Buttons under the invoice: *Save as PDF* (always; the browser print dialog, the print styles keep
+  only the invoice and show plain values), *Mark as sent* (open: payment term from that day),
+  *Mark as paid* (sent).
 
 ## Line behaviour
 

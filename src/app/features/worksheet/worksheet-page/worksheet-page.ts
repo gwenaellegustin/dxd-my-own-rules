@@ -1,23 +1,20 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WorksheetStore } from '../../../core/services/worksheet.store';
-import { TranscriptService } from '../../../core/services/transcript.service';
+import { InvoiceStore } from '../../../core/services/invoice.store';
 import { LineState, Worksheet } from '../../../core/models/worksheet.model';
 import { TemplateSection } from '../../../core/models/worksheet-template.model';
 import { Icon } from '../../../shared/icon/icon';
-import { WorksheetSidebar } from '../worksheet-sidebar/worksheet-sidebar';
-import { TranscriptPanel } from '../transcript-panel/transcript-panel';
+import { VehicleCardGroup, VehicleSidebar } from '../../../shared/vehicle-sidebar/vehicle-sidebar';
+import { PanelsLayout } from '../../../layout/panels-layout/panels-layout';
 import { WorksheetDetails } from '../worksheet-details/worksheet-details';
 import { TaskLine } from '../task-line/task-line';
 import { CarryOverDialog, CarryOverGroup, CarryOverResult } from '../carry-over-dialog/carry-over-dialog';
 
-/** Below this width the side panels overlay the work area (see _breakpoints.scss) */
-const DESKTOP_QUERY = '(min-width: 1200px)';
-
 @Component({
   selector: 'app-worksheet-page',
-  imports: [TranslatePipe, Icon, WorksheetSidebar, TranscriptPanel, WorksheetDetails, TaskLine, CarryOverDialog],
+  imports: [TranslatePipe, Icon, PanelsLayout, VehicleSidebar, WorksheetDetails, TaskLine, CarryOverDialog],
   templateUrl: './worksheet-page.html',
   styleUrl: './worksheet-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,14 +25,12 @@ const DESKTOP_QUERY = '(min-width: 1200px)';
 export class WorksheetPage {
   private readonly router = inject(Router);
   protected readonly store = inject(WorksheetStore);
-  protected readonly transcript = inject(TranscriptService);
+  private readonly invoices = inject(InvoiceStore);
+  private readonly layout = viewChild.required(PanelsLayout);
 
   /** Route parameter `:id` (bound via withComponentInputBinding) */
   readonly id = input<string>();
 
-  private readonly isDesktop = () => matchMedia(DESKTOP_QUERY).matches;
-  protected readonly sidebarOpen = signal(this.isDesktop());
-  protected readonly transcriptOpen = signal(false);
   /** Ids of the collapsed sections (Labour, Parts…); kept when switching worksheet */
   private readonly collapsedSections = signal<ReadonlySet<string>>(new Set());
   /** Content of the "carry over" dialog; null when the dialog is closed */
@@ -48,8 +43,21 @@ export class WorksheetPage {
     return worksheet ? [worksheet] : [];
   });
 
+  /** Worksheets as cards of the left panel: open (on the lift), then invoiced */
+  protected readonly cardGroups = computed<VehicleCardGroup[]>(() => {
+    const byStatus = this.store.byStatus();
+    const cards = (worksheets: Worksheet[]) =>
+      worksheets.map(({ id, vehicle, client, date, status }) => ({ id, vehicle, client, date, onLift: status === 'open' }));
+    return [
+      { id: 'open', titleKey: null, cards: cards(byStatus.open) },
+      { id: 'invoiced', titleKey: 'worksheets.groups.invoiced', cards: cards(byStatus.invoiced) },
+    ];
+  });
+
   constructor() {
     this.store.load();
+    // Hourly rates are needed to create an invoice
+    this.invoices.load();
 
     // Without a valid id, show the first open worksheet
     effect(() => {
@@ -61,7 +69,7 @@ export class WorksheetPage {
 
   protected select(id: string): void {
     this.router.navigate(['/worksheets', id]);
-    if (!this.isDesktop()) this.sidebarOpen.set(false);
+    this.layout().closeSidebarOnSmallScreens();
   }
 
   protected create(): void {
@@ -122,14 +130,23 @@ export class WorksheetPage {
   }
 
   /**
-   * Marks the lines checked "Done" in the dialog, keeps the items to carry over to the next
-   * intervention, then opens the invoice
+   * Marks the lines checked "Done" in the dialog and keeps the items to carry over to the next
+   * intervention; then creates the open invoice of the done lines (the worksheet becomes
+   * "invoiced") and opens it
    */
   protected confirmCarryOver(worksheet: Worksheet, { carryOver, done }: CarryOverResult): void {
     for (const key of done) this.store.updateLine(worksheet.id, key, { done: true });
-    this.store.update(worksheet.id, { carryOver });
+    this.store.update(worksheet.id, { carryOver, status: 'invoiced' });
     this.carryOverGroups.set(null);
-    this.router.navigate(['/invoices']);
+    const updated = this.store.getById(worksheet.id) ?? worksheet;
+    const invoice = this.invoices.createFromWorksheet(updated, this.store.template()?.sections ?? []);
+    this.router.navigate(['/invoices', invoice.id]);
+  }
+
+  /** Invoiced worksheet: its latest invoice */
+  protected openInvoice(worksheet: Worksheet): void {
+    const invoice = this.invoices.latestFor(worksheet.id);
+    if (invoice) this.router.navigate(['/invoices', invoice.id]);
   }
 
   /** Field edits; typing in a text field is grouped into one undo step */
@@ -156,11 +173,6 @@ export class WorksheetPage {
       event.preventDefault();
       this.store.redo();
     }
-  }
-
-  protected closeOverlays(): void {
-    this.sidebarOpen.set(false);
-    this.transcriptOpen.set(false);
   }
 }
 

@@ -24,6 +24,8 @@ export class RegistrationDialog {
   /** Image URL, or null when the vehicle has no registration document yet */
   readonly image = input.required<string | null>();
   readonly note = input.required<string>();
+  /** Invoiced worksheet: view only (no upload, note read-only) */
+  readonly locked = input(false);
   readonly noteChange = output<string>();
   /** Photo chosen in the upload area, as a data URL */
   readonly imageChange = output<string>();

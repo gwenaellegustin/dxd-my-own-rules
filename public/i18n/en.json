@@ -36,7 +36,6 @@
     "untitled": "New worksheet",
     "empty": "No worksheet",
     "groups": {
-      "toBeBilled": "To be billed",
       "invoiced": "Invoiced"
     }
   },
@@ -47,7 +46,9 @@
     "kilometers": "Kilometers",
     "hours": "Hours",
     "comments": "Comments and tips",
-    "createInvoice": "Create the invoice"
+    "createInvoice": "Create the invoice",
+    "openInvoice": "Open invoice",
+    "lockedNotice": "Invoiced: this worksheet can no longer be edited."
   },
   "registration": {
     "open": "Vehicle info",
@@ -57,7 +58,8 @@
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "upload": "Drop a photo of the registration document here, or click to choose one",
-    "uploadHint": "Prototype: the photo is kept until the page is reloaded"
+    "uploadHint": "Prototype: the photo is kept until the page is reloaded",
+    "none": "No registration document for this vehicle."
   },
   "damage": {
     "bump": "Bump",
@@ -147,5 +149,52 @@
     "doneCount": "{{count}} done",
     "uncheckAll": "Uncheck all",
     "checkAll": "Check all"
+  },
+  "invoices": {
+    "title": "Invoices",
+    "empty": "No invoice yet.",
+    "groups": {
+      "sent": "Sent",
+      "paid": "Paid"
+    }
+  },
+  "invoice": {
+    "number": "Invoice No {{number}}",
+    "status": {
+      "open": "Open",
+      "sent": "Sent",
+      "paid": "Paid"
+    },
+    "vehicle": "Vehicle",
+    "plate": "Plate",
+    "kilometers": "Kilometers",
+    "hourlyRate": "Hourly rate",
+    "date": "Date",
+    "columns": {
+      "quantity": "Quantity",
+      "price": "Price",
+      "discount": "% Discount",
+      "amount": "Amount"
+    },
+    "units": {
+      "hour": "h",
+      "flatRate": "Flat rate"
+    },
+    "rates": {
+      "standard": "Standard",
+      "loyalty": "Loyalty"
+    },
+    "totalNet": "Total net {{currency}}",
+    "vat": "VAT {{rate}}%",
+    "total": "Total",
+    "paymentTerm": "Net payment within {{days}} days from {{date}}",
+    "paymentTermOpen": "Net payment within {{days}} days from the sending date",
+    "observation": "Observations and tips",
+    "contact": "Contact",
+    "workshop": "Workshop",
+    "office": "Office",
+    "send": "Mark as sent",
+    "savePdf": "Save as PDF",
+    "markPaid": "Mark as paid"
   }
 }

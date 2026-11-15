@@ -80,3 +80,8 @@
 .line__note {
   width: 100%;
 }
+
+// Wraps the whole line without changing its layout; [disabled] disables every control in it
+.line__lock {
+  display: contents;
+}

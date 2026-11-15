@@ -18,4 +18,6 @@ export const API_ENDPOINTS = {
   worksheets: 'worksheets.json',
   transcripts: 'transcripts.json',
   shoppingList: 'shopping-list.json',
+  invoices: 'invoices.json',
+  company: 'company.json',
 } as const;
