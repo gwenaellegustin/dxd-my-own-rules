@@ -36,6 +36,7 @@
       [image]="ws.registrationImage"
       [note]="ws.registrationNote"
       (noteChange)="fieldChange.emit({ registrationNote: $event })"
+      (imageChange)="fieldChange.emit({ registrationImage: $event })"
       (closed)="registrationOpen.set(false)"
     />
   }

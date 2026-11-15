@@ -53,10 +53,11 @@
     "open": "Vehicle info",
     "title": "Vehicle info",
     "imageAlt": "Photo of the vehicle registration document",
-    "none": "No registration document for this vehicle.",
     "note": "Note",
     "zoomIn": "Zoom in",
-    "zoomOut": "Zoom out"
+    "zoomOut": "Zoom out",
+    "upload": "Drop a photo of the registration document here, or click to choose one",
+    "uploadHint": "Prototype: the photo is kept until the page is reloaded"
   },
   "damage": {
     "bump": "Bump",

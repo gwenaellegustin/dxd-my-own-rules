@@ -3,16 +3,19 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { AutoGrow } from '../../../shared/auto-grow/auto-grow';
 import { Clearable } from '../../../shared/clearable/clearable';
 import { ModalDialog } from '../../../shared/modal-dialog/modal-dialog';
+import { Icon } from '../../../shared/icon/icon';
 
 /**
  * "Vehicle info": photo of the registration document (carte grise) and a note under it.
  * - The dialog fits its content; the image is limited by the window height (no scroll).
  * - Click on the image zooms in at that point; moving the mouse pans; click again zooms out.
+ * - Without a document, an area lets you drop or choose a photo. There is no backend yet: the
+ *   photo is read in the browser (data URL) and kept in the worksheet until the page is reloaded.
  * - The note is saved while typing; Escape, a click on the backdrop or "Close" closes the dialog.
  */
 @Component({
   selector: 'app-registration-dialog',
-  imports: [TranslatePipe, AutoGrow, Clearable, ModalDialog],
+  imports: [TranslatePipe, AutoGrow, Clearable, ModalDialog, Icon],
   templateUrl: './registration-dialog.html',
   styleUrl: './registration-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,13 +25,37 @@ export class RegistrationDialog {
   readonly image = input.required<string | null>();
   readonly note = input.required<string>();
   readonly noteChange = output<string>();
+  /** Photo chosen in the upload area, as a data URL */
+  readonly imageChange = output<string>();
   readonly closed = output<void>();
 
   private readonly imageRef = viewChild<ElementRef<HTMLImageElement>>('image');
 
   protected readonly zoomed = signal(false);
+  /** A file is dragged over the upload area */
+  protected readonly dragOver = signal(false);
   /** Zoom centre, as a CSS transform-origin */
   protected readonly origin = signal('50% 50%');
+
+  protected onFileChosen(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.readImage(input.files?.[0]);
+    input.value = '';
+  }
+
+  protected onDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.dragOver.set(false);
+    this.readImage(event.dataTransfer?.files[0]);
+  }
+
+  /** Fake upload: the image is read in the browser and given to the worksheet */
+  private readImage(file: File | undefined): void {
+    if (!file?.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = () => this.imageChange.emit(reader.result as string);
+    reader.readAsDataURL(file);
+  }
 
   protected toggleZoom(event: MouseEvent): void {
     // Keyboard activation (no pointer position): zoom on the centre

@@ -24,6 +24,7 @@ const MATERIAL_SYMBOLS = {
   search: 'search',
   tool: 'build',
   transcript: 'speech_to_text',
+  upload: 'add_photo_alternate',
   motorcycle: 'two_wheeler',
 } as const;
 

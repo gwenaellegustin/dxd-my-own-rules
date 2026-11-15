@@ -9,7 +9,7 @@ import { RegistrationDialog } from '../registration-dialog/registration-dialog';
 import { ClientService } from '../../../core/services/client.service';
 import { Damage, DamageType, Worksheet } from '../../../core/models/worksheet.model';
 
-type EditableField = 'client' | 'vehicle' | 'registrationNote' | 'date' | 'kilometers' | 'hours' | 'comments';
+type EditableField = 'client' | 'vehicle' | 'registrationImage' | 'registrationNote' | 'date' | 'kilometers' | 'hours' | 'comments';
 
 interface DamageLegend {
   type: DamageType;

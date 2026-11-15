@@ -74,7 +74,9 @@ src/
   section unchecks / checks all its items.
 - The button next to the vehicle opens *Vehicle info*: the registration document
   (`worksheet.registrationImage`, click to zoom, the zoom follows the mouse) and a note
-  (`worksheet.registrationNote`).
+  (`worksheet.registrationNote`). Only the Kia worksheets have a document in the mock data; for
+  the others, a photo can be dropped or chosen. There is no backend yet, so this upload is fake:
+  the photo is read in the browser and kept until the page is reloaded.
 - "Other" lines (free text) have no note; as soon as one is filled, a new empty "Other" line
   appears under it (template lines with `"repeatable": true`). In place of the note button they
   have a delete button that removes the line (not shown on the trailing empty line). Typing the

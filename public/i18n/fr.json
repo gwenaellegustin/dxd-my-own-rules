@@ -53,10 +53,11 @@
     "open": "Infos du véhicule",
     "title": "Infos du véhicule",
     "imageAlt": "Photo de la carte grise du véhicule",
-    "none": "Pas de carte grise pour ce véhicule.",
     "note": "Note",
     "zoomIn": "Agrandir",
-    "zoomOut": "Réduire"
+    "zoomOut": "Réduire",
+    "upload": "Déposez une photo de la carte grise ici, ou cliquez pour en choisir une",
+    "uploadHint": "Prototype : la photo est gardée jusqu’au rechargement de la page"
   },
   "damage": {
     "bump": "Bosse",

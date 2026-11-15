@@ -31,6 +31,38 @@
   user-select: none;
 }
 
+// Upload area shown when the vehicle has no registration document yet
+.registration__upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-200);
+  min-height: var(--registration-upload-height);
+  padding: var(--space-600);
+  border: var(--stroke-border-dashed) dashed var(--color-border-strong);
+  border-radius: var(--radius-200);
+  color: var(--color-text-default);
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+
+  &:hover,
+  &--over {
+    background: var(--color-background-hover);
+  }
+
+  // The file input is visually hidden: show the focus on the area
+  &:has(input:focus-visible) {
+    outline: var(--stroke-focus) solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  app-icon {
+    color: var(--color-icon-default);
+  }
+}
+
 // The note stays small so the document keeps the space (it scrolls inside after a few lines)
 .registration__note {
   max-height: var(--registration-note-max-height);

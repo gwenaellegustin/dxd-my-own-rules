@@ -76,6 +76,7 @@
   // ---- Strokes ------------------------------------------------------------
   --stroke-border: 1px;
   --stroke-focus: 2px;
+  --stroke-border-dashed: 2px; // drop areas (upload)
 
   // ---- Sizes --------------------------------------------------------------
   --icon-size-small: 16px;
@@ -104,6 +105,7 @@
   // paddings, margins): the image gets the rest of the window height
   --registration-chrome-height: 340px;
   --registration-image-min-height: 160px;
+  --registration-upload-height: 240px;
   --registration-note-max-height: 120px;
   --registration-zoom: 2.5;
 
