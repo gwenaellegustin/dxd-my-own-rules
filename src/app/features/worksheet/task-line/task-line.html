@@ -81,6 +81,7 @@
           [placeholder]="(field.placeholderKey ?? '') | translate"
           [attr.aria-label]="(field.placeholderKey ?? '') | translate"
           (input)="setValue(field, $any($event.target).value)"
+          (blur)="removeIfEmpty()"
         ></textarea>
       </app-clearable>
     }

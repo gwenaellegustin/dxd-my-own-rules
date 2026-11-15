@@ -5,10 +5,11 @@ import { AutoGrow } from '../../../shared/auto-grow/auto-grow';
 import { Clearable } from '../../../shared/clearable/clearable';
 import { BulletList } from '../../../shared/bullet-list/bullet-list';
 import { Combobox } from '../../../shared/combobox/combobox';
+import { RegistrationDialog } from '../registration-dialog/registration-dialog';
 import { ClientService } from '../../../core/services/client.service';
 import { Damage, DamageType, Worksheet } from '../../../core/models/worksheet.model';
 
-type EditableField = 'client' | 'vehicle' | 'date' | 'kilometers' | 'hours' | 'comments';
+type EditableField = 'client' | 'vehicle' | 'registrationNote' | 'date' | 'kilometers' | 'hours' | 'comments';
 
 interface DamageLegend {
   type: DamageType;
@@ -19,7 +20,7 @@ interface DamageLegend {
 /** Top of the work area: general information + damage diagram. */
 @Component({
   selector: 'app-worksheet-details',
-  imports: [TranslatePipe, Icon, AutoGrow, BulletList, Clearable, Combobox],
+  imports: [TranslatePipe, Icon, AutoGrow, BulletList, Clearable, Combobox, RegistrationDialog],
   templateUrl: './worksheet-details.html',
   styleUrl: './worksheet-details.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +42,9 @@ export class WorksheetDetails {
 
   /** Damage type selected in the legend; clicking the diagram then places a marker */
   protected readonly activeDamage = signal<DamageType | null>(null);
+
+  /** Registration document (carte grise) dialog */
+  protected readonly registrationOpen = signal(false);
 
   protected update(field: EditableField, event: Event): void {
     const value = (event.target as HTMLInputElement | HTMLTextAreaElement).value;

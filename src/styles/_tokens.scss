@@ -88,14 +88,24 @@
   --control-width-medium: 200px;
   --textarea-height: 80px;
   --checkbox-size: 16px;
-  --badge-size: 20px;
+  --logo-size: 40px;
+  --badge-size: 22px;
+  --badge-font-size: 12px;
   --avatar-size: 32px;
 
   // ---- Layout -------------------------------------------------------------
   --header-height: 64px;
   --panel-width: 300px; // left sidebar & transcript when open
   --rail-width: 76px; // left sidebar & transcript when collapsed
-  --damage-diagram-width: 348px;
+  --damage-diagram-width: 350px; // max width of the car damage diagram
+  --dialog-width: 600px;
+  --dialog-width-wide: 1024px; // dialogs showing a document (registration)
+  // Height of everything around the document in the Vehicle info dialog (title, note, button,
+  // paddings, margins): the image gets the rest of the window height
+  --registration-chrome-height: 340px;
+  --registration-image-min-height: 160px;
+  --registration-note-max-height: 120px;
+  --registration-zoom: 2.5;
 
   // ---- Elevation & motion -------------------------------------------------
   --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.12);

@@ -19,8 +19,16 @@
 }
 
 .logo {
+  flex: none;
   display: inline-flex;
-  color: var(--color-icon-default);
+  border-radius: var(--radius-full);
+}
+
+// Company logo (round image)
+.logo__image {
+  display: block;
+  width: var(--logo-size);
+  height: var(--logo-size);
 }
 
 .nav {
@@ -59,9 +67,11 @@
 }
 
 // Notification badge overlapping the top-right corner of the pill
+// The number is centred in the circle (2 digits still fit; it becomes a pill beyond)
 .nav__badge {
-  display: inline-grid;
-  place-content: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: var(--badge-size);
   height: var(--badge-size);
   margin: calc(var(--space-200) * -1) calc(var(--space-200) * -1) 0 0;
@@ -70,9 +80,10 @@
   border-radius: var(--radius-full);
   background: var(--color-background-brand);
   color: var(--color-text-on-brand);
-  font-size: var(--font-size-small);
+  font-size: var(--badge-font-size);
   font-weight: var(--font-weight-strong);
-  line-height: var(--line-height-single);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
 // EN | FR segmented switch

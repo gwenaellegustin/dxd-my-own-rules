@@ -27,7 +27,8 @@
     "notDesignedYet": "Cette page n'a pas encore été conçue.",
     "clear": "Effacer",
     "showOptions": "Afficher les options",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "close": "Fermer"
   },
   "worksheets": {
     "title": "Fiches de travail",
@@ -47,6 +48,15 @@
     "hours": "Heures",
     "comments": "Observations et conseils",
     "createInvoice": "Créer la facture"
+  },
+  "registration": {
+    "open": "Infos du véhicule",
+    "title": "Infos du véhicule",
+    "imageAlt": "Photo de la carte grise du véhicule",
+    "none": "Pas de carte grise pour ce véhicule.",
+    "note": "Note",
+    "zoomIn": "Agrandir",
+    "zoomOut": "Réduire"
   },
   "damage": {
     "bump": "Bosse",
@@ -132,6 +142,9 @@
   },
   "carryOver": {
     "title": "Quels éléments doivent être reportés à la prochaine intervention ?",
-    "count": "{{count}} élément(s) reporté(s)"
+    "count": "{{count}} élément(s) reporté(s)",
+    "doneCount": "{{count}} fait(s)",
+    "uncheckAll": "Tout décocher",
+    "checkAll": "Tout cocher"
   }
 }

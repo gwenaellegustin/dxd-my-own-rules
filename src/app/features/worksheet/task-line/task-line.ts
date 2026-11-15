@@ -73,6 +73,18 @@ export class TaskLine implements OnInit {
     if (this.state().note.trim() === '') this.noteOpen.set(false);
   }
 
+  /**
+   * "Other" lines: clearing the text keeps the line (and the focus), like the note field;
+   * the line is removed once the field loses focus while still empty.
+   */
+  protected removeIfEmpty(): void {
+    if (this.canHaveNote() || !this.removable()) return;
+    const empty = Object.values(this.state().values).every((value) =>
+      Array.isArray(value) ? value.length === 0 : !value,
+    );
+    if (empty) this.remove.emit();
+  }
+
   protected togglePlanned(): void {
     this.stateChange.emit({ planned: !this.state().planned });
   }
@@ -81,8 +93,11 @@ export class TaskLine implements OnInit {
     this.stateChange.emit({ done: !this.state().done });
   }
 
+  /** Typing the first character of a note marks the line as planned (it can be unchecked after) */
   protected updateNote(note: string): void {
-    this.stateChange.emit({ note });
+    const changes: Partial<LineState> = { note };
+    if (!this.state().planned && this.state().note.trim() === '' && note.trim() !== '') changes.planned = true;
+    this.stateChange.emit(changes);
   }
 
   protected value(field: LineField): LineFieldValue {

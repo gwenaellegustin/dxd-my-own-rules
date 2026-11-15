@@ -15,6 +15,7 @@ const MATERIAL_SYMBOLS = {
   'damage-impact': 'close',
   'damage-scratch': 'pen_size_2',
   note: 'maps_ugc',
+  registration: 'two_pager',
   invoice: 'receipt_long',
   'left-panel-close': 'left_panel_close',
   lift: 'car_repair',
@@ -23,6 +24,7 @@ const MATERIAL_SYMBOLS = {
   search: 'search',
   tool: 'build',
   transcript: 'speech_to_text',
+  motorcycle: 'two_wheeler',
 } as const;
 
 export type IconName = keyof typeof MATERIAL_SYMBOLS;

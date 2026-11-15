@@ -2,7 +2,7 @@
   <aside class="panel" [attr.aria-label]="'transcript.title' | translate">
     <div class="panel__head">
       <button type="button" class="panel__title" [attr.aria-expanded]="true" (click)="openChange.emit(false)">
-        <app-icon name="right-panel-close" size="large" />
+        <span class="icon-button icon-button--primary"><app-icon name="right-panel-close" /></span>
         <h2 class="text-heading">{{ 'transcript.title' | translate }}</h2>
         <span class="visually-hidden">{{ 'common.collapse' | translate }}</span>
       </button>

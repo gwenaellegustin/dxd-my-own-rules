@@ -1,59 +1,41 @@
-.dialog {
-  width: min(520px, calc(100vw - var(--space-800)));
-  max-height: calc(100dvh - var(--space-800));
-  padding: 0;
-  border: var(--stroke-border) solid var(--color-border-default);
-  border-radius: var(--radius-200);
-  background: var(--color-background-default);
-  color: var(--color-text-default);
-  box-shadow: var(--shadow-overlay);
+// One item: "carry over" checkbox + label on the left, "Done" on the right
+.carry-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-400);
+}
 
-  &::backdrop {
-    background: var(--overlay-backdrop);
+.carry-item__label {
+  flex: 1;
+  min-width: 0;
+}
+
+// Done items are not carried over: their label is dimmed
+.carry-item--done .carry-item__label {
+  color: var(--color-text-secondary);
+  cursor: default;
+
+  input {
+    cursor: default;
+    opacity: 0.5;
   }
 }
 
-.dialog__box {
+// Section title with its "Uncheck all" / "Check all" link next to it
+.carry-group__head {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-400);
-  max-height: inherit;
-  padding: var(--space-600);
+  align-items: baseline;
+  gap: var(--space-300);
 }
 
-.dialog__body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-400);
-  min-height: 0;
-  overflow-y: auto;
-}
-
-.dialog__group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-200);
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.dialog__legend {
-  padding: 0;
-  margin-bottom: var(--space-200);
-  font-weight: var(--font-weight-strong);
-}
-
-.dialog__actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-200);
-  padding-top: var(--space-400);
-  border-top: var(--stroke-border) solid var(--color-border-default);
-}
-
-.dialog__count {
-  flex: 1;
+.carry-group__toggle {
   font-size: var(--font-size-small);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
+  text-decoration: underline;
+
+  &:hover {
+    color: var(--color-text-default);
+  }
 }

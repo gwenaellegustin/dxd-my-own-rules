@@ -3,7 +3,7 @@
     <div class="panel__head">
       <button type="button" class="panel__title" [attr.aria-expanded]="true" (click)="openChange.emit(false)">
         <h2 class="text-heading">{{ 'worksheets.title' | translate }}</h2>
-        <app-icon name="left-panel-close" size="large" />
+        <span class="icon-button icon-button--primary"><app-icon name="left-panel-close" /></span>
         <span class="visually-hidden">{{ 'common.collapse' | translate }}</span>
       </button>
 
@@ -42,11 +42,16 @@
               [attr.aria-current]="worksheet.id === selectedId() ? 'true' : null"
               (click)="selectWorksheet.emit(worksheet.id)"
             >
-              <!-- Known brand: its logo. Otherwise a car, on the lift while the worksheet is open -->
-              @if (brands.brandOf(worksheet.vehicle); as brand) {
-                <span class="card__logo" aria-hidden="true" [style.mask-image]="'url(' + brand.logo + ')'"></span>
+              <!-- Brand logo when known. Otherwise the vehicle on the lift while the worksheet is
+                   open, else a car or a motorcycle (brand "kind") -->
+              @let brand = brands.brandOf(worksheet.vehicle);
+              @if (brand?.logo; as logo) {
+                <span class="card__logo" aria-hidden="true" [style.mask-image]="'url(' + logo + ')'"></span>
               } @else {
-                <app-icon [name]="worksheet.status === 'open' ? 'lift' : 'car'" size="xlarge" />
+                <app-icon
+                  [name]="worksheet.status === 'open' ? 'lift' : brand?.kind === 'motorcycle' ? 'motorcycle' : 'car'"
+                  size="xlarge"
+                />
               }
               <span class="card__body">
                 <span class="card__title">

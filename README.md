@@ -24,7 +24,9 @@ Asset URLs must stay relative (no leading `/`) because the site is served from a
 public/
   i18n/            en.json, fr.json — every UI text (translation keys)
   mock-api/        JSON files standing in for the backend
-  images/          car damage diagram exported from Figma
+  favicon.png      browser tab icon (64px, from the AW conseils logo)
+  images/          logo.png (header), car damage diagram exported from Figma,
+                   registration/ (vehicle registration documents)
 src/
   styles/          _tokens.scss (CSS variables), _breakpoints.scss, _side-panel.scss
   styles.scss      base styles and shared form controls
@@ -50,7 +52,9 @@ src/
 - **Brand logos** (`public/images/brands/`) come from [Simple Icons](https://simpleicons.org) and are
   listed in `mock-api/vehicle-brands.json` (with aliases, e.g. "vw" → Volkswagen). A worksheet card
   shows the logo when its vehicle matches a brand, otherwise the status icon. Logos are trademarks
-  of their owners.
+  of their owners. The Triumph logo is not in Simple Icons: it comes from
+  [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Logo_Triumph.svg) (public domain).
+  A brand without a logo can set `"kind": "motorcycle"` to show a motorcycle instead of a car.
 - **No hard-coded data** — everything comes from `public/mock-api/*.json` through `ApiService`.
   Point `API_BASE_URL` (`core/api/api.config.ts`) to the real backend when it exists.
   The worksheet content (sections, lines, options) is described in `worksheet-template.json`.
@@ -63,14 +67,25 @@ src/
 
 - The note button opens the note field; it is hidden while the field is shown.
 - An empty note field closes when you click outside it.
+- Typing the first character of a note checks *Planned* (it can be unchecked afterwards).
 - "Create the invoice" first lists the lines planned but not done, all checked: the checked ones
   are kept in `worksheet.carryOver` for the next intervention, then the invoice page opens.
+  Each item can also be marked *Done* (it is then not carried over), and a link under each
+  section unchecks / checks all its items.
+- The button next to the vehicle opens *Vehicle info*: the registration document
+  (`worksheet.registrationImage`, click to zoom, the zoom follows the mouse) and a note
+  (`worksheet.registrationNote`).
 - "Other" lines (free text) have no note; as soon as one is filled, a new empty "Other" line
   appears under it (template lines with `"repeatable": true`). In place of the note button they
   have a delete button that removes the line (not shown on the trailing empty line). Typing the
   first character in an empty "Other" line checks *Planned* (it can be unchecked afterwards).
+  Like the note, the ✕ empties the line but keeps it; an emptied line is removed when you click
+  outside it.
 - *Planned* and *Done* toggle independently; the note stays visible.
 - Radio groups hold 0 or 1 value: clicking the selected option clears it.
+- **Ctrl+Z** undoes the last edit on the worksheet (text, checkbox, radio, damage mark, added or
+  removed line), **Ctrl+Y** / **Ctrl+Shift+Z** redoes it. Typing in one field is one undo step
+  (a pause of 1 s starts a new one). History is kept in `WorksheetStore`.
 - Background: white (not planned) → blue (planned) → green (done).
 
 ## Responsive

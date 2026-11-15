@@ -10,14 +10,35 @@
     />
   </label>
 
-  <label class="field">
-    <span class="field__label">{{ 'worksheet.vehicle' | translate }}</span>
-    <app-combobox
-      [value]="ws.vehicle"
-      [options]="clients.vehiclesFor(ws.client)"
-      (valueChange)="fieldChange.emit({ vehicle: $event })"
+  <div class="field-row">
+    <label class="field">
+      <span class="field__label">{{ 'worksheet.vehicle' | translate }}</span>
+      <app-combobox
+        [value]="ws.vehicle"
+        [options]="clients.vehiclesFor(ws.client)"
+        (valueChange)="fieldChange.emit({ vehicle: $event })"
+      />
+    </label>
+    <button
+      type="button"
+      class="icon-button icon-button--primary registration-button"
+      aria-haspopup="dialog"
+      [attr.aria-label]="'registration.open' | translate"
+      [attr.title]="'registration.open' | translate"
+      (click)="registrationOpen.set(true)"
+    >
+      <app-icon name="registration" />
+    </button>
+  </div>
+
+  @if (registrationOpen()) {
+    <app-registration-dialog
+      [image]="ws.registrationImage"
+      [note]="ws.registrationNote"
+      (noteChange)="fieldChange.emit({ registrationNote: $event })"
+      (closed)="registrationOpen.set(false)"
     />
-  </label>
+  }
 
   <label class="field">
     <span class="field__label">{{ 'worksheet.date' | translate }}</span>
@@ -34,7 +55,7 @@
     </app-clearable>
   </label>
 
-  <div class="hours">
+  <div class="field-row hours">
     <label class="field">
       <span class="field__label">{{ 'worksheet.hours' | translate }}</span>
       <app-clearable>

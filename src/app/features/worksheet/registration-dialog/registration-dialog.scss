@@ -1,0 +1,42 @@
+// The dialog fits its content (no blank space on narrow screens) and never exceeds the window:
+// the document is limited by the width, or by the height left once the title, the note and the
+// button are placed (--registration-chrome-height), so there is no scroll.
+.registration__viewer {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-100);
+  cursor: zoom-in;
+
+  &--zoomed {
+    cursor: zoom-out;
+
+    .registration__image {
+      transform: scale(var(--registration-zoom));
+    }
+  }
+}
+
+.registration__image {
+  display: block;
+  max-width: 100%;
+  max-height: max(
+    var(--registration-image-min-height),
+    calc(100dvh - var(--registration-chrome-height))
+  );
+  object-fit: contain;
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-100);
+  transition: transform var(--transition-fast);
+  user-select: none;
+}
+
+// The note stays small so the document keeps the space (it scrolls inside after a few lines)
+.registration__note {
+  max-height: var(--registration-note-max-height);
+  overflow-y: auto;
+}
+
+.dialog__actions--end {
+  justify-content: flex-end;
+}

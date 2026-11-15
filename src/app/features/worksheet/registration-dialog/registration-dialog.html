@@ -1,0 +1,57 @@
+<dialog
+  #dialog
+  class="dialog dialog--wide"
+  aria-labelledby="registration-title"
+  (cancel)="$event.preventDefault(); closed.emit()"
+  (click)="onDialogClick($event)"
+>
+  <div class="dialog__box">
+    <h2 id="registration-title" class="text-subheading">{{ 'registration.title' | translate }}</h2>
+
+    <div class="dialog__body registration">
+      @if (image(); as src) {
+        <!-- Click zooms in where you click, the zoomed image follows the mouse; click again to zoom out -->
+        <button
+          type="button"
+          class="registration__viewer"
+          [class.registration__viewer--zoomed]="zoomed()"
+          [attr.aria-pressed]="zoomed()"
+          [attr.aria-label]="(zoomed() ? 'registration.zoomOut' : 'registration.zoomIn') | translate"
+          [attr.title]="(zoomed() ? 'registration.zoomOut' : 'registration.zoomIn') | translate"
+          (click)="toggleZoom($event)"
+          (mousemove)="pan($event)"
+        >
+          <img
+            #image
+            class="registration__image"
+            [src]="src"
+            [alt]="'registration.imageAlt' | translate"
+            [style.transform-origin]="origin()"
+            draggable="false"
+          />
+        </button>
+      } @else {
+        <p class="registration__empty text-secondary">{{ 'registration.none' | translate }}</p>
+      }
+
+      <label class="field">
+        <span class="field__label">{{ 'registration.note' | translate }}</span>
+        <app-clearable>
+          <textarea
+            #clearTarget
+            class="textarea registration__note"
+            appAutoGrow
+            [value]="note()"
+            (input)="noteChange.emit($any($event.target).value)"
+          ></textarea>
+        </app-clearable>
+      </label>
+    </div>
+
+    <div class="dialog__actions dialog__actions--end">
+      <button type="button" class="button button--primary" (click)="closed.emit()">
+        {{ 'common.close' | translate }}
+      </button>
+    </div>
+  </div>
+</dialog>

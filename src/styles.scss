@@ -127,7 +127,8 @@ button {
   &:focus-visible {
     outline: none;
     border-color: var(--color-border-strong);
-    box-shadow: 0 0 0 1px var(--color-border-strong);
+    // Inset: drawn inside the border, so a scrolling container (dialog, panel) never clips it
+    box-shadow: inset 0 0 0 1px var(--color-border-strong);
   }
 }
 
@@ -375,7 +376,7 @@ button {
   width: calc(var(--control-width-medium) + var(--icon-size-large));
 }
 
-// Search input (pill shaped, with search icon; the clear button sits left of it)
+// Search input (pill shaped): search icon on the left, clear button on the right
 .search {
   position: relative;
   width: 100%;
@@ -387,11 +388,7 @@ button {
   .input {
     width: 100%;
     border-radius: var(--radius-full);
-    padding-right: calc(var(--space-400) * 2 + var(--icon-size-small) + var(--icon-size-large));
-  }
-
-  .clearable__button {
-    right: calc(var(--space-400) + var(--icon-size-small) + var(--space-100));
+    padding-left: calc(var(--space-400) + var(--icon-size-small) + var(--space-200));
   }
 
   // Native clear button replaced by <app-clearable>
@@ -401,9 +398,76 @@ button {
 
   > app-icon {
     position: absolute;
-    right: var(--space-400);
+    left: var(--space-400);
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
   }
+}
+
+// ---------------------------------------------------------------------------
+// Dialog (native <dialog> opened with showModal())
+// ---------------------------------------------------------------------------
+
+.dialog {
+  width: min(var(--dialog-width), calc(100vw - var(--space-800)));
+  max-height: calc(100dvh - var(--space-800));
+  padding: 0;
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  background: var(--color-background-default);
+  color: var(--color-text-default);
+  box-shadow: var(--shadow-overlay);
+
+  &::backdrop {
+    background: var(--overlay-backdrop);
+  }
+}
+
+.dialog__box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+  max-height: inherit;
+  padding: var(--space-600);
+}
+
+.dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.dialog__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.dialog__legend {
+  padding: 0;
+  margin-bottom: var(--space-200);
+  font-weight: var(--font-weight-strong);
+}
+
+.dialog__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-200);
+}
+
+.dialog__count {
+  flex: 1;
+  font-size: var(--font-size-small);
+}
+
+// Dialog showing a document (registration): wider
+.dialog--wide {
+  width: min(var(--dialog-width-wide), calc(100vw - var(--space-800)));
 }

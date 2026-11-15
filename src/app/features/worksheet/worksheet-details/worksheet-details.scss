@@ -21,8 +21,10 @@
   }
 }
 
-// Label stays aligned with its row neighbour; the invoice button sits at the bottom
-.hours {
+// Field + icon button (vehicle → registration, hours → invoice): the label stays aligned with
+// its row neighbour; the button sits at the top of the field, centred on its first row
+// (label height + label gap, minus half the extra size of the primary button)
+.field-row {
   display: flex;
   align-items: flex-start;
   gap: var(--space-200);
@@ -33,7 +35,7 @@
   }
 
   .icon-button {
-    align-self: flex-end;
+    margin-top: calc(var(--font-size-medium) * var(--line-height-body) + var(--space-200) - var(--space-100) / 2);
   }
 }
 
@@ -47,7 +49,7 @@
 
   @container work-area (max-width: 760px) {
     width: 100%;
-    max-width: calc(var(--damage-diagram-width) * 1.5);
+    max-width: var(--damage-diagram-width);
     align-self: center;
   }
 }

@@ -1,10 +1,59 @@
 [
-  { "id": "client-1", "name": "Fabrice Favre", "vehicles": ["Kia"] },
-  { "id": "client-2", "name": "Corentin Despont", "vehicles": ["Ducati"] },
-  { "id": "client-3", "name": "Mr Morard", "vehicles": ["Peugeot"] },
-  { "id": "client-4", "name": "Patrice Petit", "vehicles": ["VW"] },
-  { "id": "client-5", "name": "Gwen Gustin", "vehicles": ["Honda"] },
-  { "id": "client-6", "name": "Matthieu Berclaz", "vehicles": ["Bus"] },
-  { "id": "client-7", "name": "Mrs Jacquet", "vehicles": ["Toyota"] },
-  { "id": "client-8", "name": "Mr Jacquet", "vehicles": ["Audi"] }
+  {
+    "id": "client-1",
+    "name": "Fabrice Favre",
+    "vehicles": [
+      "Kia Ceed 1.5 T-GDi"
+    ]
+  },
+  {
+    "id": "client-2",
+    "name": "Corentin Despont",
+    "vehicles": [
+      "Ducati Monster 937"
+    ]
+  },
+  {
+    "id": "client-3",
+    "name": "Mr Morard",
+    "vehicles": [
+      "Peugeot 308 SW"
+    ]
+  },
+  {
+    "id": "client-4",
+    "name": "Patrice Petit",
+    "vehicles": [
+      "VW Golf 8 Variant"
+    ]
+  },
+  {
+    "id": "client-5",
+    "name": "Gwen Gustin",
+    "vehicles": [
+      "Honda CB650R"
+    ]
+  },
+  {
+    "id": "client-6",
+    "name": "Matthieu Berclaz",
+    "vehicles": [
+      "Bus",
+      "Triumph Street Triple RS"
+    ]
+  },
+  {
+    "id": "client-7",
+    "name": "Mrs Jacquet",
+    "vehicles": [
+      "Toyota Yaris Hybrid"
+    ]
+  },
+  {
+    "id": "client-8",
+    "name": "Mr Jacquet",
+    "vehicles": [
+      "Audi A4 Avant"
+    ]
+  }
 ]

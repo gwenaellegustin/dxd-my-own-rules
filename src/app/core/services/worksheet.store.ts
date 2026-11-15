@@ -15,7 +15,15 @@ import {
  * Holds the worksheets and the worksheet template in memory.
  * Edits are kept client-side for the prototype; replace the `update*`
  * methods with API calls once a backend exists.
+ *
+ * Every edit is recorded for undo / redo (Ctrl+Z / Ctrl+Y, see WorksheetPage).
+ * Typing in one field is grouped into one step, like in a text editor.
  */
+/** Edits kept in the undo history */
+const HISTORY_LIMIT = 100;
+/** Keystrokes in the same field closer than this make one undo step */
+const TYPING_GROUP_MS = 1000;
+
 @Injectable({ providedIn: 'root' })
 export class WorksheetStore {
   private readonly api = inject(ApiService);
@@ -24,7 +32,15 @@ export class WorksheetStore {
   private readonly _template = signal<WorksheetTemplate | null>(null);
   private readonly _loaded = signal(false);
 
+  /** Previous states of the worksheet list (immutable snapshots), most recent last */
+  private readonly undoStack = signal<Worksheet[][]>([]);
+  private readonly redoStack = signal<Worksheet[][]>([]);
+  /** Last recorded edit, to group typing: field key + time */
+  private lastEdit: { key: string; time: number } | null = null;
+
   readonly worksheets = this._worksheets.asReadonly();
+  readonly canUndo = computed(() => this.undoStack().length > 0);
+  readonly canRedo = computed(() => this.redoStack().length > 0);
   readonly template = this._template.asReadonly();
   readonly loaded = this._loaded.asReadonly();
 
@@ -56,6 +72,8 @@ export class WorksheetStore {
       status: 'open',
       client: '',
       vehicle: '',
+      registrationImage: null,
+      registrationNote: '',
       date: new Date().toISOString().slice(0, 10),
       kilometers: '',
       hours: '',
@@ -63,22 +81,27 @@ export class WorksheetStore {
       damages: [],
       lines: {},
     };
+    this.record('create');
     this._worksheets.update((list) => [worksheet, ...list]);
     return worksheet;
   }
 
   update(id: string, changes: Partial<Omit<Worksheet, 'id' | 'lines'>>): void {
-    this.patch(id, (worksheet) => ({ ...worksheet, ...changes }));
+    this.patch(id, (worksheet) => ({ ...worksheet, ...changes }), `${id}:${Object.keys(changes).sort()}`);
   }
 
   updateLine(id: string, lineId: string, changes: Partial<LineState>): void {
-    this.patch(id, (worksheet) => ({
-      ...worksheet,
-      lines: {
-        ...worksheet.lines,
-        [lineId]: { ...this.lineState(worksheet, lineId), ...changes },
-      },
-    }));
+    this.patch(
+      id,
+      (worksheet) => ({
+        ...worksheet,
+        lines: {
+          ...worksheet.lines,
+          [lineId]: { ...this.lineState(worksheet, lineId), ...changes },
+        },
+      }),
+      `${id}:${lineId}:${Object.keys(changes).sort()}`,
+    );
   }
 
   /** Removes a line instance (repeatable "Other" lines) */
@@ -107,7 +130,9 @@ export class WorksheetStore {
   /**
    * State keys under which a template line is displayed.
    * A repeatable line ("Other") shows every stored instance (`id`, `id~2`, `id~3`…)
-   * plus a new empty one as soon as the last instance has a value.
+   * plus a trailing empty one to type a new line.
+   * A stored instance whose text was cleared stays in place (it is removed when its field
+   * loses focus while empty, see TaskLine), so clearing never makes a line disappear.
    */
   lineInstanceIds(worksheet: Worksheet, line: TemplateLine): string[] {
     if (!line.repeatable) return [line.id];
@@ -116,14 +141,53 @@ export class WorksheetStore {
       .filter((key) => key === line.id || (key.startsWith(`${line.id}~`) && index(key) > 1))
       .sort((a, b) => index(a) - index(b));
     if (ids.length === 0) return [line.id];
-    const last = ids[ids.length - 1];
-    const lastFilled = Object.values(this.lineState(worksheet, last).values).some((value) =>
-      Array.isArray(value) ? value.length > 0 : !!value,
-    );
-    return lastFilled ? [...ids, `${line.id}~${index(last) + 1}`] : ids;
+    return [...ids, `${line.id}~${index(ids[ids.length - 1]) + 1}`];
   }
 
-  private patch(id: string, fn: (worksheet: Worksheet) => Worksheet): void {
+  /** Restores the state before the last edit */
+  undo(): void {
+    const previous = this.undoStack().at(-1);
+    if (!previous) return;
+    this.undoStack.update((stack) => stack.slice(0, -1));
+    this.redoStack.update((stack) => [...stack, this._worksheets()]);
+    this._worksheets.set(previous);
+    this.lastEdit = null;
+  }
+
+  /** Re-applies the last undone edit */
+  redo(): void {
+    const next = this.redoStack().at(-1);
+    if (!next) return;
+    this.redoStack.update((stack) => stack.slice(0, -1));
+    this.undoStack.update((stack) => [...stack, this._worksheets()]);
+    this._worksheets.set(next);
+    this.lastEdit = null;
+  }
+
+  /**
+   * Saves the current state before an edit.
+   * Typing in a text field (same field, keystrokes close together) extends the current step
+   * instead of adding one per character; clicks (checkbox, radio, button) are always one step.
+   */
+  private record(key: string): void {
+    const now = Date.now();
+    const typing = isTyping();
+    const sameTyping = typing && this.lastEdit?.key === key && now - this.lastEdit.time < TYPING_GROUP_MS;
+    this.lastEdit = typing ? { key, time: now } : null;
+    this.redoStack.set([]);
+    if (sameTyping) return;
+    this.undoStack.update((stack) => [...stack, this._worksheets()].slice(-HISTORY_LIMIT));
+  }
+
+  private patch(id: string, fn: (worksheet: Worksheet) => Worksheet, key = 'edit'): void {
+    this.record(key);
     this._worksheets.update((list) => list.map((worksheet) => (worksheet.id === id ? fn(worksheet) : worksheet)));
   }
+}
+
+/** True when the edit comes from typing in a text field (not a checkbox / radio / button) */
+function isTyping(): boolean {
+  const element = document.activeElement;
+  if (element instanceof HTMLTextAreaElement) return true;
+  return element instanceof HTMLInputElement && !['checkbox', 'radio', 'button', 'submit'].includes(element.type);
 }

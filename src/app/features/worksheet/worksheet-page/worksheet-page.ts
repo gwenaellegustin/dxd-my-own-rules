@@ -10,7 +10,7 @@ import { WorksheetSidebar } from '../worksheet-sidebar/worksheet-sidebar';
 import { TranscriptPanel } from '../transcript-panel/transcript-panel';
 import { WorksheetDetails } from '../worksheet-details/worksheet-details';
 import { TaskLine } from '../task-line/task-line';
-import { CarryOverDialog, CarryOverGroup } from '../carry-over-dialog/carry-over-dialog';
+import { CarryOverDialog, CarryOverGroup, CarryOverResult } from '../carry-over-dialog/carry-over-dialog';
 
 /** Below this width the side panels overlay the work area (see _breakpoints.scss) */
 const DESKTOP_QUERY = '(min-width: 1200px)';
@@ -21,6 +21,9 @@ const DESKTOP_QUERY = '(min-width: 1200px)';
   templateUrl: './worksheet-page.html',
   styleUrl: './worksheet-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:keydown)': 'onKeydown($event)',
+  },
 })
 export class WorksheetPage {
   private readonly router = inject(Router);
@@ -115,14 +118,35 @@ export class WorksheetPage {
       .filter((group) => group.items.length > 0);
 
     if (groups.length) this.carryOverGroups.set(groups);
-    else this.confirmCarryOver(worksheet, []);
+    else this.confirmCarryOver(worksheet, { carryOver: [], done: [] });
   }
 
-  /** Keeps the items to carry over to the next intervention, then opens the invoice */
-  protected confirmCarryOver(worksheet: Worksheet, keys: string[]): void {
-    this.store.update(worksheet.id, { carryOver: keys });
+  /**
+   * Marks the lines checked "Done" in the dialog, keeps the items to carry over to the next
+   * intervention, then opens the invoice
+   */
+  protected confirmCarryOver(worksheet: Worksheet, { carryOver, done }: CarryOverResult): void {
+    for (const key of done) this.store.updateLine(worksheet.id, key, { done: true });
+    this.store.update(worksheet.id, { carryOver });
     this.carryOverGroups.set(null);
     this.router.navigate(['/invoices']);
+  }
+
+  /**
+   * Ctrl+Z undoes the last edit (text, checkbox, radio, damage mark, added / removed line),
+   * Ctrl+Y or Ctrl+Shift+Z redoes it (Cmd on macOS). The browser's own undo of text fields is
+   * replaced, so the fields and the worksheet data always stay in sync.
+   */
+  protected onKeydown(event: KeyboardEvent): void {
+    if (!(event.ctrlKey || event.metaKey) || event.altKey) return;
+    const key = event.key.toLowerCase();
+    if (key === 'z' && !event.shiftKey) {
+      event.preventDefault();
+      this.store.undo();
+    } else if (key === 'y' || (key === 'z' && event.shiftKey)) {
+      event.preventDefault();
+      this.store.redo();
+    }
   }
 
   protected closeOverlays(): void {
