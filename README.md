@@ -11,13 +11,20 @@ npm start          # http://localhost:4200
 npm run build      # production build in dist/
 ```
 
+## Deployment
+
+Every push on `main` builds the app and publishes it on GitHub Pages
+(`.github/workflows/deploy.yml`): https://gwenaellegustin.github.io/dxd-my-own-rules/
+
+Asset URLs must stay relative (no leading `/`) because the site is served from a sub-path.
+
 ## Project structure
 
 ```
 public/
   i18n/            en.json, fr.json — every UI text (translation keys)
   mock-api/        JSON files standing in for the backend
-  icons/, images/  assets exported from Figma
+  images/          car damage diagram exported from Figma
 src/
   styles/          _tokens.scss (CSS variables), _breakpoints.scss, _side-panel.scss
   styles.scss      base styles and shared form controls
@@ -38,7 +45,8 @@ src/
 - **Form helpers** (`src/app/shared/`): `<app-clearable>` adds a ✕ reset button to a text field,
   `<app-combobox>` is a select that also accepts free text (client / vehicle, suggestions from
   `clients.json`), `appAutoGrow` makes a textarea grow with its content.
-- **Icons** are rendered as CSS masks (`<app-icon name="…">`) and take the current text color.
+- **Icons** are [Google Material Symbols](https://fonts.google.com/icons) (`<app-icon name="…">`) and take the
+  current text color. To add one, map it in `shared/icon/icon.ts` and add it to `icon_names` in `index.html`.
 - **No hard-coded data** — everything comes from `public/mock-api/*.json` through `ApiService`.
   Point `API_BASE_URL` (`core/api/api.config.ts`) to the real backend when it exists.
   The worksheet content (sections, lines, options) is described in `worksheet-template.json`.

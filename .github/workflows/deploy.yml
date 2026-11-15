@@ -1,0 +1,52 @@
+# Builds the Angular app and publishes it on GitHub Pages at every push on main.
+# Repository settings → Pages → Build and deployment → Source must be "GitHub Actions".
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time; a newer push cancels the pending one
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # The site is served from https://<user>.github.io/<repository>/
+      - run: npx ng build --base-href "/${{ github.event.repository.name }}/"
+
+      # GitHub Pages has no SPA fallback: serve index.html for unknown URLs
+      # so deep links such as /worksheets/ws-1006 work on refresh
+      - run: cp dist/garage/browser/index.html dist/garage/browser/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/garage/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

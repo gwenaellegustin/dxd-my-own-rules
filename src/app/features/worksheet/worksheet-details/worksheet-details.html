@@ -21,7 +21,10 @@
 
   <label class="field">
     <span class="field__label">{{ 'worksheet.date' | translate }}</span>
-    <input class="input" type="date" [value]="ws.date ?? ''" (change)="update('date', $event)" />
+    <span class="date-field date-field--full">
+      <input class="input" type="date" [value]="ws.date ?? ''" (change)="update('date', $event)" />
+      <app-icon name="calendar" size="small" />
+    </span>
   </label>
 
   <label class="field">
@@ -67,15 +70,12 @@
       <button
         type="button"
         class="damage__marker"
-        [class.damage__marker--bump]="damage.type === 'bump'"
         [style.left.%]="damage.x"
         [style.top.%]="damage.y"
         [attr.aria-label]="('damage.remove' | translate) + ' ' + ('damage.' + damage.type | translate)"
         (click)="$event.stopPropagation(); damageRemove.emit($index)"
       >
-        @if (iconOf(damage.type); as icon) {
-          <app-icon [name]="icon" size="small" />
-        }
+        <app-icon [name]="iconOf(damage.type)" size="small" />
       </button>
     }
   </div>
@@ -89,11 +89,7 @@
         [attr.aria-pressed]="activeDamage() === item.type"
         (click)="toggleDamage(item.type)"
       >
-        @if (item.icon) {
-          <app-icon [name]="item.icon" size="small" />
-        } @else {
-          <span class="damage__bump-icon"></span>
-        }
+        <app-icon [name]="item.icon" size="small" />
         {{ item.labelKey | translate }}
       </button>
     }

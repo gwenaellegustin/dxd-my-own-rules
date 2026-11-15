@@ -10,15 +10,73 @@
     "comments": "Niv. d'huile au mini avant la vidange !\n225/45 R17 été → saison\nFrein AR → expertise",
     "damages": [],
     "lines": {
-      "service": { "planned": true, "done": false, "note": "+ (sans les bougies)", "values": { "km": "120000", "size": ["big"] } },
-      "wheelChange": { "planned": true, "done": false, "note": "", "values": { "season": "winter" } },
-      "labourOther": { "planned": true, "done": false, "note": "", "values": { "text": "Nettoyés + graissés frein AR" } },
-      "drainPlugWasher": { "planned": true, "done": false, "note": "", "values": {} },
-      "oilFilter": { "planned": true, "done": false, "note": "1566", "values": {} },
-      "airFilter": { "planned": true, "done": false, "note": "", "values": {} },
-      "cabinAirFilter": { "planned": true, "done": false, "note": "", "values": {} },
-      "engineOil": { "planned": true, "done": false, "note": "3.50", "values": { "grade": "5W30" } },
-      "washerFluid": { "planned": true, "done": false, "note": "7.5", "values": { "season": "winter" } }
+      "service": {
+        "planned": true,
+        "done": false,
+        "note": "+ (sans les bougies)",
+        "values": {
+          "km": "120000",
+          "size": [
+            "big"
+          ]
+        }
+      },
+      "wheelChange": {
+        "planned": true,
+        "done": false,
+        "note": "",
+        "values": {
+          "season": "winter"
+        }
+      },
+      "labourOther": {
+        "planned": true,
+        "done": false,
+        "note": "",
+        "values": {
+          "text": "Nettoyés + graissés frein AR"
+        }
+      },
+      "drainPlugWasher": {
+        "planned": true,
+        "done": false,
+        "note": "",
+        "values": {}
+      },
+      "oilFilter": {
+        "planned": true,
+        "done": false,
+        "note": "1566",
+        "values": {}
+      },
+      "airFilter": {
+        "planned": true,
+        "done": false,
+        "note": "",
+        "values": {}
+      },
+      "cabinAirFilter": {
+        "planned": true,
+        "done": false,
+        "note": "",
+        "values": {}
+      },
+      "engineOil": {
+        "planned": true,
+        "done": false,
+        "note": "3.50",
+        "values": {
+          "grade": "5W30"
+        }
+      },
+      "washerFluid": {
+        "planned": true,
+        "done": false,
+        "note": "1.5",
+        "values": {
+          "season": "winter"
+        }
+      }
     }
   },
   {
@@ -44,8 +102,24 @@
     "comments": "",
     "damages": [],
     "lines": {
-      "brakes": { "planned": true, "done": true, "note": "", "values": { "axle": ["front"] } },
-      "brakeFluid": { "planned": true, "done": true, "note": "", "values": { "grade": "DOT 4" } }
+      "brakes": {
+        "planned": true,
+        "done": true,
+        "note": "",
+        "values": {
+          "axle": [
+            "front"
+          ]
+        }
+      },
+      "brakeFluid": {
+        "planned": true,
+        "done": true,
+        "note": "",
+        "values": {
+          "grade": "DOT 4"
+        }
+      }
     }
   },
   {

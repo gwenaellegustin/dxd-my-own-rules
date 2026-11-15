@@ -143,14 +143,21 @@ button {
     width: var(--control-width-medium);
   }
 
-  // Native date picker: keep the Figma calendar icon, hide the browser one
-  &[type='date'] {
+}
+
+// Date picker: <span class="date-field"><input type="date"> <app-icon name="calendar"></span>
+// The browser icon is hidden but still covers the whole field, so a click opens the picker.
+.date-field {
+  position: relative;
+  display: inline-block;
+
+  &--full {
+    display: block;
+  }
+
+  .input {
     position: relative;
     padding-right: calc(var(--space-400) * 2 + var(--icon-size-small));
-    background-image: url('/icons/calendar.svg');
-    background-repeat: no-repeat;
-    background-position: right var(--space-400) center;
-    background-size: var(--icon-size-small);
 
     &::-webkit-calendar-picker-indicator {
       position: absolute;
@@ -160,6 +167,14 @@ button {
       opacity: 0;
       cursor: pointer;
     }
+  }
+
+  > app-icon {
+    position: absolute;
+    right: var(--space-400);
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
   }
 }
 
@@ -206,12 +221,14 @@ button {
       background-color: var(--color-background-brand);
       border-color: var(--color-background-brand);
 
+      // Material Symbols "check" ligature
       &::after {
-        content: '';
-        width: var(--checkbox-size);
-        height: var(--checkbox-size);
-        background-color: var(--color-icon-on-brand);
-        mask: url('/icons/check.svg') center / contain no-repeat;
+        content: 'check';
+        font-family: 'Material Symbols Outlined';
+        font-size: var(--checkbox-size);
+        font-feature-settings: 'liga';
+        line-height: 1;
+        color: var(--color-icon-on-brand);
       }
     }
   }
@@ -246,6 +263,8 @@ button {
   height: var(--control-height);
   border-radius: var(--radius-pill);
   color: var(--color-icon-default);
+  // Icons are font glyphs: an <a class="icon-button"> must not underline them
+  text-decoration: none;
   transition: background-color var(--transition-fast);
 
   &:hover {

@@ -77,11 +77,6 @@
   height: var(--icon-size-small);
   transform: translate(-50%, -50%);
   color: var(--color-damage-marker);
-
-  &--bump {
-    border: var(--stroke-focus) solid var(--color-damage-marker);
-    border-radius: var(--radius-full);
-  }
 }
 
 .damage__legend {
@@ -111,11 +106,4 @@
   &--active {
     background: var(--color-background-tertiary);
   }
-}
-
-.damage__bump-icon {
-  width: var(--icon-size-small);
-  height: var(--icon-size-small);
-  border: var(--stroke-focus) solid var(--color-damage-marker);
-  border-radius: var(--radius-full);
 }

@@ -13,7 +13,7 @@ type EditableField = 'client' | 'vehicle' | 'date' | 'kilometers' | 'hours' | 'c
 interface DamageLegend {
   type: DamageType;
   labelKey: string;
-  icon: IconName | null; // bump is drawn in CSS (circle)
+  icon: IconName;
 }
 
 /** Top of the work area: general information + damage diagram. */
@@ -33,7 +33,7 @@ export class WorksheetDetails {
   readonly damageRemove = output<number>();
 
   protected readonly legend: DamageLegend[] = [
-    { type: 'bump', labelKey: 'damage.bump', icon: null },
+    { type: 'bump', labelKey: 'damage.bump', icon: 'damage-bump' },
     { type: 'scratch', labelKey: 'damage.scratch', icon: 'damage-scratch' },
     { type: 'impact', labelKey: 'damage.impact', icon: 'damage-impact' },
   ];
@@ -61,7 +61,7 @@ export class WorksheetDetails {
     });
   }
 
-  protected iconOf(type: DamageType): IconName | null {
-    return this.legend.find((item) => item.type === type)?.icon ?? null;
+  protected iconOf(type: DamageType): IconName {
+    return this.legend.find((item) => item.type === type)!.icon;
   }
 }

@@ -100,13 +100,16 @@
       </span>
     }
     @case ('date') {
-      <input
-        class="input line__date"
-        type="date"
-        [value]="value(field) ?? ''"
-        [attr.aria-label]="(line().titleKey ?? '') | translate"
-        (input)="setValue(field, $any($event.target).value)"
-      />
+      <span class="date-field">
+        <input
+          class="input line__date"
+          type="date"
+          [value]="value(field) ?? ''"
+          [attr.aria-label]="(line().titleKey ?? '') | translate"
+          (input)="setValue(field, $any($event.target).value)"
+        />
+        <app-icon name="calendar" size="small" />
+      </span>
     }
     @default {
       <app-clearable>

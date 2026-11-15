@@ -1,46 +1,58 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-export type IconName =
-  | 'bill'
-  | 'calendar'
-  | 'check'
-  | 'chevron-down'
-  | 'close'
-  | 'damage-impact'
-  | 'damage-scratch'
-  | 'edit'
-  | 'invoice'
-  | 'left-panel-close'
-  | 'lift'
-  | 'plus-circle'
-  | 'right-panel-close'
-  | 'search'
-  | 'tool'
-  | 'transcript';
+/**
+ * App icon names → Google Material Symbols (https://fonts.google.com/icons).
+ * To add an icon: add it here AND to the `icon_names` list of the font link in index.html.
+ */
+const MATERIAL_SYMBOLS = {
+  bill: 'receipt_long',
+  calendar: 'calendar_today',
+  check: 'check',
+  'chevron-down': 'keyboard_arrow_down',
+  close: 'close',
+  'damage-bump': 'circle',
+  'damage-impact': 'close',
+  'damage-scratch': 'pen_size_2',
+  edit: 'edit',
+  invoice: 'receipt_long',
+  'left-panel-close': 'left_panel_close',
+  lift: 'car_repair',
+  'plus-circle': 'add_circle',
+  'right-panel-close': 'right_panel_close',
+  search: 'search',
+  tool: 'build',
+  transcript: 'speech_to_text',
+} as const;
 
+export type IconName = keyof typeof MATERIAL_SYMBOLS;
 export type IconSize = 'small' | 'medium' | 'large' | 'xlarge';
 
-/**
- * Renders an SVG from `public/icons` as a CSS mask so it takes the
- * current text color: icons follow the color tokens automatically.
- */
+/** Google Material Symbols icon; takes the current text color and the size tokens. */
 @Component({
   selector: 'app-icon',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '',
+  template: '{{ symbol() }}',
   host: {
+    class: 'material-symbols-outlined',
     'aria-hidden': 'true',
-    '[style.--icon-url]': 'url()',
+    translate: 'no',
     '[style.--icon-size]': 'sizeVar()',
   },
   styles: `
+    // Material Symbols keep ~1/6 of empty margin around each glyph: the glyph is
+    // drawn 20% bigger so it fills the space like the Figma icons, and the negative
+    // margin keeps the space taken in the layout equal to --icon-size (centered).
     :host {
+      --glyph-size: calc(var(--icon-size) * 1.2);
       display: inline-block;
       flex: none;
-      width: var(--icon-size);
-      height: var(--icon-size);
-      background-color: currentColor;
-      mask: var(--icon-url) center / contain no-repeat;
+      width: var(--glyph-size);
+      height: var(--glyph-size);
+      margin: calc((var(--icon-size) - var(--glyph-size)) / 2);
+      font-size: var(--glyph-size);
+      line-height: 1;
+      text-align: center;
+      user-select: none;
     }
   `,
 })
@@ -48,6 +60,6 @@ export class Icon {
   readonly name = input.required<IconName>();
   readonly size = input<IconSize>('medium');
 
-  protected readonly url = computed(() => `url('/icons/${this.name()}.svg')`);
+  protected readonly symbol = computed(() => MATERIAL_SYMBOLS[this.name()]);
   protected readonly sizeVar = computed(() => `var(--icon-size-${this.size()})`);
 }
