@@ -27,6 +27,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/clients/clients-page/clients-page').then((m) => m.ClientsPage),
   },
   {
+    path: 'settings/worksheet',
+    loadComponent: () =>
+      import('./features/settings/worksheet-settings-page/worksheet-settings-page').then((m) => m.WorksheetSettingsPage),
+  },
+  {
     path: 'shopping-list',
     loadComponent: () => import('./features/shopping-list/shopping-list-page').then((m) => m.ShoppingListPage),
   },

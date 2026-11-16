@@ -14,7 +14,7 @@ export const API_ENDPOINTS = {
   currentUser: 'current-user.json',
   clients: 'clients.json',
   vehicleBrands: 'vehicle-brands.json',
-  worksheetTemplate: 'worksheet-template.json',
+  worksheetSettings: 'worksheet-settings.json',
   worksheets: 'worksheets.json',
   transcripts: 'transcripts.json',
   shoppingList: 'shopping-list.json',

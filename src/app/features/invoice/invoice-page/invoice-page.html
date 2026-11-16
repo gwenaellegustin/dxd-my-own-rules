@@ -21,7 +21,7 @@
           [plate]="ws ? clients.plateOf(ws.client, ws.vehicle) : ''"
           [address]="ws ? clients.byName(ws.client)?.address : undefined"
           [company]="company"
-          [sections]="worksheets.template()?.sections ?? []"
+          [sections]="worksheets.allSections()"
           (itemChange)="changeItem(inv.id, $event)"
           (rateChange)="store.setRate(inv.id, $event)"
           (observationChange)="worksheets.updateComments(inv.worksheetId, $event)"

@@ -1,0 +1,160 @@
+<div class="page">
+  <header class="page__head">
+    <h1 class="text-heading">{{ 'settings.title' | translate }}</h1>
+
+    <!-- Kind of vehicle: each has its own lines, default values and rules -->
+    <div class="segmented" role="radiogroup" [attr.aria-label]="'registration.kind' | translate">
+      @for (k of kinds; track k) {
+        <button
+          type="button"
+          role="radio"
+          class="segmented__option"
+          [class.segmented__option--active]="kind() === k"
+          [attr.aria-checked]="kind() === k"
+          (click)="kind.set(k)"
+        >
+          <app-icon [name]="k === 'car' ? 'car' : 'motorcycle'" size="small" />
+          {{ 'registration.kinds.' + k | translate }}
+        </button>
+      }
+    </div>
+
+    <div class="tabs" role="tablist">
+      @for (t of tabs; track t) {
+        <button
+          type="button"
+          role="tab"
+          class="tabs__tab"
+          [id]="'settings-tab-' + t"
+          [class.tabs__tab--active]="tab() === t"
+          [attr.aria-selected]="tab() === t"
+          [attr.aria-controls]="'settings-panel-' + t"
+          (click)="tab.set(t)"
+        >
+          {{ 'settings.tabs.' + t | translate }}
+        </button>
+      }
+    </div>
+  </header>
+
+  @if (template(); as tpl) {
+    @if (tab() === 'defaults') {
+      <div class="panel" role="tabpanel" id="settings-panel-defaults" aria-labelledby="settings-tab-defaults">
+        <p class="text-secondary">{{ 'settings.defaultsHint' | translate }}</p>
+        @for (section of tpl.sections; track section.id) {
+          <section class="section" [attr.aria-labelledby]="'defaults-' + section.id">
+            <h2 class="text-subheading" [id]="'defaults-' + section.id">{{ section.titleKey | translate }}</h2>
+            <!-- Drag a line by its handle to move it inside its section -->
+            @for (line of section.lines; track line.id; let i = $index) {
+              <ng-container *ngTemplateOutlet="insert; context: { sectionId: section.id, index: i }" />
+              <!-- Editor on the left, preview of the worksheet line on the right (also a drag handle) -->
+              <div
+                class="line-row"
+                [attr.draggable]="armed() === line.id"
+                [class.dragging]="drag()?.lineId === line.id"
+                [class.drop-before]="isDropTarget(section.id, i, 'before')"
+                [class.drop-after]="isDropTarget(section.id, i, 'after')"
+                (dragstart)="startDrag($event, section.id, line.id, i)"
+                (dragover)="dragOver($event, section.id, i)"
+                (drop)="dropLine($event, section.id)"
+                (dragend)="endDrag()"
+              >
+                <app-line-editor [line]="line" [kind]="kind()" (dragArm)="armed.set($event ? line.id : null)" />
+                <div
+                  class="preview"
+                  [attr.title]="'settings.drag' | translate"
+                  (mousedown)="armed.set(line.id)"
+                  (mouseup)="armed.set(null)"
+                  (touchstart)="armed.set(line.id)"
+                >
+                  <span class="preview__label text-small text-secondary">{{ 'settings.preview' | translate }}</span>
+                  <app-task-line [line]="line" [state]="defaultState(line.id)" inert />
+                </div>
+              </div>
+            }
+            <ng-container *ngTemplateOutlet="insert; context: { sectionId: section.id, index: section.lines.length }" />
+          </section>
+        }
+      </div>
+    } @else {
+      <div class="panel" role="tabpanel" id="settings-panel-rules" aria-labelledby="settings-tab-rules">
+        <p class="text-secondary">{{ 'settings.rulesHint' | translate }}</p>
+        @if (ruleSections().length) {
+          <button type="button" class="button-subtle rule-add" (click)="store.addRule(kind())">
+            <app-icon name="plus-circle" />
+            {{ 'settings.addRule' | translate }}
+          </button>
+        }
+
+        @if (ruleSections().length === 0) {
+          <p class="text-secondary">{{ 'settings.noRuleLine' | translate }}</p>
+        } @else {
+          @for (rule of rules(); track rule.id; let i = $index) {
+            <article class="rule" [attr.aria-label]="'settings.rule' | translate: { number: i + 1 }">
+              <div class="rule__head">
+                <label class="field rule__trigger">
+                  <span class="field__label">{{ 'settings.when' | translate }}</span>
+                  <select class="input" (change)="changeTrigger(rule, $any($event.target).value)">
+                    @let selected = triggerValue(rule);
+                    @for (group of triggerGroups(); track group.label) {
+                      <optgroup [label]="group.label | translate">
+                        @for (choice of group.choices; track choice.value) {
+                          <option [value]="choice.value" [selected]="choice.value === selected">
+                            {{ choice.labelKey | translate }}
+                          </option>
+                        }
+                      </optgroup>
+                    }
+                  </select>
+                </label>
+                <button
+                  type="button"
+                  class="icon-button"
+                  [attr.aria-label]="'settings.removeRule' | translate"
+                  [attr.title]="'settings.removeRule' | translate"
+                  (click)="store.removeRule(rule.id)"
+                >
+                  <app-icon name="delete" />
+                </button>
+              </div>
+
+              <fieldset class="rule__group">
+                <legend class="field__label">{{ 'settings.alsoPlan' | translate }}</legend>
+                @for (section of ruleSections(); track section.id) {
+                  <p class="text-small text-secondary">{{ section.titleKey | translate }}</p>
+                  <div class="rule__choices">
+                    @for (line of section.lines; track line.id) {
+                      @if (line.id !== rule.lineId) {
+                        <label class="choice choice--wrap">
+                          <input type="checkbox" [checked]="rule.plan.includes(line.id)" (change)="togglePlan(rule, line.id)" />
+                          {{ line.titleKey! | translate }}
+                        </label>
+                      }
+                    }
+                  </div>
+                }
+              </fieldset>
+            </article>
+          } @empty {
+            <p class="text-secondary">{{ 'settings.noRule' | translate }}</p>
+          }
+        }
+      </div>
+    }
+  }
+</div>
+
+<!-- Small + between two lines: inserts a new line there -->
+<ng-template #insert let-sectionId="sectionId" let-index="index">
+  <div class="insert">
+    <button
+      type="button"
+      class="insert__button"
+      [attr.aria-label]="'settings.addLine' | translate"
+      [attr.title]="'settings.addLine' | translate"
+      (click)="addLine(sectionId, index)"
+    >
+      <app-icon name="plus-circle" size="small" />
+    </button>
+  </div>
+</ng-template>

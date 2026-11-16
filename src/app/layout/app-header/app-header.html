@@ -46,6 +46,10 @@
       @if (user.currentUser(); as currentUser) {
         <p class="account__name">{{ currentUser.firstName }} {{ currentUser.lastName }}</p>
       }
+      <a class="account__item" role="menuitem" routerLink="/settings/worksheet" (click)="menuOpen.set(false)">
+        <app-icon name="settings" />
+        {{ 'settings.title' | translate }}
+      </a>
     </div>
   }
 </div>

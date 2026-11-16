@@ -1,0 +1,84 @@
+// A line card (like a worksheet line) with a drag handle on the left
+:host {
+  display: flex;
+  gap: var(--space-200);
+  padding: var(--space-300) var(--space-400) var(--space-300) var(--space-200);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+}
+
+.handle {
+  flex: none;
+  display: grid;
+  place-content: center;
+  align-self: flex-start;
+  height: var(--control-height);
+  color: var(--color-icon-secondary, var(--color-text-secondary));
+  cursor: grab;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-300);
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+.field-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  padding: var(--space-300);
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-200);
+}
+
+.field-editor__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.type {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-strong);
+}
+
+.default {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+  max-width: var(--vehicle-field-min-width);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+
+  > input {
+    flex: none;
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
+    margin: 0;
+    accent-color: var(--color-background-brand);
+  }
+}
+
+.add-option {
+  align-self: flex-start;
+}
+
+.add-field {
+  align-self: flex-start;
+  width: auto;
+  color: var(--color-text-secondary);
+}

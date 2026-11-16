@@ -2,6 +2,7 @@
   {
     "id": "ws-1006",
     "status": "open",
+    "kind": "car",
     "client": "Fabrice Favre",
     "vehicle": "Kia Ceed 1.5 T-GDi",
     "date": "2026-11-06",
@@ -80,6 +81,7 @@
   {
     "id": "ws-1008",
     "status": "open",
+    "kind": "car",
     "client": "Matthieu Berclaz",
     "vehicle": "Bus",
     "date": "2026-11-04",
@@ -92,6 +94,7 @@
   {
     "id": "ws-1007",
     "status": "open",
+    "kind": "motorcycle",
     "client": "Corentin Despont",
     "vehicle": "Ducati Monster 937",
     "date": null,
@@ -104,6 +107,7 @@
   {
     "id": "ws-1005",
     "status": "invoiced",
+    "kind": "car",
     "client": "Mr Morard",
     "vehicle": "Peugeot 308 SW",
     "date": "2026-11-05",
@@ -135,6 +139,7 @@
   {
     "id": "ws-1004",
     "status": "invoiced",
+    "kind": "car",
     "client": "Patrice Petit",
     "vehicle": "VW Golf 8 Variant",
     "date": "2026-11-05",
@@ -147,6 +152,7 @@
   {
     "id": "ws-1003",
     "status": "invoiced",
+    "kind": "motorcycle",
     "client": "Gwen Gustin",
     "vehicle": "Honda CB650R",
     "date": "2026-11-01",
@@ -159,6 +165,7 @@
   {
     "id": "ws-1002",
     "status": "invoiced",
+    "kind": "car",
     "client": "Fabrice Favre",
     "vehicle": "Kia Ceed 1.5 T-GDi",
     "date": "2026-10-25",
@@ -171,6 +178,7 @@
   {
     "id": "ws-1001",
     "status": "invoiced",
+    "kind": "car",
     "client": "Matthieu Berclaz",
     "vehicle": "Bus",
     "date": "2026-10-24",
@@ -183,6 +191,7 @@
   {
     "id": "ws-1000",
     "status": "invoiced",
+    "kind": "car",
     "client": "Mrs Jacquet",
     "vehicle": "Toyota Yaris Hybrid",
     "date": "2026-10-20",
@@ -195,6 +204,7 @@
   {
     "id": "ws-0999",
     "status": "invoiced",
+    "kind": "car",
     "client": "Mr Jacquet",
     "vehicle": "Audi A4 Avant",
     "date": "2026-10-20",
@@ -207,6 +217,7 @@
   {
     "id": "ws-0998",
     "status": "invoiced",
+    "kind": "motorcycle",
     "client": "Matthieu Berclaz",
     "vehicle": "Triumph Street Triple RS",
     "date": "2026-10-15",

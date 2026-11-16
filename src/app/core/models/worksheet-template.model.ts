@@ -1,4 +1,6 @@
 import { InvoiceUnit } from './invoice.model';
+import { VehicleKind } from './vehicle-brand.model';
+import { LineState } from './worksheet.model';
 
 /**
  * The worksheet template describes WHICH lines a worksheet contains
@@ -53,6 +55,29 @@ export interface TemplateSection {
   lines: TemplateLine[];
 }
 
+/** Lines of the worksheets of one kind of vehicle (car, motorcycle) */
 export interface WorksheetTemplate {
+  kind: VehicleKind;
   sections: TemplateSection[];
+  /** State of the lines of a new worksheet (planned, values…), keyed like Worksheet.lines */
+  defaults: Record<string, LineState>;
+}
+
+/**
+ * Planning rule: when the line `lineId` is planned (and, with `fieldId`, its field has one of
+ * `values`), the lines `plan` are planned too. Applied when the line is edited.
+ */
+export interface PlanningRule {
+  id: string;
+  kind: VehicleKind;
+  lineId: string;
+  fieldId?: string;
+  values?: string[];
+  plan: string[];
+}
+
+/** Worksheet settings (`worksheet-settings.json`) */
+export interface WorksheetSettings {
+  templates: WorksheetTemplate[];
+  rules: PlanningRule[];
 }

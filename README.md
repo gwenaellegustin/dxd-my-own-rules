@@ -61,7 +61,9 @@ src/
   A brand without a logo can set `"kind": "motorcycle"` to show a motorcycle instead of a car.
 - **No hard-coded data** — everything comes from `public/mock-api/*.json` through `ApiService`.
   Point `API_BASE_URL` (`core/api/api.config.ts`) to the real backend when it exists.
-  The worksheet content (sections, lines, options) is described in `worksheet-template.json`.
+  The worksheet content (sections, lines, options) is described in `worksheet-settings.json`:
+  one template per kind of vehicle (car, motorcycle), with the default values of a new worksheet,
+  and the planning rules.
 - **Translations** — [ngx-translate](https://ngx-translate.org) with `public/i18n/{lang}.json`.
   English is the default; the EN / FR switch (top right) changes it and the choice is remembered.
   The French texts reuse the wording of the garage's paper worksheet.
@@ -73,12 +75,31 @@ src/
 - **Invoice**: *open* (being prepared) → *sent* → *paid*.
 
 "Create the invoice" on a worksheet creates its open invoice from the done lines (one item per
-line, counted in the unit of its section: `invoiceUnit` in `worksheet-template.json`), marks the
+line, counted in the unit of its section: `invoiceUnit` in `worksheet-settings.json`), marks the
 worksheet invoiced and opens the invoice.
 
 An **invoiced worksheet is read-only** (the store refuses its edits, the fields are disabled and a
 notice says why); its button becomes *Open invoice*. The only exception is *Observations and
 tips*, editable from the invoice while it is open. Invoicing clears the undo history.
+
+## Worksheet settings
+
+Account menu (top right) → *Worksheet settings*, for cars or motorcycles (each kind has its own
+lines: a worksheet takes the kind of its vehicle; the motorcycle template only has "Other" lines
+for now):
+
+- **Default values**: the lines of the worksheet. Drag a line by its handle to reorder it (inside
+  its section), rename it (French and English side by side), add / edit / delete its fields
+  (text, number, date, text area, fixed text, radio buttons, checkboxes, with their options) and
+  set their default value in a new worksheet. Edited texts are written into the translations
+  (`TemplateTextService`, keys `custom.*`), so every page shows them at once; a shared key is
+  copied first so editing one line never changes another.
+- **Planning rules**: when a line is planned (optionally only with one option, e.g. Service → Small), other lines are
+  planned too, in the same undo step. They are never unplanned automatically. Mock rules: a small
+  or medium service plans the oil filter and the engine oil; a big service plans the 3 filters and
+  the engine oil.
+
+Settings are kept in memory like the rest of the data.
 
 ## Invoice page
 

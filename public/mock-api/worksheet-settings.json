@@ -1,0 +1,488 @@
+{
+  "templates": [
+    {
+      "kind": "car",
+      "sections": [
+        {
+          "id": "labour",
+          "titleKey": "template.labour.title",
+          "invoiceUnit": "hour",
+          "lines": [
+            {
+              "id": "pickup",
+              "titleKey": "template.labour.pickup",
+              "fields": [
+                {
+                  "id": "location",
+                  "type": "text",
+                  "size": "medium",
+                  "placeholderKey": "common.ellipsis"
+                }
+              ]
+            },
+            {
+              "id": "service",
+              "titleKey": "template.labour.service",
+              "fields": [
+                {
+                  "id": "km",
+                  "type": "number",
+                  "placeholderKey": "common.km"
+                },
+                {
+                  "id": "size",
+                  "type": "radio",
+                  "options": [
+                    {
+                      "value": "small",
+                      "labelKey": "template.options.small"
+                    },
+                    {
+                      "value": "medium",
+                      "labelKey": "template.options.medium"
+                    },
+                    {
+                      "value": "big",
+                      "labelKey": "template.options.big"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "wheelChange",
+              "titleKey": "template.labour.wheelChange",
+              "fields": [
+                {
+                  "id": "season",
+                  "type": "radio",
+                  "options": [
+                    {
+                      "value": "winter",
+                      "labelKey": "template.options.winterTyres"
+                    },
+                    {
+                      "value": "summer",
+                      "labelKey": "template.options.summerTyres"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "tyreFitting",
+              "titleKey": "template.labour.tyreFitting",
+              "fields": [
+                {
+                  "id": "quantity",
+                  "type": "number",
+                  "placeholderKey": "common.ellipsis"
+                },
+                {
+                  "id": "suffix",
+                  "type": "label",
+                  "labelKey": "template.labour.tyreFittingSuffix"
+                }
+              ],
+              "details": [
+                {
+                  "id": "tyreType",
+                  "type": "checkbox",
+                  "options": [
+                    {
+                      "value": "alloyRims",
+                      "labelKey": "template.options.alloyRims"
+                    },
+                    {
+                      "value": "lowProfile",
+                      "labelKey": "template.options.lowProfile"
+                    },
+                    {
+                      "value": "tpms",
+                      "labelKey": "template.options.tpmsSensor"
+                    },
+                    {
+                      "value": "runFlat",
+                      "labelKey": "template.options.runFlat"
+                    },
+                    {
+                      "value": "largeSize",
+                      "labelKey": "template.options.largeSize"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "inspectionPreparation",
+              "titleKey": "template.labour.inspectionPreparation",
+              "details": [
+                {
+                  "id": "vehicleAge",
+                  "type": "radio",
+                  "options": [
+                    {
+                      "value": "under10",
+                      "labelKey": "template.options.under10Years"
+                    },
+                    {
+                      "value": "over10",
+                      "labelKey": "template.options.over10Years"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "technicalInspection",
+              "titleKey": "template.labour.technicalInspection",
+              "fields": [
+                {
+                  "id": "date",
+                  "type": "date"
+                }
+              ]
+            },
+            {
+              "id": "brakes",
+              "titleKey": "template.labour.brakes",
+              "fields": [
+                {
+                  "id": "axle",
+                  "type": "checkbox",
+                  "options": [
+                    {
+                      "value": "front",
+                      "labelKey": "template.options.front"
+                    },
+                    {
+                      "value": "rear",
+                      "labelKey": "template.options.rear"
+                    }
+                  ]
+                }
+              ],
+              "details": [
+                {
+                  "id": "wearIndicator",
+                  "type": "checkbox",
+                  "options": [
+                    {
+                      "value": "yes",
+                      "labelKey": "template.options.brakePadWearIndicator"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "brakeCalipers",
+              "titleKey": "template.labour.brakeCalipers"
+            },
+            {
+              "id": "alignment",
+              "titleKey": "template.labour.alignment",
+              "fields": [
+                {
+                  "id": "axle",
+                  "type": "checkbox",
+                  "options": [
+                    {
+                      "value": "front",
+                      "labelKey": "template.options.front"
+                    },
+                    {
+                      "value": "rear",
+                      "labelKey": "template.options.rear"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "labourOther",
+              "repeatable": true,
+              "fields": [
+                {
+                  "id": "text",
+                  "type": "textarea",
+                  "placeholderKey": "common.other"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "parts",
+          "titleKey": "template.parts.title",
+          "invoiceUnit": "piece",
+          "lines": [
+            {
+              "id": "drainPlugWasher",
+              "titleKey": "template.parts.drainPlugWasher"
+            },
+            {
+              "id": "oilFilter",
+              "titleKey": "template.parts.oilFilter"
+            },
+            {
+              "id": "airFilter",
+              "titleKey": "template.parts.airFilter"
+            },
+            {
+              "id": "cabinAirFilter",
+              "titleKey": "template.parts.cabinAirFilter"
+            },
+            {
+              "id": "partsOther",
+              "repeatable": true,
+              "fields": [
+                {
+                  "id": "text",
+                  "type": "textarea",
+                  "placeholderKey": "common.other"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fluids",
+          "titleKey": "template.fluids.title",
+          "invoiceUnit": "litre",
+          "lines": [
+            {
+              "id": "engineOil",
+              "titleKey": "template.fluids.engineOil",
+              "fields": [
+                {
+                  "id": "grade",
+                  "type": "text",
+                  "placeholderKey": "template.fluids.engineOilPlaceholder"
+                }
+              ]
+            },
+            {
+              "id": "engineCoolant",
+              "titleKey": "template.fluids.engineCoolant"
+            },
+            {
+              "id": "washerFluid",
+              "titleKey": "template.fluids.washerFluid",
+              "fields": [
+                {
+                  "id": "season",
+                  "type": "radio",
+                  "options": [
+                    {
+                      "value": "winter",
+                      "labelKey": "template.options.winter"
+                    },
+                    {
+                      "value": "summer",
+                      "labelKey": "template.options.summer"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "brakeFluid",
+              "titleKey": "template.fluids.brakeFluid",
+              "fields": [
+                {
+                  "id": "grade",
+                  "type": "text",
+                  "placeholderKey": "template.fluids.brakeFluidPlaceholder"
+                }
+              ]
+            },
+            {
+              "id": "fluidsOther",
+              "repeatable": true,
+              "fields": [
+                {
+                  "id": "text",
+                  "type": "textarea",
+                  "placeholderKey": "common.other"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "various",
+          "titleKey": "template.various.title",
+          "invoiceUnit": "flatRate",
+          "lines": [
+            {
+              "id": "smallSupplies",
+              "titleKey": "template.various.smallSupplies"
+            },
+            {
+              "id": "courtesyCar",
+              "titleKey": "template.various.courtesyCar"
+            },
+            {
+              "id": "lightCleaning",
+              "titleKey": "template.various.lightCleaning",
+              "fields": [
+                {
+                  "id": "areas",
+                  "type": "checkbox",
+                  "options": [
+                    {
+                      "value": "interior",
+                      "labelKey": "template.options.interior"
+                    },
+                    {
+                      "value": "exterior",
+                      "labelKey": "template.options.exterior"
+                    },
+                    {
+                      "value": "windshield",
+                      "labelKey": "template.options.windshield"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "variousOther",
+              "repeatable": true,
+              "fields": [
+                {
+                  "id": "text",
+                  "type": "textarea",
+                  "placeholderKey": "common.other"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "defaults": {}
+    },
+    {
+      "kind": "motorcycle",
+      "sections": [
+        {
+          "id": "labour",
+          "titleKey": "template.labour.title",
+          "invoiceUnit": "hour",
+          "lines": [
+            {
+              "id": "labourOther",
+              "repeatable": true,
+              "fields": [
+                {
+                  "id": "text",
+                  "type": "textarea",
+                  "placeholderKey": "common.other"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "parts",
+          "titleKey": "template.parts.title",
+          "invoiceUnit": "piece",
+          "lines": [
+            {
+              "id": "partsOther",
+              "repeatable": true,
+              "fields": [
+                {
+                  "id": "text",
+                  "type": "textarea",
+                  "placeholderKey": "common.other"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fluids",
+          "titleKey": "template.fluids.title",
+          "invoiceUnit": "litre",
+          "lines": [
+            {
+              "id": "fluidsOther",
+              "repeatable": true,
+              "fields": [
+                {
+                  "id": "text",
+                  "type": "textarea",
+                  "placeholderKey": "common.other"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "various",
+          "titleKey": "template.various.title",
+          "invoiceUnit": "flatRate",
+          "lines": [
+            {
+              "id": "variousOther",
+              "repeatable": true,
+              "fields": [
+                {
+                  "id": "text",
+                  "type": "textarea",
+                  "placeholderKey": "common.other"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "defaults": {}
+    }
+  ],
+  "rules": [
+    {
+      "id": "rule-1",
+      "kind": "car",
+      "lineId": "service",
+      "fieldId": "size",
+      "values": [
+        "small"
+      ],
+      "plan": [
+        "oilFilter",
+        "engineOil"
+      ]
+    },
+    {
+      "id": "rule-2",
+      "kind": "car",
+      "lineId": "service",
+      "fieldId": "size",
+      "values": [
+        "medium"
+      ],
+      "plan": [
+        "oilFilter",
+        "engineOil"
+      ]
+    },
+    {
+      "id": "rule-3",
+      "kind": "car",
+      "lineId": "service",
+      "fieldId": "size",
+      "values": [
+        "big"
+      ],
+      "plan": [
+        "oilFilter",
+        "airFilter",
+        "cabinAirFilter",
+        "engineOil"
+      ]
+    }
+  ]
+}

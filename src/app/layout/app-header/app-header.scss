@@ -159,3 +159,18 @@
   padding: var(--space-200);
   font-weight: var(--font-weight-strong);
 }
+
+.account__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-200);
+  border-radius: var(--radius-200);
+  color: var(--color-text-default);
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+}

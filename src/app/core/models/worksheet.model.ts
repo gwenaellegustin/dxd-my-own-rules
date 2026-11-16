@@ -1,3 +1,5 @@
+import { VehicleKind } from './vehicle-brand.model';
+
 /** open: work in progress → invoiced: its invoice exists (open, sent or paid) */
 export type WorksheetStatus = 'open' | 'invoiced';
 
@@ -23,6 +25,8 @@ export interface Damage {
 export interface Worksheet {
   id: string;
   status: WorksheetStatus;
+  /** Which template (lines) the worksheet uses */
+  kind: VehicleKind;
   client: string;
   vehicle: string;
   /** ISO date (yyyy-MM-dd) or null when not scheduled yet */

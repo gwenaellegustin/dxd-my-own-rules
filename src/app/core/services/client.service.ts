@@ -109,6 +109,11 @@ export class ClientService {
     return { clientId: client.id, vehicleId: vehicle.id };
   }
 
+  /** Car or motorcycle: from the vehicle file, else from the brand */
+  kindOf(clientName: string, vehicleName: string): VehicleKind {
+    return this.vehicleOf(clientName, vehicleName)?.kind ?? this.defaultKind(vehicleName);
+  }
+
   /** Car or motorcycle, from the brand when known */
   private defaultKind(name: string): VehicleKind {
     return this.brands.brandOf(name)?.kind === 'motorcycle' ? 'motorcycle' : 'car';

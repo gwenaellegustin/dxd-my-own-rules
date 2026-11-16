@@ -107,7 +107,7 @@ export class WorksheetPage {
 
   /** Lines planned but not done, grouped by section; asked before creating the invoice */
   protected createInvoice(worksheet: Worksheet): void {
-    const groups = (this.store.template()?.sections ?? [])
+    const groups = (this.store.templateFor(worksheet.kind)?.sections ?? [])
       .map((section) => ({
         sectionTitleKey: section.titleKey,
         items: section.lines.flatMap((line) =>
@@ -143,7 +143,7 @@ export class WorksheetPage {
     const updated = this.store.getById(worksheet.id) ?? worksheet;
     const invoice = this.invoices.createFromWorksheet(
       updated,
-      this.store.template()?.sections ?? [],
+      this.store.allSections(),
       this.clients.byName(updated.client)?.rateId,
     );
     this.router.navigate(['/invoices', invoice.id]);
@@ -155,8 +155,15 @@ export class WorksheetPage {
     if (invoice) this.router.navigate(['/invoices', invoice.id]);
   }
 
-  /** Field edits; typing in a text field is grouped into one undo step */
+  /**
+   * Field edits (typing in a text field is grouped into one undo step); a new vehicle also sets
+   * the kind of worksheet (car / motorcycle lines)
+   */
   protected updateWorksheet(id: string, changes: Partial<Omit<Worksheet, 'id' | 'lines'>>): void {
+    const worksheet = this.store.getById(id);
+    if (worksheet && changes.vehicle !== undefined) {
+      changes = { ...changes, kind: this.clients.kindOf(changes.client ?? worksheet.client, changes.vehicle) };
+    }
     this.store.update(id, changes, { typing: isTextEditing() });
   }
 

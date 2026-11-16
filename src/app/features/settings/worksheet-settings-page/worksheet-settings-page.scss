@@ -1,0 +1,215 @@
+// The page scrolls inside the main area (the window itself never scrolls); like the work area of
+// the other pages, it is the `work-area` container the task lines adapt to
+:host {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--color-background-secondary);
+  container: work-area / inline-size;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-600);
+  max-width: var(--settings-max-width);
+  margin-inline: auto;
+  padding: var(--space-400);
+}
+
+.page__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-400);
+}
+
+// Car / motorcycle switch (same look as the EN / FR switch of the header)
+.segmented {
+  display: inline-flex;
+  gap: var(--space-100);
+  padding: var(--space-100);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+}
+
+.segmented__option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-200) var(--space-300);
+  border-radius: var(--radius-100);
+  color: var(--color-text-secondary);
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+
+  &--active,
+  &--active:hover {
+    background: var(--color-background-brand);
+    color: var(--color-text-on-brand);
+    font-weight: var(--font-weight-strong);
+  }
+}
+
+.tabs {
+  align-self: stretch;
+  display: flex;
+  gap: var(--space-400);
+  border-bottom: var(--stroke-border) solid var(--color-border-default);
+}
+
+.tabs__tab {
+  padding: var(--space-200) 0;
+  margin-bottom: calc(-1 * var(--stroke-border));
+  border-bottom: var(--stroke-focus) solid transparent;
+  color: var(--color-text-secondary);
+
+  &:hover {
+    color: var(--color-text-default);
+  }
+
+  &--active {
+    border-bottom-color: var(--color-border-strong);
+    color: var(--color-text-default);
+    font-weight: var(--font-weight-strong);
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-600);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+// One planning rule: trigger line, options, lines to plan
+.rule {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+  padding: var(--space-400);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+}
+
+.rule__head {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-200);
+}
+
+.rule__trigger {
+  flex: 1;
+}
+
+.rule__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  legend {
+    padding: 0;
+    margin-bottom: var(--space-200);
+  }
+}
+
+.rule__choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--vehicle-field-min-width), 1fr));
+  gap: var(--space-200) var(--space-400);
+}
+
+// "+" between two lines, centred on the line editors (left column), with room above and below
+.insert {
+  position: relative;
+  height: var(--space-600);
+
+  @container work-area (max-width: 900px) {
+    --insert-center: 50%;
+  }
+}
+
+.insert__button {
+  position: absolute;
+  top: 50%;
+  // Centre of the left column of .line-row (two columns separated by its gap)
+  left: var(--insert-center, calc((100% - var(--space-400)) / 4));
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-content: center;
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-full);
+  color: var(--color-text-tertiary);
+  transition: color var(--transition-fast);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-text-default);
+  }
+}
+
+// One line: editor | preview side by side; stacked when the page is narrow
+.line-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-400);
+  align-items: start;
+
+  @container work-area (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// The preview is the worksheet line as it will look (not editable); it can be dragged too
+.preview {
+  position: sticky;
+  top: var(--space-400);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+  cursor: grab;
+}
+
+// Drag and drop of the lines: the dragged one is dimmed, a bar shows where it goes
+.line-row {
+
+  &.dragging {
+    opacity: var(--opacity-disabled);
+  }
+
+  &.drop-before::before,
+  &.drop-after::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--stroke-focus);
+    background: var(--color-border-strong);
+  }
+
+  &.drop-before::before {
+    top: calc(-1 * var(--space-100) - var(--stroke-focus) / 2);
+  }
+
+  &.drop-after::after {
+    bottom: calc(-1 * var(--space-100) - var(--stroke-focus) / 2);
+  }
+}
+
+.rule-add {
+  align-self: flex-start;
+}
