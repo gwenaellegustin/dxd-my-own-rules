@@ -29,6 +29,7 @@ const MATERIAL_SYMBOLS = {
   forward: 'arrow_forward',
   undo: 'undo',
   'left-panel-close': 'left_panel_close',
+  language: 'language',
   lift: 'car_repair',
   menu: 'menu',
   'plus-circle': 'add_circle',

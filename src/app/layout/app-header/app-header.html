@@ -72,8 +72,9 @@
         {{ 'settings.title' | translate }}
       </a>
 
-      <div class="account__language">
-        <span class="text-small text-secondary" id="account-language">{{ 'account.language' | translate }}</span>
+      <div class="dropdown-menu__item account__language">
+        <app-icon name="language" />
+        <span id="account-language">{{ 'account.language' | translate }}</span>
         <div class="language" role="group" aria-labelledby="account-language">
           @for (lang of language.languages; track lang) {
             <button

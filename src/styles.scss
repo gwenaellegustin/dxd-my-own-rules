@@ -609,6 +609,8 @@ select.input {
     position: absolute;
     left: var(--space-400);
     top: 50%;
+    // Vertically centred on the field (the icon's negative margin would pull it up)
+    margin-block: 0;
     transform: translateY(-50%);
     pointer-events: none;
   }

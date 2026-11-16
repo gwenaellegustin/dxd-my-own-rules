@@ -35,14 +35,17 @@
   }
 }
 
-// Language, in the user menu: label + EN | FR switch
+// Language, in the user menu: a row like the others, the EN | FR switch on the right
 .account__language {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-300);
-  padding: var(--space-200);
-  border-top: var(--stroke-border) solid var(--color-border-default);
+  cursor: default;
+
+  &:hover {
+    background: none;
+  }
+
+  .language {
+    margin-left: auto;
+  }
 }
 
 // EN | FR segmented switch
@@ -93,7 +96,9 @@
 }
 
 .account__name {
-  padding: var(--space-200);
+  padding: var(--space-200) var(--space-200) var(--space-300);
+  margin-bottom: var(--space-100);
+  border-bottom: var(--stroke-border) solid var(--color-border-default);
   font-weight: var(--font-weight-strong);
 }
 
