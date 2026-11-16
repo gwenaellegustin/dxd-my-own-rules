@@ -184,7 +184,8 @@ counts them. It says that no action was done; the *Mark as read* button removes 
 - Worksheets refer to their client and vehicle by name: renaming a client or a vehicle renames
   them in its worksheets too (`WorksheetStore.rename`, when saved / when the field is left).
 - Vehicle tiles (brand logo, plate) filter the worksheets and invoices; all are selected when a
-  client is opened. The button of a tile opens its *Vehicle info*; *Add a vehicle* creates one
+  client is opened. The buttons of a tile open its *Vehicle info* and create a new worksheet for that vehicle
+  (then opened); *Add a vehicle* creates one
   (not kept if closed empty).
 
 ## Vehicle info

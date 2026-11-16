@@ -66,14 +66,17 @@ export class WorksheetStore {
     return this._worksheets().find((worksheet) => worksheet.id === id);
   }
 
-  /** New worksheet: its lines start with the default values of its kind (see settings) */
-  create(kind: VehicleKind = 'car'): Worksheet {
+  /**
+   * New worksheet: its lines start with the default values of its kind (see settings); `from`:
+   * already for a client / vehicle (e.g. from the client page)
+   */
+  create(kind: VehicleKind = 'car', from: Partial<Pick<Worksheet, 'client' | 'vehicle'>> = {}): Worksheet {
     const worksheet: Worksheet = {
       id: crypto.randomUUID(),
       status: 'open',
       kind,
-      client: '',
-      vehicle: '',
+      client: from.client ?? '',
+      vehicle: from.vehicle ?? '',
       date: new Date().toISOString().slice(0, 10),
       kilometers: '',
       hours: '',

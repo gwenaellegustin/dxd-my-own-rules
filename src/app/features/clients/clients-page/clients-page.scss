@@ -98,6 +98,18 @@
   }
 }
 
+// Vehicle info, new worksheet: one above the other on the right of the tile. The tile itself
+// turns grey on hover: the buttons take a darker grey so they stand out from it
+.tile__buttons {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+
+  .icon-button:not(:disabled):hover {
+    background: var(--color-background-tertiary);
+  }
+}
+
 .tile__toggle {
   flex: 1;
   min-width: 0;

@@ -262,7 +262,8 @@
     "delete": "Supprimer le client",
     "deleteHasWorksheets": "Un client avec des fiches de travail ne peut pas être supprimé",
     "deleteTitle": "Supprimer le client ?",
-    "deleteMessage": "Le client « {{name}} » et ses véhicules seront supprimés."
+    "deleteMessage": "Le client « {{name}} » et ses véhicules seront supprimés.",
+    "newWorksheet": "Nouvelle fiche de travail pour ce véhicule"
   },
   "settings": {
     "title": "Paramètres des fiches de travail",

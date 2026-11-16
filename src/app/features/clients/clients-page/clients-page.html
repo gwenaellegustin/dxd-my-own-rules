@@ -110,16 +110,29 @@
                   }
                 </span>
               </label>
-              <button
-                type="button"
-                class="icon-button"
-                aria-haspopup="dialog"
-                [attr.aria-label]="'registration.open' | translate"
-                [attr.title]="'registration.open' | translate"
-                (click)="openVehicle.set({ id: vehicle.id, isNew: false })"
-              >
-                <app-icon name="registration" />
-              </button>
+              <!-- Vehicle info, and a new worksheet for this vehicle -->
+              <span class="tile__buttons">
+                <button
+                  type="button"
+                  class="icon-button"
+                  aria-haspopup="dialog"
+                  [attr.aria-label]="'registration.open' | translate"
+                  [attr.title]="'registration.open' | translate"
+                  (click)="openVehicle.set({ id: vehicle.id, isNew: false })"
+                >
+                  <app-icon name="registration" />
+                </button>
+                <button
+                  type="button"
+                  class="icon-button"
+                  [disabled]="!vehicle.name.trim()"
+                  [attr.aria-label]="'clients.newWorksheet' | translate"
+                  [attr.title]="'clients.newWorksheet' | translate"
+                  (click)="createWorksheet(c, vehicle)"
+                >
+                  <app-icon name="tool" />
+                </button>
+              </span>
             </div>
           }
           <button type="button" class="tile tile--add" (click)="addVehicle(c)">

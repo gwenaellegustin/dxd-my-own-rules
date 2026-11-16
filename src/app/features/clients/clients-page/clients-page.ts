@@ -7,7 +7,7 @@ import { WorksheetStore } from '../../../core/services/worksheet.store';
 import { InvoiceStore } from '../../../core/services/invoice.store';
 import { ClientActivityService } from '../../../core/services/client-activity.service';
 import { invoiceTotals } from '../../../core/models/invoice.model';
-import { Address, Client, ClientChanges } from '../../../core/models/client.model';
+import { Address, Client, ClientChanges, Vehicle } from '../../../core/models/client.model';
 import { PanelsLayout } from '../../../layout/panels-layout/panels-layout';
 import { CardBadge, SortOption, VehicleCardGroup, VehicleSidebar } from '../../../shared/vehicle-sidebar/vehicle-sidebar';
 import { VehicleLogo } from '../../../shared/vehicle-logo/vehicle-logo';
@@ -229,6 +229,12 @@ export class ClientsPage {
   protected addVehicle(client: Client): void {
     const vehicle = this.clients.addVehicle(client.id);
     this.openVehicle.set({ id: vehicle.id, isNew: true });
+  }
+
+  /** New worksheet for this vehicle (and this client), then opened */
+  protected createWorksheet(client: Client, vehicle: Vehicle): void {
+    const worksheet = this.worksheets.create(vehicle.kind, { client: client.name, vehicle: vehicle.name });
+    this.router.navigate(['/worksheets', worksheet.id]);
   }
 
   protected renameVehicle(client: Client, { from, to }: { from: string; to: string }): void {

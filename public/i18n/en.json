@@ -262,7 +262,8 @@
     "delete": "Delete the client",
     "deleteHasWorksheets": "A client with worksheets cannot be deleted",
     "deleteTitle": "Delete the client?",
-    "deleteMessage": "The client \"{{name}}\" and its vehicles will be deleted."
+    "deleteMessage": "The client \"{{name}}\" and its vehicles will be deleted.",
+    "newWorksheet": "New worksheet for this vehicle"
   },
   "settings": {
     "title": "Worksheet settings",
