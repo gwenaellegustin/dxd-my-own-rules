@@ -6,41 +6,41 @@
 </nav>
 
 <!-- Mobile: the current page; opens the list of pages -->
-<div class="mobile">
+<div class="mobile" appDropdown #pages="appDropdown">
   <button
     type="button"
     class="pill pill--active mobile__button"
     aria-haspopup="menu"
-    [attr.aria-expanded]="menuOpen()"
+    [attr.aria-expanded]="pages.open()"
     [attr.aria-label]="'nav.menu' | translate"
-    (click)="menuOpen.set(!menuOpen())"
+    (click)="pages.toggle()"
   >
     <app-icon name="menu" size="small" />
     @if (current(); as page) {
       <app-icon [name]="page.icon" size="small" />
       {{ page.labelKey | translate }}
     }
-    @if (hasBadge() && !menuOpen()) {
+    @if (hasBadge() && !pages.open()) {
       <span class="dot" aria-hidden="true"></span>
     }
   </button>
 
-  @if (menuOpen()) {
-    <nav class="mobile__menu" [attr.aria-label]="'nav.label' | translate">
+  @if (pages.open()) {
+    <nav class="dropdown-menu dropdown-menu--start" [attr.aria-label]="'nav.label' | translate">
       @for (item of items; track item.path) {
-        <ng-container *ngTemplateOutlet="link; context: { $implicit: item, cls: 'menu-item' }" />
+        <ng-container *ngTemplateOutlet="link; context: { $implicit: item, cls: 'dropdown-menu__item', close: pages }" />
       }
     </nav>
   }
 </div>
 
-<ng-template #link let-item let-cls="cls">
+<ng-template #link let-item let-cls="cls" let-close="close">
   <a
     [class]="cls"
     [routerLink]="item.path"
     routerLinkActive="{{ cls }}--active"
     ariaCurrentWhenActive="page"
-    (click)="menuOpen.set(false)"
+    (click)="close?.close()"
   >
     <app-icon [name]="item.icon" size="small" />
     {{ item.labelKey | translate }}

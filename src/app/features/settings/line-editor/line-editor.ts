@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-import { WorksheetStore } from '../../../core/services/worksheet.store';
+import { WorksheetSettingsStore } from '../../../core/services/worksheet-settings.store';
 import { TemplateTextService } from '../../../core/services/template-text.service';
 import { VehicleKind } from '../../../core/models/vehicle-brand.model';
 import { LineField, LineFieldType, TemplateLine } from '../../../core/models/worksheet-template.model';
@@ -26,7 +26,7 @@ const FIELD_TYPES: LineFieldType[] = ['text', 'number', 'date', 'textarea', 'lab
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineEditor {
-  private readonly store = inject(WorksheetStore);
+  private readonly store = inject(WorksheetSettingsStore);
   private readonly texts = inject(TemplateTextService);
 
   readonly line = input.required<TemplateLine>();

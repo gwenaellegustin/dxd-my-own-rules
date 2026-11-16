@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { InvoiceStore } from '../../../core/services/invoice.store';
 import { WorksheetStore } from '../../../core/services/worksheet.store';
+import { WorksheetSettingsStore } from '../../../core/services/worksheet-settings.store';
 import { ClientService } from '../../../core/services/client.service';
 import { Invoice } from '../../../core/models/invoice.model';
 import { PanelsLayout } from '../../../layout/panels-layout/panels-layout';
@@ -22,6 +23,7 @@ export class InvoicePage {
   private readonly router = inject(Router);
   protected readonly store = inject(InvoiceStore);
   protected readonly worksheets = inject(WorksheetStore);
+  protected readonly settings = inject(WorksheetSettingsStore);
   protected readonly clients = inject(ClientService);
   private readonly translate = inject(TranslateService);
   private readonly layout = viewChild.required(PanelsLayout);

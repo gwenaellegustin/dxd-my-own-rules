@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, ElementRef, computed, inject, input, model, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model, output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon, IconName } from '../icon/icon';
 import { Clearable } from '../clearable/clearable';
 import { VehicleLogo } from '../vehicle-logo/vehicle-logo';
+import { Dropdown } from '../dropdown/dropdown';
 
 /** One card of the list: a vehicle and its client (a worksheet, an invoice…) */
 export interface VehicleCard {
@@ -49,15 +50,11 @@ export interface VehicleCardGroup {
  */
 @Component({
   selector: 'app-vehicle-sidebar',
-  imports: [DatePipe, TranslatePipe, Icon, Clearable, VehicleLogo],
+  imports: [DatePipe, TranslatePipe, Icon, Clearable, VehicleLogo, Dropdown],
   templateUrl: './vehicle-sidebar.html',
   styleUrl: './vehicle-sidebar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[class.is-open]': 'open()',
-    '(document:click)': 'closeSortMenuOutside($event)',
-    '(document:keydown.escape)': 'sortMenuOpen.set(false)',
-  },
+  host: { '[class.is-open]': 'open()' },
 })
 export class VehicleSidebar {
   readonly titleKey = input.required<string>();
@@ -80,19 +77,9 @@ export class VehicleSidebar {
   readonly create = output<void>();
   readonly openChange = output<boolean>();
 
-  private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly query = signal('');
-  protected readonly sortMenuOpen = signal(false);
 
-  protected chooseSort(id: string): void {
-    this.sort.set(id);
-    this.sortMenuOpen.set(false);
-  }
 
-  protected closeSortMenuOutside(event: MouseEvent): void {
-    const menu = this.host.nativeElement.querySelector('.sort');
-    if (menu && !menu.contains(event.target as Node)) this.sortMenuOpen.set(false);
-  }
 
   /** Groups filtered by the search; empty groups are hidden */
   protected readonly visibleGroups = computed(() => {

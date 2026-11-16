@@ -5,6 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ClientService } from '../../../core/services/client.service';
 import { WorksheetStore } from '../../../core/services/worksheet.store';
 import { InvoiceStore } from '../../../core/services/invoice.store';
+import { ClientActivityService } from '../../../core/services/client-activity.service';
 import { invoiceTotals } from '../../../core/models/invoice.model';
 import { Address, Client, Vehicle } from '../../../core/models/client.model';
 import { PanelsLayout } from '../../../layout/panels-layout/panels-layout';
@@ -14,11 +15,8 @@ import { VehicleDialog } from '../../../shared/vehicle-dialog/vehicle-dialog';
 import { Clearable } from '../../../shared/clearable/clearable';
 import { Icon } from '../../../shared/icon/icon';
 import { MoneyPipe } from '../../../shared/money/money.pipe';
+import { familyName, sameName } from '../../../core/utils/names';
 
-const sameName = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
-
-/** Last word of a name ("Mr Morard" → Morard) */
-const familyName = (name: string) => name.trim().split(/\s+/).at(-1) ?? '';
 
 /**
  * Clients: list on the left ("New client" at the top); for the selected client, its details
@@ -49,6 +47,7 @@ export class ClientsPage {
   protected readonly clients = inject(ClientService);
   private readonly worksheets = inject(WorksheetStore);
   protected readonly invoices = inject(InvoiceStore);
+  private readonly activity = inject(ClientActivityService);
   private readonly layout = viewChild.required(PanelsLayout);
 
   /** Route parameter `:id` (bound via withComponentInputBinding) */
@@ -61,35 +60,6 @@ export class ClientsPage {
   /** Order of the list: family name (default) or last activity */
   protected readonly sort = signal<string | null>('name');
 
-  /** Worksheets and invoices of each client (by name, lower case) */
-  private readonly activity = computed(() => {
-    const byClient = new Map<string, { lastDate: string; openWorksheets: number; openInvoices: number; sentInvoices: number }>();
-    const entry = (name: string) => {
-      const key = name.trim().toLowerCase();
-      if (!byClient.has(key)) byClient.set(key, { lastDate: '', openWorksheets: 0, openInvoices: 0, sentInvoices: 0 });
-      return byClient.get(key)!;
-    };
-    const worksheets = new Map(this.worksheets.worksheets().map((worksheet) => [worksheet.id, worksheet]));
-    for (const worksheet of worksheets.values()) {
-      const e = entry(worksheet.client);
-      if (worksheet.status === 'open') e.openWorksheets++;
-      if (worksheet.date && worksheet.date > e.lastDate) e.lastDate = worksheet.date;
-    }
-    for (const invoice of this.invoices.invoices()) {
-      const worksheet = worksheets.get(invoice.worksheetId);
-      if (!worksheet) continue;
-      const e = entry(worksheet.client);
-      if (invoice.status === 'open') e.openInvoices++;
-      if (invoice.status === 'sent') e.sentInvoices++;
-      if (invoice.date > e.lastDate) e.lastDate = invoice.date;
-    }
-    return byClient;
-  });
-
-  private activityOf(client: Client) {
-    return this.activity().get(client.name.trim().toLowerCase());
-  }
-
   /** Family name order (last word: "Fabrice Favre" → Favre), or most recent activity first */
   private readonly sortedClients = computed(() => {
     const byName = (a: Client, b: Client) =>
@@ -97,7 +67,7 @@ export class ClientsPage {
     const clients = [...this.clients.clients()];
     if (this.sort() === 'date') {
       return clients.sort(
-        (a, b) => (this.activityOf(b)?.lastDate ?? '').localeCompare(this.activityOf(a)?.lastDate ?? '') || byName(a, b),
+        (a, b) => this.activity.of(b.name).lastDate.localeCompare(this.activity.of(a.name).lastDate) || byName(a, b),
       );
     }
     return clients.sort(byName);
@@ -183,8 +153,7 @@ export class ClientsPage {
 
   /** Open worksheets (grey), open invoices (blue), sent invoices not paid (red); none when 0 */
   private badgesOf(client: Client): CardBadge[] {
-    const activity = this.activityOf(client);
-    if (!activity) return [];
+    const activity = this.activity.of(client.name);
     const badges: CardBadge[] = [
       { count: activity.openWorksheets, icon: 'tool', tone: 'neutral', labelKey: 'clients.badges.openWorksheets' },
       { count: activity.openInvoices, icon: 'invoice', tone: 'open', labelKey: 'clients.badges.openInvoices' },

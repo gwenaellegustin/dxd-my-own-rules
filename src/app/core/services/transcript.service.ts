@@ -3,17 +3,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
 import { TranscriptMessage } from '../models/transcript.model';
+import { readPreference, writePreference } from '../utils/local-storage';
 
-const WIDTH_KEY = 'greasy-notes.transcriptWidth';
-
-function readWidth(): number | null {
-  try {
-    const width = Number(localStorage.getItem(WIDTH_KEY));
-    return width > 0 ? width : null;
-  } catch {
-    return null;
-  }
-}
+const WIDTH_KEY = 'transcriptWidth';
 
 @Injectable({ providedIn: 'root' })
 export class TranscriptService {
@@ -36,15 +28,13 @@ export class TranscriptService {
   scrollTop: number | null = null;
 
   /** Width of the open panel (px) chosen by dragging its edge; null = default width. Remembered. */
-  readonly width = signal<number | null>(readWidth());
+  readonly width = signal<number | null>(Number(readPreference(WIDTH_KEY)) || null);
 
-  setWidth(width: number): void {
-    this.width.set(Math.round(width));
-    try {
-      localStorage.setItem(WIDTH_KEY, String(Math.round(width)));
-    } catch {
-      // storage unavailable: the width is simply not remembered
-    }
+  /** `null`: back to the default width */
+  setWidth(width: number | null): void {
+    const rounded = width === null ? null : Math.round(width);
+    this.width.set(rounded);
+    writePreference(WIDTH_KEY, rounded === null ? null : String(rounded));
   }
 
   /** Problem answers already seen and validated by the user (kept in memory) */

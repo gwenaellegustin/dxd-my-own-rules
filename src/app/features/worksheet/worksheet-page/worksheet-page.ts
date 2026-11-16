@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, si
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WorksheetStore } from '../../../core/services/worksheet.store';
+import { WorksheetSettingsStore } from '../../../core/services/worksheet-settings.store';
 import { InvoiceStore } from '../../../core/services/invoice.store';
 import { LineState, Worksheet } from '../../../core/models/worksheet.model';
 import { TemplateSection } from '../../../core/models/worksheet-template.model';
@@ -26,6 +27,7 @@ import { CarryOverDialog, CarryOverGroup, CarryOverResult } from '../carry-over-
 export class WorksheetPage {
   private readonly router = inject(Router);
   protected readonly store = inject(WorksheetStore);
+  protected readonly settings = inject(WorksheetSettingsStore);
   private readonly invoices = inject(InvoiceStore);
   private readonly clients = inject(ClientService);
   private readonly layout = viewChild.required(PanelsLayout);
@@ -107,7 +109,7 @@ export class WorksheetPage {
 
   /** Lines planned but not done, grouped by section; asked before creating the invoice */
   protected createInvoice(worksheet: Worksheet): void {
-    const groups = (this.store.templateFor(worksheet.kind)?.sections ?? [])
+    const groups = (this.settings.templateFor(worksheet.kind)?.sections ?? [])
       .map((section) => ({
         sectionTitleKey: section.titleKey,
         items: section.lines.flatMap((line) =>
@@ -143,7 +145,7 @@ export class WorksheetPage {
     const updated = this.store.getById(worksheet.id) ?? worksheet;
     const invoice = this.invoices.createFromWorksheet(
       updated,
-      this.store.allSections(),
+      this.settings.allSections(),
       this.clients.byName(updated.client)?.rateId,
     );
     this.router.navigate(['/invoices', invoice.id]);

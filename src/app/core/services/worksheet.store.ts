@@ -1,32 +1,12 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { forkJoin } from 'rxjs';
 import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
-import {
-  PlanningRule,
-  TemplateLine,
-  TemplateSection,
-  WorksheetSettings,
-  WorksheetTemplate,
-} from '../models/worksheet-template.model';
+import { TemplateLine } from '../models/worksheet-template.model';
 import { VehicleKind } from '../models/vehicle-brand.model';
-import {
-  Damage,
-  LineState,
-  Worksheet,
-  WorksheetStatus,
-  emptyLineState,
-} from '../models/worksheet.model';
+import { Damage, LineState, Worksheet, WorksheetStatus, emptyLineState } from '../models/worksheet.model';
+import { sameName } from '../utils/names';
+import { WorksheetSettingsStore } from './worksheet-settings.store';
 
-/**
- * Holds the worksheets and the worksheet settings (template per kind of vehicle, default values
- * of a new worksheet, planning rules) in memory.
- * Edits are kept client-side for the prototype; replace the `update*`
- * methods with API calls once a backend exists.
- *
- * Every edit is recorded for undo / redo (Ctrl+Z / Ctrl+Y, see WorksheetPage).
- * Typing in one field is grouped into one step, like in a text editor.
- */
 /** `typing`: the edit comes from typing in a text field (grouped into one undo step) */
 export interface EditOptions {
   typing?: boolean;
@@ -37,13 +17,22 @@ const HISTORY_LIMIT = 100;
 /** Keystrokes in the same field closer than this make one undo step */
 const TYPING_GROUP_MS = 1000;
 
+/**
+ * Holds the worksheets in memory. Edits are kept client-side for the prototype; replace the
+ * `update*` methods with API calls once a backend exists. Their lines and default values come
+ * from the settings (WorksheetSettingsStore).
+ *
+ * Every edit is recorded for undo / redo (Ctrl+Z / Ctrl+Y, see WorksheetPage).
+ * Typing in one field is grouped into one step, like in a text editor.
+ */
 @Injectable({ providedIn: 'root' })
 export class WorksheetStore {
   private readonly api = inject(ApiService);
+  private readonly settings = inject(WorksheetSettingsStore);
 
   private readonly _worksheets = signal<Worksheet[]>([]);
-  private readonly _settings = signal<WorksheetSettings | null>(null);
   private readonly _loaded = signal(false);
+  private loading = false;
 
   /** Previous states of the worksheet list (immutable snapshots), most recent last */
   private readonly undoStack = signal<Worksheet[][]>([]);
@@ -52,10 +41,9 @@ export class WorksheetStore {
   private lastEdit: { key: string; time: number } | null = null;
 
   readonly worksheets = this._worksheets.asReadonly();
+  readonly loaded = this._loaded.asReadonly();
   readonly canUndo = computed(() => this.undoStack().length > 0);
   readonly canRedo = computed(() => this.redoStack().length > 0);
-  readonly settings = this._settings.asReadonly();
-  readonly loaded = this._loaded.asReadonly();
 
   readonly byStatus = computed(() => {
     const groups: Record<WorksheetStatus, Worksheet[]> = { open: [], invoiced: [] };
@@ -63,13 +51,12 @@ export class WorksheetStore {
     return groups;
   });
 
+  /** Loads the worksheets and their settings (once) */
   load(): void {
-    if (this._loaded()) return;
-    forkJoin({
-      settings: this.api.get<WorksheetSettings>(API_ENDPOINTS.worksheetSettings),
-      worksheets: this.api.get<Worksheet[]>(API_ENDPOINTS.worksheets),
-    }).subscribe(({ settings, worksheets }) => {
-      this._settings.set(settings);
+    this.settings.load();
+    if (this.loading) return;
+    this.loading = true;
+    this.api.get<Worksheet[]>(API_ENDPOINTS.worksheets).subscribe((worksheets) => {
       this._worksheets.set(worksheets);
       this._loaded.set(true);
     });
@@ -77,27 +64,6 @@ export class WorksheetStore {
 
   getById(id: string | null): Worksheet | undefined {
     return this._worksheets().find((worksheet) => worksheet.id === id);
-  }
-
-  /**
-   * Sections with the lines of every template (an invoice shows the items of any worksheet,
-   * whatever the kind of its vehicle)
-   */
-  readonly allSections = computed(() => {
-    const sections = new Map<string, TemplateSection>();
-    for (const template of this._settings()?.templates ?? []) {
-      for (const section of template.sections) {
-        const known = sections.get(section.id);
-        const lines = known ? [...known.lines, ...section.lines.filter((l) => !known.lines.some((k) => k.id === l.id))] : section.lines;
-        sections.set(section.id, { ...section, lines });
-      }
-    }
-    return [...sections.values()];
-  });
-
-  /** Template (lines) of a kind of vehicle */
-  templateFor(kind: VehicleKind): WorksheetTemplate | undefined {
-    return this._settings()?.templates.find((template) => template.kind === kind);
   }
 
   /** New worksheet: its lines start with the default values of its kind (see settings) */
@@ -113,7 +79,7 @@ export class WorksheetStore {
       hours: '',
       comments: '',
       damages: [],
-      lines: structuredClone(this.templateFor(kind)?.defaults ?? {}),
+      lines: structuredClone(this.settings.templateFor(kind)?.defaults ?? {}),
     };
     this.record();
     this._worksheets.update((list) => [worksheet, ...list]);
@@ -142,87 +108,10 @@ export class WorksheetStore {
       id,
       (worksheet) => {
         const lines = { ...worksheet.lines, [lineId]: { ...this.lineState(worksheet, lineId), ...changes } };
-        return { ...worksheet, lines: this.applyRules(worksheet.kind, lineId, lines) };
+        return { ...worksheet, lines: this.settings.applyRules(worksheet.kind, lineId, lines) };
       },
       typingKey,
     );
-  }
-
-  // ----- Settings (edited on the settings page; not part of the worksheet undo history) -----
-
-  /** Default state of a line of new worksheets */
-  updateDefaultLine(kind: VehicleKind, lineId: string, changes: Partial<LineState>): void {
-    this.patchTemplate(kind, (template) => ({
-      ...template,
-      defaults: {
-        ...template.defaults,
-        [lineId]: { ...(template.defaults[lineId] ?? emptyLineState()), ...changes },
-      },
-    }));
-  }
-
-  removeDefaultLine(kind: VehicleKind, lineId: string): void {
-    this.patchTemplate(kind, (template) => {
-      const { [lineId]: _removed, ...defaults } = template.defaults;
-      return { ...template, defaults };
-    });
-  }
-
-  /** Changes a line of a template (title, fields…) */
-  updateTemplateLine(kind: VehicleKind, lineId: string, fn: (line: TemplateLine) => TemplateLine): void {
-    this.patchTemplate(kind, (template) => ({
-      ...template,
-      sections: template.sections.map((section) => ({
-        ...section,
-        lines: section.lines.map((line) => (line.id === lineId ? fn(line) : line)),
-      })),
-    }));
-  }
-
-  /** Adds a line to a section of a template, at `index` */
-  insertTemplateLine(kind: VehicleKind, sectionId: string, index: number, line: TemplateLine): void {
-    this.patchTemplate(kind, (template) => ({
-      ...template,
-      sections: template.sections.map((section) =>
-        section.id === sectionId
-          ? { ...section, lines: [...section.lines.slice(0, index), line, ...section.lines.slice(index)] }
-          : section,
-      ),
-    }));
-  }
-
-  /** Moves a line inside its section (drag and drop of the settings page) */
-  moveTemplateLine(kind: VehicleKind, sectionId: string, from: number, to: number): void {
-    this.patchTemplate(kind, (template) => ({
-      ...template,
-      sections: template.sections.map((section) => {
-        if (section.id !== sectionId) return section;
-        const lines = [...section.lines];
-        const [moved] = lines.splice(from, 1);
-        lines.splice(to, 0, moved);
-        return { ...section, lines };
-      }),
-    }));
-  }
-
-  addRule(kind: VehicleKind): PlanningRule {
-    const firstLine = this.templateFor(kind)
-      ?.sections.flatMap((section) => section.lines)
-      .find((line) => line.titleKey);
-    const rule: PlanningRule = { id: crypto.randomUUID(), kind, lineId: firstLine?.id ?? '', plan: [] };
-    this.patchSettings((settings) => ({ ...settings, rules: [...settings.rules, rule] }));
-    return rule;
-  }
-
-  updateRule(id: string, changes: Partial<Omit<PlanningRule, 'id' | 'kind'>>): void {
-    this.patchSettings((settings) => ({
-      ...settings,
-      rules: settings.rules.map((rule) => (rule.id === id ? { ...rule, ...changes } : rule)),
-    }));
-  }
-
-  removeRule(id: string): void {
-    this.patchSettings((settings) => ({ ...settings, rules: settings.rules.filter((rule) => rule.id !== id) }));
   }
 
   /** Removes a line instance (repeatable "Other" lines) */
@@ -266,10 +155,9 @@ export class WorksheetStore {
    * `client`: only the vehicles of this client are renamed.
    */
   rename(field: 'client' | 'vehicle', from: string, to: string, client?: string): void {
-    const same = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
-    if (!from.trim() || same(from, to)) return;
+    if (!from.trim() || sameName(from, to)) return;
     const matches = (worksheet: Worksheet) =>
-      same(worksheet[field], from) && (client === undefined || same(worksheet.client, client));
+      sameName(worksheet[field], from) && (client === undefined || sameName(worksheet.client, client));
     const rename = (list: Worksheet[]) =>
       list.map((worksheet) => (matches(worksheet) ? { ...worksheet, [field]: to } : worksheet));
     this._worksheets.update(rename);
@@ -312,39 +200,6 @@ export class WorksheetStore {
     this.undoStack.update((stack) => [...stack, this._worksheets()].slice(-HISTORY_LIMIT));
   }
 
-  /**
-   * Rules triggered by the edited line (`lineId`, an instance key): when it is planned and its
-   * field matches, the rule's lines are planned (never unplanned: they can be unchecked after)
-   */
-  private applyRules(kind: VehicleKind, lineId: string, lines: Record<string, LineState>): Record<string, LineState> {
-    const baseId = lineId.split('~')[0];
-    const trigger = lines[lineId];
-    if (!trigger?.planned) return lines;
-    const matches = (rule: PlanningRule) =>
-      rule.kind === kind &&
-      rule.lineId === baseId &&
-      (!rule.fieldId || (rule.values ?? []).includes(String(trigger.values[rule.fieldId] ?? '')));
-    const result = { ...lines };
-    for (const rule of this._settings()?.rules.filter(matches) ?? []) {
-      for (const target of rule.plan) {
-        const state = result[target] ?? emptyLineState();
-        if (!state.planned) result[target] = { ...state, planned: true };
-      }
-    }
-    return result;
-  }
-
-  private patchTemplate(kind: VehicleKind, fn: (template: WorksheetTemplate) => WorksheetTemplate): void {
-    this.patchSettings((settings) => ({
-      ...settings,
-      templates: settings.templates.map((template) => (template.kind === kind ? fn(template) : template)),
-    }));
-  }
-
-  private patchSettings(fn: (settings: WorksheetSettings) => WorksheetSettings): void {
-    this._settings.update((settings) => (settings ? fn(settings) : settings));
-  }
-
   private clearHistory(): void {
     this.undoStack.set([]);
     this.redoStack.set([]);
@@ -366,7 +221,7 @@ export class WorksheetStore {
 }
 
 /** Keys of the instances of a line in `lines` (see WorksheetStore.lineInstanceIds) */
-export function lineInstanceIds(lines: Record<string, LineState>, line: TemplateLine, locked = false): string[] {
+function lineInstanceIds(lines: Record<string, LineState>, line: TemplateLine, locked = false): string[] {
   if (!line.repeatable) return [line.id];
   const index = (key: string) => (key === line.id ? 1 : Number(key.slice(line.id.length + 1)));
   const ids = Object.keys(lines)

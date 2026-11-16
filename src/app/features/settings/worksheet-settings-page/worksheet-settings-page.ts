@@ -2,6 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WorksheetStore } from '../../../core/services/worksheet.store';
+import { WorksheetSettingsStore } from '../../../core/services/worksheet-settings.store';
 import { VehicleKind } from '../../../core/models/vehicle-brand.model';
 import { PlanningRule, TemplateLine } from '../../../core/models/worksheet-template.model';
 import { LineEditor } from '../line-editor/line-editor';
@@ -16,7 +17,7 @@ type SettingsTab = 'defaults' | 'rules';
  * Worksheet settings (account menu), per kind of vehicle (car / motorcycle):
  * - Default values: the state of the lines of a new worksheet (planned, values, notes).
  * - Planning rules: "when this line is planned (with these options), also plan those lines".
- * Kept in memory like the rest of the prototype (WorksheetStore).
+ * Kept in memory like the rest of the prototype (WorksheetSettingsStore).
  */
 @Component({
   selector: 'app-worksheet-settings-page',
@@ -26,7 +27,7 @@ type SettingsTab = 'defaults' | 'rules';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorksheetSettingsPage {
-  protected readonly store = inject(WorksheetStore);
+  protected readonly store = inject(WorksheetSettingsStore);
 
   protected readonly kinds: VehicleKind[] = ['car', 'motorcycle'];
   protected readonly tabs: SettingsTab[] = ['defaults', 'rules'];
@@ -68,7 +69,7 @@ export class WorksheetSettingsPage {
     }),
   );
 
-  protected readonly rules = computed(() => (this.store.settings()?.rules ?? []).filter((rule) => rule.kind === this.kind()));
+  protected readonly rules = computed(() => this.store.rulesFor(this.kind()));
 
   /** Line whose handle is pressed (only it can be dragged, not from its inputs) */
   protected readonly armed = signal<string | null>(null);
@@ -79,7 +80,8 @@ export class WorksheetSettingsPage {
   private readonly texts = inject(TemplateTextService);
 
   constructor() {
-    this.store.load();
+    // Settings and the worksheets that use them
+    inject(WorksheetStore).load();
     // Texts are edited in every language at once
     this.texts.load();
   }

@@ -31,7 +31,7 @@
         (vehicleRenamed)="store.rename('vehicle', $event.from, $event.to, ws.client)"
       />
 
-      @for (section of store.templateFor(ws.kind)?.sections ?? []; track section.id) {
+      @for (section of settings.templateFor(ws.kind)?.sections ?? []; track section.id) {
         @let collapsed = isCollapsed(section.id);
         <section class="section" [class.section--collapsed]="collapsed">
           <!-- Only the title and its arrow toggle the section, not the whole row -->

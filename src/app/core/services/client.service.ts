@@ -3,8 +3,8 @@ import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
 import { Address, Client, ClientChanges, Vehicle, VehicleChanges, VehicleKind } from '../models/client.model';
 import { VehicleBrandService } from './vehicle-brand.service';
+import { sameName } from '../utils/names';
 
-const sameName = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
 
 /**
  * Clients and their vehicle files, kept in memory for the prototype (replace the edit methods

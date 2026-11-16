@@ -25,28 +25,28 @@
 
       <!-- Order of the cards (e.g. last date / name) -->
       @if (sortOptions().length) {
-        <div class="sort">
+        <div appDropdown #sortMenu="appDropdown">
           <button
             type="button"
             class="icon-button"
             aria-haspopup="menu"
-            [attr.aria-expanded]="sortMenuOpen()"
+            [attr.aria-expanded]="sortMenu.open()"
             [attr.aria-label]="'common.sortBy' | translate"
             [attr.title]="'common.sortBy' | translate"
-            (click)="sortMenuOpen.set(!sortMenuOpen())"
+            (click)="sortMenu.toggle()"
           >
             <app-icon name="sort" />
           </button>
-          @if (sortMenuOpen()) {
-            <div class="sort__menu" role="menu">
-              <p class="sort__title text-small text-secondary">{{ 'common.sortBy' | translate }}</p>
+          @if (sortMenu.open()) {
+            <div class="dropdown-menu" role="menu">
+              <p class="dropdown-menu__title text-small text-secondary">{{ 'common.sortBy' | translate }}</p>
               @for (option of sortOptions(); track option.id) {
                 <button
                   type="button"
                   role="menuitemradio"
-                  class="sort__option"
+                  class="dropdown-menu__item"
                   [attr.aria-checked]="sort() === option.id"
-                  (click)="chooseSort(option.id)"
+                  (click)="sort.set(option.id); sortMenu.close()"
                 >
                   <app-icon name="check" size="small" [class.sort__check--hidden]="sort() !== option.id" />
                   {{ option.labelKey | translate }}

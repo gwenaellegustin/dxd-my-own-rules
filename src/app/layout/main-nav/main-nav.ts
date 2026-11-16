@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NgTemplateOutlet } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -6,6 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { filter, map } from 'rxjs';
 import { Icon, IconName } from '../../shared/icon/icon';
 import { ShoppingListService } from '../../core/services/shopping-list.service';
+import { Dropdown } from '../../shared/dropdown/dropdown';
 
 interface NavItem {
   path: string;
@@ -20,17 +21,12 @@ interface NavItem {
  */
 @Component({
   selector: 'app-main-nav',
-  imports: [NgTemplateOutlet, RouterLink, RouterLinkActive, TranslatePipe, Icon],
+  imports: [NgTemplateOutlet, RouterLink, RouterLinkActive, TranslatePipe, Icon, Dropdown],
   templateUrl: './main-nav.html',
   styleUrl: './main-nav.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '(document:click)': 'closeOutside($event)',
-    '(document:keydown.escape)': 'menuOpen.set(false)',
-  },
 })
 export class MainNav {
-  private readonly host = inject(ElementRef<HTMLElement>);
   private readonly router = inject(Router);
   private readonly shoppingList = inject(ShoppingListService);
 
@@ -40,8 +36,6 @@ export class MainNav {
     { path: '/clients', labelKey: 'nav.clients', icon: 'person' },
     { path: '/shopping-list', labelKey: 'nav.shoppingList', icon: 'cart', badge: () => this.shoppingList.count() },
   ];
-
-  protected readonly menuOpen = signal(false);
 
   private readonly url = toSignal(
     this.router.events.pipe(
@@ -57,7 +51,4 @@ export class MainNav {
   /** Something to see in the menu (shown on the closed mobile button) */
   protected readonly hasBadge = computed(() => this.items.some((item) => (item.badge?.() ?? 0) > 0));
 
-  protected closeOutside(event: MouseEvent): void {
-    if (!this.host.nativeElement.contains(event.target as Node)) this.menuOpen.set(false);
-  }
 }

@@ -32,16 +32,21 @@ src/
   styles/          _tokens.scss (CSS variables), _breakpoints.scss, _side-panel.scss
   styles.scss      base styles and shared form controls
   app/
-    core/          models, API access, services (worksheet & invoice stores, language, user…)
-    layout/        application header, panels layout (left panel | work area | transcript),
-                   transcript panel (common to the whole app)
-    shared/        icon, vehicle logo, vehicle sidebar (cards list), vehicle info dialog,
-                   modal dialog, money pipe, form helpers
+    core/          models, API access, services, utils (names, saved preferences)
+                   - stores: worksheets (with undo), worksheet settings (templates, default
+                     values, rules), invoices, clients, shopping list, transcript
+                   - client activity (counts and last date of each client), highlight (shows
+                     the element a transcript change refers to)
+    layout/        header, main navigation (pills / mobile menu), panels layout
+                   (left panel | work area | transcript), transcript panel and change cards
+    shared/        icon, vehicle logo, vehicle sidebar (cards list, search, sort), vehicle info
+                   dialog, modal dialog, dropdown menu, money pipe, form helpers
     features/
       worksheet/   worksheet page: details, task line, carry-over dialog
       invoice/     invoice page and invoice document
-      clients/     clients page (vehicles, open worksheets, invoices)
+      clients/     clients page (details, vehicles, open worksheets, invoices)
       shopping-list/   shopping list
+      settings/    worksheet settings: line editor (FR / EN texts), planning rules
 ```
 
 ## Conventions
@@ -49,6 +54,10 @@ src/
 - **Design tokens** — all colors, spacing, typography and sizes are CSS variables in
   `src/styles/_tokens.scss`. The current values are a greyscale wireframe: change them there to
   apply the final colors, components never hard-code values.
+- **Menus**: the `appDropdown` directive (`shared/dropdown/`) opens / closes a menu (outside click,
+  Escape); style it with the global `.dropdown-menu` classes.
+- **Preferences** (language, transcript width) are saved in the browser with `readPreference` /
+  `writePreference` (`core/utils/local-storage.ts`).
 - **Form helpers** (`src/app/shared/`): `<app-clearable>` adds a ✕ reset button to a text field,
   `<app-combobox>` is a select that also accepts free text (client / vehicle, suggestions from
   `clients.json`), `appAutoGrow` makes a textarea grow with its content.
@@ -56,7 +65,7 @@ src/
   current text color. To add one, map it in `shared/icon/icon.ts` and add it to `icon_names` in `index.html`.
 - **Brand logos** (`public/images/brands/`) come from [Simple Icons](https://simpleicons.org) and are
   listed in `mock-api/vehicle-brands.json` (with aliases, e.g. "vw" → Volkswagen). A worksheet card
-  shows the logo when its vehicle matches a brand, otherwise the status icon. Logos are trademarks
+  shows the logo when its vehicle matches a brand, otherwise a car / motorcycle icon (or the lift for work in progress). Logos are trademarks
   of their owners. The Triumph logo is not in Simple Icons: it comes from
   [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Logo_Triumph.svg) (public domain).
   A brand without a logo can set `"kind": "motorcycle"` to show a motorcycle instead of a car.

@@ -1,11 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { readPreference, writePreference } from '../utils/local-storage';
 
 export const SUPPORTED_LANGUAGES = ['en', 'fr'] as const;
 export type Language = (typeof SUPPORTED_LANGUAGES)[number];
 
-const STORAGE_KEY = 'greasy-notes.language';
+const STORAGE_KEY = 'language';
 const DEFAULT_LANGUAGE: Language = 'en';
 
 @Injectable({ providedIn: 'root' })
@@ -24,19 +25,11 @@ export class LanguageService {
   use(language: Language): void {
     this.translate.use(language);
     this.document.documentElement.lang = language;
-    try {
-      localStorage.setItem(STORAGE_KEY, language);
-    } catch {
-      // storage unavailable (private mode…): the choice simply isn't remembered
-    }
+    writePreference(STORAGE_KEY, language);
   }
 
   private storedLanguage(): Language | null {
-    try {
-      return this.asSupported(localStorage.getItem(STORAGE_KEY));
-    } catch {
-      return null;
-    }
+    return this.asSupported(readPreference(STORAGE_KEY));
   }
 
   private asSupported(value: string | null): Language | null {
