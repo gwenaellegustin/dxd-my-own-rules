@@ -2,16 +2,7 @@
   <img class="logo__image" src="images/logo.png" alt="" />
 </a>
 
-<nav class="nav" [attr.aria-label]="'nav.label' | translate">
-  @for (item of navItems; track item.path) {
-    <a class="nav__pill" [routerLink]="item.path" routerLinkActive="nav__pill--active" ariaCurrentWhenActive="page">
-      {{ item.labelKey | translate }}
-      @if (item.badge?.(); as count) {
-        <span class="nav__badge" [attr.aria-label]="'nav.badgeCount' | translate: { count }">{{ count }}</span>
-      }
-    </a>
-  }
-</nav>
+<app-main-nav />
 
 <div class="language" role="group" [attr.aria-label]="'account.language' | translate">
   @for (lang of language.languages; track lang) {

@@ -26,6 +26,7 @@ const MATERIAL_SYMBOLS = {
   receipt: 'receipt',
   'left-panel-close': 'left_panel_close',
   lift: 'car_repair',
+  menu: 'menu',
   'plus-circle': 'add_circle',
   'right-panel-close': 'right_panel_close',
   search: 'search',

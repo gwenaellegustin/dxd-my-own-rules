@@ -31,61 +31,6 @@
   height: var(--logo-size);
 }
 
-.nav {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: var(--space-100);
-  // On narrow screens the pills scroll horizontally instead of wrapping
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding: var(--space-100) 0;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-.nav__pill {
-  position: relative;
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  padding: var(--space-200);
-  border-radius: var(--radius-200);
-  color: var(--color-text-default);
-  line-height: var(--line-height-single);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background-color var(--transition-fast);
-
-  &:hover,
-  &--active {
-    background: var(--color-background-brand-subtle);
-  }
-}
-
-// Notification badge overlapping the top-right corner of the pill
-// The number is centred in the circle (2 digits still fit; it becomes a pill beyond)
-.nav__badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--badge-size);
-  height: var(--badge-size);
-  margin: calc(var(--space-200) * -1) calc(var(--space-200) * -1) 0 0;
-  align-self: flex-start;
-  padding: 0 var(--space-100);
-  border-radius: var(--radius-full);
-  background: var(--color-background-brand);
-  color: var(--color-text-on-brand);
-  font-size: var(--badge-font-size);
-  font-weight: var(--font-weight-strong);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-
 // EN | FR segmented switch
 .language {
   flex: none;

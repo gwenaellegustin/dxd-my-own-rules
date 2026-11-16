@@ -8,7 +8,8 @@
     "invoice": "Facture",
     "clients": "Clients",
     "shoppingList": "Liste d'achats",
-    "badgeCount": "{{count}} articles"
+    "badgeCount": "{{count}} articles",
+    "menu": "Pages"
   },
   "account": {
     "menu": "Menu du compte",
