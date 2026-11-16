@@ -100,7 +100,8 @@
     "problems": "{{count}} réponse(s) à vérifier",
     "noAction": "Aucune action effectuée",
     "validate": "Ok",
-    "shoppingList": "Liste d’achats"
+    "shoppingList": "Liste d’achats",
+    "resize": "Glisser pour redimensionner le panneau (double clic : largeur par défaut)"
   },
   "template": {
     "labour": {

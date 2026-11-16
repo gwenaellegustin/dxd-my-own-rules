@@ -100,7 +100,8 @@
     "problems": "{{count}} answer(s) to check",
     "noAction": "No action done",
     "validate": "Ok",
-    "shoppingList": "Shopping list"
+    "shoppingList": "Shopping list",
+    "resize": "Drag to resize the panel (double click: default width)"
   },
   "template": {
     "labour": {

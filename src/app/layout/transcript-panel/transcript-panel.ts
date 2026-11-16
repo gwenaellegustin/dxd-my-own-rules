@@ -50,6 +50,47 @@ export class TranscriptPanel {
 
   protected readonly query = signal('');
 
+  /** Drag of the left edge: the panel is on the right, so moving left makes it wider */
+  protected startResize(event: PointerEvent): void {
+    const handle = event.currentTarget as HTMLElement;
+    const panel = handle.parentElement!;
+    const startX = event.clientX;
+    const startWidth = panel.getBoundingClientRect().width;
+    handle.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    const move = (e: PointerEvent) => this.transcript.setWidth(this.clamp(panel, startWidth + startX - e.clientX));
+    const end = () => {
+      handle.removeEventListener('pointermove', move);
+      handle.removeEventListener('pointerup', end);
+      handle.removeEventListener('pointercancel', end);
+    };
+    handle.addEventListener('pointermove', move);
+    handle.addEventListener('pointerup', end);
+    handle.addEventListener('pointercancel', end);
+  }
+
+  protected resizeBy(delta: number): void {
+    const panel = this.scroller()?.nativeElement.closest<HTMLElement>('.panel');
+    if (panel) this.transcript.setWidth(this.clamp(panel, panel.getBoundingClientRect().width + delta));
+  }
+
+  protected resetWidth(): void {
+    this.transcript.width.set(null);
+    try {
+      localStorage.removeItem('garage.transcriptWidth');
+    } catch {
+      // nothing remembered
+    }
+  }
+
+  /** Between the min / max width tokens */
+  private clamp(panel: HTMLElement, width: number): number {
+    const style = getComputedStyle(panel);
+    const min = parseFloat(style.getPropertyValue('--transcript-min-width')) || 0;
+    const max = parseFloat(style.getPropertyValue('--transcript-max-width')) || width;
+    return Math.min(max, Math.max(min, width));
+  }
+
   protected show(change: TranscriptChange): void {
     this.highlight.show(change.target, change.area);
   }

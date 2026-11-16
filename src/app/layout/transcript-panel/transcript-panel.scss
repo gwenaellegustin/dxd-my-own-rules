@@ -1,6 +1,52 @@
 @use 'side-panel';
 
+@use 'breakpoints' as bp;
+
 @include side-panel.side-panel(right);
+
+// Desktop: the width can be changed by dragging the left edge (see .resize)
+.panel {
+  width: var(--transcript-width, var(--panel-width));
+
+  // Desktop only: on smaller screens the panel is an overlay (absolute / fixed, see side-panel)
+  @media (min-width: bp.$tablet-max + 1) {
+    position: relative;
+  }
+
+  min-width: var(--transcript-min-width);
+  max-width: var(--transcript-max-width);
+
+  @include bp.tablet-down {
+    width: var(--panel-width);
+    min-width: 0;
+  }
+
+  @include bp.mobile {
+    width: auto;
+    max-width: none;
+  }
+}
+
+.resize {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--resize-handle-width) / -2);
+  z-index: 1;
+  width: var(--resize-handle-width);
+  cursor: col-resize;
+  touch-action: none;
+
+  &:hover,
+  &:focus-visible {
+    outline: none;
+    background: linear-gradient(var(--color-border-strong), var(--color-border-strong)) center / 2px 100% no-repeat;
+  }
+
+  @include bp.tablet-down {
+    display: none;
+  }
+}
 
 .day {
   display: flex;

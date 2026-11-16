@@ -4,6 +4,17 @@ import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
 import { TranscriptMessage } from '../models/transcript.model';
 
+const WIDTH_KEY = 'garage.transcriptWidth';
+
+function readWidth(): number | null {
+  try {
+    const width = Number(localStorage.getItem(WIDTH_KEY));
+    return width > 0 ? width : null;
+  } catch {
+    return null;
+  }
+}
+
 @Injectable({ providedIn: 'root' })
 export class TranscriptService {
   private readonly api = inject(ApiService);
@@ -23,6 +34,18 @@ export class TranscriptService {
    * panel). Null until the panel was scrolled: it then opens on today.
    */
   scrollTop: number | null = null;
+
+  /** Width of the open panel (px) chosen by dragging its edge; null = default width. Remembered. */
+  readonly width = signal<number | null>(readWidth());
+
+  setWidth(width: number): void {
+    this.width.set(Math.round(width));
+    try {
+      localStorage.setItem(WIDTH_KEY, String(Math.round(width)));
+    } catch {
+      // storage unavailable: the width is simply not remembered
+    }
+  }
 
   /** Problem answers already seen and validated by the user (kept in memory) */
   private readonly validated = signal<ReadonlySet<string>>(new Set());

@@ -120,7 +120,9 @@ new value. Clicking a card opens that worksheet or invoice and highlights the ch
 with a border (`HighlightService`, elements marked with `data-area`: `hours`, `line:engineOil`,
 `item:brakeFluid`…)
 until the next click. The panel stays open, and keeps its scroll position from one page to
-another (`TranscriptService`).
+another (`TranscriptService`). On desktop its width can be changed by dragging its left edge
+(or with the arrow keys on the edge; double click: default width), between
+`--transcript-min-width` and `--transcript-max-width`; the width is remembered in the browser.
 An answer the assistant could not apply (`"problem": true`, e.g. it did not know which vehicle)
 has a light red background, and a red badge next to the panel title (also on the closed panel)
 counts them. It says that no action was done; the *Ok* button ("Mark chat read" icon) removes the red status (and the count).
