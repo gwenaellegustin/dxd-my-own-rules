@@ -195,7 +195,9 @@ client: brand / model, plate, car or motorcycle, owner (read-only), the registra
 data; for the others, a photo can be dropped or chosen. There is no backend yet, so this upload is
 fake: the photo is read in the browser and kept until the page is reloaded. Opened from a
 worksheet whose vehicle has no file yet, the file is created (with its client if needed); from an
-invoiced worksheet it is read-only.
+invoiced worksheet it is read-only. Until something is changed there is only *Close* (a new vehicle has *Cancel* / *Save* at once); then *Save* keeps the changes and *Cancel* (or
+Escape) drops them
+(a click outside does not close the window).
 
 ## Line behaviour
 

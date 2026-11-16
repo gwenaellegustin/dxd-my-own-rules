@@ -192,9 +192,10 @@
       <app-vehicle-dialog
         [vehicle]="vehicle"
         [owner]="c.name"
+        [isNew]="!!openVehicle()?.isNew"
         (vehicleChange)="clients.updateVehicle(c.id, vehicle.id, $event)"
         (renamed)="renameVehicle(c, $event)"
-        (closed)="closeVehicle(c, vehicle)"
+        (closed)="closeVehicle(c, vehicle.id)"
       />
     }
   }

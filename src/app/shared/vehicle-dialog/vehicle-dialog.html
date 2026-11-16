@@ -1,9 +1,9 @@
-<dialog class="dialog dialog--wide" aria-labelledby="registration-title" appModalDialog (dismiss)="closed.emit()">
+<dialog class="dialog dialog--wide" aria-labelledby="registration-title" appModalDialog [closeOnBackdrop]="false" (dismiss)="closed.emit()">
   <div class="dialog__box">
     <h2 id="registration-title" class="text-subheading">{{ 'registration.title' | translate }}</h2>
 
     <div class="dialog__body registration">
-      @let v = vehicle();
+      @let v = draft();
       <div class="vehicle-fields">
         <label class="field">
           <span class="field__label">{{ 'registration.name' | translate }}</span>
@@ -12,9 +12,7 @@
             type="text"
             [value]="v.name"
             [disabled]="locked()"
-            (focus)="onNameFocus($event)"
-            (input)="vehicleChange.emit({ name: $any($event.target).value })"
-            (change)="onNameCommit($event)"
+            (input)="set({ name: $any($event.target).value })"
           />
         </label>
         <label class="field">
@@ -24,7 +22,7 @@
             type="text"
             [value]="v.plate"
             [disabled]="locked()"
-            (input)="vehicleChange.emit({ plate: $any($event.target).value })"
+            (input)="set({ plate: $any($event.target).value })"
           />
         </label>
         <fieldset class="field vehicle-fields__kind">
@@ -37,7 +35,7 @@
                   name="vehicle-kind"
                   [checked]="v.kind === kind"
                   [disabled]="locked()"
-                  (change)="vehicleChange.emit({ kind })"
+                  (change)="set({ kind })"
                 />
                 {{ 'registration.kinds.' + kind | translate }}
               </label>
@@ -103,16 +101,26 @@
             appAutoGrow
             [value]="v.registrationNote"
             [disabled]="locked()"
-            (input)="vehicleChange.emit({ registrationNote: $any($event.target).value })"
+            (input)="set({ registrationNote: $any($event.target).value })"
           ></textarea>
         </app-clearable>
       </label>
     </div>
 
     <div class="dialog__actions dialog__actions--end">
-      <button type="button" class="button button--primary" (click)="closed.emit()">
-        {{ 'common.close' | translate }}
-      </button>
+      @if (locked()) {
+        <button type="button" class="button button--primary" (click)="closed.emit()">
+          {{ 'common.close' | translate }}
+        </button>
+      } @else {
+        <!-- Nothing changed: Close. Something changed, or a new vehicle: Cancel or Save -->
+        @if (dirty() || isNew()) {
+          <button type="button" class="button" (click)="closed.emit()">{{ 'common.cancel' | translate }}</button>
+          <button type="button" class="button button--primary" (click)="save()">{{ 'common.save' | translate }}</button>
+        } @else {
+          <button type="button" class="button button--primary" (click)="closed.emit()">{{ 'common.close' | translate }}</button>
+        }
+      }
     </div>
   </div>
 </dialog>

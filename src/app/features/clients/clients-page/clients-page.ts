@@ -7,7 +7,7 @@ import { WorksheetStore } from '../../../core/services/worksheet.store';
 import { InvoiceStore } from '../../../core/services/invoice.store';
 import { ClientActivityService } from '../../../core/services/client-activity.service';
 import { invoiceTotals } from '../../../core/models/invoice.model';
-import { Address, Client, ClientChanges, Vehicle } from '../../../core/models/client.model';
+import { Address, Client, ClientChanges } from '../../../core/models/client.model';
 import { PanelsLayout } from '../../../layout/panels-layout/panels-layout';
 import { CardBadge, SortOption, VehicleCardGroup, VehicleSidebar } from '../../../shared/vehicle-sidebar/vehicle-sidebar';
 import { VehicleLogo } from '../../../shared/vehicle-logo/vehicle-logo';
@@ -236,10 +236,11 @@ export class ClientsPage {
   }
 
   /** A vehicle added then closed without any information is not kept */
-  protected closeVehicle(client: Client, vehicle: Vehicle): void {
+  protected closeVehicle(client: Client, vehicleId: string): void {
     const isNew = this.openVehicle()?.isNew;
     this.openVehicle.set(null);
-    if (isNew && !vehicle.name.trim() && !vehicle.plate.trim() && !vehicle.registrationImage) {
+    const vehicle = this.clients.getById(client.id)?.vehicles.find((v) => v.id === vehicleId);
+    if (isNew && vehicle && !vehicle.name.trim() && !vehicle.plate.trim() && !vehicle.registrationImage) {
       this.clients.removeVehicle(client.id, vehicle.id);
     }
   }

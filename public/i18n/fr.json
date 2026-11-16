@@ -29,7 +29,8 @@
     "showOptions": "Afficher les options",
     "cancel": "Annuler",
     "close": "Fermer",
-    "sortBy": "Trier par"
+    "sortBy": "Trier par",
+    "save": "Enregistrer"
   },
   "worksheets": {
     "title": "Fiches de travail",

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, input, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, computed, input, linkedSignal, output, signal, untracked, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AutoGrow } from '../auto-grow/auto-grow';
 import { Clearable } from '../clearable/clearable';
@@ -14,8 +14,10 @@ import { Vehicle, VehicleChanges, VehicleKind } from '../../core/models/client.m
  * - Click on the image zooms in at that point; moving the mouse pans; click again zooms out.
  * - Without a document, an area lets you drop or choose a photo. There is no backend yet: the
  *   photo is read in the browser (data URL) and kept in the vehicle file until the page is reloaded.
- * - Every field is saved while typing (`vehicleChange`); a new brand / model is also reported once
- *   the field is left (`renamed`), so that the worksheets of the vehicle follow; Escape, a click on the backdrop or "Close" closes the dialog.
+ * - The fields are edited in a draft: "Save" reports the changes (`vehicleChange`, and `renamed`
+ *   for a new brand / model, so that the worksheets of the vehicle follow) and closes; "Cancel" or
+ *   Escape close without saving. Until something is changed, there is only "Close" (a new vehicle
+ *   has "Cancel" / "Save" from the start). A click outside does not close it (nothing is lost by mistake).
  */
 @Component({
   selector: 'app-vehicle-dialog',
@@ -30,25 +32,45 @@ export class VehicleDialog {
   readonly owner = input.required<string>();
   /** View only (vehicle of an invoiced worksheet): no upload, fields disabled */
   readonly locked = input(false);
+  /** Just added ("Add a vehicle"): Cancel / Save from the start (Cancel drops it) */
+  readonly isNew = input(false);
+  /** Saved changes (only the changed fields) */
   readonly vehicleChange = output<VehicleChanges>();
-  /** Brand / model changed (emitted when the field is left) */
+  /** Brand / model changed (on save) */
   readonly renamed = output<{ from: string; to: string }>();
   readonly closed = output<void>();
 
+  /** Fields being edited; reset if another vehicle is shown */
+  protected readonly draft = linkedSignal({
+    source: () => this.vehicle().id,
+    computation: () => untracked(() => ({ ...this.vehicle() })),
+  });
+
+  /** Changed fields (by the draft, compared with the saved vehicle) */
+  private readonly changes = computed(() => {
+    const before = this.vehicle();
+    return Object.fromEntries(
+      Object.entries(this.draft()).filter(([key, value]) => key !== 'id' && before[key as keyof Vehicle] !== value),
+    ) as VehicleChanges;
+  });
+
+  /** Something was changed: "Cancel" and "Save" instead of "Close" */
+  protected readonly dirty = computed(() => Object.keys(this.changes()).length > 0);
+
+  protected set(changes: VehicleChanges): void {
+    this.draft.update((draft) => ({ ...draft, ...changes }));
+  }
+
+  /** Saves the changes and closes */
+  protected save(): void {
+    const changes = this.changes();
+    this.vehicleChange.emit(changes);
+    if (changes.name !== undefined) this.renamed.emit({ from: this.vehicle().name, to: changes.name });
+    this.closed.emit();
+  }
+
   protected readonly kinds: VehicleKind[] = ['car', 'motorcycle'];
 
-  /** Brand / model when its field got the focus */
-  private nameBefore = '';
-
-  protected onNameFocus(event: Event): void {
-    this.nameBefore = (event.target as HTMLInputElement).value;
-  }
-
-  protected onNameCommit(event: Event): void {
-    const to = (event.target as HTMLInputElement).value;
-    if (this.nameBefore !== to) this.renamed.emit({ from: this.nameBefore, to });
-    this.nameBefore = to;
-  }
 
   private readonly imageRef = viewChild<ElementRef<HTMLImageElement>>('image');
 
@@ -70,11 +92,11 @@ export class VehicleDialog {
     this.readImage(event.dataTransfer?.files[0]);
   }
 
-  /** Fake upload: the image is read in the browser and given to the vehicle file */
+  /** Fake upload: the image is read in the browser and put in the draft (kept on save) */
   private readImage(file: File | undefined): void {
     if (!file?.type.startsWith('image/')) return;
     const reader = new FileReader();
-    reader.onload = () => this.vehicleChange.emit({ registrationImage: reader.result as string });
+    reader.onload = () => this.set({ registrationImage: reader.result as string });
     reader.readAsDataURL(file);
   }
 

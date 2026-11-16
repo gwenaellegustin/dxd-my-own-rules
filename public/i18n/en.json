@@ -29,7 +29,8 @@
     "showOptions": "Show options",
     "cancel": "Cancel",
     "close": "Close",
-    "sortBy": "Sort by"
+    "sortBy": "Sort by",
+    "save": "Save"
   },
   "worksheets": {
     "title": "Worksheets",
