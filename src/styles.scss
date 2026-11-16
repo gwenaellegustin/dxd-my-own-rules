@@ -574,9 +574,23 @@ button {
   background: transparent;
 }
 
-// Select: the text box of a select is not shrunk by the vertical padding like an input's
+// Select: the text box of a select is not shrunk by the vertical padding like an input's.
+// The browser's arrow is replaced by the app's chevron icon, centred where the ✕ of the text
+// fields is (see Clearable), so both line up in a form.
 select.input {
+  appearance: none;
   padding-block: 0;
+  padding-right: calc(var(--space-200) + var(--icon-size-large) + var(--space-100));
+  background-image: var(--icon-select-arrow);
+  // Same size as an <app-icon> glyph (drawn 1.2 × its size, see Icon), centred like the ✕
+  background-position: right calc(var(--space-200) + (var(--icon-size-large) - var(--icon-size-medium) * 1.2) / 2) center;
+  background-size: calc(var(--icon-size-medium) * 1.2);
+  background-repeat: no-repeat;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
 }
 
 .clearable > .input--medium {

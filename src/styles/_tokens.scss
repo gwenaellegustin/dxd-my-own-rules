@@ -52,6 +52,9 @@
   --color-text-neutral: #303030;
   --color-text-on-brand: #f5f5f5;
   --color-icon-default: #1e1e1e;
+  // Arrow of the select fields: Material "keyboard_arrow_down", in --color-icon-default (an image
+  // cannot read CSS variables: update its fill (%23 = #) together with that colour)
+  --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cpath fill='%231e1e1e' d='M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
   --color-icon-on-brand: #f5f5f5;
 
   // Damage: legend symbols, and marks drawn on the car diagram (red so they stand out)
