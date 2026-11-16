@@ -331,6 +331,13 @@ button {
     background: var(--color-background-hover);
   }
 
+  // Nothing to do (e.g. no edit to undo): greyed, no hover
+  &:disabled {
+    opacity: var(--opacity-disabled);
+    cursor: default;
+    background: none;
+  }
+
   &--primary {
     width: calc(var(--control-height) + var(--space-100));
     height: calc(var(--control-height) + var(--space-100));

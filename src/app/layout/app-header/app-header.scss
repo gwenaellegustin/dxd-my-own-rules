@@ -31,6 +31,36 @@
   height: var(--logo-size);
 }
 
+// Back / forward, undo / redo
+.tools {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+}
+
+.tools__group {
+  display: flex;
+  align-items: center;
+
+  // Phones: the browser has its own back / forward, keep the room for the rest
+  &--history {
+    @include bp.mobile {
+      display: none;
+    }
+  }
+}
+
+// Language, in the user menu: label + EN | FR switch
+.account__language {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-300);
+  padding: var(--space-200);
+  border-top: var(--stroke-border) solid var(--color-border-default);
+}
+
 // EN | FR segmented switch
 .language {
   flex: none;

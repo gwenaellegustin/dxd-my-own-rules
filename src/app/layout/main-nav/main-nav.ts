@@ -48,7 +48,5 @@ export class MainNav {
   /** Page shown on the mobile menu button */
   protected readonly current = computed(() => this.items.find((item) => this.url().startsWith(item.path)));
 
-  /** Something to see in the menu (shown on the closed mobile button) */
-  protected readonly hasBadge = computed(() => this.items.some((item) => (item.badge?.() ?? 0) > 0));
 
 }

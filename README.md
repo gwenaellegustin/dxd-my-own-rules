@@ -75,9 +75,16 @@ src/
   one template per kind of vehicle (car, motorcycle), with the default values of a new worksheet,
   and the planning rules.
 - **Translations** — [ngx-translate](https://ngx-translate.org) with `public/i18n/{lang}.json`.
-  English is the default; the EN / FR switch (top right) changes it and the choice is remembered.
+  English is the default; the EN / FR switch (user menu, top right) changes it and the choice is remembered.
   The French texts reuse the wording of the garage's paper worksheet.
   To add a language: add `xx.json` and its code to `SUPPORTED_LANGUAGES` (`language.service.ts`).
+
+## Header
+
+- Left: logo and the pages (icon + name; a menu on phones).
+- Right: *Back* / *Forward* (browser history; greyed when there is no page to go to, in Chromium
+  browsers; hidden on phones), *Undo* / *Redo* (worksheet edits, like Ctrl+Z / Ctrl+Y) and the
+  user menu: worksheet settings and the EN / FR language switch.
 
 ## Statuses
 

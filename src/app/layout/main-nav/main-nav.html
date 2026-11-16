@@ -20,9 +20,6 @@
       <app-icon [name]="page.icon" size="small" />
       {{ page.labelKey | translate }}
     }
-    @if (hasBadge() && !pages.open()) {
-      <span class="dot" aria-hidden="true"></span>
-    }
   </button>
 
   @if (pages.open()) {

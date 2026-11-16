@@ -299,5 +299,13 @@
     "vehicle": "Vehicle",
     "none": "—",
     "add": "Add"
+  },
+  "header": {
+    "history": "History",
+    "back": "Back",
+    "forward": "Forward",
+    "edits": "Edits",
+    "undo": "Undo (Ctrl+Z)",
+    "redo": "Redo (Ctrl+Y)"
   }
 }

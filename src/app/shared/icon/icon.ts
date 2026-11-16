@@ -5,6 +5,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
  * To add an icon: add it here AND to the `icon_names` list of the font link in index.html.
  */
 const MATERIAL_SYMBOLS = {
+  back: 'arrow_back',
   calendar: 'calendar_today',
   cart: 'shopping_cart',
   car: 'directions_car',
@@ -24,6 +25,9 @@ const MATERIAL_SYMBOLS = {
   registration: 'two_pager',
   invoice: 'receipt_long',
   receipt: 'receipt',
+  redo: 'redo',
+  forward: 'arrow_forward',
+  undo: 'undo',
   'left-panel-close': 'left_panel_close',
   lift: 'car_repair',
   menu: 'menu',

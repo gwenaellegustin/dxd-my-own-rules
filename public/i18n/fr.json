@@ -299,5 +299,13 @@
     "vehicle": "Véhicule",
     "none": "—",
     "add": "Ajouter"
+  },
+  "header": {
+    "history": "Historique",
+    "back": "Précédent",
+    "forward": "Suivant",
+    "edits": "Modifications",
+    "undo": "Annuler (Ctrl+Z)",
+    "redo": "Rétablir (Ctrl+Y)"
   }
 }
