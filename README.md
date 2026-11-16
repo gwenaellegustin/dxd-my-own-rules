@@ -1,7 +1,8 @@
-# Garage
+# Greasy Notes
 
-Prototype of a garage management web app (desktop first, responsive), built with Angular 22.
-Design source: Figma "Simple Design System (Community)", page **Examples**, frame *MacBook Air - 1*.
+Prototype of a garage management web app for mechanics working alone: voice notes fill the
+worksheets and invoices, so nothing is forgotten without having to type everything. Web app (desktop first, responsive), built with Angular 22.
+Design source: Figma "My own rules", page **Screens**, frame *MacBook Air - 1*.
 
 ## Getting started
 
@@ -196,10 +197,10 @@ invoiced worksheet it is read-only.
 
 ## Responsive
 
-| Width        | Side panels                                                       |
-| ------------ | ----------------------------------------------------------------- |
-| ≥ 1200px     | Inline, open (300px) or collapsed rail (76px)                     |
-| 640 – 1199px | Rails inline, opened panel overlays the work area                 |
+| Width        | Side panels                                                        |
+| ------------ | ------------------------------------------------------------------ |
+| ≥ 1200px     | Inline, open (300px) or collapsed rail (76px)                      |
+| 640 – 1199px | Rails inline, opened panel overlays the work area                  |
 | < 640px      | Rails become a toolbar above the work area, panels are full screen |
 
 The work area content uses container queries, so it adapts to the space left by the panels.

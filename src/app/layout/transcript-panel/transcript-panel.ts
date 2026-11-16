@@ -77,7 +77,7 @@ export class TranscriptPanel {
   protected resetWidth(): void {
     this.transcript.width.set(null);
     try {
-      localStorage.removeItem('garage.transcriptWidth');
+      localStorage.removeItem('greasy-notes.transcriptWidth');
     } catch {
       // nothing remembered
     }

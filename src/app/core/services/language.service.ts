@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 export const SUPPORTED_LANGUAGES = ['en', 'fr'] as const;
 export type Language = (typeof SUPPORTED_LANGUAGES)[number];
 
-const STORAGE_KEY = 'garage.language';
+const STORAGE_KEY = 'greasy-notes.language';
 const DEFAULT_LANGUAGE: Language = 'en';
 
 @Injectable({ providedIn: 'root' })

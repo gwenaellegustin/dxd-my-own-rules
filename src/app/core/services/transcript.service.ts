@@ -4,7 +4,7 @@ import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
 import { TranscriptMessage } from '../models/transcript.model';
 
-const WIDTH_KEY = 'garage.transcriptWidth';
+const WIDTH_KEY = 'greasy-notes.transcriptWidth';
 
 function readWidth(): number | null {
   try {

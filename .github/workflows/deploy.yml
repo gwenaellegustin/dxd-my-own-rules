@@ -35,11 +35,11 @@ jobs:
 
       # GitHub Pages has no SPA fallback: serve index.html for unknown URLs
       # so deep links such as /worksheets/ws-1006 work on refresh
-      - run: cp dist/garage/browser/index.html dist/garage/browser/404.html
+      - run: cp dist/greasy-notes/browser/index.html dist/greasy-notes/browser/404.html
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/garage/browser
+          path: dist/greasy-notes/browser
 
   deploy:
     needs: build
