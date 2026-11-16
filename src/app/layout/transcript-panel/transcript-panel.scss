@@ -51,35 +51,13 @@
 .day {
   display: flex;
   flex-direction: column;
-  gap: var(--space-100);
+  gap: var(--space-200);
   padding: var(--space-200);
   background: var(--color-background-secondary);
 }
 
 // Today fills the scroll area: opened at the bottom, "Today" is at the top of the panel and the
 // previous days are above it (scroll up)
-// Answer the assistant could not apply: light red, to be answered
-.message--problem {
-  padding: var(--space-200);
-  background: var(--color-background-danger);
-  border: var(--stroke-border) solid var(--color-border-danger);
-}
-
-// The badge follows the title (the title does not take the whole row)
-.message__no-action {
-  display: flex;
-  align-items: center;
-  gap: var(--space-100);
-}
-
-.message__validate {
-  align-self: flex-end;
-}
-
-.panel__title h2 {
-  flex: 0 1 auto;
-}
-
 .day--today {
   min-height: 100%;
 }
@@ -91,33 +69,58 @@
   text-align: center;
 }
 
+// The badge follows the title (the title does not take the whole row)
+.panel__title h2 {
+  flex: 0 1 auto;
+}
+
 .message {
   display: flex;
   border-radius: var(--radius-200);
 }
 
-// "AI Chat -> User message"
+// "AI Chat -> User message": what was said, a chat bubble on the right with its time above.
+// Each exchange (what was said + the answer) is separated from the next one by a larger space.
 .message--user {
   flex-direction: column;
-  padding: var(--space-150) var(--space-200);
+  align-items: flex-end;
+  padding-left: var(--space-600);
+
+  &:not(:first-of-type) {
+    margin-top: var(--space-400);
+  }
 }
 
 .message__bubble {
-  padding: var(--space-150) var(--space-200);
+  position: relative;
+  padding: var(--space-150) var(--space-300);
   background: var(--color-background-default);
-  border: var(--stroke-border) solid var(--color-border-default);
-  border-radius: var(--radius-200);
+  border: var(--stroke-focus) solid var(--color-border-strong);
+  border-radius: var(--radius-300) var(--radius-300) 0 var(--radius-300);
+
+  // Tail of the bubble, bottom right
+  &::after {
+    content: '';
+    position: absolute;
+    right: calc(var(--stroke-focus) * -1);
+    bottom: calc(var(--space-200) * -1);
+    width: var(--space-200);
+    height: var(--space-200);
+    background: var(--color-border-strong);
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+  }
 }
 
 .message__time {
   padding: 0 var(--space-100);
-  text-align: right;
+  color: var(--color-text-secondary);
 }
 
-// "AI Chat -> Chat Response"
+// "AI Chat -> Chat Response": right under what was said (small space)
 .message--assistant {
   align-items: flex-start;
   gap: var(--space-200);
+  margin-top: var(--space-100);
   color: var(--color-icon-default);
 
   p {
@@ -131,6 +134,23 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-200);
+}
+
+// Answer the assistant could not apply: light red, to be checked (Ok button)
+.message--problem {
+  padding: var(--space-200);
+  background: var(--color-background-danger);
+  border: var(--stroke-border) solid var(--color-border-danger);
+}
+
+.message__no-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-100);
+}
+
+.message__validate {
+  align-self: flex-end;
 }
 
 .empty-day {

@@ -58,10 +58,10 @@
           @for (message of day.messages; track message.id) {
             @if (message.userId) {
               <div class="message message--user">
-                <p class="message__bubble">{{ message.text }}</p>
                 <time class="message__time text-small" [attr.datetime]="message.timestamp">
                   {{ message.timestamp | date: 'HH:mm' }}
                 </time>
+                <p class="message__bubble">{{ message.text }}</p>
               </div>
             } @else {
               @let problem = transcript.isProblem(message);
