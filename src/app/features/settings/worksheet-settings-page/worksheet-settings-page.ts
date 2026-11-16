@@ -4,8 +4,9 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { WorksheetStore } from '../../../core/services/worksheet.store';
 import { WorksheetSettingsStore } from '../../../core/services/worksheet-settings.store';
 import { VehicleKind } from '../../../core/models/vehicle-brand.model';
-import { PlanningRule, TemplateLine } from '../../../core/models/worksheet-template.model';
+import { TemplateLine } from '../../../core/models/worksheet-template.model';
 import { LineEditor } from '../line-editor/line-editor';
+import { RulesEditor } from '../rules-editor/rules-editor';
 import { TaskLine } from '../../worksheet/task-line/task-line';
 import { emptyLineState } from '../../../core/models/worksheet.model';
 import { TemplateTextService } from '../../../core/services/template-text.service';
@@ -16,12 +17,12 @@ type SettingsTab = 'lines' | 'rules';
 /**
  * Worksheet settings (account menu), per kind of vehicle (car / motorcycle):
  * - Lines: the worksheet as it will look (right); click a line to edit it (left), drag it to move it.
- * - Planning rules: "when this line is planned (with these options), also plan those lines".
+ * - Planning rules (RulesEditor): "when this line is planned (with these options), also plan those lines".
  * Kept in memory like the rest of the prototype (WorksheetSettingsStore).
  */
 @Component({
   selector: 'app-worksheet-settings-page',
-  imports: [NgTemplateOutlet, TranslatePipe, LineEditor, TaskLine, Icon],
+  imports: [NgTemplateOutlet, TranslatePipe, LineEditor, RulesEditor, TaskLine, Icon],
   templateUrl: './worksheet-settings-page.html',
   styleUrl: './worksheet-settings-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,41 +49,6 @@ export class WorksheetSettingsPage {
 
   /** The preview shows empty lines, as in a new worksheet */
   protected readonly emptyState = emptyLineState();
-
-  /** Lines a rule can use: the titled ones ("Other" lines have no fixed meaning) */
-  protected readonly ruleSections = computed(() =>
-    (this.template()?.sections ?? [])
-      .map((section) => ({ ...section, lines: section.lines.filter((line) => line.titleKey) }))
-      .filter((section) => section.lines.length > 0),
-  );
-
-  /**
-   * Choices of the "When this line is planned" list: one group per section for the lines without
-   * options, and one group per line with options (its options, or any of them)
-   */
-  protected readonly triggerGroups = computed(() =>
-    this.ruleSections().flatMap((section) => {
-      const plain = section.lines.filter((line) => !this.choiceField(line));
-      const groups: { label: string; choices: { value: string; labelKey: string }[] }[] = [];
-      if (plain.length) {
-        groups.push({ label: section.titleKey, choices: plain.map((line) => ({ value: line.id, labelKey: line.titleKey! })) });
-      }
-      for (const line of section.lines) {
-        const field = this.choiceField(line);
-        if (!field) continue;
-        groups.push({
-          label: line.titleKey!,
-          choices: [
-            ...field.options!.map((option) => ({ value: `${line.id}|${field.id}|${option.value}`, labelKey: option.labelKey })),
-            { value: line.id, labelKey: 'settings.anyOption' },
-          ],
-        });
-      }
-      return groups;
-    }),
-  );
-
-  protected readonly rules = computed(() => this.store.rulesFor(this.kind()));
 
   /** Line being dragged, and where it would be dropped */
   protected readonly drag = signal<{ sectionId: string; lineId: string; from: number } | null>(null);
@@ -162,31 +128,5 @@ export class WorksheetSettingsPage {
   protected endDrag(): void {
     this.drag.set(null);
     this.dropAt.set(null);
-  }
-
-  /** Field whose options can restrict a rule: the first choice field of the line */
-  private choiceField(line: TemplateLine) {
-    return line.fields?.find((field) => (field.type === 'radio' || field.type === 'checkbox') && field.options?.length);
-  }
-
-  /** Value of the rule in the list: `line`, or `line|field|option` */
-  protected triggerValue(rule: PlanningRule): string {
-    const value = rule.values?.[0];
-    return rule.fieldId && value ? `${rule.lineId}|${rule.fieldId}|${value}` : rule.lineId;
-  }
-
-  protected changeTrigger(rule: PlanningRule, choice: string): void {
-    const [lineId, fieldId, value] = choice.split('|');
-    this.store.updateRule(rule.id, {
-      lineId,
-      fieldId: fieldId || undefined,
-      values: value ? [value] : undefined,
-      plan: rule.plan.filter((id) => id !== lineId),
-    });
-  }
-
-  protected togglePlan(rule: PlanningRule, lineId: string): void {
-    const plan = rule.plan.includes(lineId) ? rule.plan.filter((id) => id !== lineId) : [...rule.plan, lineId];
-    this.store.updateRule(rule.id, { plan });
   }
 }

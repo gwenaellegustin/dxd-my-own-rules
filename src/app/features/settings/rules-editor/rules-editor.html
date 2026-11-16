@@ -1,0 +1,135 @@
+<p class="text-secondary">{{ 'settings.rulesHint' | translate }}</p>
+
+@if (ruleSections().length === 0) {
+  <p class="text-secondary">{{ 'settings.noRuleLine' | translate }}</p>
+} @else {
+  <div class="split">
+    <!-- Left: the rules; click one to edit it on the right -->
+    <div class="list">
+      @for (rule of rules(); track rule.id; let i = $index) {
+        @let trigger = triggerLabel(rule);
+        @let plan = planned(rule);
+        <button
+          type="button"
+          class="rule-card"
+          [class.rule-card--selected]="selectedRule()?.id === rule.id"
+          [attr.aria-pressed]="selectedRule()?.id === rule.id"
+          (click)="select(rule)"
+        >
+          <span class="text-small text-secondary">
+            {{ 'settings.rule' | translate: { number: i + 1 } }} · {{ 'settings.status.' + status(rule) | translate }}
+          </span>
+          <span class="text-strong">
+            {{ trigger.lineKey | translate }}
+            @if (trigger.optionKey) {
+              · {{ trigger.optionKey | translate }}
+            }
+          </span>
+          <span class="text-small text-secondary">
+            @for (key of plan; track key; let last = $last) {
+              {{ key | translate }}{{ last ? '' : ', ' }}
+            } @empty {
+              {{ 'settings.planNone' | translate }}
+            }
+          </span>
+        </button>
+      } @empty {
+        <p class="text-secondary">{{ 'settings.noRule' | translate }}</p>
+      }
+      <button type="button" class="button-subtle add-rule" (click)="addRule()">
+        <app-icon name="plus-circle" />
+        {{ 'settings.addRule' | translate }}
+      </button>
+    </div>
+
+    <!-- Right: the selected rule -->
+    @if (selectedRule(); as rule) {
+      <article class="rule" [attr.aria-label]="'settings.rule' | translate: { number: rules().indexOf(rule) + 1 }">
+        <div class="rule__head">
+          <!-- "When this line is [planned / done]" on one row, then the line in a menu (not a native
+               select) so it stays in the page, scrolls when long and opens on the current choice -->
+          <div class="field rule__trigger">
+            <div class="rule__when" role="radiogroup" aria-labelledby="rule-trigger-label">
+              <span class="field__label" id="rule-trigger-label">{{ 'settings.when' | translate }}</span>
+              @for (s of statuses; track s) {
+                <label class="choice">
+                  <input type="radio" name="rule-status" [checked]="status(rule) === s" (change)="setStatus(rule, s)" />
+                  {{ 'settings.status.' + s | translate }}
+                </label>
+              }
+            </div>
+            <div class="trigger" appDropdown #menu="appDropdown">
+              @let trigger = triggerLabel(rule);
+              <button
+                type="button"
+                class="input trigger__button"
+                aria-haspopup="listbox"
+                aria-labelledby="rule-trigger-label"
+                [attr.aria-expanded]="menu.open()"
+                (click)="openTrigger(menu)"
+              >
+                <span class="trigger__value">
+                  {{ trigger.lineKey | translate }}
+                  @if (trigger.optionKey) {
+                    · {{ trigger.optionKey | translate }}
+                  }
+                </span>
+                <app-icon name="chevron-down" />
+              </button>
+              @if (menu.open()) {
+                @let current = triggerValue(rule);
+                <div class="dropdown-menu dropdown-menu--start trigger-menu" role="listbox" aria-labelledby="rule-trigger-label">
+                  @for (group of triggerGroups(); track group.label) {
+                    <div role="group" [attr.aria-label]="group.label | translate">
+                      <p class="dropdown-menu__title text-small text-secondary">{{ group.label | translate }}</p>
+                      @for (choice of group.choices; track choice.value) {
+                        <button
+                          type="button"
+                          role="option"
+                          class="dropdown-menu__item"
+                          [class.dropdown-menu__item--active]="choice.value === current"
+                          [attr.aria-selected]="choice.value === current"
+                          (click)="changeTrigger(rule, choice.value, menu)"
+                        >
+                          {{ choice.labelKey | translate }}
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+          <button
+            type="button"
+            class="icon-button"
+            [attr.aria-label]="'settings.removeRule' | translate"
+            [attr.title]="'settings.removeRule' | translate"
+            (click)="store.removeRule(rule.id)"
+          >
+            <app-icon name="delete" />
+          </button>
+        </div>
+
+        <!-- "Also mark as planned / done": the lines as in the worksheet, a checkbox on the left of each -->
+        <fieldset class="plan">
+          <legend class="field__label">{{ 'settings.also.' + status(rule) | translate }}</legend>
+          @for (section of ruleSections(); track section.id) {
+            <h3 class="text-subheading">{{ section.titleKey | translate }}</h3>
+            <div class="plan__lines">
+              @for (line of section.lines; track line.id) {
+                @if (line.id !== rule.lineId) {
+                  @let checked = rule.plan.includes(line.id);
+                  <label class="plan-line" [class.plan-line--checked]="checked" [class.plan-line--done]="status(rule) === 'done'">
+                    <input type="checkbox" [checked]="checked" (change)="togglePlan(rule, line.id)" />
+                    <span class="text-strong">{{ line.titleKey! | translate }}</span>
+                  </label>
+                }
+              }
+            </div>
+          }
+        </fieldset>
+      </article>
+    }
+  </div>
+}

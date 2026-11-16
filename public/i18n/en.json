@@ -272,17 +272,25 @@
     "title": "Worksheet settings",
     "tabs": {
       "lines": "Lines",
-      "rules": "Planning rules"
+      "rules": "Rules"
     },
     "linesHint": "The worksheet as it will look: click a line to edit its title (French and English) and its fields, drag it to move it inside its section (or Alt + arrow up / down), and use + between two lines to add one.",
-    "rulesHint": "When a line is planned (with the chosen option, if it has some), the selected lines are planned too.",
-    "when": "When this line is planned",
-    "alsoPlan": "Also plan",
+    "rulesHint": "When a line is planned or done (with the chosen option, if it has some), the selected lines are marked as planned or done too.",
+    "when": "When this line is",
+    "status": {
+      "planned": "Planned",
+      "done": "Done"
+    },
+    "also": {
+      "planned": "Also mark as planned",
+      "done": "Also mark as done"
+    },
     "addRule": "Add a rule",
     "removeRule": "Delete the rule",
     "rule": "Rule {{number}}",
     "noRule": "No rule.",
     "noRuleLine": "This worksheet only has \"Other\" lines: there is no line to use in a rule.",
+    "planNone": "No line to plan yet",
     "anyOption": "Any option",
     "drag": "Click to edit the line, drag to move it",
     "noLine": "Add a line to edit it here.",

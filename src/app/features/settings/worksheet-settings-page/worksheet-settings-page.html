@@ -108,69 +108,7 @@
         </div>
       </div>
     } @else {
-      <div class="panel" role="tabpanel" id="settings-panel-rules" aria-labelledby="settings-tab-rules">
-        <p class="text-secondary">{{ 'settings.rulesHint' | translate }}</p>
-        @if (ruleSections().length) {
-          <button type="button" class="button-subtle rule-add" (click)="store.addRule(kind())">
-            <app-icon name="plus-circle" />
-            {{ 'settings.addRule' | translate }}
-          </button>
-        }
-
-        @if (ruleSections().length === 0) {
-          <p class="text-secondary">{{ 'settings.noRuleLine' | translate }}</p>
-        } @else {
-          @for (rule of rules(); track rule.id; let i = $index) {
-            <article class="rule" [attr.aria-label]="'settings.rule' | translate: { number: i + 1 }">
-              <div class="rule__head">
-                <label class="field rule__trigger">
-                  <span class="field__label">{{ 'settings.when' | translate }}</span>
-                  <select class="input" (change)="changeTrigger(rule, $any($event.target).value)">
-                    @let selected = triggerValue(rule);
-                    @for (group of triggerGroups(); track group.label) {
-                      <optgroup [label]="group.label | translate">
-                        @for (choice of group.choices; track choice.value) {
-                          <option [value]="choice.value" [selected]="choice.value === selected">
-                            {{ choice.labelKey | translate }}
-                          </option>
-                        }
-                      </optgroup>
-                    }
-                  </select>
-                </label>
-                <button
-                  type="button"
-                  class="icon-button"
-                  [attr.aria-label]="'settings.removeRule' | translate"
-                  [attr.title]="'settings.removeRule' | translate"
-                  (click)="store.removeRule(rule.id)"
-                >
-                  <app-icon name="delete" />
-                </button>
-              </div>
-
-              <fieldset class="rule__group">
-                <legend class="field__label">{{ 'settings.alsoPlan' | translate }}</legend>
-                @for (section of ruleSections(); track section.id) {
-                  <p class="text-small text-secondary">{{ section.titleKey | translate }}</p>
-                  <div class="rule__choices">
-                    @for (line of section.lines; track line.id) {
-                      @if (line.id !== rule.lineId) {
-                        <label class="choice choice--wrap">
-                          <input type="checkbox" [checked]="rule.plan.includes(line.id)" (change)="togglePlan(rule, line.id)" />
-                          {{ line.titleKey! | translate }}
-                        </label>
-                      }
-                    }
-                  </div>
-                }
-              </fieldset>
-            </article>
-          } @empty {
-            <p class="text-secondary">{{ 'settings.noRule' | translate }}</p>
-          }
-        }
-      </div>
+      <app-rules-editor class="panel" role="tabpanel" id="settings-panel-rules" aria-labelledby="settings-tab-rules" [kind]="kind()" />
     }
   }
 </div>

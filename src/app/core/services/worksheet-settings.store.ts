@@ -57,21 +57,24 @@ export class WorksheetSettingsStore {
   }
 
   /**
-   * Rules triggered by the edited line (`lineId`, an instance key): when it is planned and its
-   * field matches, the rule's lines are planned (never unplanned: they can be unchecked after)
+   * Rules triggered by the edited line (`lineId`, an instance key): when it is planned (or done,
+   * depending on the rule) and its field matches, the rule's lines are planned (or done) too; never
+   * the other way round: they can be unchecked after
    */
   applyRules(kind: VehicleKind, lineId: string, lines: Record<string, LineState>): Record<string, LineState> {
     const baseId = lineId.split('~')[0];
     const trigger = lines[lineId];
-    if (!trigger?.planned) return lines;
+    if (!trigger) return lines;
     const matches = (rule: PlanningRule) =>
       rule.lineId === baseId &&
+      trigger[rule.status ?? 'planned'] &&
       (!rule.fieldId || (rule.values ?? []).includes(String(trigger.values[rule.fieldId] ?? '')));
     const result = { ...lines };
     for (const rule of this.rulesFor(kind).filter(matches)) {
+      const status = rule.status ?? 'planned';
       for (const target of rule.plan) {
         const state = result[target] ?? emptyLineState();
-        if (!state.planned) result[target] = { ...state, planned: true };
+        if (!state[status]) result[target] = { ...state, [status]: true };
       }
     }
     return result;

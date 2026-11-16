@@ -272,17 +272,25 @@
     "title": "Paramètres des fiches de travail",
     "tabs": {
       "lines": "Lignes",
-      "rules": "Règles de planification"
+      "rules": "Règles"
     },
     "linesHint": "La fiche de travail telle qu’elle s’affichera : cliquez sur une ligne pour modifier son titre (français et anglais) et ses champs, glissez-la pour la déplacer dans sa section (ou Alt + flèche haut / bas), et utilisez le + entre deux lignes pour en ajouter une.",
-    "rulesHint": "Quand une ligne est prévue (avec l’option choisie, si elle en a), les lignes cochées sont aussi prévues.",
-    "when": "Quand cette ligne est prévue",
-    "alsoPlan": "Prévoir aussi",
+    "rulesHint": "Quand une ligne est prévue ou faite (avec l’option choisie, si elle en a), les lignes cochées sont aussi marquées comme prévues ou faites.",
+    "when": "Quand cette ligne est",
+    "status": {
+      "planned": "Prévue",
+      "done": "Faite"
+    },
+    "also": {
+      "planned": "Marquer aussi comme prévues",
+      "done": "Marquer aussi comme faites"
+    },
     "addRule": "Ajouter une règle",
     "removeRule": "Supprimer la règle",
     "rule": "Règle {{number}}",
     "noRule": "Aucune règle.",
     "noRuleLine": "Cette fiche n’a que des lignes « Autre » : aucune ligne à utiliser dans une règle.",
+    "planNone": "Aucune ligne à planifier pour l’instant",
     "anyOption": "Toutes les options",
     "drag": "Cliquer pour modifier la ligne, glisser pour la déplacer",
     "noLine": "Ajoutez une ligne pour la modifier ici.",

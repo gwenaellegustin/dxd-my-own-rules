@@ -134,8 +134,9 @@ for now):
   Alt + arrow up / down), and use the + between two lines to insert one. Edited texts are written into the translations
   (`TemplateTextService`, keys `custom.*`), so every page shows them at once; a shared key is
   copied first so editing one line never changes another.
-- **Planning rules**: when a line is planned (optionally only with one option, e.g. Service → Small), other lines are
-  planned too, in the same undo step. They are never unplanned automatically. Mock rules: a small
+- **Rules** (list on the left, the selected rule on the right): when a line is planned, or done,
+  depending on the rule (optionally only with one option, e.g. Service → Small), other lines are
+  planned (or done) too, in the same undo step. They are never unchecked automatically. Mock rules: a small
   or medium service plans the oil filter and the engine oil; a big service plans the 3 filters and
   the engine oil.
 

@@ -100,47 +100,6 @@
   gap: var(--space-200);
 }
 
-// One planning rule: trigger line, options, lines to plan
-.rule {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-400);
-  padding: var(--space-400);
-  background: var(--color-background-default);
-  border: var(--stroke-border) solid var(--color-border-default);
-  border-radius: var(--radius-200);
-}
-
-.rule__head {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--space-200);
-}
-
-.rule__trigger {
-  flex: 1;
-}
-
-.rule__group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-200);
-  margin: 0;
-  padding: 0;
-  border: none;
-
-  legend {
-    padding: 0;
-    margin-bottom: var(--space-200);
-  }
-}
-
-.rule__choices {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--vehicle-field-min-width), 1fr));
-  gap: var(--space-200) var(--space-400);
-}
-
 // Lines tab: editor of the selected line | the worksheet preview; stacked when the page is narrow
 .lines-layout {
   display: grid;
@@ -242,7 +201,6 @@
   }
 }
 
-.rule-add,
 .add-line {
   align-self: flex-start;
 }

@@ -59,12 +59,17 @@ export interface WorksheetTemplate {
 }
 
 /**
- * Planning rule: when the line `lineId` is planned (and, with `fieldId`, its field has one of
- * `values`), the lines `plan` are planned too. Applied when the line is edited.
+ * Planning rule: when the line `lineId` is planned (or done, see `status`) and, with `fieldId`,
+ * its field has one of `values`, the lines `plan` are planned (or done) too. Applied when the line
+ * is edited.
  */
+export type RuleStatus = 'planned' | 'done';
+
 export interface PlanningRule {
   id: string;
   kind: VehicleKind;
+  /** State that triggers the rule, and that it gives to the lines `plan` (default: planned) */
+  status?: RuleStatus;
   lineId: string;
   fieldId?: string;
   values?: string[];
