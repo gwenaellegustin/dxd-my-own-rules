@@ -232,6 +232,21 @@
   }
 }
 
+.invoice__observation-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-200);
+}
+
+// Hidden on the invoice: still editable while open, dimmed
+.invoice__observation--hidden {
+  .invoice__observation-field,
+  .invoice__observation-head > .text-strong {
+    opacity: var(--opacity-disabled);
+  }
+}
+
 .invoice__observation-field {
   flex: 1;
   min-width: 0;

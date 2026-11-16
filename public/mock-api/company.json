@@ -4,7 +4,7 @@
   "currency": "CHF",
   "vatRate": 8.1,
   "vatNumber": "CHE-361.969.386",
-  "paymentTermDays": 30,
+  "paymentTermDays": 20,
   "hourlyRates": [
     { "id": "standard", "nameKey": "invoice.rates.standard", "price": 110 },
     { "id": "loyalty", "nameKey": "invoice.rates.loyalty", "price": 100 }

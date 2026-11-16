@@ -40,6 +40,8 @@ export interface Invoice {
   /** Hourly rate applied (see Company.hourlyRates) */
   rateId: string;
   sections: InvoiceSection[];
+  /** The observations and tips (worksheet comments) are kept but not printed on the invoice */
+  hideObservation?: boolean;
   /**
    * Its worksheet was reopened: the invoice is kept (with its data) but not shown; it comes back
    * when the worksheet is invoiced again

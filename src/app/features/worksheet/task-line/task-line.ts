@@ -50,6 +50,8 @@ export class TaskLine implements OnInit {
   readonly removable = input(false);
   /** Invoiced worksheet: the line is read-only */
   readonly locked = input(false);
+  /** Section counted in litres (fluids): quantity field, taken by the invoice */
+  readonly quantity = input(false);
   readonly remove = output<void>();
 
   private readonly injector = inject(Injector);
@@ -94,6 +96,10 @@ export class TaskLine implements OnInit {
 
   protected updateNote(note: string): void {
     this.stateChange.emit(this.planIfFirstText({ note }, this.state().note, note));
+  }
+
+  protected updateQuantity(quantity: string): void {
+    this.stateChange.emit({ quantity });
   }
 
   protected value(field: LineField): LineFieldValue {

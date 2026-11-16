@@ -11,6 +11,21 @@
   </div>
 
   <div class="line__status">
+    @if (quantity()) {
+      <!-- Litres used (fluids): the invoice takes this quantity -->
+      <label class="line__quantity">
+        <input
+          class="input"
+          type="text"
+          inputmode="decimal"
+          [value]="state().quantity ?? ''"
+          [attr.aria-label]="'line.quantity' | translate"
+          [attr.title]="'line.quantity' | translate"
+          (input)="updateQuantity($any($event.target).value)"
+        />
+        <span class="text-secondary" aria-hidden="true">{{ 'line.litres' | translate }}</span>
+      </label>
+    }
     @if (canHaveNote()) {
       <!-- Hidden (space kept for alignment) while the note is shown -->
       <button

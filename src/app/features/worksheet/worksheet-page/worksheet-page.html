@@ -98,6 +98,7 @@
                   [line]="line"
                   [state]="lineState(ws, key)"
                   [removable]="!!line.repeatable && !last"
+                  [quantity]="section.invoiceUnit === 'litre'"
                   [locked]="ws.status === 'invoiced'"
                   (stateChange)="updateLine(ws.id, key, $event)"
                   (remove)="store.removeLine(ws.id, key)"

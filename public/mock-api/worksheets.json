@@ -63,18 +63,20 @@
       "engineOil": {
         "planned": true,
         "done": true,
-        "note": "3.50",
+        "note": "",
         "values": {
           "grade": "5W30"
-        }
+        },
+        "quantity": "3.50"
       },
       "washerFluid": {
         "planned": true,
         "done": false,
-        "note": "1.5",
+        "note": "",
         "values": {
           "season": "winter"
-        }
+        },
+        "quantity": "1.5"
       },
       "brakeFluid": {
         "planned": true,

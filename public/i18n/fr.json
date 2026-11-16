@@ -92,6 +92,8 @@
     "done": "Fait",
     "addNote": "Ajouter une note",
     "note": "Note",
+    "quantity": "Quantité (litres)",
+    "litres": "L",
     "remove": "Supprimer la ligne"
   },
   "transcript": {
@@ -224,6 +226,7 @@
     "paymentTerm": "Paiement net à {{days}} jours à partir du {{date}}",
     "paymentTermOpen": "Paiement net à {{days}} jours à partir de l'envoi",
     "observation": "Observation et conseil",
+    "showObservation": "Afficher sur la facture",
     "contact": "Contact",
     "workshop": "Atelier",
     "office": "Bureau",

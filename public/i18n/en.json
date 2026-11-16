@@ -92,6 +92,8 @@
     "done": "Done",
     "addNote": "Add a note",
     "note": "Note",
+    "quantity": "Quantity (litres)",
+    "litres": "L",
     "remove": "Remove the line"
   },
   "transcript": {
@@ -224,6 +226,7 @@
     "paymentTerm": "Net payment within {{days}} days from {{date}}",
     "paymentTermOpen": "Net payment within {{days}} days from the sending date",
     "observation": "Observations and tips",
+    "showObservation": "Show on the invoice",
     "contact": "Contact",
     "workshop": "Workshop",
     "office": "Office",

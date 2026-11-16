@@ -11,6 +11,8 @@ export interface LineState {
   done: boolean;
   note: string;
   values: Record<string, LineFieldValue>;
+  /** Quantity used, as typed ("3.5", "3,5"): lines of the sections counted in litres (fluids) */
+  quantity?: string;
 }
 
 export type DamageType = 'bump' | 'scratch' | 'impact';
@@ -48,6 +50,13 @@ export const emptyLineState = (): LineState => ({
   values: {},
 });
 
-/** True when at least one field of the line holds a value (text, option…) */
+/** True when at least one field of the line holds a value (text, option…) or its quantity is filled */
 export const hasLineValues = (state: LineState): boolean =>
+  !!state.quantity?.trim() ||
   Object.values(state.values).some((value) => (Array.isArray(value) ? value.length > 0 : !!value));
+
+/** Typed quantity as a number ("3,5" → 3.5); null when empty or not a positive number */
+export const parseQuantity = (quantity: string | undefined): number | null => {
+  const value = Number((quantity ?? '').trim().replace(',', '.'));
+  return quantity?.trim() && Number.isFinite(value) && value > 0 ? value : null;
+};

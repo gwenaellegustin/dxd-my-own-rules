@@ -77,7 +77,7 @@
                         (drop)="dropLine($event, section.id)"
                         (dragend)="endDrag()"
                       >
-                        <app-task-line [line]="line" [state]="emptyState" inert />
+                        <app-task-line [line]="line" [state]="emptyState" [quantity]="section.invoiceUnit === 'litre'" inert />
                       </div>
                       <!-- Small + in the gap above the line (and under the last one, unless it is an
                            "Other" line): inserts a line there (after the line in the DOM: drawn over it) -->

@@ -25,6 +25,7 @@
           (itemChange)="changeItem(inv.id, $event)"
           (rateChange)="store.setRate(inv.id, $event)"
           (observationChange)="worksheets.updateComments(inv.worksheetId, $event)"
+          (observationHiddenChange)="store.setObservationHidden(inv.id, $event)"
         />
         <div class="actions no-print">
           <button type="button" class="button" (click)="saveAsPdf(inv, ws?.client)">

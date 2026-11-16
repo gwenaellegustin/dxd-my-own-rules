@@ -91,6 +91,17 @@
   min-height: var(--control-height);
 }
 
+.line__quantity {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-100);
+
+  > .input {
+    width: var(--control-width-quantity);
+    text-align: right;
+  }
+}
+
 .line__note-toggle--hidden {
   visibility: hidden;
 }

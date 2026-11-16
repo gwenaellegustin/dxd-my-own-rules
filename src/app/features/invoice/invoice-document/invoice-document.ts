@@ -6,6 +6,7 @@ import { InvoiceFooter } from '../invoice-footer/invoice-footer';
 import { AutoGrow } from '../../../shared/auto-grow/auto-grow';
 import { BulletList } from '../../../shared/bullet-list/bullet-list';
 import { Clearable } from '../../../shared/clearable/clearable';
+import { DecimalInput } from '../../../shared/decimal-input/decimal-input';
 import { Company } from '../../../core/models/company.model';
 import { Address } from '../../../core/models/client.model';
 import { Invoice, InvoiceItem, invoiceTotals, itemAmount } from '../../../core/models/invoice.model';
@@ -30,7 +31,7 @@ const QUANTITY_STEP = { hour: 0.25, litre: 0.1, piece: 1, flatRate: 1 } as const
  */
 @Component({
   selector: 'app-invoice-document',
-  imports: [DatePipe, TranslatePipe, MoneyPipe, AutoGrow, BulletList, Clearable, InvoiceFooter],
+  imports: [DatePipe, TranslatePipe, MoneyPipe, AutoGrow, BulletList, Clearable, DecimalInput, InvoiceFooter],
   templateUrl: './invoice-document.html',
   styleUrl: './invoice-document.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,6 +52,8 @@ export class InvoiceDocument {
   readonly rateChange = output<string>();
   /** Observations and tips: the comments of the worksheet */
   readonly observationChange = output<string>();
+  /** "Show on the invoice" unchecked: the observations are kept but hidden */
+  readonly observationHiddenChange = output<boolean>();
 
   protected readonly editable = computed(() => this.invoice().status === 'open');
   protected readonly totals = computed(() => invoiceTotals(this.invoice(), this.company().vatRate));

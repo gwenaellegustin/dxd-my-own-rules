@@ -5,7 +5,7 @@ import { API_ENDPOINTS } from '../api/api.config';
 import { Company } from '../models/company.model';
 import { Invoice, InvoiceItem, InvoiceSection, InvoiceStatus } from '../models/invoice.model';
 import { TemplateSection } from '../models/worksheet-template.model';
-import { Worksheet } from '../models/worksheet.model';
+import { Worksheet, parseQuantity } from '../models/worksheet.model';
 
 /** Fields of an item that can be edited while the invoice is open */
 export type EditableItemFields = Partial<Pick<InvoiceItem, 'quantity' | 'price' | 'discount'>>;
@@ -65,7 +65,7 @@ export class InvoiceStore {
 
   /**
    * Open invoice of the done lines of a worksheet: one item per line, counted in the unit of its
-   * section; labour at the client's hourly rate (`clientRateId`, else the default one), other
+   * section (fluids: the quantity filled in the worksheet, else 1); labour at the client's hourly rate (`clientRateId`, else the default one), other
    * prices to fill in. A worksheet has at most one open invoice: asking again returns it (shown
    * again, with its data, if the worksheet had been reopened).
    */
@@ -89,11 +89,12 @@ export class InvoiceStore {
         Object.keys(worksheet.lines)
           .filter((key) => (key === line.id || key.startsWith(`${line.id}~`)) && worksheet.lines[key].done)
           .map((key): InvoiceItem => {
-            const text = line.titleKey ? undefined : String(worksheet.lines[key].values[line.fields?.[0]?.id ?? ''] ?? '');
+            const state = worksheet.lines[key];
+            const text = line.titleKey ? undefined : String(state.values[line.fields?.[0]?.id ?? ''] ?? '');
             return {
               id: key,
               ...(line.titleKey ? { lineId: line.id } : { text }),
-              quantity: 1,
+              quantity: (section.invoiceUnit === 'litre' && parseQuantity(state.quantity)) || 1,
               unit: section.invoiceUnit,
               price: section.invoiceUnit === 'hour' ? hourlyPrice : 0,
               discount: 0,
@@ -148,6 +149,11 @@ export class InvoiceStore {
         items: section.items.map((item) => (item.unit === 'hour' ? { ...item, price } : item)),
       })),
     }));
+  }
+
+  /** Shows or hides the observations and tips on the invoice (they are kept) */
+  setObservationHidden(id: string, hidden: boolean): void {
+    this.patch(id, (invoice) => ({ ...invoice, hideObservation: hidden }));
   }
 
   updateItem(id: string, sectionId: string, itemId: string, changes: EditableItemFields): void {
