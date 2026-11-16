@@ -87,7 +87,15 @@
   "transcript": {
     "title": "Transcripts",
     "rail": "Transcript",
-    "empty": "No message"
+    "empty": "No message",
+    "worksheet": "Worksheet · {{vehicle}} – {{client}}",
+    "invoice": "Invoice No {{number}}",
+    "show": "Show",
+    "before": "Previous value",
+    "after": "New value",
+    "emptyValue": "empty",
+    "today": "Today",
+    "nothingToday": "Nothing said yet today."
   },
   "template": {
     "labour": {

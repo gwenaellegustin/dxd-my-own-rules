@@ -1,0 +1,45 @@
+@let target = targetLabel();
+<button
+  type="button"
+  class="change"
+  [class.change--planned]="change().statusAfter === 'planned'"
+  [class.change--done]="change().statusAfter === 'done'"
+  (click)="show.emit()"
+>
+  <span class="change__head">
+    <app-icon [name]="change().target.type === 'invoice' ? 'invoice' : 'tool'" size="small" />
+    <span class="change__target text-small">{{ target.key | translate: target.params }}</span>
+    <span class="change__show text-small">
+      {{ 'transcript.show' | translate }}
+      <app-icon name="chevron-right" size="small" />
+    </span>
+  </span>
+  <span class="change__field text-strong">{{ change().labelKey | translate }}</span>
+  <span class="change__values">
+    <span class="change__before" [attr.aria-label]="'transcript.before' | translate">
+      <ng-container *ngTemplateOutlet="value; context: { text: change().before, status: change().statusBefore, final: false }" />
+    </span>
+    <app-icon name="chevron-right" size="small" aria-hidden="true" />
+    <span class="change__after" [attr.aria-label]="'transcript.after' | translate">
+      <ng-container *ngTemplateOutlet="value; context: { text: change().after, status: change().statusAfter, final: true }" />
+    </span>
+  </span>
+</button>
+
+<!-- A value of a change: Planned / Done (the new status with a check of its colour), then the
+     text; "empty" if none -->
+<ng-template #value let-text="text" let-status="status" let-final="final">
+  @if (status) {
+    <span class="status status--{{ status }}">
+      @if (final) {
+        <app-icon name="check" size="small" />
+      }
+      <span class="change__text">{{ 'line.' + status | translate }}</span>
+    </span>
+  }
+  @if (text) {
+    <span class="change__text">{{ status ? '· ' : '' }}{{ text }}</span>
+  } @else if (!status) {
+    <span class="change__value--empty">{{ 'transcript.emptyValue' | translate }}</span>
+  }
+</ng-template>

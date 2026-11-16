@@ -2,14 +2,114 @@
   {
     "id": "msg-1",
     "userId": "user-1",
+    "text": "On Mr Morard's invoice, the brake fluid was one litre at 28.50, not 18.",
+    "timestamp": "2026-11-05T16:42:00"
+  },
+  {
+    "id": "msg-2",
+    "text": "I corrected the brake fluid price on Mr Morard's invoice.",
+    "timestamp": "2026-11-05T16:42:03",
+    "changes": [
+      {
+        "target": {
+          "type": "invoice",
+          "id": "inv-2261105"
+        },
+        "area": "item:brakeFluid",
+        "labelKey": "template.fluids.brakeFluid",
+        "before": "1 l × 18.00",
+        "after": "1 l × 28.50"
+      }
+    ]
+  },
+  {
+    "id": "msg-3",
+    "userId": "user-1",
     "text": "Work began at 13:15 on Fabrice's car",
     "timestamp": "2026-11-06T13:37:00",
     "worksheetId": "ws-1006"
   },
   {
-    "id": "msg-2",
-    "text": "“13:15” added to the notes on Kia's last worksheet - Fabrice",
+    "id": "msg-4",
+    "text": "I added the start time to the hours of Fabrice's Kia worksheet.",
     "timestamp": "2026-11-06T13:37:02",
+    "worksheetId": "ws-1006",
+    "changes": [
+      {
+        "target": {
+          "type": "worksheet",
+          "id": "ws-1006"
+        },
+        "area": "hours",
+        "labelKey": "worksheet.hours",
+        "before": "• 20h → 21h\n• 11h → 12h",
+        "after": "• 20h → 21h\n• 11h → 12h\n• 13h15 →"
+      }
+    ]
+  },
+  {
+    "id": "msg-5",
+    "userId": "user-1",
+    "text": "Oil change done with three and a half litres of 5W30, the oil filter is a 1566.",
+    "timestamp": "2026-11-06T14:05:00",
     "worksheetId": "ws-1006"
+  },
+  {
+    "id": "msg-6",
+    "text": "I marked the engine oil and the oil filter as done on Fabrice's Kia worksheet.",
+    "timestamp": "2026-11-06T14:05:03",
+    "worksheetId": "ws-1006",
+    "changes": [
+      {
+        "target": {
+          "type": "worksheet",
+          "id": "ws-1006"
+        },
+        "area": "line:engineOil",
+        "labelKey": "template.fluids.engineOil",
+        "before": "",
+        "after": "5W30 · 3.50",
+        "statusBefore": "planned",
+        "statusAfter": "done"
+      },
+      {
+        "target": {
+          "type": "worksheet",
+          "id": "ws-1006"
+        },
+        "area": "line:oilFilter",
+        "labelKey": "template.parts.oilFilter",
+        "before": "",
+        "after": "1566",
+        "statusBefore": "planned",
+        "statusAfter": "done"
+      }
+    ]
+  },
+  {
+    "id": "msg-7",
+    "userId": "user-1",
+    "text": "The brake fluid of the Kia must be changed too, it is DOT 4.",
+    "timestamp": "2026-11-06T14:20:00",
+    "worksheetId": "ws-1006"
+  },
+  {
+    "id": "msg-8",
+    "text": "I planned the brake fluid change on Fabrice's Kia worksheet.",
+    "timestamp": "2026-11-06T14:20:03",
+    "worksheetId": "ws-1006",
+    "changes": [
+      {
+        "target": {
+          "type": "worksheet",
+          "id": "ws-1006"
+        },
+        "area": "line:brakeFluid",
+        "labelKey": "template.fluids.brakeFluid",
+        "before": "",
+        "after": "DOT 4",
+        "statusAfter": "planned"
+      }
+    ]
   }
 ]

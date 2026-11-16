@@ -389,6 +389,14 @@ button {
   width: calc(var(--control-width-small) + var(--icon-size-large));
 }
 
+// Element shown from a transcript change (HighlightService): a strong border around it
+.is-highlighted {
+  outline: var(--stroke-highlight) solid var(--color-highlight);
+  outline-offset: var(--space-100);
+  border-radius: var(--radius-200);
+  transition: outline-color var(--transition-fast);
+}
+
 // Select: the text box of a select is not shrunk by the vertical padding like an input's
 select.input {
   padding-block: 0;

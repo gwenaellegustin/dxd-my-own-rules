@@ -62,6 +62,7 @@
               @for (key of store.lineInstanceIds(ws, line); track key; let last = $last) {
                 <!-- The trailing empty instance is the "new line" field: nothing to delete -->
                 <app-task-line
+                  [attr.data-area]="'line:' + key"
                   [line]="line"
                   [state]="lineState(ws, key)"
                   [removable]="!!line.repeatable && !last"

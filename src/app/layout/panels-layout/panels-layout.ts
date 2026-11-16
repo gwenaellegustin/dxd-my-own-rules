@@ -32,7 +32,8 @@ export class PanelsLayout {
 
   private readonly isDesktop = () => matchMedia(DESKTOP_QUERY).matches;
   readonly sidebarOpen = signal(this.isDesktop());
-  readonly transcriptOpen = signal(false);
+  /** Shared by every page (see TranscriptService.open) */
+  readonly transcriptOpen = this.transcript.open;
 
   /** After choosing an item in the side panel: on small screens the panel covers the content */
   closeSidebarOnSmallScreens(): void {

@@ -44,7 +44,7 @@
       },
       "oilFilter": {
         "planned": true,
-        "done": false,
+        "done": true,
         "note": "1566",
         "values": {}
       },
@@ -62,7 +62,7 @@
       },
       "engineOil": {
         "planned": true,
-        "done": false,
+        "done": true,
         "note": "3.50",
         "values": {
           "grade": "5W30"
@@ -74,6 +74,14 @@
         "note": "1.5",
         "values": {
           "season": "winter"
+        }
+      },
+      "brakeFluid": {
+        "planned": true,
+        "done": false,
+        "note": "",
+        "values": {
+          "grade": "DOT 4"
         }
       }
     }

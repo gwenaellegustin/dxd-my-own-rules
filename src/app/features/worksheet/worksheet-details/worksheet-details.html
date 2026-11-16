@@ -1,7 +1,7 @@
 @let ws = worksheet();
 
 <div class="fields">
-  <label class="field">
+  <label class="field" data-area="client">
     <span class="field__label">{{ 'worksheet.client' | translate }}</span>
     <app-combobox
       [value]="ws.client"
@@ -12,7 +12,7 @@
   </label>
 
   <div class="field-row">
-    <label class="field">
+    <label class="field" data-area="vehicle">
       <span class="field__label">{{ 'worksheet.vehicle' | translate }}</span>
       <app-combobox
         [value]="ws.vehicle"
@@ -44,7 +44,7 @@
     />
   }
 
-  <label class="field">
+  <label class="field" data-area="date">
     <span class="field__label">{{ 'worksheet.date' | translate }}</span>
     <span class="date-field date-field--full">
       <input class="input" type="date" [disabled]="locked()" [value]="ws.date ?? ''" (change)="update('date', $event)" />
@@ -52,7 +52,7 @@
     </span>
   </label>
 
-  <label class="field">
+  <label class="field" data-area="kilometers">
     <span class="field__label">{{ 'worksheet.kilometers' | translate }}</span>
     <app-clearable>
       <input #clearTarget class="input" type="text" inputmode="numeric" [disabled]="locked()" [value]="ws.kilometers" (input)="update('kilometers', $event)" />
@@ -60,7 +60,7 @@
   </label>
 
   <div class="field-row">
-    <label class="field">
+    <label class="field" data-area="hours">
       <span class="field__label">{{ 'worksheet.hours' | translate }}</span>
       <app-clearable>
         <textarea #clearTarget class="textarea" appAutoGrow appBulletList [disabled]="locked()" [value]="ws.hours" (input)="update('hours', $event)"></textarea>
@@ -80,7 +80,7 @@
     </button>
   </div>
 
-  <label class="field">
+  <label class="field" data-area="comments">
     <span class="field__label">{{ 'worksheet.comments' | translate }}</span>
     <app-clearable>
       <textarea #clearTarget class="textarea" appAutoGrow appBulletList [disabled]="locked()" [value]="ws.comments" (input)="update('comments', $event)"></textarea>

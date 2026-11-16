@@ -20,6 +20,8 @@
   // Line status backgrounds (Labour / Parts / Fluids / Various lines)
   --color-background-status-planned: #f1f6fd;
   --color-background-status-done: #ebffee;
+  --color-icon-status-planned: #2f6fd6; // check of a planned line (transcript changes)
+  --color-icon-status-done: #1e9e4a; // check of a done line
   // Invoice status chips (open / sent / paid)
   --color-background-invoice-open: var(--color-background-status-planned);
   --color-background-invoice-sent: var(--color-background-tertiary);
@@ -30,6 +32,7 @@
   --color-border-strong: #757575;
   --color-border-brand: #2c2c2c;
   --color-focus-ring: #2c2c2c;
+  --color-highlight: #2c2c2c; // border of an element shown from a transcript change
 
   // ---- Colors: text & icons -----------------------------------------------
   --color-text-default: #1e1e1e;
@@ -116,6 +119,7 @@
   --vehicle-tile-min-width: 220px;
   --vehicle-field-min-width: 200px;
   --text-key-min-width: 160px;
+  --stroke-highlight: 3px; // element shown from a transcript change
   --settings-max-width: 1400px;
   --invoice-logo-size: 72px;
   --invoice-totals-width: 320px;

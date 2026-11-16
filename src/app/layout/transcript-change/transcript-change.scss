@@ -1,0 +1,115 @@
+// A change: a card that opens the worksheet / invoice on the changed element
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.change {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+  padding: var(--space-200) var(--space-300);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  color: var(--color-text-default);
+  text-align: left;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+
+  &:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-background-hover);
+
+    .change__show {
+      color: var(--color-text-default);
+    }
+  }
+}
+
+.change__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-100);
+  color: var(--color-text-secondary);
+}
+
+.change__target {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.change__show {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-text-secondary);
+}
+
+.change__values {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-100);
+  color: var(--color-text-secondary);
+}
+
+// Previous value struck through, new value emphasised; multi-line values keep their lines
+.change__before,
+.change__after {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-100);
+  padding: 0 var(--space-100);
+  border-radius: var(--radius-100);
+  white-space: pre-line;
+}
+
+.change__before .change__text {
+  color: var(--color-text-secondary);
+  text-decoration: line-through;
+}
+
+// Planned / Done of a line: a check in the colour of the status
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-050);
+
+  app-icon {
+    color: var(--color-icon-status-planned);
+  }
+
+  &--done app-icon {
+    color: var(--color-icon-status-done);
+  }
+}
+
+// The card takes the background of the line in the worksheet once changed (planned / done)
+.change--planned {
+  background: var(--color-background-status-planned);
+}
+
+.change--done {
+  background: var(--color-background-status-done);
+}
+
+.change__after {
+  background: var(--color-background-secondary);
+  color: var(--color-text-default);
+  font-weight: var(--font-weight-strong);
+}
+
+// No value before / after: "empty", in italics, not struck through
+.change__value--empty {
+  background: none;
+  color: var(--color-text-tertiary);
+  font-style: italic;
+  font-weight: normal;
+  text-decoration: none;
+}

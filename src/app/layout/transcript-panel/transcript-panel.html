@@ -23,10 +23,18 @@
       </div>
     </div>
 
-    <div class="panel__scroll" aria-live="polite">
+    <div #scroller class="panel__scroll" aria-live="polite">
       @for (day of days(); track day.date) {
-        <section class="day">
-          <h3 class="day__date">{{ day.date | date: 'dd.MM.yyyy' }}</h3>
+        <section class="day" [class.day--today]="day.date === today">
+          <h3 class="day__date">
+            @if (day.date === today) {
+              {{ 'transcript.today' | translate }} ·
+            }
+            {{ day.date | date: 'dd.MM.yyyy' }}
+          </h3>
+          @if (day.messages.length === 0) {
+            <p class="empty-day text-secondary text-small">{{ 'transcript.nothingToday' | translate }}</p>
+          }
           @for (message of day.messages; track message.id) {
             @if (message.userId) {
               <div class="message message--user">
@@ -37,8 +45,14 @@
               </div>
             } @else {
               <div class="message message--assistant">
-                <app-icon name="lift" size="xlarge" />
-                <p>{{ message.text }}</p>
+                <app-icon name="robot" size="xlarge" />
+                <div class="message__body">
+                  <p>{{ message.text }}</p>
+                  <!-- What was changed: click to open the worksheet / invoice on that element -->
+                  @for (change of message.changes ?? []; track $index) {
+                    <app-transcript-change [change]="change" (show)="show(change)" />
+                  }
+                </div>
               </div>
             }
           }
@@ -54,3 +68,4 @@
     <span class="rail__label text-heading">{{ 'transcript.rail' | translate }}</span>
   </button>
 }
+

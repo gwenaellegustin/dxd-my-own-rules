@@ -73,7 +73,7 @@
       </thead>
       <tbody>
         @for (item of section.items; track item.id) {
-          <tr>
+          <tr [attr.data-area]="'item:' + item.id">
             <td class="items__description">
               @if (titleKey(item); as key) {
                 {{ key | translate }}
@@ -166,7 +166,7 @@
   </p>
 
   <!-- Always shown, like on the paper invoice; it is the worksheet "Comments and tips" -->
-  <div class="invoice__observation">
+  <div class="invoice__observation" data-area="observation">
     <span class="text-strong" id="invoice-observation">{{ 'invoice.observation' | translate }}</span>
     @if (editable()) {
       <app-clearable class="invoice__observation-field no-print">

@@ -1,19 +1,37 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  afterRenderEffect,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon } from '../../shared/icon/icon';
 import { Clearable } from '../../shared/clearable/clearable';
-import { TranscriptMessage } from '../../core/models/transcript.model';
+import { TranscriptChange, TranscriptMessage } from '../../core/models/transcript.model';
+import { TranscriptChangeCard } from '../transcript-change/transcript-change';
+import { HighlightService } from '../../core/services/highlight.service';
 
 interface TranscriptDay {
   date: string;
   messages: TranscriptMessage[];
 }
 
-/** "Transcript" component set (Default = collapsed, Opened). */
+/**
+ * "Transcript" component set (Default = collapsed, Opened).
+ * A user message is what was said; the assistant reply under it lists what was changed from it
+ * (previous → new value). Clicking a change opens its worksheet or invoice and highlights the
+ * changed element.
+ */
 @Component({
   selector: 'app-transcript-panel',
-  imports: [DatePipe, TranslatePipe, Icon, Clearable],
+  imports: [DatePipe, TranslatePipe, Icon, Clearable, TranscriptChangeCard],
   templateUrl: './transcript-panel.html',
   styleUrl: './transcript-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,7 +42,13 @@ export class TranscriptPanel {
   readonly open = input(false);
   readonly openChange = output<boolean>();
 
+  private readonly highlight = inject(HighlightService);
+
   protected readonly query = signal('');
+
+  protected show(change: TranscriptChange): void {
+    this.highlight.show(change.target, change.area);
+  }
 
   protected readonly days = computed<TranscriptDay[]>(() => {
     const query = this.query().trim().toLowerCase();
@@ -35,6 +59,22 @@ export class TranscriptPanel {
       const day = message.timestamp.slice(0, 10);
       days.set(day, [...(days.get(day) ?? []), message]);
     }
+    // Today is always the last day (empty until something is said), the previous ones above it
+    if (!query && !days.has(this.today)) days.set(this.today, []);
     return [...days].map(([date, messages]) => ({ date, messages }));
   });
+
+  /** yyyy-MM-dd, local time */
+  protected readonly today = new Date().toLocaleDateString('sv');
+
+  private readonly scroller = viewChild<ElementRef<HTMLElement>>('scroller');
+
+  constructor() {
+    // When the panel opens: scrolled to the bottom (today); scroll up for the previous days
+    afterRenderEffect(() => {
+      const scroller = this.scroller()?.nativeElement;
+      // Next frame: once the panel has its final size (fonts, layout of the open panel)
+      if (scroller) requestAnimationFrame(() => (scroller.scrollTop = scroller.scrollHeight));
+    });
+  }
 }

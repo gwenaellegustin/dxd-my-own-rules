@@ -87,7 +87,15 @@
   "transcript": {
     "title": "Transcriptions",
     "rail": "Transcription",
-    "empty": "Aucun message"
+    "empty": "Aucun message",
+    "worksheet": "Fiche · {{vehicle}} – {{client}}",
+    "invoice": "Facture N° {{number}}",
+    "show": "Voir",
+    "before": "Ancienne valeur",
+    "after": "Nouvelle valeur",
+    "emptyValue": "vide",
+    "today": "Aujourd’hui",
+    "nothingToday": "Rien n’a encore été dit aujourd’hui."
   },
   "template": {
     "labour": {

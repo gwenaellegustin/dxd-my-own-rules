@@ -101,6 +101,16 @@ for now):
 
 Settings are kept in memory like the rest of the data.
 
+## Transcript
+
+The right panel (common to the worksheet and invoice pages) shows, per day, what was said (user
+messages) and the assistant's answer: what it changed from that transcript, as cards
+(`changes` in `transcripts.json`): the worksheet or invoice, the field or line, and the previous →
+new value. Clicking a card opens that worksheet or invoice and highlights the changed element
+with a border (`HighlightService`, elements marked with `data-area`: `hours`, `line:engineOil`,
+`item:brakeFluid`…)
+until the next click. The panel stays open.
+
 ## Invoice page
 
 - Left panel: open invoices on top, then *Sent* and *Paid* (newest first). The transcript stays

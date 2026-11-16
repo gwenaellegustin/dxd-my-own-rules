@@ -22,6 +22,7 @@ const MATERIAL_SYMBOLS = {
   registration: 'two_pager',
   invoice: 'receipt_long',
   receipt: 'receipt',
+  robot: 'smart_toy',
   'left-panel-close': 'left_panel_close',
   lift: 'car_repair',
   'plus-circle': 'add_circle',
