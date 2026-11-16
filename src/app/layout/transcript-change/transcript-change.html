@@ -7,7 +7,7 @@
   (click)="show.emit()"
 >
   <span class="change__head">
-    <app-icon [name]="change().target.type === 'invoice' ? 'invoice' : 'tool'" size="small" />
+    <app-icon [name]="targetIcon()" size="small" />
     <span class="change__target text-small">{{ target.key | translate: target.params }}</span>
     <span class="change__show text-small">
       {{ 'transcript.show' | translate }}

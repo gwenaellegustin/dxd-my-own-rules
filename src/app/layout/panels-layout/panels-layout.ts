@@ -22,13 +22,15 @@ const DESKTOP_QUERY = '(min-width: 1200px)';
   templateUrl: './panels-layout.html',
   styleUrl: './panels-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.no-transcript]': '!withTranscript()' },
+  host: { '[class.no-transcript]': '!withTranscript()', '[class.no-sidebar]': '!withSidebar()' },
 })
 export class PanelsLayout {
   protected readonly transcript = inject(TranscriptService);
 
   /** The transcript panel on the right (not on every page) */
   readonly withTranscript = input(true);
+  /** The side panel on the left (a page without a list, e.g. the shopping list, has none) */
+  readonly withSidebar = input(true);
 
   private readonly isDesktop = () => matchMedia(DESKTOP_QUERY).matches;
   readonly sidebarOpen = signal(this.isDesktop());

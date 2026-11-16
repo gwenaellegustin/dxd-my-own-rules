@@ -123,5 +123,28 @@
     "text": "Wheel change not marked as done: Fabrice's Kia and Matthieu's Bus both have one planned, so the vehicle was not clear.",
     "timestamp": "2026-11-16T08:12:03",
     "problem": true
+  },
+  {
+    "id": "msg-11",
+    "userId": "user-1",
+    "text": "I have to buy an air filter for Fabrice's car.",
+    "timestamp": "2026-11-16T08:30:00"
+  },
+  {
+    "id": "msg-12",
+    "text": "I added an air filter for Fabrice's Kia to the shopping list.",
+    "timestamp": "2026-11-16T08:30:03",
+    "changes": [
+      {
+        "target": {
+          "type": "shopping-list",
+          "id": "sl-12"
+        },
+        "area": "item:sl-12",
+        "labelKey": "shoppingList.item",
+        "before": "",
+        "after": "1 × Air filter · Kia Ceed 1.5 T-GDi – Fabrice Favre"
+      }
+    ]
   }
 ]

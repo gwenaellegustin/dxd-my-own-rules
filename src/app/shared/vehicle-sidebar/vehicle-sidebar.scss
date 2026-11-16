@@ -75,33 +75,6 @@
   margin-top: var(--space-100);
 }
 
-.count-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-050);
-  padding: var(--space-050) var(--space-200) var(--space-050) var(--space-100);
-  border: var(--stroke-border) solid transparent;
-  border-radius: var(--radius-full);
-  background: var(--color-background-secondary);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-small);
-  font-weight: var(--font-weight-strong);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-
-  // Same colours as the status chips (Open / Sent) of the invoices
-  &--open {
-    background: var(--color-background-invoice-open);
-    border-color: var(--color-border-info);
-    color: var(--color-text-info);
-  }
-
-  &--alert {
-    background: var(--color-background-danger);
-    border-color: var(--color-border-danger);
-    color: var(--color-text-danger);
-  }
-}
 
 .card {
   display: flex;

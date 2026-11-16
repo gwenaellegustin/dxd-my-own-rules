@@ -1,4 +1,6 @@
-<div class="sidebar"><ng-content select="[sidebar]" /></div>
+@if (withSidebar()) {
+  <div class="sidebar"><ng-content select="[sidebar]" /></div>
+}
 
 <div class="work-area"><ng-content /></div>
 

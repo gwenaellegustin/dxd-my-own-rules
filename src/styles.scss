@@ -10,10 +10,22 @@
   box-sizing: border-box;
 }
 
+// The page always has exactly the size of the screen: only the app's own areas scroll (work
+// area, side panels), never the page itself
 html,
 body {
   height: 100%;
   margin: 0;
+  overflow: hidden;
+}
+
+// Printing (invoice as PDF): the document flows over several pages
+@media print {
+  html,
+  body {
+    height: auto;
+    overflow: visible;
+  }
 }
 
 body {
@@ -412,6 +424,35 @@ button {
   font-weight: var(--font-weight-strong);
   font-variant-numeric: tabular-nums;
   line-height: 1;
+}
+
+// Count with an icon (client cards of the side panel): grey, blue (open invoices), red (sent)
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-050);
+  padding: var(--space-050) var(--space-200) var(--space-050) var(--space-100);
+  border: var(--stroke-border) solid transparent;
+  border-radius: var(--radius-full);
+  background: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-strong);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+
+  // Same colours as the status chips (Open / Sent) of the invoices
+  &--open {
+    background: var(--color-background-invoice-open);
+    border-color: var(--color-border-info);
+    color: var(--color-text-info);
+  }
+
+  &--alert {
+    background: var(--color-background-danger);
+    border-color: var(--color-border-danger);
+    color: var(--color-text-danger);
+  }
 }
 
 // Scrollbars of the whole app: thin rounded thumb (pill like the search field and the buttons),

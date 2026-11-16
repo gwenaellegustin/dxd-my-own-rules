@@ -25,8 +25,16 @@ export class TranscriptChangeCard {
   readonly change = input.required<TranscriptChange>();
   readonly show = output<void>();
 
+  protected targetIcon(): 'invoice' | 'tool' | 'cart' {
+    const type = this.change().target.type;
+    return type === 'invoice' ? 'invoice' : type === 'shopping-list' ? 'cart' : 'tool';
+  }
+
   /** What a change is about: "Kia Ceed – Fabrice Favre" or the invoice number */
   protected targetLabel(): { key: string; params: Record<string, string> } {
+    if (this.change().target.type === 'shopping-list') {
+      return { key: 'transcript.shoppingList', params: {} };
+    }
     if (this.change().target.type === 'invoice') {
       return { key: 'transcript.invoice', params: { number: this.invoices.getById(this.change().target.id)?.number ?? '' } };
     }

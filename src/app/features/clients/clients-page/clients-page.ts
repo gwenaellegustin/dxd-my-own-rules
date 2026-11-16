@@ -24,7 +24,7 @@ const familyName = (name: string) => name.trim().split(/\s+/).at(-1) ?? '';
  * Clients: list on the left ("New client" at the top); for the selected client, its details
  * (name, address, hourly rate of its invoices, all editable), its vehicles (tiles that filter
  * what is shown below, all selected at first; each opens its vehicle file), its open worksheets
- * and its invoices. No transcript panel on this page.
+ * and its invoices. The transcript panel stays on the right, as on the other pages.
  */
 @Component({
   selector: 'app-clients-page',

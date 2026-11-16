@@ -99,7 +99,8 @@
     "nothingToday": "Rien n’a encore été dit aujourd’hui.",
     "problems": "{{count}} réponse(s) à vérifier",
     "noAction": "Aucune action effectuée",
-    "validate": "Ok"
+    "validate": "Ok",
+    "shoppingList": "Liste d’achats"
   },
   "template": {
     "labour": {
@@ -286,5 +287,16 @@
     "addField": "Ajouter un champ",
     "preview": "Aperçu",
     "addLine": "Ajouter une ligne ici"
+  },
+  "shoppingList": {
+    "ordered": "Commandé",
+    "remove": "Retirer de la liste",
+    "empty": "Rien à acheter.",
+    "item": "Article",
+    "quantity": "Quantité",
+    "client": "Client",
+    "vehicle": "Véhicule",
+    "none": "—",
+    "add": "Ajouter"
   }
 }

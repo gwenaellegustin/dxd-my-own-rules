@@ -1,6 +1,6 @@
 /** Worksheet or invoice changed by the assistant */
 export interface TranscriptTarget {
-  type: 'worksheet' | 'invoice';
+  type: 'worksheet' | 'invoice' | 'shopping-list';
   id: string;
 }
 

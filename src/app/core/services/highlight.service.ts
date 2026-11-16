@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranscriptTarget } from '../models/transcript.model';
+import { scrollIntoArea } from '../../shared/scroll-into-area';
 
 const HIGHLIGHT_CLASS = 'is-highlighted';
 /** How long to wait for the target page to show the element */
@@ -20,13 +21,17 @@ export class HighlightService {
   private readonly document = inject(DOCUMENT);
 
   async show(target: TranscriptTarget, area: string): Promise<void> {
-    await this.router.navigate([target.type === 'worksheet' ? '/worksheets' : '/invoices', target.id]);
+    const route =
+      target.type === 'shopping-list'
+        ? ['/shopping-list']
+        : [target.type === 'worksheet' ? '/worksheets' : '/invoices', target.id];
+    await this.router.navigate(route);
     const element = await this.find(area);
     if (!element) return;
 
     this.clear();
     element.classList.add(HIGHLIGHT_CLASS);
-    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    scrollIntoArea(element, { block: 'center', smooth: true });
     // Removed by the next click (registered after this one has finished)
     setTimeout(() => this.document.addEventListener('pointerdown', () => this.clear(), { once: true }));
   }

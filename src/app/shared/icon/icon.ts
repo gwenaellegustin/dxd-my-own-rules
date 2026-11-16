@@ -6,6 +6,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
  */
 const MATERIAL_SYMBOLS = {
   calendar: 'calendar_today',
+  cart: 'shopping_cart',
   car: 'directions_car',
   check: 'check',
   'chevron-down': 'keyboard_arrow_down',

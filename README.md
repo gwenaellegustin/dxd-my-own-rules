@@ -40,7 +40,7 @@ src/
       worksheet/   worksheet page: details, task line, carry-over dialog
       invoice/     invoice page and invoice document
       clients/     clients page (vehicles, open worksheets, invoices)
-      shopping-list/   empty page (not designed yet)
+      shopping-list/   shopping list
 ```
 
 ## Conventions
@@ -82,6 +82,16 @@ An **invoiced worksheet is read-only** (the store refuses its edits, the fields 
 notice says why); its button becomes *Open invoice*. The only exception is *Observations and
 tips*, editable from the invoice while it is open. Invoicing clears the undo history.
 
+## Shopping list
+
+- A plain list in the order items were added (grouped by day), without side panel
+  (`[withSidebar]="false"` on `app-panels-layout`); the transcript stays on the right.
+- Each item: quantity × label, optionally linked to a client and / or one of its vehicles (links
+  to the client page), a checkbox *Ordered* (green, struck through) and a delete button.
+- The page opens with the first item not ordered yet at the top; older items are above it.
+  New items are added with the form at the bottom. The menu badge counts the items not ordered.
+- The transcript can add items (example: an air filter for Fabrice's Kia).
+
 ## Worksheet settings
 
 Account menu (top right) → *Worksheet settings*, for cars or motorcycles (each kind has its own
@@ -109,7 +119,8 @@ messages) and the assistant's answer: what it changed from that transcript, as c
 new value. Clicking a card opens that worksheet or invoice and highlights the changed element
 with a border (`HighlightService`, elements marked with `data-area`: `hours`, `line:engineOil`,
 `item:brakeFluid`…)
-until the next click. The panel stays open.
+until the next click. The panel stays open, and keeps its scroll position from one page to
+another (`TranscriptService`).
 An answer the assistant could not apply (`"problem": true`, e.g. it did not know which vehicle)
 has a light red background, and a red badge next to the panel title (also on the closed panel)
 counts them. It says that no action was done; the *Ok* button ("Mark chat read" icon) removes the red status (and the count).
@@ -134,7 +145,7 @@ counts them. It says that no action was done; the *Ok* button ("Mark chat read" 
 
 ## Clients page
 
-- Same layout, without the transcript panel (`[withTranscript]="false"` on `app-panels-layout`).
+- Same layout, with the transcript panel on the right.
 - Left: the clients (name, town) and *New client*, ordered by family name (last word of the
   name) or by last date (latest worksheet or invoice) with the sort button next to the search.
   Each card counts, with an icon, the client's open worksheets (tool, grey), open invoices

@@ -99,7 +99,8 @@
     "nothingToday": "Nothing said yet today.",
     "problems": "{{count}} answer(s) to check",
     "noAction": "No action done",
-    "validate": "Ok"
+    "validate": "Ok",
+    "shoppingList": "Shopping list"
   },
   "template": {
     "labour": {
@@ -286,5 +287,16 @@
     "addField": "Add a field",
     "preview": "Preview",
     "addLine": "Add a line here"
+  },
+  "shoppingList": {
+    "ordered": "Ordered",
+    "remove": "Remove from the list",
+    "empty": "Nothing to buy.",
+    "item": "Item",
+    "quantity": "Quantity",
+    "client": "Client",
+    "vehicle": "Vehicle",
+    "none": "—",
+    "add": "Add"
   }
 }

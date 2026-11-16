@@ -18,6 +18,12 @@ export class TranscriptService {
    */
   readonly open = signal(false);
 
+  /**
+   * Scroll position of the panel, kept when another page is opened (each page has its own
+   * panel). Null until the panel was scrolled: it then opens on today.
+   */
+  scrollTop: number | null = null;
+
   /** Problem answers already seen and validated by the user (kept in memory) */
   private readonly validated = signal<ReadonlySet<string>>(new Set());
 

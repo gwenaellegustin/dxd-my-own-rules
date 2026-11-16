@@ -74,11 +74,14 @@ export class TranscriptPanel {
   private readonly scroller = viewChild<ElementRef<HTMLElement>>('scroller');
 
   constructor() {
-    // When the panel opens: scrolled to the bottom (today); scroll up for the previous days
+    // When the panel opens: where it was left (also on another page), else on today (bottom)
     afterRenderEffect(() => {
       const scroller = this.scroller()?.nativeElement;
+      if (!scroller) return;
       // Next frame: once the panel has its final size (fonts, layout of the open panel)
-      if (scroller) requestAnimationFrame(() => (scroller.scrollTop = scroller.scrollHeight));
+      requestAnimationFrame(() => {
+        scroller.scrollTop = this.transcript.scrollTop ?? scroller.scrollHeight;
+      });
     });
   }
 }

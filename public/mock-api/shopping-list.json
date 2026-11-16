@@ -1,13 +1,14 @@
 [
-  { "id": "sl-1", "label": "Oil filter", "quantity": 2, "worksheetId": "ws-1006" },
-  { "id": "sl-2", "label": "Engine oil 5W30 (5 L)", "quantity": 1, "worksheetId": "ws-1006" },
-  { "id": "sl-3", "label": "Drain plug washer", "quantity": 5 },
-  { "id": "sl-4", "label": "Air filter", "quantity": 1 },
-  { "id": "sl-5", "label": "Cabin air filter", "quantity": 1 },
-  { "id": "sl-6", "label": "Brake pads (front)", "quantity": 1, "worksheetId": "ws-1005" },
-  { "id": "sl-7", "label": "Brake discs (front)", "quantity": 2, "worksheetId": "ws-1005" },
-  { "id": "sl-8", "label": "Brake fluid DOT 4", "quantity": 1 },
-  { "id": "sl-9", "label": "Engine coolant −35°C", "quantity": 2 },
-  { "id": "sl-10", "label": "Windshield washer fluid (winter)", "quantity": 4 },
-  { "id": "sl-11", "label": "Brake cleaner spray", "quantity": 3 }
+  { "id": "sl-1", "label": "Brake pads (front)", "quantity": 1, "addedAt": "2026-10-28T09:10:00", "clientId": "client-3", "vehicleId": "vehicle-3", "ordered": true },
+  { "id": "sl-2", "label": "Brake discs (front)", "quantity": 2, "addedAt": "2026-10-28T09:11:00", "clientId": "client-3", "vehicleId": "vehicle-3", "ordered": true },
+  { "id": "sl-3", "label": "Drain plug washer", "quantity": 5, "addedAt": "2026-10-30T14:02:00", "ordered": true },
+  { "id": "sl-4", "label": "Brake fluid DOT 4", "quantity": 1, "addedAt": "2026-11-02T08:45:00", "ordered": true },
+  { "id": "sl-5", "label": "Chain kit 520", "quantity": 1, "addedAt": "2026-11-03T16:20:00", "clientId": "client-2", "vehicleId": "vehicle-2", "ordered": true },
+  { "id": "sl-6", "label": "Oil filter", "quantity": 2, "addedAt": "2026-11-05T10:30:00", "clientId": "client-1", "vehicleId": "vehicle-1", "ordered": false },
+  { "id": "sl-7", "label": "Engine oil 5W30 (5 L)", "quantity": 1, "addedAt": "2026-11-05T10:31:00", "clientId": "client-1", "vehicleId": "vehicle-1", "ordered": false },
+  { "id": "sl-8", "label": "Winter tyres 205/55 R16", "quantity": 4, "addedAt": "2026-11-06T11:15:00", "clientId": "client-6", "vehicleId": "vehicle-6", "ordered": false },
+  { "id": "sl-9", "label": "Engine coolant −35°C", "quantity": 2, "addedAt": "2026-11-10T09:00:00", "ordered": false },
+  { "id": "sl-10", "label": "Windshield washer fluid (winter)", "quantity": 4, "addedAt": "2026-11-10T09:01:00", "ordered": false },
+  { "id": "sl-11", "label": "Brake cleaner spray", "quantity": 3, "addedAt": "2026-11-12T17:40:00", "ordered": false },
+  { "id": "sl-12", "label": "Air filter", "quantity": 1, "addedAt": "2026-11-16T08:30:03", "clientId": "client-1", "vehicleId": "vehicle-1", "ordered": false }
 ]
