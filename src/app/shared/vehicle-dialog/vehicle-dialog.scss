@@ -72,3 +72,28 @@
 .dialog__actions--end {
   justify-content: flex-end;
 }
+
+// Identity of the vehicle: two columns, one on narrow screens
+.vehicle-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--vehicle-field-min-width), 1fr));
+  gap: var(--space-400);
+}
+
+.vehicle-fields__kind {
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  legend {
+    padding: 0;
+    margin-bottom: var(--space-200);
+  }
+}
+
+.vehicle-fields__choices {
+  display: flex;
+  align-items: center;
+  gap: var(--space-600);
+  min-height: var(--control-height);
+}

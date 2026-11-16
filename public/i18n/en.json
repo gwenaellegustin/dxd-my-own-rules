@@ -59,7 +59,15 @@
     "zoomOut": "Zoom out",
     "upload": "Drop a photo of the registration document here, or click to choose one",
     "uploadHint": "Prototype: the photo is kept until the page is reloaded",
-    "none": "No registration document for this vehicle."
+    "none": "No registration document for this vehicle.",
+    "name": "Brand / model",
+    "plate": "Plate",
+    "kind": "Type",
+    "kinds": {
+      "car": "Car",
+      "motorcycle": "Motorcycle"
+    },
+    "owner": "Owner"
   },
   "damage": {
     "bump": "Bump",
@@ -205,6 +213,15 @@
     "openWorksheets": "Open worksheets",
     "invoices": "Invoices",
     "noWorksheet": "No open worksheet.",
-    "noInvoice": "No invoice."
+    "noInvoice": "No invoice.",
+    "new": "New client",
+    "untitled": "New client",
+    "name": "Name",
+    "street": "Street",
+    "postcode": "Postcode",
+    "city": "City",
+    "rate": "Hourly rate",
+    "addVehicle": "Add a vehicle",
+    "unnamedVehicle": "New vehicle"
   }
 }

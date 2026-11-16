@@ -28,6 +28,7 @@
         (damageRemove)="store.removeDamage(ws.id, $event)"
         (createInvoice)="createInvoice(ws)"
         (openInvoice)="openInvoice(ws)"
+        (vehicleRenamed)="store.rename('vehicle', $event.from, $event.to, ws.client)"
       />
 
       @for (section of store.template()?.sections ?? []; track section.id) {

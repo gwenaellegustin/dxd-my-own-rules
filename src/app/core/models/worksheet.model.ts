@@ -25,10 +25,6 @@ export interface Worksheet {
   status: WorksheetStatus;
   client: string;
   vehicle: string;
-  /** Photo of the vehicle registration document (carte grise), or null when none */
-  registrationImage: string | null;
-  /** Note about the registration document */
-  registrationNote: string;
   /** ISO date (yyyy-MM-dd) or null when not scheduled yet */
   date: string | null;
   kilometers: string;

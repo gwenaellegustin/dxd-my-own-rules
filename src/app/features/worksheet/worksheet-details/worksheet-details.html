@@ -27,20 +27,20 @@
       aria-haspopup="dialog"
       [attr.aria-label]="'registration.open' | translate"
       [attr.title]="'registration.open' | translate"
-      (click)="registrationOpen.set(true)"
+      (click)="openVehicle()"
     >
       <app-icon name="registration" />
     </button>
   </div>
 
-  @if (registrationOpen()) {
-    <app-registration-dialog
-      [image]="ws.registrationImage"
-      [note]="ws.registrationNote"
-      [locked]="locked()"
-      (noteChange)="fieldChange.emit({ registrationNote: $event })"
-      (imageChange)="fieldChange.emit({ registrationImage: $event })"
-      (closed)="registrationOpen.set(false)"
+  @if (vehicleFile(); as file) {
+    <app-vehicle-dialog
+      [vehicle]="file.vehicle"
+      [owner]="ws.client"
+      [locked]="locked() || !file.clientId"
+      (vehicleChange)="clients.updateVehicle(file.clientId, file.vehicle.id, $event)"
+      (renamed)="vehicleRenamed.emit($event)"
+      (closed)="vehicleRef.set(null)"
     />
   }
 

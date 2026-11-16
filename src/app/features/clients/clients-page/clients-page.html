@@ -4,48 +4,151 @@
     titleKey="clients.title"
     icon="person"
     emptyKey="clients.empty"
+    newLabelKey="clients.new"
+    untitledKey="clients.untitled"
     [groups]="cardGroups()"
     [selectedId]="client()?.id ?? null"
     [open]="layout.sidebarOpen()"
     (openChange)="layout.sidebarOpen.set($event)"
     (selectCard)="select($event)"
+    (create)="create()"
   />
 
   @if (client(); as c) {
     <div class="content">
-      <header class="client">
-        <h2 class="text-heading">{{ c.name }}</h2>
-        <address class="client__address">{{ c.address.street }}, {{ c.address.postcode }} {{ c.address.city }}</address>
-      </header>
+      <!-- Client details: saved while typing -->
+      <section class="block" aria-labelledby="client-details">
+        <h2 class="text-heading" id="client-details">
+          {{ c.name || ('clients.untitled' | translate) }}
+        </h2>
+        <div class="client-fields">
+          <label class="field client-fields__wide">
+            <span class="field__label">{{ 'clients.name' | translate }}</span>
+            <app-clearable>
+              <input
+                #clearTarget
+                class="input"
+                type="text"
+                autocomplete="off"
+                [value]="c.name"
+                (focus)="onNameFocus($event)"
+                (input)="updateName(c, $event)"
+                (change)="onNameCommit($event)"
+              />
+            </app-clearable>
+          </label>
+          <label class="field client-fields__wide">
+            <span class="field__label">{{ 'clients.street' | translate }}</span>
+            <app-clearable>
+              <input
+                #clearTarget
+                class="input"
+                type="text"
+                autocomplete="off"
+                [value]="c.address.street"
+                (input)="updateAddress(c, 'street', $event)"
+              />
+            </app-clearable>
+          </label>
+          <label class="field">
+            <span class="field__label">{{ 'clients.postcode' | translate }}</span>
+            <app-clearable>
+              <input
+                #clearTarget
+                class="input"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                [value]="c.address.postcode"
+                (input)="updateAddress(c, 'postcode', $event)"
+              />
+            </app-clearable>
+          </label>
+          <label class="field">
+            <span class="field__label">{{ 'clients.city' | translate }}</span>
+            <app-clearable>
+              <input
+                #clearTarget
+                class="input"
+                type="text"
+                autocomplete="off"
+                [value]="c.address.city"
+                (input)="updateAddress(c, 'city', $event)"
+              />
+            </app-clearable>
+          </label>
+          <label class="field client-fields__wide">
+            <span class="field__label">{{ 'clients.rate' | translate }}</span>
+            <select
+              class="input"
+              (change)="clients.update(c.id, { rateId: $any($event.target).value })"
+            >
+              @for (rate of invoices.company()?.hourlyRates ?? []; track rate.id) {
+                <option
+                  [value]="rate.id"
+                  [selected]="rate.id === (c.rateId || invoices.company()?.defaultRateId)"
+                >
+                  {{ rate.nameKey | translate }} ({{ rate.price }}.-/h)
+                </option>
+              }
+            </select>
+          </label>
+        </div>
+      </section>
 
       <!-- Vehicles: each tile shows / hides the worksheets and invoices of that vehicle -->
       <section class="block" aria-labelledby="client-vehicles">
         <h3 class="text-subheading" id="client-vehicles">{{ 'clients.vehicles' | translate }}</h3>
         <p class="text-secondary text-small">{{ 'clients.vehiclesHint' | translate }}</p>
         <div class="tiles">
-          @for (vehicle of vehicles(); track vehicle.name) {
-            @let checked = selected().has(vehicle.name);
-            <label class="tile" [class.tile--checked]="checked">
-              <input class="visually-hidden" type="checkbox" [checked]="checked" (change)="toggleVehicle(vehicle.name)" />
-              <app-vehicle-logo [vehicle]="vehicle.name" />
-              <span class="tile__body">
-                <span class="text-strong">{{ vehicle.name }}</span>
-                @if (vehicle.plate) {
-                  <span class="text-secondary text-small">{{ vehicle.plate }}</span>
-                }
-              </span>
-              <span class="tile__check" aria-hidden="true">
-                @if (checked) {
-                  <app-icon name="check" size="small" />
-                }
-              </span>
-            </label>
+          @for (vehicle of c.vehicles; track vehicle.id) {
+            @let checked = !hidden().has(vehicle.id);
+            <div class="tile" [class.tile--checked]="checked">
+              <label class="tile__toggle">
+                <input
+                  class="visually-hidden"
+                  type="checkbox"
+                  [checked]="checked"
+                  (change)="toggleVehicle(vehicle.id)"
+                />
+                <span class="tile__check" aria-hidden="true">
+                  @if (checked) {
+                    <app-icon name="check" size="small" />
+                  }
+                </span>
+                <app-vehicle-logo [vehicle]="vehicle.name" [kind]="vehicle.kind" />
+                <span class="tile__body">
+                  <span class="text-strong">{{
+                    vehicle.name || ('clients.unnamedVehicle' | translate)
+                  }}</span>
+                  @if (vehicle.plate) {
+                    <span class="text-secondary text-small">{{ vehicle.plate }}</span>
+                  }
+                </span>
+              </label>
+              <button
+                type="button"
+                class="icon-button"
+                aria-haspopup="dialog"
+                [attr.aria-label]="'registration.open' | translate"
+                [attr.title]="'registration.open' | translate"
+                (click)="openVehicle.set({ id: vehicle.id, isNew: false })"
+              >
+                <app-icon name="registration" />
+              </button>
+            </div>
           }
+          <button type="button" class="tile tile--add" (click)="addVehicle(c)">
+            <app-icon name="plus-circle" />
+            {{ 'clients.addVehicle' | translate }}
+          </button>
         </div>
       </section>
 
       <section class="block" aria-labelledby="client-worksheets">
-        <h3 class="text-subheading" id="client-worksheets">{{ 'clients.openWorksheets' | translate }}</h3>
+        <h3 class="text-subheading" id="client-worksheets">
+          {{ 'clients.openWorksheets' | translate }}
+        </h3>
         @for (worksheet of openWorksheets(); track worksheet.id) {
           <a class="row" [routerLink]="['/worksheets', worksheet.id]">
             <app-vehicle-logo [vehicle]="worksheet.vehicle" [lifted]="true" />
@@ -68,10 +171,16 @@
           <a class="row" [routerLink]="['/invoices', row.invoice.id]">
             <app-vehicle-logo [vehicle]="row.vehicle" />
             <span class="row__main">
-              <span class="text-strong">{{ 'invoice.number' | translate: { number: row.invoice.number } }}</span>
-              <span class="text-secondary">{{ row.vehicle }} · {{ row.invoice.date | date: 'dd.MM.yyyy' }}</span>
+              <span class="text-strong">{{
+                'invoice.number' | translate: { number: row.invoice.number }
+              }}</span>
+              <span class="text-secondary"
+                >{{ row.vehicle }} · {{ row.invoice.date | date: 'dd.MM.yyyy' }}</span
+              >
             </span>
-            <span class="row__amount">{{ invoices.company()?.currency }} {{ row.total | money }}</span>
+            <span class="row__amount"
+              >{{ invoices.company()?.currency }} {{ row.total | money }}</span
+            >
             <span class="status-chip status-chip--{{ row.invoice.status }}">
               {{ 'invoice.status.' + row.invoice.status | translate }}
             </span>
@@ -82,5 +191,15 @@
         }
       </section>
     </div>
+
+    @if (dialogVehicle(); as vehicle) {
+      <app-vehicle-dialog
+        [vehicle]="vehicle"
+        [owner]="c.name"
+        (vehicleChange)="clients.updateVehicle(c.id, vehicle.id, $event)"
+        (renamed)="renameVehicle(c, $event)"
+        (closed)="closeVehicle(c, vehicle)"
+      />
+    }
   }
 </app-panels-layout>

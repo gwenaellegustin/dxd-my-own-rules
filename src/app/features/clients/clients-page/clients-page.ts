@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, signal, viewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -6,29 +6,44 @@ import { ClientService } from '../../../core/services/client.service';
 import { WorksheetStore } from '../../../core/services/worksheet.store';
 import { InvoiceStore } from '../../../core/services/invoice.store';
 import { invoiceTotals } from '../../../core/models/invoice.model';
+import { Address, Client, Vehicle } from '../../../core/models/client.model';
 import { PanelsLayout } from '../../../layout/panels-layout/panels-layout';
 import { VehicleCardGroup, VehicleSidebar } from '../../../shared/vehicle-sidebar/vehicle-sidebar';
 import { VehicleLogo } from '../../../shared/vehicle-logo/vehicle-logo';
+import { VehicleDialog } from '../../../shared/vehicle-dialog/vehicle-dialog';
+import { Clearable } from '../../../shared/clearable/clearable';
 import { Icon } from '../../../shared/icon/icon';
 import { MoneyPipe } from '../../../shared/money/money.pipe';
 
 const sameName = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
 
 /**
- * Clients: list on the left; for the selected client, its vehicles (tiles that filter what is
- * shown below, all selected at first), its open worksheets and its invoices.
- * No transcript panel on this page.
+ * Clients: list on the left ("New client" at the top); for the selected client, its details
+ * (name, address, hourly rate of its invoices, all editable), its vehicles (tiles that filter
+ * what is shown below, all selected at first; each opens its vehicle file), its open worksheets
+ * and its invoices. No transcript panel on this page.
  */
 @Component({
   selector: 'app-clients-page',
-  imports: [DatePipe, RouterLink, TranslatePipe, PanelsLayout, VehicleSidebar, VehicleLogo, Icon, MoneyPipe],
+  imports: [
+    DatePipe,
+    RouterLink,
+    TranslatePipe,
+    PanelsLayout,
+    VehicleSidebar,
+    VehicleLogo,
+    VehicleDialog,
+    Clearable,
+    Icon,
+    MoneyPipe,
+  ],
   templateUrl: './clients-page.html',
   styleUrl: './clients-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientsPage {
   private readonly router = inject(Router);
-  private readonly clients = inject(ClientService);
+  protected readonly clients = inject(ClientService);
   private readonly worksheets = inject(WorksheetStore);
   protected readonly invoices = inject(InvoiceStore);
   private readonly layout = viewChild.required(PanelsLayout);
@@ -40,7 +55,7 @@ export class ClientsPage {
     [...this.clients.clients()].sort((a, b) => a.name.localeCompare(b.name)),
   );
 
-  protected readonly client = computed(() => this.clients.clients().find((client) => client.id === this.id()));
+  protected readonly client = computed(() => this.clients.getById(this.id()));
 
   protected readonly cardGroups = computed<VehicleCardGroup[]>(() => [
     {
@@ -52,7 +67,7 @@ export class ClientsPage {
         client: client.name,
         date: null,
         title: client.name,
-        subtitle: `${client.address.postcode} ${client.address.city}`,
+        subtitle: `${client.address.postcode} ${client.address.city}`.trim(),
         icon: 'person' as const,
       })),
     },
@@ -60,22 +75,17 @@ export class ClientsPage {
 
   private readonly clientWorksheets = computed(() => {
     const client = this.client();
-    return client ? this.worksheets.worksheets().filter((worksheet) => sameName(worksheet.client, client.name)) : [];
+    return client?.name.trim()
+      ? this.worksheets.worksheets().filter((worksheet) => sameName(worksheet.client, client.name))
+      : [];
   });
 
-  /** Vehicles of the client, with those only known from its worksheets */
-  protected readonly vehicles = computed(() => {
-    const known = this.client()?.vehicles ?? [];
-    const fromWorksheets = this.clientWorksheets()
-      .map((worksheet) => worksheet.vehicle)
-      .filter((name) => name && !known.some((vehicle) => sameName(vehicle.name, name)));
-    return [...known, ...[...new Set(fromWorksheets)].map((name) => ({ name, plate: '' }))];
-  });
+  /** Vehicles (ids) whose worksheets and invoices are hidden: none when the client changes */
+  protected readonly hidden = linkedSignal({ source: this.id, computation: () => new Set<string>() });
 
-  /** Vehicles whose worksheets and invoices are shown: all of them when the client changes */
-  protected readonly selected = linkedSignal(() => new Set(this.vehicles().map((vehicle) => vehicle.name)));
-
-  private readonly isShown = (vehicle: string) => [...this.selected()].some((name) => sameName(name, vehicle));
+  /** A worksheet's vehicle is shown unless it is the vehicle of an unselected tile */
+  private readonly isShown = (vehicleName: string) =>
+    !this.client()?.vehicles.some((vehicle) => this.hidden().has(vehicle.id) && sameName(vehicle.name, vehicleName));
 
   protected readonly openWorksheets = computed(() =>
     this.clientWorksheets()
@@ -101,6 +111,16 @@ export class ClientsPage {
       }));
   });
 
+  /** Vehicle file open in the dialog; `isNew`: just added (dropped on close if left empty) */
+  protected readonly openVehicle = signal<{ id: string; isNew: boolean } | null>(null);
+  protected readonly dialogVehicle = computed(() => {
+    const open = this.openVehicle();
+    return open ? this.client()?.vehicles.find((vehicle) => vehicle.id === open.id) : undefined;
+  });
+
+  /** Client name when its field got the focus */
+  private nameBefore = '';
+
   constructor() {
     this.worksheets.load();
     this.invoices.load();
@@ -113,15 +133,59 @@ export class ClientsPage {
   }
 
   protected select(id: string): void {
+    this.openVehicle.set(null);
     this.router.navigate(['/clients', id]);
     this.layout().closeSidebarOnSmallScreens();
   }
 
-  protected toggleVehicle(name: string): void {
-    this.selected.update((current) => {
+  protected create(): void {
+    const client = this.clients.create();
+    this.router.navigate(['/clients', client.id]);
+    this.layout().closeSidebarOnSmallScreens();
+  }
+
+  protected updateName(client: Client, event: Event): void {
+    this.clients.update(client.id, { name: (event.target as HTMLInputElement).value });
+  }
+
+  protected onNameFocus(event: Event): void {
+    this.nameBefore = (event.target as HTMLInputElement).value;
+  }
+
+  /** Worksheets refer to their client by name: they follow the new name */
+  protected onNameCommit(event: Event): void {
+    const name = (event.target as HTMLInputElement).value;
+    this.worksheets.rename('client', this.nameBefore, name);
+    this.nameBefore = name;
+  }
+
+  protected updateAddress(client: Client, field: keyof Address, event: Event): void {
+    this.clients.updateAddress(client.id, { [field]: (event.target as HTMLInputElement).value });
+  }
+
+  protected toggleVehicle(id: string): void {
+    this.hidden.update((current) => {
       const next = new Set(current);
-      if (!next.delete(name)) next.add(name);
+      if (!next.delete(id)) next.add(id);
       return next;
     });
+  }
+
+  protected addVehicle(client: Client): void {
+    const vehicle = this.clients.addVehicle(client.id);
+    this.openVehicle.set({ id: vehicle.id, isNew: true });
+  }
+
+  protected renameVehicle(client: Client, { from, to }: { from: string; to: string }): void {
+    this.worksheets.rename('vehicle', from, to, client.name);
+  }
+
+  /** A vehicle added then closed without any information is not kept */
+  protected closeVehicle(client: Client, vehicle: Vehicle): void {
+    const isNew = this.openVehicle()?.isNew;
+    this.openVehicle.set(null);
+    if (isNew && !vehicle.name.trim() && !vehicle.plate.trim() && !vehicle.registrationImage) {
+      this.clients.removeVehicle(client.id, vehicle.id);
+    }
   }
 }

@@ -8,6 +8,7 @@ import { TemplateSection } from '../../../core/models/worksheet-template.model';
 import { Icon } from '../../../shared/icon/icon';
 import { VehicleCardGroup, VehicleSidebar } from '../../../shared/vehicle-sidebar/vehicle-sidebar';
 import { PanelsLayout } from '../../../layout/panels-layout/panels-layout';
+import { ClientService } from '../../../core/services/client.service';
 import { WorksheetDetails } from '../worksheet-details/worksheet-details';
 import { TaskLine } from '../task-line/task-line';
 import { CarryOverDialog, CarryOverGroup, CarryOverResult } from '../carry-over-dialog/carry-over-dialog';
@@ -26,6 +27,7 @@ export class WorksheetPage {
   private readonly router = inject(Router);
   protected readonly store = inject(WorksheetStore);
   private readonly invoices = inject(InvoiceStore);
+  private readonly clients = inject(ClientService);
   private readonly layout = viewChild.required(PanelsLayout);
 
   /** Route parameter `:id` (bound via withComponentInputBinding) */
@@ -139,7 +141,11 @@ export class WorksheetPage {
     this.store.update(worksheet.id, { carryOver, status: 'invoiced' });
     this.carryOverGroups.set(null);
     const updated = this.store.getById(worksheet.id) ?? worksheet;
-    const invoice = this.invoices.createFromWorksheet(updated, this.store.template()?.sections ?? []);
+    const invoice = this.invoices.createFromWorksheet(
+      updated,
+      this.store.template()?.sections ?? [],
+      this.clients.byName(updated.client)?.rateId,
+    );
     this.router.navigate(['/invoices', invoice.id]);
   }
 

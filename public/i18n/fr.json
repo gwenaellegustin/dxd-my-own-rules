@@ -59,7 +59,15 @@
     "zoomOut": "Réduire",
     "upload": "Déposez une photo de la carte grise ici, ou cliquez pour en choisir une",
     "uploadHint": "Prototype : la photo est gardée jusqu’au rechargement de la page",
-    "none": "Pas de carte grise pour ce véhicule."
+    "none": "Pas de carte grise pour ce véhicule.",
+    "name": "Marque / modèle",
+    "plate": "Plaque",
+    "kind": "Type",
+    "kinds": {
+      "car": "Voiture",
+      "motorcycle": "Moto"
+    },
+    "owner": "Propriétaire"
   },
   "damage": {
     "bump": "Bosse",
@@ -205,6 +213,15 @@
     "openWorksheets": "Fiches de travail ouvertes",
     "invoices": "Factures",
     "noWorksheet": "Aucune fiche de travail ouverte.",
-    "noInvoice": "Aucune facture."
+    "noInvoice": "Aucune facture.",
+    "new": "Nouveau client",
+    "untitled": "Nouveau client",
+    "name": "Nom",
+    "street": "Rue",
+    "postcode": "NPA",
+    "city": "Localité",
+    "rate": "Tarif horaire",
+    "addVehicle": "Ajouter un véhicule",
+    "unnamedVehicle": "Nouveau véhicule"
   }
 }

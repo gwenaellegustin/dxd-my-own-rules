@@ -107,13 +107,14 @@
   --damage-diagram-width: 350px; // max width of the car damage diagram
   --dialog-width: 600px;
   --dialog-width-wide: 1024px; // dialogs showing a document (registration)
-  // Height of everything around the document in the Vehicle info dialog (title, note, button,
+  // Height of everything around the document in the Vehicle info dialog (title, vehicle fields, note, button,
   // paddings, margins): the image gets the rest of the window height
-  --registration-chrome-height: 340px;
+  --registration-chrome-height: 500px;
   --registration-image-min-height: 160px;
   --registration-upload-height: 240px;
   --invoice-max-width: 880px;
   --vehicle-tile-min-width: 220px;
+  --vehicle-field-min-width: 200px;
   --invoice-logo-size: 72px;
   --invoice-totals-width: 320px;
   --invoice-number-input-width: 88px;

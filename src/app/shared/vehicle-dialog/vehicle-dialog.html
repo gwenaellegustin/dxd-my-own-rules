@@ -3,7 +3,54 @@
     <h2 id="registration-title" class="text-subheading">{{ 'registration.title' | translate }}</h2>
 
     <div class="dialog__body registration">
-      @if (image(); as src) {
+      @let v = vehicle();
+      <div class="vehicle-fields">
+        <label class="field">
+          <span class="field__label">{{ 'registration.name' | translate }}</span>
+          <input
+            class="input"
+            type="text"
+            [value]="v.name"
+            [disabled]="locked()"
+            (focus)="onNameFocus($event)"
+            (input)="vehicleChange.emit({ name: $any($event.target).value })"
+            (change)="onNameCommit($event)"
+          />
+        </label>
+        <label class="field">
+          <span class="field__label">{{ 'registration.plate' | translate }}</span>
+          <input
+            class="input"
+            type="text"
+            [value]="v.plate"
+            [disabled]="locked()"
+            (input)="vehicleChange.emit({ plate: $any($event.target).value })"
+          />
+        </label>
+        <fieldset class="field vehicle-fields__kind">
+          <legend class="field__label">{{ 'registration.kind' | translate }}</legend>
+          <div class="vehicle-fields__choices">
+            @for (kind of kinds; track kind) {
+              <label class="choice">
+                <input
+                  type="radio"
+                  name="vehicle-kind"
+                  [checked]="v.kind === kind"
+                  [disabled]="locked()"
+                  (change)="vehicleChange.emit({ kind })"
+                />
+                {{ 'registration.kinds.' + kind | translate }}
+              </label>
+            }
+          </div>
+        </fieldset>
+        <label class="field">
+          <span class="field__label">{{ 'registration.owner' | translate }}</span>
+          <input class="input" type="text" [value]="owner()" readonly disabled />
+        </label>
+      </div>
+
+      @if (v.registrationImage; as src) {
         <!-- Click zooms in where you click, the zoomed image follows the mouse; click again to zoom out -->
         <button
           type="button"
@@ -54,9 +101,9 @@
             #clearTarget
             class="textarea registration__note"
             appAutoGrow
-            [value]="note()"
+            [value]="v.registrationNote"
             [disabled]="locked()"
-            (input)="noteChange.emit($any($event.target).value)"
+            (input)="vehicleChange.emit({ registrationNote: $any($event.target).value })"
           ></textarea>
         </app-clearable>
       </label>

@@ -5,12 +5,13 @@ import { AutoGrow } from '../../../shared/auto-grow/auto-grow';
 import { Clearable } from '../../../shared/clearable/clearable';
 import { BulletList } from '../../../shared/bullet-list/bullet-list';
 import { Combobox } from '../../../shared/combobox/combobox';
-import { RegistrationDialog } from '../registration-dialog/registration-dialog';
+import { VehicleDialog } from '../../../shared/vehicle-dialog/vehicle-dialog';
 import { ClientService } from '../../../core/services/client.service';
 import { isLocked } from '../../../core/services/worksheet.store';
 import { Damage, DamageType, Worksheet } from '../../../core/models/worksheet.model';
+import { Vehicle } from '../../../core/models/client.model';
 
-type EditableField = 'client' | 'vehicle' | 'registrationImage' | 'registrationNote' | 'date' | 'kilometers' | 'hours' | 'comments';
+type EditableField = 'client' | 'vehicle' | 'date' | 'kilometers' | 'hours' | 'comments';
 
 interface DamageLegend {
   type: DamageType;
@@ -21,7 +22,7 @@ interface DamageLegend {
 /** Top of the work area: general information + damage diagram. */
 @Component({
   selector: 'app-worksheet-details',
-  imports: [TranslatePipe, Icon, AutoGrow, BulletList, Clearable, Combobox, RegistrationDialog],
+  imports: [TranslatePipe, Icon, AutoGrow, BulletList, Clearable, Combobox, VehicleDialog],
   templateUrl: './worksheet-details.html',
   styleUrl: './worksheet-details.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,6 +37,8 @@ export class WorksheetDetails {
   readonly createInvoice = output<void>();
   /** Invoiced worksheet: show its invoice */
   readonly openInvoice = output<void>();
+  /** Brand / model changed in the vehicle file: the worksheets of that vehicle follow */
+  readonly vehicleRenamed = output<{ from: string; to: string }>();
 
   protected readonly legend: DamageLegend[] = [
     { type: 'bump', labelKey: 'damage.bump', icon: 'damage-bump' },
@@ -49,8 +52,42 @@ export class WorksheetDetails {
   /** Invoiced worksheet: read-only (its invoice can still be opened, its vehicle info viewed) */
   protected readonly locked = computed(() => isLocked(this.worksheet()));
 
-  /** Registration document (carte grise) dialog */
-  protected readonly registrationOpen = signal(false);
+  /** Vehicle file shown in the "Vehicle info" dialog (null: closed) */
+  protected readonly vehicleRef = signal<{ clientId: string; vehicleId: string } | null>(null);
+
+  /**
+   * Vehicle of the open dialog. Without a client (or a vehicle of a locked worksheet that has no
+   * file), a read-only draft made from the worksheet.
+   */
+  protected readonly vehicleFile = computed(() => {
+    const ref = this.vehicleRef();
+    if (!ref) return null;
+    const vehicle = this.clients.getById(ref.clientId)?.vehicles.find((v) => v.id === ref.vehicleId);
+    if (vehicle) return { clientId: ref.clientId, vehicle };
+    const draft: Vehicle = {
+      id: '',
+      name: this.worksheet().vehicle,
+      plate: '',
+      kind: 'car',
+      registrationImage: null,
+      registrationNote: '',
+    };
+    return { clientId: '', vehicle: draft };
+  });
+
+  /** Opens the vehicle file, created when the worksheet's vehicle is not known yet */
+  protected openVehicle(): void {
+    const { client, vehicle } = this.worksheet();
+    const known = this.clients.vehicleOf(client, vehicle);
+    const owner = this.clients.byName(client);
+    const ref =
+      known && owner
+        ? { clientId: owner.id, vehicleId: known.id }
+        : this.locked()
+          ? null
+          : this.clients.ensureVehicle(client, vehicle);
+    this.vehicleRef.set(ref ?? { clientId: '', vehicleId: '' });
+  }
 
   protected update(field: EditableField, event: Event): void {
     const value = (event.target as HTMLInputElement | HTMLTextAreaElement).value;

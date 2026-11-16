@@ -7,10 +7,15 @@
       "postcode": "1110",
       "city": "Morges"
     },
+    "rateId": "loyalty",
     "vehicles": [
       {
+        "id": "vehicle-1",
         "name": "Kia Ceed 1.5 T-GDi",
-        "plate": "VD 232 067"
+        "plate": "VD 232 067",
+        "kind": "car",
+        "registrationImage": "images/registration/sample.jpg",
+        "registrationNote": ""
       }
     ]
   },
@@ -22,10 +27,15 @@
       "postcode": "1145",
       "city": "Bière"
     },
+    "rateId": "standard",
     "vehicles": [
       {
+        "id": "vehicle-2",
         "name": "Ducati Monster 937",
-        "plate": "VD 6213"
+        "plate": "VD 6213",
+        "kind": "motorcycle",
+        "registrationImage": null,
+        "registrationNote": ""
       }
     ]
   },
@@ -37,10 +47,15 @@
       "postcode": "1143",
       "city": "Apples"
     },
+    "rateId": "standard",
     "vehicles": [
       {
+        "id": "vehicle-3",
         "name": "Peugeot 308 SW",
-        "plate": "VD 302 118"
+        "plate": "VD 302 118",
+        "kind": "car",
+        "registrationImage": null,
+        "registrationNote": ""
       }
     ]
   },
@@ -52,10 +67,15 @@
       "postcode": "1170",
       "city": "Aubonne"
     },
+    "rateId": "standard",
     "vehicles": [
       {
+        "id": "vehicle-4",
         "name": "VW Golf 8 Variant",
-        "plate": "VD 77 410"
+        "plate": "VD 77 410",
+        "kind": "car",
+        "registrationImage": null,
+        "registrationNote": ""
       }
     ]
   },
@@ -67,10 +87,15 @@
       "postcode": "1304",
       "city": "Cossonay"
     },
+    "rateId": "standard",
     "vehicles": [
       {
+        "id": "vehicle-5",
         "name": "Honda CB650R",
-        "plate": "VD 8124"
+        "plate": "VD 8124",
+        "kind": "motorcycle",
+        "registrationImage": null,
+        "registrationNote": ""
       }
     ]
   },
@@ -82,14 +107,23 @@
       "postcode": "1142",
       "city": "Pampigny"
     },
+    "rateId": "loyalty",
     "vehicles": [
       {
+        "id": "vehicle-6",
         "name": "Bus",
-        "plate": "VD 418 233"
+        "plate": "VD 418 233",
+        "kind": "car",
+        "registrationImage": null,
+        "registrationNote": ""
       },
       {
+        "id": "vehicle-7",
         "name": "Triumph Street Triple RS",
-        "plate": "VD 5841"
+        "plate": "VD 5841",
+        "kind": "motorcycle",
+        "registrationImage": null,
+        "registrationNote": ""
       }
     ]
   },
@@ -101,10 +135,15 @@
       "postcode": "1260",
       "city": "Nyon"
     },
+    "rateId": "standard",
     "vehicles": [
       {
+        "id": "vehicle-8",
         "name": "Toyota Yaris Hybrid",
-        "plate": "VD 127 554"
+        "plate": "VD 127 554",
+        "kind": "car",
+        "registrationImage": null,
+        "registrationNote": ""
       }
     ]
   },
@@ -116,10 +155,15 @@
       "postcode": "1260",
       "city": "Nyon"
     },
+    "rateId": "standard",
     "vehicles": [
       {
+        "id": "vehicle-9",
         "name": "Audi A4 Avant",
-        "plate": "VD 127 555"
+        "plate": "VD 127 555",
+        "kind": "car",
+        "registrationImage": null,
+        "registrationNote": ""
       }
     ]
   }

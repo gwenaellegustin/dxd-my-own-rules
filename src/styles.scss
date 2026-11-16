@@ -389,6 +389,11 @@ button {
   width: calc(var(--control-width-small) + var(--icon-size-large));
 }
 
+// Select: the text box of a select is not shrunk by the vertical padding like an input's
+select.input {
+  padding-block: 0;
+}
+
 .clearable > .input--medium {
   width: calc(var(--control-width-medium) + var(--icon-size-large));
 }

@@ -21,6 +21,9 @@
     border-#{$border-side}: var(--stroke-border) solid var(--color-border-default);
 
     @include bp.tablet-down {
+      // The rail keeps its full width: the border is added outside (else the rail overflows the
+      // window by 1px and the whole page scrolls)
+      box-sizing: content-box;
       width: var(--rail-width);
     }
 

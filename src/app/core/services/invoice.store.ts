@@ -64,15 +64,17 @@ export class InvoiceStore {
 
   /**
    * Open invoice of the done lines of a worksheet: one item per line, counted in the unit of its
-   * section; labour at the default hourly rate, other prices to fill in. A worksheet has at most
+   * section; labour at the client's hourly rate (`clientRateId`, else the default one), other
+   * prices to fill in. A worksheet has at most
    * one open invoice: asking again returns it.
    */
-  createFromWorksheet(worksheet: Worksheet, sections: TemplateSection[]): Invoice {
+  createFromWorksheet(worksheet: Worksheet, sections: TemplateSection[], clientRateId?: string): Invoice {
     const existing = this._invoices().find((invoice) => invoice.worksheetId === worksheet.id && invoice.status === 'open');
     if (existing) return existing;
 
     const company = this._company();
-    const rateId = company?.defaultRateId ?? '';
+    const known = (id: string | undefined) => !!id && !!company?.hourlyRates.some((rate) => rate.id === id);
+    const rateId = known(clientRateId) ? clientRateId! : (company?.defaultRateId ?? '');
     const hourlyPrice = company?.hourlyRates.find((rate) => rate.id === rateId)?.price ?? 0;
     const today = new Date().toISOString().slice(0, 10);
     const number = this.nextNumber(today);

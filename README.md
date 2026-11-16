@@ -34,10 +34,10 @@ src/
     core/          models, API access, services (worksheet & invoice stores, language, user…)
     layout/        application header, panels layout (left panel | work area | transcript),
                    transcript panel (common to the whole app)
-    shared/        icon, vehicle logo, vehicle sidebar (cards list), modal dialog, money pipe,
-                   form helpers
+    shared/        icon, vehicle logo, vehicle sidebar (cards list), vehicle info dialog,
+                   modal dialog, money pipe, form helpers
     features/
-      worksheet/   worksheet page: details, task line, carry-over & vehicle info dialogs
+      worksheet/   worksheet page: details, task line, carry-over dialog
       invoice/     invoice page and invoice document
       clients/     clients page (vehicles, open worksheets, invoices)
       shopping-list/   empty page (not designed yet)
@@ -91,6 +91,7 @@ tips*, editable from the invoice while it is open. Invoicing clears the undo his
   *Comments and tips*). VAT, payment term, hourly rates and contact details are in
   `company.json`.
 - The client address and the vehicle plate come from `clients.json` (each vehicle has its plate).
+- A new invoice takes the hourly rate of the client (`rateId` in `clients.json`), else the default one.
 - Open invoices are editable: hourly rate (list of the rates of `company.json`; the labour lines
   take its price), quantity, price, discount, observations. Sent and paid ones are read-only.
 - Buttons under the invoice: *Save as PDF* (always; the browser print dialog, the print styles keep
@@ -100,11 +101,24 @@ tips*, editable from the invoice while it is open. Invoicing clears the undo his
 ## Clients page
 
 - Same layout, without the transcript panel (`[withTranscript]="false"` on `app-panels-layout`).
-- Left: the clients (name, town). Right: the client's address, its vehicles, its open worksheets
-  and its invoices (total and status open / sent / paid); each row links to the worksheet or
-  invoice.
+- Left: the clients (name, town) and *New client*. Right: the client's name, address and hourly
+  rate of its invoices (editable, saved while typing), its vehicles, its open worksheets and its
+  invoices (total and status open / sent / paid); each row links to the worksheet or invoice.
+- Worksheets refer to their client and vehicle by name: renaming a client or a vehicle renames
+  them in its worksheets too (`WorksheetStore.rename`, when the field is left).
 - Vehicle tiles (brand logo, plate) filter the worksheets and invoices; all are selected when a
-  client is opened.
+  client is opened. The button of a tile opens its *Vehicle info*; *Add a vehicle* creates one
+  (not kept if closed empty).
+
+## Vehicle info
+
+The vehicle file (in `clients.json`), opened from a worksheet (button next to the vehicle) or a
+client: brand / model, plate, car or motorcycle, owner (read-only), the registration document
+(click to zoom, the zoom follows the mouse) and a note. Only the Kia has a document in the mock
+data; for the others, a photo can be dropped or chosen. There is no backend yet, so this upload is
+fake: the photo is read in the browser and kept until the page is reloaded. Opened from a
+worksheet whose vehicle has no file yet, the file is created (with its client if needed); from an
+invoiced worksheet it is read-only.
 
 ## Line behaviour
 
@@ -115,11 +129,6 @@ tips*, editable from the invoice while it is open. Invoicing clears the undo his
   are kept in `worksheet.carryOver` for the next intervention, then the invoice page opens.
   Each item can also be marked *Done* (it is then not carried over), and a link under each
   section unchecks / checks all its items.
-- The button next to the vehicle opens *Vehicle info*: the registration document
-  (`worksheet.registrationImage`, click to zoom, the zoom follows the mouse) and a note
-  (`worksheet.registrationNote`). Only the Kia worksheets have a document in the mock data; for
-  the others, a photo can be dropped or chosen. There is no backend yet, so this upload is fake:
-  the photo is read in the browser and kept until the page is reloaded.
 - "Other" lines (free text) have no note; as soon as one is filled, a new empty "Other" line
   appears under it (template lines with `"repeatable": true`). In place of the note button they
   have a delete button that removes the line (not shown on the trailing empty line). Typing the

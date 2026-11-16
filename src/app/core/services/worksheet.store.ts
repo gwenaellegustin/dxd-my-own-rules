@@ -77,8 +77,6 @@ export class WorksheetStore {
       status: 'open',
       client: '',
       vehicle: '',
-      registrationImage: null,
-      registrationNote: '',
       date: new Date().toISOString().slice(0, 10),
       kilometers: '',
       hours: '',
@@ -161,6 +159,23 @@ export class WorksheetStore {
       .sort((a, b) => index(a) - index(b));
     if (ids.length === 0) return locked ? [] : [line.id];
     return locked ? ids : [...ids, `${line.id}~${index(ids[ids.length - 1]) + 1}`];
+  }
+
+  /**
+   * A client or vehicle file was renamed: worksheets refer to them by name, so they follow
+   * (invoiced ones too, it is not an edit of the worksheet; not recorded for undo).
+   * `client`: only the vehicles of this client are renamed.
+   */
+  rename(field: 'client' | 'vehicle', from: string, to: string, client?: string): void {
+    const same = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
+    if (!from.trim() || same(from, to)) return;
+    const matches = (worksheet: Worksheet) =>
+      same(worksheet[field], from) && (client === undefined || same(worksheet.client, client));
+    const rename = (list: Worksheet[]) =>
+      list.map((worksheet) => (matches(worksheet) ? { ...worksheet, [field]: to } : worksheet));
+    this._worksheets.update(rename);
+    this.undoStack.update((stack) => stack.map(rename));
+    this.redoStack.update((stack) => stack.map(rename));
   }
 
   /** Restores the state before the last edit */
