@@ -28,7 +28,8 @@
     "clear": "Effacer",
     "showOptions": "Afficher les options",
     "cancel": "Annuler",
-    "close": "Fermer"
+    "close": "Fermer",
+    "sortBy": "Trier par"
   },
   "worksheets": {
     "title": "Fiches de travail",
@@ -233,7 +234,16 @@
     "city": "Localité",
     "rate": "Tarif horaire",
     "addVehicle": "Ajouter un véhicule",
-    "unnamedVehicle": "Nouveau véhicule"
+    "unnamedVehicle": "Nouveau véhicule",
+    "sort": {
+      "name": "Nom",
+      "date": "Dernière date"
+    },
+    "badges": {
+      "openWorksheets": "{{count}} fiche(s) de travail ouverte(s)",
+      "openInvoices": "{{count}} facture(s) ouverte(s)",
+      "sentInvoices": "{{count}} facture(s) envoyée(s), non payée(s)"
+    }
   },
   "settings": {
     "title": "Paramètres des fiches de travail",

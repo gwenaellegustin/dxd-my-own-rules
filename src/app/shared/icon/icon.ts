@@ -30,6 +30,7 @@ const MATERIAL_SYMBOLS = {
   search: 'search',
   send: 'send',
   settings: 'settings',
+  sort: 'sort',
   tool: 'build',
   transcript: 'speech_to_text',
   upload: 'add_photo_alternate',

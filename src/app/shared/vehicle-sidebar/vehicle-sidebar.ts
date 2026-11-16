@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, computed, inject, input, model, output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon, IconName } from '../icon/icon';
@@ -18,6 +18,22 @@ export interface VehicleCard {
   title?: string;
   subtitle?: string;
   icon?: IconName;
+  /** Counts shown on the right of the card (e.g. open worksheets, open / sent invoices) */
+  badges?: CardBadge[];
+}
+
+export interface CardBadge {
+  count: number;
+  icon: IconName;
+  /** Colours of the invoice status chips: open = blue, alert = red (sent, not paid yet) */
+  tone: 'neutral' | 'open' | 'alert';
+  /** Accessible text, with {{count}} */
+  labelKey: string;
+}
+
+export interface SortOption {
+  id: string;
+  labelKey: string;
 }
 
 export interface VehicleCardGroup {
@@ -37,7 +53,11 @@ export interface VehicleCardGroup {
   templateUrl: './vehicle-sidebar.html',
   styleUrl: './vehicle-sidebar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.is-open]': 'open()' },
+  host: {
+    '[class.is-open]': 'open()',
+    '(document:click)': 'closeSortMenuOutside($event)',
+    '(document:keydown.escape)': 'sortMenuOpen.set(false)',
+  },
 })
 export class VehicleSidebar {
   readonly titleKey = input.required<string>();
@@ -52,11 +72,27 @@ export class VehicleSidebar {
   /** Shown on a card without vehicle nor client */
   readonly untitledKey = input<string>('worksheets.untitled');
 
+  /** Ways to order the cards: a button next to the search opens them (none: no button) */
+  readonly sortOptions = input<SortOption[]>([]);
+  readonly sort = model<string | null>(null);
+
   readonly selectCard = output<string>();
   readonly create = output<void>();
   readonly openChange = output<boolean>();
 
+  private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly query = signal('');
+  protected readonly sortMenuOpen = signal(false);
+
+  protected chooseSort(id: string): void {
+    this.sort.set(id);
+    this.sortMenuOpen.set(false);
+  }
+
+  protected closeSortMenuOutside(event: MouseEvent): void {
+    const menu = this.host.nativeElement.querySelector('.sort');
+    if (menu && !menu.contains(event.target as Node)) this.sortMenuOpen.set(false);
+  }
 
   /** Groups filtered by the search; empty groups are hidden */
   protected readonly visibleGroups = computed(() => {

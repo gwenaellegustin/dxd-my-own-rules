@@ -7,6 +7,7 @@
         <span class="visually-hidden">{{ 'common.collapse' | translate }}</span>
       </button>
 
+      <div class="search-row">
       <div class="search">
         <app-clearable>
           <input
@@ -20,6 +21,41 @@
           />
         </app-clearable>
         <app-icon name="search" size="small" />
+      </div>
+
+      <!-- Order of the cards (e.g. last date / name) -->
+      @if (sortOptions().length) {
+        <div class="sort">
+          <button
+            type="button"
+            class="icon-button"
+            aria-haspopup="menu"
+            [attr.aria-expanded]="sortMenuOpen()"
+            [attr.aria-label]="'common.sortBy' | translate"
+            [attr.title]="'common.sortBy' | translate"
+            (click)="sortMenuOpen.set(!sortMenuOpen())"
+          >
+            <app-icon name="sort" />
+          </button>
+          @if (sortMenuOpen()) {
+            <div class="sort__menu" role="menu">
+              <p class="sort__title text-small text-secondary">{{ 'common.sortBy' | translate }}</p>
+              @for (option of sortOptions(); track option.id) {
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  class="sort__option"
+                  [attr.aria-checked]="sort() === option.id"
+                  (click)="chooseSort(option.id)"
+                >
+                  <app-icon name="check" size="small" [class.sort__check--hidden]="sort() !== option.id" />
+                  {{ option.labelKey | translate }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
       </div>
 
       @if (newLabelKey(); as newLabel) {
@@ -64,6 +100,20 @@
                   <span class="card__date">{{ card.subtitle }}</span>
                 } @else if (card.date) {
                   <span class="card__date">{{ card.date | date: 'dd.MM.yyyy' }}</span>
+                }
+                @if (card.badges?.length) {
+                  <span class="card__badges">
+                    @for (badge of card.badges; track badge.icon) {
+                      <span
+                        class="count-badge count-badge--{{ badge.tone }}"
+                        [attr.title]="badge.labelKey | translate: { count: badge.count }"
+                        [attr.aria-label]="badge.labelKey | translate: { count: badge.count }"
+                      >
+                        <app-icon [name]="badge.icon" size="small" />
+                        {{ badge.count }}
+                      </span>
+                    }
+                  </span>
                 }
               </span>
             </button>

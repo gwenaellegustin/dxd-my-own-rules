@@ -6,6 +6,8 @@
     emptyKey="clients.empty"
     newLabelKey="clients.new"
     untitledKey="clients.untitled"
+    [sortOptions]="sortOptions"
+    [(sort)]="sort"
     [groups]="cardGroups()"
     [selectedId]="client()?.id ?? null"
     [open]="layout.sidebarOpen()"

@@ -24,11 +24,14 @@
   --color-background-danger: #fdecec;
   --color-border-danger: #f3b9b9;
   --color-background-danger-strong: #d92d20;
+  --color-text-danger: #b42318;
+  --color-text-info: #1d5bbf; // open invoice count
+  --color-border-info: #b5ccf2;
   --color-icon-status-planned: #2f6fd6; // check of a planned line (transcript changes)
   --color-icon-status-done: #1e9e4a; // check of a done line
   // Invoice status chips (open / sent / paid)
   --color-background-invoice-open: var(--color-background-status-planned);
-  --color-background-invoice-sent: var(--color-background-tertiary);
+  --color-background-invoice-sent: var(--color-background-danger); // sent: waiting for payment
   --color-background-invoice-paid: var(--color-background-status-done);
 
   // ---- Colors: borders ----------------------------------------------------
@@ -129,6 +132,7 @@
   --text-key-min-width: 160px;
   --stroke-highlight: 3px; // element shown from a transcript change
   --settings-max-width: 1400px;
+  --sort-menu-width: 180px;
   --invoice-logo-size: 72px;
   --invoice-totals-width: 320px;
   --invoice-number-input-width: 88px;

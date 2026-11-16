@@ -72,7 +72,7 @@ src/
 ## Statuses
 
 - **Worksheet**: *open* (work in progress, car on the lift) → *invoiced* (its invoice exists).
-- **Invoice**: *open* (being prepared) → *sent* → *paid*.
+- **Invoice**: *open* (being prepared, blue) → *sent* (waiting for payment, red) → *paid* (green).
 
 "Create the invoice" on a worksheet creates its open invoice from the done lines (one item per
 line, counted in the unit of its section: `invoiceUnit` in `worksheet-settings.json`), marks the
@@ -135,7 +135,11 @@ counts them. It says that no action was done; the *Ok* button ("Mark chat read" 
 ## Clients page
 
 - Same layout, without the transcript panel (`[withTranscript]="false"` on `app-panels-layout`).
-- Left: the clients (name, town) and *New client*. Right: the client's name, address and hourly
+- Left: the clients (name, town) and *New client*, ordered by family name (last word of the
+  name) or by last date (latest worksheet or invoice) with the sort button next to the search.
+  Each card counts, with an icon, the client's open worksheets (tool, grey), open invoices
+  (receipt, blue like the *Open* chip) and sent, unpaid invoices (send, red like the *Sent* chip).
+- Right: the client's name, address and hourly
   rate of its invoices (editable, saved while typing), its vehicles, its open worksheets and its
   invoices (total and status open / sent / paid); each row links to the worksheet or invoice.
 - Worksheets refer to their client and vehicle by name: renaming a client or a vehicle renames

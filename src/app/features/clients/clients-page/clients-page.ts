@@ -8,7 +8,7 @@ import { InvoiceStore } from '../../../core/services/invoice.store';
 import { invoiceTotals } from '../../../core/models/invoice.model';
 import { Address, Client, Vehicle } from '../../../core/models/client.model';
 import { PanelsLayout } from '../../../layout/panels-layout/panels-layout';
-import { VehicleCardGroup, VehicleSidebar } from '../../../shared/vehicle-sidebar/vehicle-sidebar';
+import { CardBadge, SortOption, VehicleCardGroup, VehicleSidebar } from '../../../shared/vehicle-sidebar/vehicle-sidebar';
 import { VehicleLogo } from '../../../shared/vehicle-logo/vehicle-logo';
 import { VehicleDialog } from '../../../shared/vehicle-dialog/vehicle-dialog';
 import { Clearable } from '../../../shared/clearable/clearable';
@@ -16,6 +16,9 @@ import { Icon } from '../../../shared/icon/icon';
 import { MoneyPipe } from '../../../shared/money/money.pipe';
 
 const sameName = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
+
+/** Last word of a name ("Mr Morard" → Morard) */
+const familyName = (name: string) => name.trim().split(/\s+/).at(-1) ?? '';
 
 /**
  * Clients: list on the left ("New client" at the top); for the selected client, its details
@@ -51,9 +54,54 @@ export class ClientsPage {
   /** Route parameter `:id` (bound via withComponentInputBinding) */
   readonly id = input<string>();
 
-  private readonly sortedClients = computed(() =>
-    [...this.clients.clients()].sort((a, b) => a.name.localeCompare(b.name)),
-  );
+  protected readonly sortOptions: SortOption[] = [
+    { id: 'name', labelKey: 'clients.sort.name' },
+    { id: 'date', labelKey: 'clients.sort.date' },
+  ];
+  /** Order of the list: family name (default) or last activity */
+  protected readonly sort = signal<string | null>('name');
+
+  /** Worksheets and invoices of each client (by name, lower case) */
+  private readonly activity = computed(() => {
+    const byClient = new Map<string, { lastDate: string; openWorksheets: number; openInvoices: number; sentInvoices: number }>();
+    const entry = (name: string) => {
+      const key = name.trim().toLowerCase();
+      if (!byClient.has(key)) byClient.set(key, { lastDate: '', openWorksheets: 0, openInvoices: 0, sentInvoices: 0 });
+      return byClient.get(key)!;
+    };
+    const worksheets = new Map(this.worksheets.worksheets().map((worksheet) => [worksheet.id, worksheet]));
+    for (const worksheet of worksheets.values()) {
+      const e = entry(worksheet.client);
+      if (worksheet.status === 'open') e.openWorksheets++;
+      if (worksheet.date && worksheet.date > e.lastDate) e.lastDate = worksheet.date;
+    }
+    for (const invoice of this.invoices.invoices()) {
+      const worksheet = worksheets.get(invoice.worksheetId);
+      if (!worksheet) continue;
+      const e = entry(worksheet.client);
+      if (invoice.status === 'open') e.openInvoices++;
+      if (invoice.status === 'sent') e.sentInvoices++;
+      if (invoice.date > e.lastDate) e.lastDate = invoice.date;
+    }
+    return byClient;
+  });
+
+  private activityOf(client: Client) {
+    return this.activity().get(client.name.trim().toLowerCase());
+  }
+
+  /** Family name order (last word: "Fabrice Favre" → Favre), or most recent activity first */
+  private readonly sortedClients = computed(() => {
+    const byName = (a: Client, b: Client) =>
+      familyName(a.name).localeCompare(familyName(b.name)) || a.name.localeCompare(b.name);
+    const clients = [...this.clients.clients()];
+    if (this.sort() === 'date') {
+      return clients.sort(
+        (a, b) => (this.activityOf(b)?.lastDate ?? '').localeCompare(this.activityOf(a)?.lastDate ?? '') || byName(a, b),
+      );
+    }
+    return clients.sort(byName);
+  });
 
   protected readonly client = computed(() => this.clients.getById(this.id()));
 
@@ -69,6 +117,7 @@ export class ClientsPage {
         title: client.name,
         subtitle: `${client.address.postcode} ${client.address.city}`.trim(),
         icon: 'person' as const,
+        badges: this.badgesOf(client),
       })),
     },
   ]);
@@ -130,6 +179,18 @@ export class ClientsPage {
       const first = this.sortedClients()[0];
       if (first && !this.client()) this.router.navigate(['/clients', first.id], { replaceUrl: true });
     });
+  }
+
+  /** Open worksheets (grey), open invoices (blue), sent invoices not paid (red); none when 0 */
+  private badgesOf(client: Client): CardBadge[] {
+    const activity = this.activityOf(client);
+    if (!activity) return [];
+    const badges: CardBadge[] = [
+      { count: activity.openWorksheets, icon: 'tool', tone: 'neutral', labelKey: 'clients.badges.openWorksheets' },
+      { count: activity.openInvoices, icon: 'invoice', tone: 'open', labelKey: 'clients.badges.openInvoices' },
+      { count: activity.sentInvoices, icon: 'send', tone: 'alert', labelKey: 'clients.badges.sentInvoices' },
+    ];
+    return badges.filter((badge) => badge.count > 0);
   }
 
   protected select(id: string): void {

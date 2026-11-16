@@ -457,6 +457,8 @@ select.input {
 // Search input (pill shaped): search icon on the left, clear button on the right
 .search {
   position: relative;
+  flex: 1;
+  min-width: 0;
   width: 100%;
 
   .clearable {

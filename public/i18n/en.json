@@ -28,7 +28,8 @@
     "clear": "Clear",
     "showOptions": "Show options",
     "cancel": "Cancel",
-    "close": "Close"
+    "close": "Close",
+    "sortBy": "Sort by"
   },
   "worksheets": {
     "title": "Worksheets",
@@ -233,7 +234,16 @@
     "city": "City",
     "rate": "Hourly rate",
     "addVehicle": "Add a vehicle",
-    "unnamedVehicle": "New vehicle"
+    "unnamedVehicle": "New vehicle",
+    "sort": {
+      "name": "Name",
+      "date": "Last date"
+    },
+    "badges": {
+      "openWorksheets": "{{count}} open worksheet(s)",
+      "openInvoices": "{{count}} open invoice(s)",
+      "sentInvoices": "{{count}} sent invoice(s), not paid"
+    }
   },
   "settings": {
     "title": "Worksheet settings",
