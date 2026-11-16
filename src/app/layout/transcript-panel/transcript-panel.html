@@ -4,6 +4,9 @@
       <button type="button" class="panel__title" [attr.aria-expanded]="true" (click)="openChange.emit(false)">
         <span class="icon-button icon-button--primary"><app-icon name="right-panel-close" /></span>
         <h2 class="text-heading">{{ 'transcript.title' | translate }}</h2>
+        @if (problemCount(); as count) {
+          <span class="problem-badge" [attr.aria-label]="'transcript.problems' | translate: { count }">{{ count }}</span>
+        }
         <span class="visually-hidden">{{ 'common.collapse' | translate }}</span>
       </button>
 
@@ -44,10 +47,27 @@
                 </time>
               </div>
             } @else {
-              <div class="message message--assistant">
-                <app-icon name="robot" size="xlarge" />
+              @let problem = transcript.isProblem(message);
+              <div class="message message--assistant" [class.message--problem]="problem">
                 <div class="message__body">
+                  @if (message.problem) {
+                    <p class="message__no-action text-small text-strong">
+                      <app-icon name="close" size="small" />
+                      {{ 'transcript.noAction' | translate }}
+                    </p>
+                  }
                   <p>{{ message.text }}</p>
+                  @if (problem) {
+                    <button
+                      type="button"
+                      class="icon-button message__validate"
+                      [attr.aria-label]="'transcript.validate' | translate"
+                      [attr.title]="'transcript.validate' | translate"
+                      (click)="transcript.validate(message.id)"
+                    >
+                      <app-icon name="mark-read" />
+                    </button>
+                  }
                   <!-- What was changed: click to open the worksheet / invoice on that element -->
                   @for (change of message.changes ?? []; track $index) {
                     <app-transcript-change [change]="change" (show)="show(change)" />
@@ -66,6 +86,10 @@
   <button type="button" class="rail" [attr.aria-expanded]="false" (click)="openChange.emit(true)">
     <span class="icon-button icon-button--primary"><app-icon name="transcript" /></span>
     <span class="rail__label text-heading">{{ 'transcript.rail' | translate }}</span>
+    <!-- Under the vertical title -->
+    @if (problemCount(); as count) {
+      <span class="problem-badge" [attr.aria-label]="'transcript.problems' | translate: { count }">{{ count }}</span>
+    }
   </button>
 }
 

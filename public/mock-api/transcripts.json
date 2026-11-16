@@ -111,5 +111,17 @@
         "statusAfter": "planned"
       }
     ]
+  },
+  {
+    "id": "msg-9",
+    "userId": "user-1",
+    "text": "Wheel change done, the winter tyres are on.",
+    "timestamp": "2026-11-16T08:12:00"
+  },
+  {
+    "id": "msg-10",
+    "text": "Wheel change not marked as done: Fabrice's Kia and Matthieu's Bus both have one planned, so the vehicle was not clear.",
+    "timestamp": "2026-11-16T08:12:03",
+    "problem": true
   }
 ]

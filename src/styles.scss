@@ -397,6 +397,23 @@ button {
   transition: outline-color var(--transition-fast);
 }
 
+// Red notification badge: something needs an answer (transcript)
+.problem-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--badge-size);
+  height: var(--badge-size);
+  padding: 0 var(--space-100);
+  border-radius: var(--radius-full);
+  background: var(--color-background-danger-strong);
+  color: var(--color-text-on-brand);
+  font-size: var(--badge-font-size);
+  font-weight: var(--font-weight-strong);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
 // Scrollbars of the whole app: thin rounded thumb (pill like the search field and the buttons),
 // transparent track. Standard properties (Firefox, recent Chrome) + WebKit fallback.
 * {

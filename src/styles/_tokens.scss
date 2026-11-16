@@ -20,6 +20,10 @@
   // Line status backgrounds (Labour / Parts / Fluids / Various lines)
   --color-background-status-planned: #f1f6fd;
   --color-background-status-done: #ebffee;
+  // Problems (transcript answer the assistant could not apply)
+  --color-background-danger: #fdecec;
+  --color-border-danger: #f3b9b9;
+  --color-background-danger-strong: #d92d20;
   --color-icon-status-planned: #2f6fd6; // check of a planned line (transcript changes)
   --color-icon-status-done: #1e9e4a; // check of a done line
   // Invoice status chips (open / sent / paid)

@@ -85,7 +85,7 @@
     "remove": "Supprimer la ligne"
   },
   "transcript": {
-    "title": "Transcriptions",
+    "title": "Transcription",
     "rail": "Transcription",
     "empty": "Aucun message",
     "worksheet": "Fiche · {{vehicle}} – {{client}}",
@@ -95,7 +95,10 @@
     "after": "Nouvelle valeur",
     "emptyValue": "vide",
     "today": "Aujourd’hui",
-    "nothingToday": "Rien n’a encore été dit aujourd’hui."
+    "nothingToday": "Rien n’a encore été dit aujourd’hui.",
+    "problems": "{{count}} réponse(s) à vérifier",
+    "noAction": "Aucune action effectuée",
+    "validate": "Ok"
   },
   "template": {
     "labour": {

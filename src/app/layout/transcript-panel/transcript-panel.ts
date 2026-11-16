@@ -17,6 +17,7 @@ import { Clearable } from '../../shared/clearable/clearable';
 import { TranscriptChange, TranscriptMessage } from '../../core/models/transcript.model';
 import { TranscriptChangeCard } from '../transcript-change/transcript-change';
 import { HighlightService } from '../../core/services/highlight.service';
+import { TranscriptService } from '../../core/services/transcript.service';
 
 interface TranscriptDay {
   date: string;
@@ -41,8 +42,11 @@ export class TranscriptPanel {
   readonly messages = input.required<TranscriptMessage[]>();
   readonly open = input(false);
   readonly openChange = output<boolean>();
+  /** Answers the assistant could not apply (red badge, shown even when the panel is closed) */
+  readonly problemCount = input(0);
 
   private readonly highlight = inject(HighlightService);
+  protected readonly transcript = inject(TranscriptService);
 
   protected readonly query = signal('');
 

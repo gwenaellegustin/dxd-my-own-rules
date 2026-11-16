@@ -6,6 +6,7 @@
   <app-transcript-panel
     class="transcript"
     [messages]="transcript.messages()"
+    [problemCount]="transcript.problemCount()"
     [open]="transcriptOpen()"
     (openChange)="transcriptOpen.set($event)"
   />

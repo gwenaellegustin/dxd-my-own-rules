@@ -85,7 +85,7 @@
     "remove": "Remove the line"
   },
   "transcript": {
-    "title": "Transcripts",
+    "title": "Transcript",
     "rail": "Transcript",
     "empty": "No message",
     "worksheet": "Worksheet · {{vehicle}} – {{client}}",
@@ -95,7 +95,10 @@
     "after": "New value",
     "emptyValue": "empty",
     "today": "Today",
-    "nothingToday": "Nothing said yet today."
+    "nothingToday": "Nothing said yet today.",
+    "problems": "{{count}} answer(s) to check",
+    "noAction": "No action done",
+    "validate": "Ok"
   },
   "template": {
     "labour": {

@@ -35,4 +35,6 @@ export interface TranscriptMessage {
   worksheetId?: string;
   /** Assistant replies: what was changed, with the previous and new values */
   changes?: TranscriptChange[];
+  /** Assistant replies: the request could not be applied (e.g. which vehicle?); to be answered */
+  problem?: boolean;
 }

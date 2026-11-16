@@ -110,6 +110,9 @@ new value. Clicking a card opens that worksheet or invoice and highlights the ch
 with a border (`HighlightService`, elements marked with `data-area`: `hours`, `line:engineOil`,
 `item:brakeFluid`…)
 until the next click. The panel stays open.
+An answer the assistant could not apply (`"problem": true`, e.g. it did not know which vehicle)
+has a light red background, and a red badge next to the panel title (also on the closed panel)
+counts them. It says that no action was done; the *Ok* button ("Mark chat read" icon) removes the red status (and the count).
 
 ## Invoice page
 

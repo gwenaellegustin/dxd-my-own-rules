@@ -12,6 +12,28 @@
 
 // Today fills the scroll area: opened at the bottom, "Today" is at the top of the panel and the
 // previous days are above it (scroll up)
+// Answer the assistant could not apply: light red, to be answered
+.message--problem {
+  padding: var(--space-200);
+  background: var(--color-background-danger);
+  border: var(--stroke-border) solid var(--color-border-danger);
+}
+
+// The badge follows the title (the title does not take the whole row)
+.message__no-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-100);
+}
+
+.message__validate {
+  align-self: flex-end;
+}
+
+.panel__title h2 {
+  flex: 0 1 auto;
+}
+
 .day--today {
   min-height: 100%;
 }

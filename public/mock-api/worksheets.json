@@ -97,7 +97,16 @@
     "hours": "",
     "comments": "",
     "damages": [],
-    "lines": {}
+    "lines": {
+      "wheelChange": {
+        "planned": true,
+        "done": false,
+        "note": "",
+        "values": {
+          "season": "winter"
+        }
+      }
+    }
   },
   {
     "id": "ws-1007",
