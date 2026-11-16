@@ -1,22 +1,25 @@
 <div class="page">
   <header class="page__head">
-    <h1 class="text-heading">{{ 'settings.title' | translate }}</h1>
+    <!-- Title and kind of vehicle on one row -->
+    <div class="page__title">
+      <h1 class="text-heading">{{ 'settings.title' | translate }}</h1>
 
-    <!-- Kind of vehicle: each has its own lines, default values and rules -->
-    <div class="segmented" role="radiogroup" [attr.aria-label]="'registration.kind' | translate">
-      @for (k of kinds; track k) {
-        <button
-          type="button"
-          role="radio"
-          class="segmented__option"
-          [class.segmented__option--active]="kind() === k"
-          [attr.aria-checked]="kind() === k"
-          (click)="kind.set(k)"
-        >
-          <app-icon [name]="k === 'car' ? 'car' : 'motorcycle'" size="small" />
-          {{ 'registration.kinds.' + k | translate }}
-        </button>
-      }
+      <!-- Kind of vehicle: each has its own lines and rules -->
+      <div class="segmented" role="radiogroup" [attr.aria-label]="'registration.kind' | translate">
+        @for (k of kinds; track k) {
+          <button
+            type="button"
+            role="radio"
+            class="segmented__option"
+            [class.segmented__option--active]="kind() === k"
+            [attr.aria-checked]="kind() === k"
+            (click)="kind.set(k)"
+          >
+            <app-icon [name]="k === 'car' ? 'car' : 'motorcycle'" size="small" />
+            {{ 'registration.kinds.' + k | translate }}
+          </button>
+        }
+      </div>
     </div>
 
     <div class="tabs" role="tablist">
@@ -38,43 +41,71 @@
   </header>
 
   @if (template(); as tpl) {
-    @if (tab() === 'defaults') {
-      <div class="panel" role="tabpanel" id="settings-panel-defaults" aria-labelledby="settings-tab-defaults">
-        <p class="text-secondary">{{ 'settings.defaultsHint' | translate }}</p>
-        @for (section of tpl.sections; track section.id) {
-          <section class="section" [attr.aria-labelledby]="'defaults-' + section.id">
-            <h2 class="text-subheading" [id]="'defaults-' + section.id">{{ section.titleKey | translate }}</h2>
-            <!-- Drag a line by its handle to move it inside its section -->
-            @for (line of section.lines; track line.id; let i = $index) {
-              <ng-container *ngTemplateOutlet="insert; context: { sectionId: section.id, index: i }" />
-              <!-- Editor on the left, preview of the worksheet line on the right (also a drag handle) -->
-              <div
-                class="line-row"
-                [attr.draggable]="armed() === line.id"
-                [class.dragging]="drag()?.lineId === line.id"
-                [class.drop-before]="isDropTarget(section.id, i, 'before')"
-                [class.drop-after]="isDropTarget(section.id, i, 'after')"
-                (dragstart)="startDrag($event, section.id, line.id, i)"
-                (dragover)="dragOver($event, section.id, i)"
-                (drop)="dropLine($event, section.id)"
-                (dragend)="endDrag()"
-              >
-                <app-line-editor [line]="line" [kind]="kind()" (dragArm)="armed.set($event ? line.id : null)" />
-                <div
-                  class="preview"
-                  [attr.title]="'settings.drag' | translate"
-                  (mousedown)="armed.set(line.id)"
-                  (mouseup)="armed.set(null)"
-                  (touchstart)="armed.set(line.id)"
-                >
-                  <span class="preview__label text-small text-secondary">{{ 'settings.preview' | translate }}</span>
-                  <app-task-line [line]="line" [state]="defaultState(line.id)" inert />
+    @if (tab() === 'lines') {
+      <div class="panel" role="tabpanel" id="settings-panel-lines" aria-labelledby="settings-tab-lines">
+        <p class="text-secondary">{{ 'settings.linesHint' | translate }}</p>
+        <div class="lines-layout">
+          <!-- Left: the worksheet as it will look; click a line to edit it, drag it to move it -->
+          <div class="worksheet-preview" [attr.aria-label]="'settings.preview' | translate" role="group">
+            @for (section of tpl.sections; track section.id) {
+              <section class="section" [attr.aria-labelledby]="'preview-' + section.id">
+                <h2 class="text-heading" [id]="'preview-' + section.id">{{ section.titleKey | translate }}</h2>
+                <div class="section__lines">
+                  @for (line of section.lines; track line.id; let i = $index; let last = $last) {
+                    <!-- "Other" lines are fixed: always last, not editable, not movable -->
+                    @let fixed = !!line.repeatable;
+                    <div class="line-slot">
+                      <div
+                        class="preview-line"
+                        [attr.role]="fixed ? null : 'button'"
+                        [attr.tabindex]="fixed ? null : 0"
+                        [attr.draggable]="!fixed"
+                        [attr.aria-pressed]="fixed ? null : selectedLine()?.id === line.id"
+                        [attr.aria-label]="fixed ? null : (line.titleKey ?? '' | translate)"
+                        [attr.title]="fixed ? null : ('settings.drag' | translate)"
+                        [class.preview-line--selected]="selectedLine()?.id === line.id"
+                        [class.dragging]="drag()?.lineId === line.id"
+                        [class.drop-before]="isDropTarget(section.id, i, 'before')"
+                        [class.drop-after]="isDropTarget(section.id, i, 'after')"
+                        (click)="select(line)"
+                        (keydown.enter)="select(line)"
+                        (keydown.space)="$event.preventDefault(); select(line)"
+                        (keydown.alt.arrowup)="$event.preventDefault(); moveBy(section.id, i, -1, $event)"
+                        (keydown.alt.arrowdown)="$event.preventDefault(); moveBy(section.id, i, 1, $event)"
+                        (dragstart)="startDrag($event, section.id, line.id, i)"
+                        (dragover)="dragOver($event, section.id, i)"
+                        (drop)="dropLine($event, section.id)"
+                        (dragend)="endDrag()"
+                      >
+                        <app-task-line [line]="line" [state]="emptyState" inert />
+                      </div>
+                      <!-- Small + in the gap above the line (and under the last one, unless it is an
+                           "Other" line): inserts a line there (after the line in the DOM: drawn over it) -->
+                      <ng-container *ngTemplateOutlet="insert; context: { sectionId: section.id, index: i, side: 'before' }" />
+                      @if (last && !fixed) {
+                        <ng-container *ngTemplateOutlet="insert; context: { sectionId: section.id, index: i + 1, side: 'after' }" />
+                      }
+                    </div>
+                  } @empty {
+                    <button type="button" class="button-subtle add-line" (click)="addLine(section.id, 0)">
+                      <app-icon name="plus-circle" />
+                      {{ 'settings.addLine' | translate }}
+                    </button>
+                  }
                 </div>
-              </div>
+              </section>
             }
-            <ng-container *ngTemplateOutlet="insert; context: { sectionId: section.id, index: section.lines.length }" />
-          </section>
-        }
+          </div>
+          <!-- Right: editor of the line selected in the preview -->
+          <div class="editor">
+            @if (selectedLine(); as line) {
+              <app-line-editor [line]="line" [kind]="kind()" />
+            } @else {
+              <p class="text-secondary">{{ 'settings.noLine' | translate }}</p>
+            }
+          </div>
+
+        </div>
       </div>
     } @else {
       <div class="panel" role="tabpanel" id="settings-panel-rules" aria-labelledby="settings-tab-rules">
@@ -144,17 +175,16 @@
   }
 </div>
 
-<!-- Small + between two lines: inserts a new line there -->
-<ng-template #insert let-sectionId="sectionId" let-index="index">
-  <div class="insert">
-    <button
-      type="button"
-      class="insert__button"
-      [attr.aria-label]="'settings.addLine' | translate"
-      [attr.title]="'settings.addLine' | translate"
-      (click)="addLine(sectionId, index)"
-    >
-      <app-icon name="plus-circle" size="small" />
-    </button>
-  </div>
+<!-- Small + between two lines (shown on hover / focus): inserts a new line there -->
+<ng-template #insert let-sectionId="sectionId" let-index="index" let-side="side">
+  <button
+    type="button"
+    class="insert"
+    [class.insert--after]="side === 'after'"
+    [attr.aria-label]="'settings.addLine' | translate"
+    [attr.title]="'settings.addLine' | translate"
+    (click)="addLine(sectionId, index)"
+  >
+    <app-icon name="plus-circle" size="small" />
+  </button>
 </ng-template>

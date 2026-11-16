@@ -271,10 +271,10 @@
   "settings": {
     "title": "Paramètres des fiches de travail",
     "tabs": {
-      "defaults": "Valeurs par défaut",
+      "lines": "Lignes",
       "rules": "Règles de planification"
     },
-    "defaultsHint": "Lignes d’une nouvelle fiche de travail : glissez-les pour les réordonner, renommez-les (français et anglais) et modifiez leurs champs et valeurs par défaut.",
+    "linesHint": "La fiche de travail telle qu’elle s’affichera : cliquez sur une ligne pour modifier son titre (français et anglais) et ses champs, glissez-la pour la déplacer dans sa section (ou Alt + flèche haut / bas), et utilisez le + entre deux lignes pour en ajouter une.",
     "rulesHint": "Quand une ligne est prévue (avec l’option choisie, si elle en a), les lignes cochées sont aussi prévues.",
     "when": "Quand cette ligne est prévue",
     "alsoPlan": "Prévoir aussi",
@@ -284,25 +284,23 @@
     "noRule": "Aucune règle.",
     "noRuleLine": "Cette fiche n’a que des lignes « Autre » : aucune ligne à utiliser dans une règle.",
     "anyOption": "Toutes les options",
-    "drag": "Glisser pour déplacer la ligne",
-    "otherLine": "Ligne « Autre » (texte libre)",
+    "drag": "Cliquer pour modifier la ligne, glisser pour la déplacer",
+    "noLine": "Ajoutez une ligne pour la modifier ici.",
     "lineTitle": "Titre",
     "slots": {
       "fields": "Champs sur la ligne du titre",
       "details": "Champs sous le titre"
     },
     "types": {
-      "text": "Texte",
-      "number": "Nombre",
+      "text": "Champ texte",
       "date": "Date",
-      "textarea": "Zone de texte",
       "label": "Texte fixe",
       "radio": "Boutons radio (un choix)",
       "checkbox": "Cases à cocher (plusieurs choix)"
     },
+    "removeLine": "Supprimer la ligne",
     "removeField": "Supprimer le champ",
     "placeholder": "Texte indicatif",
-    "defaultValue": "Valeur par défaut",
     "option": "Option",
     "removeOption": "Supprimer l’option",
     "addOption": "Ajouter une option",

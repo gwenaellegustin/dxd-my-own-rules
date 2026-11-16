@@ -271,10 +271,10 @@
   "settings": {
     "title": "Worksheet settings",
     "tabs": {
-      "defaults": "Default values",
+      "lines": "Lines",
       "rules": "Planning rules"
     },
-    "defaultsHint": "Lines of a new worksheet: drag them to reorder, rename them (French and English) and edit their fields and default values.",
+    "linesHint": "The worksheet as it will look: click a line to edit its title (French and English) and its fields, drag it to move it inside its section (or Alt + arrow up / down), and use + between two lines to add one.",
     "rulesHint": "When a line is planned (with the chosen option, if it has some), the selected lines are planned too.",
     "when": "When this line is planned",
     "alsoPlan": "Also plan",
@@ -284,25 +284,23 @@
     "noRule": "No rule.",
     "noRuleLine": "This worksheet only has \"Other\" lines: there is no line to use in a rule.",
     "anyOption": "Any option",
-    "drag": "Drag to move the line",
-    "otherLine": "\"Other\" line (free text)",
+    "drag": "Click to edit the line, drag to move it",
+    "noLine": "Add a line to edit it here.",
     "lineTitle": "Title",
     "slots": {
       "fields": "Fields on the title row",
       "details": "Fields under the title"
     },
     "types": {
-      "text": "Text",
-      "number": "Number",
+      "text": "Text field",
       "date": "Date",
-      "textarea": "Text area",
       "label": "Fixed text",
       "radio": "Radio buttons (one choice)",
       "checkbox": "Checkboxes (several choices)"
     },
+    "removeLine": "Delete the line",
     "removeField": "Delete the field",
     "placeholder": "Placeholder",
-    "defaultValue": "Default value",
     "option": "Option",
     "removeOption": "Delete the option",
     "addOption": "Add an option",

@@ -73,20 +73,6 @@
     @case ('label') {
       <span class="line__title">{{ field.labelKey | translate }}</span>
     }
-    @case ('textarea') {
-      <app-clearable class="line__free-text">
-        <textarea
-          #clearTarget
-          class="textarea textarea--single-line"
-          appAutoGrow
-          [value]="value(field) ?? ''"
-          [placeholder]="(field.placeholderKey ?? '') | translate"
-          [attr.aria-label]="(field.placeholderKey ?? '') | translate"
-          (input)="setValue(field, $any($event.target).value)"
-          (blur)="removeIfEmpty()"
-        ></textarea>
-      </app-clearable>
-    }
     @case ('radio') {
       <span class="line__options" role="radiogroup">
         @for (option of field.options; track option.value) {
@@ -129,18 +115,19 @@
       </span>
     }
     @default {
-      <app-clearable>
-        <input
+      <!-- Text: grows with its content (wider up to the row, then on several rows) -->
+      @let size = line().repeatable ? 'full' : (field.size ?? 'small');
+      <app-clearable class="line__text" [class.line__text--medium]="size === 'medium'" [class.line__text--full]="size === 'full'">
+        <textarea
           #clearTarget
-          class="input"
-          [class.input--small]="(field.size ?? 'small') === 'small'"
-          [class.input--medium]="field.size === 'medium'"
-          [type]="field.type"
+          class="textarea textarea--single-line"
+          appAutoGrow
           [value]="value(field) ?? ''"
           [placeholder]="(field.placeholderKey ?? '') | translate"
           [attr.aria-label]="((field.placeholderKey ?? line().titleKey) ?? '') | translate"
           (input)="setValue(field, $any($event.target).value)"
-        />
+          (blur)="removeIfEmpty()"
+        ></textarea>
       </app-clearable>
     }
   }

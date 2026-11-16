@@ -1,21 +1,10 @@
-// A line card (like a worksheet line) with a drag handle on the left
+// Editor of the selected line, as a card
 :host {
   display: flex;
-  gap: var(--space-200);
-  padding: var(--space-300) var(--space-400) var(--space-300) var(--space-200);
+  padding: var(--space-400);
   background: var(--color-background-default);
   border: var(--stroke-border) solid var(--color-border-default);
   border-radius: var(--radius-200);
-}
-
-.handle {
-  flex: none;
-  display: grid;
-  place-content: center;
-  align-self: flex-start;
-  height: var(--control-height);
-  color: var(--color-icon-secondary, var(--color-text-secondary));
-  cursor: grab;
 }
 
 .body {
@@ -24,6 +13,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-300);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-200);
 }
 
 .slot {
@@ -50,13 +45,6 @@
 .type {
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-strong);
-}
-
-.default {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-100);
-  max-width: var(--vehicle-field-min-width);
 }
 
 .option {

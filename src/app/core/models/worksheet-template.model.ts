@@ -1,6 +1,5 @@
 import { InvoiceUnit } from './invoice.model';
 import { VehicleKind } from './vehicle-brand.model';
-import { LineState } from './worksheet.model';
 
 /**
  * The worksheet template describes WHICH lines a worksheet contains
@@ -9,13 +8,11 @@ import { LineState } from './worksheet.model';
  */
 
 export type LineFieldType =
-  | 'text' // short text input
-  | 'number' // short numeric input
+  | 'text' // text input that grows with its content (wider, then on several rows)
   | 'date' // date picker
   | 'radio' // 0 or 1 choice among options (clicking the selected one clears it)
   | 'checkbox' // multiple choice among options
-  | 'label' // static text between inputs (e.g. "... new tyres")
-  | 'textarea'; // free text taking the full line ("Other")
+  | 'label'; // static text between inputs (e.g. "... new tyres")
 
 export interface LineFieldOption {
   value: string;
@@ -27,14 +24,14 @@ export interface LineField {
   type: LineFieldType;
   labelKey?: string;
   placeholderKey?: string;
-  /** Visual width of inputs: small (120px), medium (200px) or full */
+  /** Minimum width of text inputs: small (120px), medium (200px) or full (the rest of the row) */
   size?: 'small' | 'medium' | 'full';
   options?: LineFieldOption[];
 }
 
 export interface TemplateLine {
   id: string;
-  /** Absent for free-text lines that only contain a textarea */
+  /** Absent for free-text lines that only contain a full-width text field ("Other") */
   titleKey?: string;
   /**
    * The line can be filled several times ("Other"): as soon as the last one is filled,
@@ -59,8 +56,6 @@ export interface TemplateSection {
 export interface WorksheetTemplate {
   kind: VehicleKind;
   sections: TemplateSection[];
-  /** State of the lines of a new worksheet (planned, values…), keyed like Worksheet.lines */
-  defaults: Record<string, LineState>;
 }
 
 /**

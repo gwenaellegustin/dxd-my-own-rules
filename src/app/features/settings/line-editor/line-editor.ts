@@ -1,22 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WorksheetSettingsStore } from '../../../core/services/worksheet-settings.store';
 import { TemplateTextService } from '../../../core/services/template-text.service';
 import { VehicleKind } from '../../../core/models/vehicle-brand.model';
 import { LineField, LineFieldType, TemplateLine } from '../../../core/models/worksheet-template.model';
-import { LineFieldValue, emptyLineState } from '../../../core/models/worksheet.model';
 import { TextKeyInput } from '../text-key-input/text-key-input';
 import { Icon } from '../../../shared/icon/icon';
 
 /** "fields": on the title row; "details": on a second row */
 type Slot = 'fields' | 'details';
 
-const FIELD_TYPES: LineFieldType[] = ['text', 'number', 'date', 'textarea', 'label', 'radio', 'checkbox'];
+const FIELD_TYPES: LineFieldType[] = ['text', 'date', 'label', 'radio', 'checkbox'];
 
 /**
- * One line of the template on the settings page: title (FR / EN), its fields (add, edit, delete)
- * with their default value in a new worksheet. Dragged by its handle to reorder (WorksheetSettingsPage).
+ * Editor of the line selected in the preview of the settings page: title (FR / EN) and its fields
+ * (add, edit, delete). Lines are reordered in the preview (WorksheetSettingsPage).
  */
 @Component({
   selector: 'app-line-editor',
@@ -31,16 +30,14 @@ export class LineEditor {
 
   readonly line = input.required<TemplateLine>();
   readonly kind = input.required<VehicleKind>();
-  /** The handle is pressed: the parent makes the line draggable */
-  readonly dragArm = output<boolean>();
 
   protected readonly slots: Slot[] = ['fields', 'details'];
   protected readonly types = FIELD_TYPES;
 
-  /** Default values of the line in a new worksheet ("Other" lines have none) */
-  protected readonly values = computed(
-    () => this.store.templateFor(this.kind())?.defaults[this.line().id]?.values ?? emptyLineState().values,
-  );
+  /** The page then edits the first line of the template */
+  protected removeLine(): void {
+    this.store.removeTemplateLine(this.kind(), this.line().id);
+  }
 
   protected setTitle(titleKey: string): void {
     this.update((line) => ({ ...line, titleKey }));
@@ -57,9 +54,7 @@ export class LineEditor {
   }
 
   protected removeField(slot: Slot, index: number): void {
-    const removed = this.line()[slot]?.[index];
     this.update((line) => ({ ...line, [slot]: (line[slot] ?? []).filter((_, i) => i !== index) }));
-    if (removed) this.setDefault(removed.id, null);
   }
 
   protected patchField(slot: Slot, index: number, changes: Partial<LineField>): void {
@@ -75,41 +70,12 @@ export class LineEditor {
 
   protected removeOption(slot: Slot, index: number, field: LineField, value: string): void {
     this.patchField(slot, index, { options: (field.options ?? []).filter((option) => option.value !== value) });
-    const current = this.values()[field.id];
-    if (Array.isArray(current)) this.setDefault(field.id, current.filter((v) => v !== value));
-    else if (current === value) this.setDefault(field.id, null);
   }
 
   protected setOptionText(slot: Slot, index: number, field: LineField, value: string, labelKey: string): void {
     this.patchField(slot, index, {
       options: (field.options ?? []).map((option) => (option.value === value ? { ...option, labelKey } : option)),
     });
-  }
-
-  /** Default choice: a radio holds 0 or 1 value (clicking the selected one clears it) */
-  protected toggleDefaultOption(field: LineField, value: string): void {
-    const current = this.values()[field.id];
-    if (field.type === 'radio') {
-      this.setDefault(field.id, current === value ? null : value);
-    } else {
-      const list = Array.isArray(current) ? current : [];
-      this.setDefault(field.id, list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
-    }
-  }
-
-  protected isDefaultOption(field: LineField, value: string): boolean {
-    const current = this.values()[field.id];
-    return Array.isArray(current) ? current.includes(value) : current === value;
-  }
-
-  protected setDefault(fieldId: string, value: LineFieldValue): void {
-    if (this.line().repeatable) return;
-    this.store.updateDefaultLine(this.kind(), this.line().id, { values: { ...this.values(), [fieldId]: value } });
-  }
-
-  protected textValue(fieldId: string): string {
-    const value = this.values()[fieldId];
-    return typeof value === 'string' ? value : '';
   }
 
   private newOption() {

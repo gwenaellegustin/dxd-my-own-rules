@@ -13,7 +13,7 @@ import { LineState, emptyLineState } from '../models/worksheet.model';
 
 /**
  * Worksheet settings (`worksheet-settings.json`): the lines of the worksheets of each kind of
- * vehicle, the default values of a new worksheet and the planning rules. Edited on the settings
+ * vehicle and the planning rules. Edited on the settings
  * page, kept in memory (not part of the worksheet undo history).
  */
 @Injectable({ providedIn: 'root' })
@@ -77,18 +77,6 @@ export class WorksheetSettingsStore {
     return result;
   }
 
-  // ----- Default values -----
-
-  updateDefaultLine(kind: VehicleKind, lineId: string, changes: Partial<LineState>): void {
-    this.patchTemplate(kind, (template) => ({
-      ...template,
-      defaults: {
-        ...template.defaults,
-        [lineId]: { ...(template.defaults[lineId] ?? emptyLineState()), ...changes },
-      },
-    }));
-  }
-
   // ----- Lines of a template -----
 
   /** Changes a line of a template (title, fields…) */
@@ -106,6 +94,20 @@ export class WorksheetSettingsStore {
         ? { ...section, lines: [...section.lines.slice(0, index), line, ...section.lines.slice(index)] }
         : section,
     );
+  }
+
+  /**
+   * Deletes a line of a template, and its use in the planning rules (rules triggered by it are
+   * removed). Worksheets keep their values but no longer show the line.
+   */
+  removeTemplateLine(kind: VehicleKind, lineId: string): void {
+    this.patchSections(kind, (section) => ({ ...section, lines: section.lines.filter((line) => line.id !== lineId) }));
+    this.patch((settings) => ({
+      ...settings,
+      rules: settings.rules
+        .filter((rule) => rule.kind !== kind || rule.lineId !== lineId)
+        .map((rule) => (rule.kind === kind ? { ...rule, plan: rule.plan.filter((id) => id !== lineId) } : rule)),
+    }));
   }
 
   /** Moves a line inside its section (drag and drop of the settings page) */

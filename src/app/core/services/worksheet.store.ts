@@ -69,7 +69,7 @@ export class WorksheetStore {
   }
 
   /**
-   * New worksheet: its lines start with the default values of its kind (see settings); `from`:
+   * New worksheet of a kind of vehicle (its lines come from the settings, all empty); `from`:
    * already for a client / vehicle (e.g. from the client page)
    */
   create(kind: VehicleKind = 'car', from: Partial<Pick<Worksheet, 'client' | 'vehicle'>> = {}): Worksheet {
@@ -84,7 +84,7 @@ export class WorksheetStore {
       hours: '',
       comments: '',
       damages: [],
-      lines: structuredClone(this.settings.templateFor(kind)?.defaults ?? {}),
+      lines: {},
     };
     this.record();
     this._worksheets.update((list) => [worksheet, ...list]);

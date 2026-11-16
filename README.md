@@ -33,8 +33,8 @@ src/
   styles.scss      base styles and shared form controls
   app/
     core/          models, API access, services, utils (names, saved preferences)
-                   - stores: worksheets (with undo), worksheet settings (templates, default
-                     values, rules), invoices, clients, shopping list, transcript
+                   - stores: worksheets (with undo), worksheet settings (templates,
+                     rules), invoices, clients, shopping list, transcript
                    - client activity (counts and last date of each client), highlight (shows
                      the element a transcript change refers to)
     layout/        header, main navigation (pills / mobile menu), panels layout
@@ -72,8 +72,7 @@ src/
 - **No hard-coded data** — everything comes from `public/mock-api/*.json` through `ApiService`.
   Point `API_BASE_URL` (`core/api/api.config.ts`) to the real backend when it exists.
   The worksheet content (sections, lines, options) is described in `worksheet-settings.json`:
-  one template per kind of vehicle (car, motorcycle), with the default values of a new worksheet,
-  and the planning rules.
+  one template per kind of vehicle (car, motorcycle), and the planning rules.
 - **Translations** — [ngx-translate](https://ngx-translate.org) with `public/i18n/{lang}.json`.
   English is the default; the EN / FR switch (user menu, top right) changes it and the choice is remembered.
   The French texts reuse the wording of the garage's paper worksheet.
@@ -128,10 +127,11 @@ Account menu (top right) → *Worksheet settings*, for cars or motorcycles (each
 lines: a worksheet takes the kind of its vehicle; the motorcycle template only has "Other" lines
 for now):
 
-- **Default values**: the lines of the worksheet. Drag a line by its handle to reorder it (inside
-  its section), rename it (French and English side by side), add / edit / delete its fields
-  (text, number, date, text area, fixed text, radio buttons, checkboxes, with their options) and
-  set their default value in a new worksheet. Edited texts are written into the translations
+- **Lines**: the worksheet as it will look on the right (empty lines, as in a new worksheet). Click
+  a line to edit it on the left: rename it (French and English side by side), add / edit / delete
+  its fields (text, date, fixed text, radio buttons, checkboxes, with their options; a text field
+  grows with its content). Drag a line in the preview to reorder it inside its section (or
+  Alt + arrow up / down), and use the + between two lines to insert one. Edited texts are written into the translations
   (`TemplateTextService`, keys `custom.*`), so every page shows them at once; a shared key is
   copied first so editing one line never changes another.
 - **Planning rules**: when a line is planned (optionally only with one option, e.g. Service → Small), other lines are

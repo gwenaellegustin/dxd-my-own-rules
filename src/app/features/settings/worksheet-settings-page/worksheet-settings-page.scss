@@ -20,7 +20,14 @@
 .page__head {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  gap: var(--space-400);
+}
+
+// Title with the car / motorcycle switch next to it (wraps when narrow)
+.page__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-400);
 }
 
@@ -56,7 +63,6 @@
 }
 
 .tabs {
-  align-self: stretch;
   display: flex;
   gap: var(--space-400);
   border-bottom: var(--stroke-border) solid var(--color-border-default);
@@ -79,13 +85,16 @@
   }
 }
 
-.panel {
+// The preview has the spacing of the worksheet page
+.panel,
+.worksheet-preview {
   display: flex;
   flex-direction: column;
   gap: var(--space-600);
 }
 
-.section {
+.section,
+.section__lines {
   display: flex;
   flex-direction: column;
   gap: var(--space-200);
@@ -132,41 +141,11 @@
   gap: var(--space-200) var(--space-400);
 }
 
-// "+" between two lines, centred on the line editors (left column), with room above and below
-.insert {
-  position: relative;
-  height: var(--space-600);
-
-  @container work-area (max-width: 900px) {
-    --insert-center: 50%;
-  }
-}
-
-.insert__button {
-  position: absolute;
-  top: 50%;
-  // Centre of the left column of .line-row (two columns separated by its gap)
-  left: var(--insert-center, calc((100% - var(--space-400)) / 4));
-  transform: translate(-50%, -50%);
-  display: grid;
-  place-content: center;
-  background: var(--color-background-secondary);
-  border-radius: var(--radius-full);
-  color: var(--color-text-tertiary);
-  transition: color var(--transition-fast);
-
-  &:hover,
-  &:focus-visible {
-    color: var(--color-text-default);
-  }
-}
-
-// One line: editor | preview side by side; stacked when the page is narrow
-.line-row {
-  position: relative;
+// Lines tab: editor of the selected line | the worksheet preview; stacked when the page is narrow
+.lines-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--space-400);
+  gap: var(--space-600);
   align-items: start;
 
   @container work-area (max-width: 900px) {
@@ -174,19 +153,48 @@
   }
 }
 
-// The preview is the worksheet line as it will look (not editable); it can be dragged too
-.preview {
+// Stays in view while the preview scrolls; scrolls itself when taller than the window
+.editor {
   position: sticky;
   top: var(--space-400);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-100);
-  cursor: grab;
+  max-height: calc(100dvh - var(--header-height) - 2 * var(--space-400));
+  overflow-y: auto;
+
+  @container work-area (max-width: 900px) {
+    position: static;
+    max-height: none;
+  }
 }
 
-// Drag and drop of the lines: the dragged one is dimmed, a bar shows where it goes
-.line-row {
+// Its own container: the lines adapt to its width, as in the work area of the worksheet page
+.worksheet-preview {
+  container: work-area / inline-size;
+}
 
+.line-slot {
+  position: relative;
+}
+
+// A line of the preview: the worksheet line as it will look (not editable), selectable and draggable
+.preview-line {
+  position: relative;
+  border-radius: var(--radius-200);
+
+  &[role='button'] {
+    cursor: grab;
+  }
+
+  &[role='button']:hover,
+  &:focus-visible {
+    outline: var(--stroke-focus) solid var(--color-border-strong);
+  }
+
+  &--selected,
+  &--selected:hover {
+    outline: var(--stroke-focus) solid var(--color-background-brand);
+  }
+
+  // Dragging: the dragged line is dimmed, a bar shows where it goes (in the gap)
   &.dragging {
     opacity: var(--opacity-disabled);
   }
@@ -201,15 +209,40 @@
     background: var(--color-border-strong);
   }
 
+  // In the middle of the gap above / under the line
   &.drop-before::before {
-    top: calc(-1 * var(--space-100) - var(--stroke-focus) / 2);
+    top: calc(var(--space-100) / -1 - 1px);
   }
 
   &.drop-after::after {
-    bottom: calc(-1 * var(--space-100) - var(--stroke-focus) / 2);
+    bottom: calc(var(--space-100) / -1 - 1px);
   }
 }
 
-.rule-add {
+// "+" centred in the gap above a line (or under the last one), shown on hover / keyboard focus
+.insert {
+  position: absolute;
+  top: calc(-1 * var(--space-200) / 2);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-content: center;
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-full);
+  color: var(--color-text-default);
+  opacity: 0;
+
+  &--after {
+    top: calc(100% + var(--space-200) / 2);
+  }
+
+  .line-slot:hover > &,
+  &:focus-visible {
+    opacity: 1;
+  }
+}
+
+.rule-add,
+.add-line {
   align-self: flex-start;
 }

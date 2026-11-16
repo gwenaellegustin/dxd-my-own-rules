@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, afterNextRender, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WorksheetStore } from '../../../core/services/worksheet.store';
 import { WorksheetSettingsStore } from '../../../core/services/worksheet-settings.store';
@@ -7,15 +7,15 @@ import { VehicleKind } from '../../../core/models/vehicle-brand.model';
 import { PlanningRule, TemplateLine } from '../../../core/models/worksheet-template.model';
 import { LineEditor } from '../line-editor/line-editor';
 import { TaskLine } from '../../worksheet/task-line/task-line';
-import { LineState, emptyLineState } from '../../../core/models/worksheet.model';
+import { emptyLineState } from '../../../core/models/worksheet.model';
 import { TemplateTextService } from '../../../core/services/template-text.service';
 import { Icon } from '../../../shared/icon/icon';
 
-type SettingsTab = 'defaults' | 'rules';
+type SettingsTab = 'lines' | 'rules';
 
 /**
  * Worksheet settings (account menu), per kind of vehicle (car / motorcycle):
- * - Default values: the state of the lines of a new worksheet (planned, values, notes).
+ * - Lines: the worksheet as it will look (right); click a line to edit it (left), drag it to move it.
  * - Planning rules: "when this line is planned (with these options), also plan those lines".
  * Kept in memory like the rest of the prototype (WorksheetSettingsStore).
  */
@@ -30,11 +30,24 @@ export class WorksheetSettingsPage {
   protected readonly store = inject(WorksheetSettingsStore);
 
   protected readonly kinds: VehicleKind[] = ['car', 'motorcycle'];
-  protected readonly tabs: SettingsTab[] = ['defaults', 'rules'];
+  protected readonly tabs: SettingsTab[] = ['lines', 'rules'];
   protected readonly kind = signal<VehicleKind>('car');
-  protected readonly tab = signal<SettingsTab>('defaults');
+  protected readonly tab = signal<SettingsTab>('lines');
 
   protected readonly template = computed(() => this.store.templateFor(this.kind()));
+
+  /**
+   * Line edited on the right: the one clicked in the preview, else the first one of the template
+   * ("Other" lines cannot be edited)
+   */
+  protected readonly selected = signal<string | null>(null);
+  protected readonly selectedLine = computed(() => {
+    const lines = (this.template()?.sections ?? []).flatMap((section) => section.lines).filter((line) => !line.repeatable);
+    return lines.find((line) => line.id === this.selected()) ?? lines[0];
+  });
+
+  /** The preview shows empty lines, as in a new worksheet */
+  protected readonly emptyState = emptyLineState();
 
   /** Lines a rule can use: the titled ones ("Other" lines have no fixed meaning) */
   protected readonly ruleSections = computed(() =>
@@ -71,13 +84,12 @@ export class WorksheetSettingsPage {
 
   protected readonly rules = computed(() => this.store.rulesFor(this.kind()));
 
-  /** Line whose handle is pressed (only it can be dragged, not from its inputs) */
-  protected readonly armed = signal<string | null>(null);
   /** Line being dragged, and where it would be dropped */
   protected readonly drag = signal<{ sectionId: string; lineId: string; from: number } | null>(null);
   protected readonly dropAt = signal<{ sectionId: string; index: number } | null>(null);
 
   private readonly texts = inject(TemplateTextService);
+  private readonly injector = inject(Injector);
 
   constructor() {
     // Settings and the worksheets that use them
@@ -86,15 +98,31 @@ export class WorksheetSettingsPage {
     this.texts.load();
   }
 
-  /** New line (title to fill, no field yet) inserted at `index` of the section */
+  /** New line (title to fill, no field yet) inserted at `index` of the section, and edited */
   protected addLine(sectionId: string, index: number): void {
     const titleKey = this.texts.create('');
-    this.store.insertTemplateLine(this.kind(), sectionId, index, { id: `line-${crypto.randomUUID().slice(0, 8)}`, titleKey });
+    const id = `line-${crypto.randomUUID().slice(0, 8)}`;
+    this.store.insertTemplateLine(this.kind(), sectionId, index, { id, titleKey });
+    this.selected.set(id);
   }
 
-  /** State of a line in a new worksheet, for its preview */
-  protected defaultState(lineId: string): LineState {
-    return this.template()?.defaults[lineId] ?? emptyLineState();
+  protected select(line: TemplateLine): void {
+    if (!line.repeatable) this.selected.set(line.id);
+  }
+
+  /** Lines of a section that can be moved: all but the trailing "Other" line */
+  private movableCount(sectionId: string): number {
+    const lines = this.template()?.sections.find((section) => section.id === sectionId)?.lines ?? [];
+    return lines.filter((line) => !line.repeatable).length;
+  }
+
+  /** Alt + arrow up / down on a line of the preview: moves it by one (focus kept on it) */
+  protected moveBy(sectionId: string, from: number, delta: number, event: Event): void {
+    const to = from + delta;
+    if (from >= this.movableCount(sectionId) || to < 0 || to >= this.movableCount(sectionId)) return;
+    this.store.moveTemplateLine(this.kind(), sectionId, from, to);
+    const element = event.currentTarget as HTMLElement;
+    afterNextRender(() => element.focus(), { injector: this.injector });
   }
 
   protected startDrag(event: DragEvent, sectionId: string, lineId: string, from: number): void {
@@ -109,7 +137,8 @@ export class WorksheetSettingsPage {
     event.preventDefault();
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
     const after = event.clientY > rect.top + rect.height / 2;
-    this.dropAt.set({ sectionId, index: index + (after ? 1 : 0) });
+    // Never under the "Other" line: it stays last
+    this.dropAt.set({ sectionId, index: Math.min(index + (after ? 1 : 0), this.movableCount(sectionId)) });
   }
 
   protected isDropTarget(sectionId: string, index: number, side: 'before' | 'after'): boolean {
@@ -133,7 +162,6 @@ export class WorksheetSettingsPage {
   protected endDrag(): void {
     this.drag.set(null);
     this.dropAt.set(null);
-    this.armed.set(null);
   }
 
   /** Field whose options can restrict a rule: the first choice field of the line */

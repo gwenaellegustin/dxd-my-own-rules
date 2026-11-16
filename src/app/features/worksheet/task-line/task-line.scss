@@ -53,8 +53,33 @@
   min-width: calc(var(--control-width-small) + var(--space-800));
 }
 
-.line__free-text {
-  flex: 1;
+// Text field: starts at its minimum width, gets wider with its content up to the row, then
+// wraps on several rows (height: AutoGrow). "full": takes the rest of the row ("Other" lines)
+.line__text {
+  --text-min-width: calc(var(--control-width-small) + var(--icon-size-large));
+  display: flex;
+  max-width: 100%;
+
+  > .textarea {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: var(--text-min-width);
+    max-width: 100%;
+    field-sizing: content;
+  }
+
+  &--medium {
+    --text-min-width: calc(var(--control-width-medium) + var(--icon-size-large));
+  }
+
+  &--full {
+    flex: 1 1 0;
+    min-width: min(100%, var(--text-min-width));
+
+    > .textarea {
+      width: 100%;
+    }
+  }
 }
 
 .line__status {

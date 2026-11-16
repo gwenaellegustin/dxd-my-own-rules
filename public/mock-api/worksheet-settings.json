@@ -26,7 +26,7 @@
               "fields": [
                 {
                   "id": "km",
-                  "type": "number",
+                  "type": "text",
                   "placeholderKey": "common.km"
                 },
                 {
@@ -75,7 +75,7 @@
               "fields": [
                 {
                   "id": "quantity",
-                  "type": "number",
+                  "type": "text",
                   "placeholderKey": "common.ellipsis"
                 },
                 {
@@ -205,8 +205,9 @@
               "fields": [
                 {
                   "id": "text",
-                  "type": "textarea",
-                  "placeholderKey": "common.other"
+                  "type": "text",
+                  "placeholderKey": "common.other",
+                  "size": "full"
                 }
               ]
             }
@@ -239,8 +240,9 @@
               "fields": [
                 {
                   "id": "text",
-                  "type": "textarea",
-                  "placeholderKey": "common.other"
+                  "type": "text",
+                  "placeholderKey": "common.other",
+                  "size": "full"
                 }
               ]
             }
@@ -303,8 +305,9 @@
               "fields": [
                 {
                   "id": "text",
-                  "type": "textarea",
-                  "placeholderKey": "common.other"
+                  "type": "text",
+                  "placeholderKey": "common.other",
+                  "size": "full"
                 }
               ]
             }
@@ -353,15 +356,15 @@
               "fields": [
                 {
                   "id": "text",
-                  "type": "textarea",
-                  "placeholderKey": "common.other"
+                  "type": "text",
+                  "placeholderKey": "common.other",
+                  "size": "full"
                 }
               ]
             }
           ]
         }
-      ],
-      "defaults": {}
+      ]
     },
     {
       "kind": "motorcycle",
@@ -377,8 +380,9 @@
               "fields": [
                 {
                   "id": "text",
-                  "type": "textarea",
-                  "placeholderKey": "common.other"
+                  "type": "text",
+                  "placeholderKey": "common.other",
+                  "size": "full"
                 }
               ]
             }
@@ -395,8 +399,9 @@
               "fields": [
                 {
                   "id": "text",
-                  "type": "textarea",
-                  "placeholderKey": "common.other"
+                  "type": "text",
+                  "placeholderKey": "common.other",
+                  "size": "full"
                 }
               ]
             }
@@ -413,8 +418,9 @@
               "fields": [
                 {
                   "id": "text",
-                  "type": "textarea",
-                  "placeholderKey": "common.other"
+                  "type": "text",
+                  "placeholderKey": "common.other",
+                  "size": "full"
                 }
               ]
             }
@@ -431,15 +437,15 @@
               "fields": [
                 {
                   "id": "text",
-                  "type": "textarea",
-                  "placeholderKey": "common.other"
+                  "type": "text",
+                  "placeholderKey": "common.other",
+                  "size": "full"
                 }
               ]
             }
           ]
         }
-      ],
-      "defaults": {}
+      ]
     }
   ],
   "rules": [

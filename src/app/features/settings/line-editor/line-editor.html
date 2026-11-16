@@ -1,22 +1,19 @@
 @let l = line();
 
-<!-- Press the handle to drag the line (the whole card is the drag image) -->
-<span
-  class="handle"
-  [attr.title]="'settings.drag' | translate"
-  (mousedown)="dragArm.emit(true)"
-  (mouseup)="dragArm.emit(false)"
-  (touchstart)="dragArm.emit(true)"
->
-  <app-icon name="drag" />
-</span>
-
 <div class="body">
-  @if (l.repeatable) {
-    <p class="text-strong">{{ 'settings.otherLine' | translate }}</p>
-  } @else {
+  <!-- Title (FR / EN) and, top right, delete the line -->
+  <div class="head">
     <app-text-key-input [key]="l.titleKey" [label]="'settings.lineTitle' | translate" (keyChange)="setTitle($event)" />
-  }
+    <button
+      type="button"
+      class="icon-button"
+      [attr.aria-label]="'settings.removeLine' | translate"
+      [attr.title]="'settings.removeLine' | translate"
+      (click)="removeLine()"
+    >
+      <app-icon name="delete" />
+    </button>
+  </div>
 
   @for (slot of slots; track slot) {
     <div class="slot">
@@ -47,25 +44,13 @@
             @case ('checkbox') {
               <ng-container *ngTemplateOutlet="options; context: { $implicit: field, slot, i }" />
             }
-            @default {
+            @case ('text') {
               <app-text-key-input
                 [key]="field.placeholderKey"
                 [label]="'settings.placeholder' | translate"
                 [placeholder]="'settings.placeholder' | translate"
                 (keyChange)="patchField(slot, i, { placeholderKey: $event })"
               />
-              @if (!l.repeatable && field.type !== 'textarea') {
-                <label class="default">
-                  <span class="text-small text-secondary">{{ 'settings.defaultValue' | translate }}</span>
-                  <input
-                    class="input"
-                    [type]="field.type === 'date' ? 'date' : 'text'"
-                    [attr.inputmode]="field.type === 'number' ? 'numeric' : null"
-                    [value]="textValue(field.id)"
-                    (input)="setDefault(field.id, $any($event.target).value || null)"
-                  />
-                </label>
-              }
             }
           }
         </div>
@@ -81,18 +66,12 @@
   }
 </div>
 
-<!-- Options of a radio / checkbox field: default choice, text (FR / EN), delete -->
+<!-- Options of a radio / checkbox field: text (FR / EN), delete -->
 <ng-template #options let-field let-slot="slot" let-i="i">
   @for (option of field.options; track option.value) {
     <div class="option">
-      <input
-        [type]="field.type"
-        [checked]="isDefaultOption(field, option.value)"
-        [disabled]="l.repeatable"
-        [attr.aria-label]="'settings.defaultValue' | translate"
-        [attr.title]="'settings.defaultValue' | translate"
-        (click)="toggleDefaultOption(field, option.value)"
-      />
+      <!-- What the option looks like in the worksheet (not a value to fill here) -->
+      <input [type]="field.type" disabled aria-hidden="true" tabindex="-1" />
       <app-text-key-input
         [key]="option.labelKey"
         [label]="'settings.option' | translate"
