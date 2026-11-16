@@ -108,7 +108,10 @@
     "noAction": "No action done",
     "validate": "Mark as read",
     "shoppingList": "Shopping list",
-    "resize": "Drag to resize the panel (double click: default width)"
+    "resize": "Drag to resize the panel (double click: default width)",
+    "filterDate": "Show one day",
+    "clearDate": "Show every day",
+    "nothingThatDay": "Nothing was said that day."
   },
   "template": {
     "labour": {

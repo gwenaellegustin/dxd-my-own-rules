@@ -143,7 +143,8 @@ messages) and the assistant's answer: what it changed from that transcript, as c
 new value. Clicking a card opens that worksheet or invoice and highlights the changed element
 with a border (`HighlightService`, elements marked with `data-area`: `hours`, `line:engineOil`,
 `item:brakeFluid`…)
-until the next click. The panel stays open, and keeps its scroll position from one page to
+until the next click. The calendar button next to the search shows only one day (a chip shows
+the chosen day; click it to show every day again). The panel stays open, and keeps its scroll position from one page to
 another (`TranscriptService`). On desktop its width can be changed by dragging its left edge
 (or with the arrow keys on the edge; double click: default width), between
 `--transcript-min-width` and `--transcript-max-width`; the width is remembered in the browser.

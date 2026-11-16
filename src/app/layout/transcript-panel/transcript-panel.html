@@ -27,20 +27,33 @@
         <span class="visually-hidden">{{ 'common.collapse' | translate }}</span>
       </button>
 
-      <div class="search">
-        <app-clearable>
-          <input
-            #clearTarget
-            type="search"
-            class="input"
-            [placeholder]="'common.search' | translate"
-            [attr.aria-label]="'common.search' | translate"
-            [value]="query()"
-            (input)="query.set($any($event.target).value)"
-          />
-        </app-clearable>
-        <app-icon name="search" size="small" />
+      <div class="search-row">
+        <div class="search">
+          <app-clearable>
+            <input
+              #clearTarget
+              type="search"
+              class="input"
+              [placeholder]="'common.search' | translate"
+              [attr.aria-label]="'common.search' | translate"
+              [value]="query()"
+              (input)="query.set($any($event.target).value)"
+            />
+          </app-clearable>
+          <app-icon name="search" size="small" />
+        </div>
+
+        <!-- Only the messages of one day (date picker) -->
+        <app-date-filter labelKey="transcript.filterDate" [max]="today" [(value)]="dateFilter" />
       </div>
+
+      @if (dateFilter(); as date) {
+        <button type="button" class="filter-chip" [attr.aria-label]="'transcript.clearDate' | translate" (click)="dateFilter.set(null)">
+          <app-icon name="calendar" size="small" />
+          {{ date | date: 'dd.MM.yyyy' }}
+          <app-icon name="close" size="small" />
+        </button>
+      }
     </div>
 
     <div #scroller class="panel__scroll" aria-live="polite" (scroll)="transcript.scrollTop = scroller.scrollTop">
@@ -53,7 +66,9 @@
             {{ day.date | date: 'dd.MM.yyyy' }}
           </h3>
           @if (day.messages.length === 0) {
-            <p class="empty-day text-secondary text-small">{{ 'transcript.nothingToday' | translate }}</p>
+            <p class="empty-day text-secondary text-small">
+              {{ (day.date === today ? 'transcript.nothingToday' : 'transcript.nothingThatDay') | translate }}
+            </p>
           }
           @for (message of day.messages; track message.id) {
             @if (message.userId) {

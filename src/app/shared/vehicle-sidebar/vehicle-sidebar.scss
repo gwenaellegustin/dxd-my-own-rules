@@ -19,13 +19,6 @@
   gap: var(--space-200);
 }
 
-// Search field + sort button on one row
-.search-row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-200);
-}
-
 .sort__check--hidden {
   visibility: hidden;
 }

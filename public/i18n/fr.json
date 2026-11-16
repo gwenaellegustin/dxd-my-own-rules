@@ -108,7 +108,10 @@
     "noAction": "Aucune action effectuée",
     "validate": "Marqué comme lu",
     "shoppingList": "Liste d’achats",
-    "resize": "Glisser pour redimensionner le panneau (double clic : largeur par défaut)"
+    "resize": "Glisser pour redimensionner le panneau (double clic : largeur par défaut)",
+    "filterDate": "Afficher un jour",
+    "clearDate": "Afficher tous les jours",
+    "nothingThatDay": "Rien n’a été dit ce jour-là."
   },
   "template": {
     "labour": {

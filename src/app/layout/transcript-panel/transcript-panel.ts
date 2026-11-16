@@ -16,6 +16,7 @@ import { Icon } from '../../shared/icon/icon';
 import { Clearable } from '../../shared/clearable/clearable';
 import { TranscriptChange, TranscriptMessage } from '../../core/models/transcript.model';
 import { TranscriptChangeCard } from '../transcript-change/transcript-change';
+import { DateFilter } from '../../shared/date-filter/date-filter';
 import { HighlightService } from '../../core/services/highlight.service';
 import { TranscriptService } from '../../core/services/transcript.service';
 
@@ -32,7 +33,7 @@ interface TranscriptDay {
  */
 @Component({
   selector: 'app-transcript-panel',
-  imports: [DatePipe, TranslatePipe, Icon, Clearable, TranscriptChangeCard],
+  imports: [DatePipe, TranslatePipe, Icon, Clearable, TranscriptChangeCard, DateFilter],
   templateUrl: './transcript-panel.html',
   styleUrl: './transcript-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -90,19 +91,26 @@ export class TranscriptPanel {
     this.highlight.show(change.target, change.area);
   }
 
+  /** Only the messages of this day (yyyy-MM-dd), chosen with the calendar button */
+  protected readonly dateFilter = signal<string | null>(null);
+
   protected readonly days = computed<TranscriptDay[]>(() => {
     const query = this.query().trim().toLowerCase();
+    const date = this.dateFilter();
     const days = new Map<string, TranscriptMessage[]>();
     const sorted = [...this.messages()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
     for (const message of sorted) {
       if (query && !message.text.toLowerCase().includes(query)) continue;
       const day = message.timestamp.slice(0, 10);
+      if (date && day !== date) continue;
       days.set(day, [...(days.get(day) ?? []), message]);
     }
-    // Today is always the last day (empty until something is said), the previous ones above it
-    if (!query && !days.has(this.today)) days.set(this.today, []);
-    return [...days].map(([date, messages]) => ({ date, messages }));
+    // The chosen day, or today, is shown even without message (today: last, the previous above)
+    const shown = date ?? this.today;
+    if (!query && !days.has(shown)) days.set(shown, []);
+    return [...days].map(([day, messages]) => ({ date: day, messages }));
   });
+
 
   /** yyyy-MM-dd, local time */
   protected readonly today = new Date().toLocaleDateString('sv');

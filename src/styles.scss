@@ -584,6 +584,29 @@ select.input {
 }
 
 // Search input (pill shaped): search icon on the left, clear button on the right
+// Active filter shown under a search (e.g. a day): click to remove it
+.filter-chip {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-100);
+  padding: var(--space-050) var(--space-200);
+  border-radius: var(--radius-full);
+  background: var(--color-background-secondary);
+  font-size: var(--font-size-small);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+}
+
+// Search field + a button next to it (sort, date…)
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+}
+
 .search {
   position: relative;
   flex: 1;
