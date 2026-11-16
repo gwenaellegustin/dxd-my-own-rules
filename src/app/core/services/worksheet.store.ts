@@ -3,7 +3,7 @@ import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
 import { TemplateLine } from '../models/worksheet-template.model';
 import { VehicleKind } from '../models/vehicle-brand.model';
-import { Damage, LineState, Worksheet, WorksheetStatus, emptyLineState } from '../models/worksheet.model';
+import { CarryOverRef, Damage, LineState, Worksheet, WorksheetStatus, emptyLineState } from '../models/worksheet.model';
 import { sameName } from '../utils/names';
 import { WorksheetSettingsStore } from './worksheet-settings.store';
 
@@ -41,6 +41,8 @@ export class WorksheetStore {
   private lastEdit: { key: string; time: number } | null = null;
   /** Worksheets created and not edited yet: dropped when left (see `discardIfUntouched`) */
   private readonly untouched = new Set<string>();
+  /** Worksheets whose carried-over proposal was answered or closed: not proposed again */
+  private readonly carryOverAnswered = signal<ReadonlySet<string>>(new Set());
 
   readonly worksheets = this._worksheets.asReadonly();
   readonly loaded = this._loaded.asReadonly();
@@ -140,6 +142,68 @@ export class WorksheetStore {
         return { ...worksheet, lines: this.settings.applyRules(worksheet.kind, lineId, lines) };
       },
       typingKey,
+    );
+  }
+
+  /**
+   * Earlier invoiced worksheets of the same vehicle (same client) that still carry lines over to
+   * the next intervention, newest first; none once the proposal was answered for `worksheet`
+   */
+  pendingCarryOver(worksheet: Worksheet): Worksheet[] {
+    if (isLocked(worksheet) || !worksheet.client.trim() || !worksheet.vehicle.trim()) return [];
+    if (this.carryOverAnswered().has(worksheet.id)) return [];
+    return (
+      this._worksheets()
+        .filter(
+          (other) =>
+            other.id !== worksheet.id &&
+            isLocked(other) &&
+            !!other.carryOver?.length &&
+            other.kind === worksheet.kind &&
+            sameName(other.client, worksheet.client) &&
+            sameName(other.vehicle, worksheet.vehicle) &&
+            (!worksheet.date || !other.date || other.date <= worksheet.date),
+        )
+        // Stable sort: the list order (newest first) is kept for equal dates
+        .sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))
+    );
+  }
+
+  /**
+   * Answer to the carried-over proposal of worksheet `id` (not proposed again in this session):
+   * - `imported` lines are added to it (planned, not done; their quantity is not kept), a
+   *   repeatable line ("Other") as a new instance after the existing ones;
+   * - `imported` and `deleted` lines are no longer carried over by their source worksheet;
+   * - the others stay carried over, proposed again for the next worksheet.
+   * One undo step (it may change several worksheets).
+   */
+  answerCarryOver(id: string, imported: CarryOverRef[], deleted: CarryOverRef[]): void {
+    this.carryOverAnswered.update((current) => new Set(current).add(id));
+    const target = this.getById(id);
+    if (!target || isLocked(target) || (!imported.length && !deleted.length)) return;
+
+    const templateLines = this.settings.templateFor(target.kind)?.sections.flatMap((section) => section.lines) ?? [];
+    const lines = { ...target.lines };
+    for (const { sourceId, key } of imported) {
+      const state = this.getById(sourceId)?.lines[key];
+      const line = templateLines.find((candidate) => candidate.id === key.split('~')[0]);
+      if (!state || !line) continue;
+      const lineKey = line.repeatable ? lineInstanceIds(lines, line).at(-1)! : line.id;
+      const { quantity: _quantity, ...kept } = state;
+      lines[lineKey] = { ...kept, planned: true, done: false };
+    }
+
+    const handled = [...imported, ...deleted];
+    const isHandled = (worksheet: Worksheet, key: string) =>
+      handled.some((ref) => ref.sourceId === worksheet.id && ref.key === key);
+    this.untouched.delete(id);
+    this.record();
+    this._worksheets.update((list) =>
+      list.map((worksheet) => {
+        if (worksheet.id === id) return { ...worksheet, lines };
+        if (!worksheet.carryOver?.some((key) => isHandled(worksheet, key))) return worksheet;
+        return { ...worksheet, carryOver: worksheet.carryOver.filter((key) => !isHandled(worksheet, key)) };
+      }),
     );
   }
 

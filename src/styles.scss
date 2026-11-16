@@ -373,7 +373,8 @@ button {
   line-height: var(--line-height-single);
   transition: background-color var(--transition-fast);
 
-  &:hover {
+  // No hover effect on a disabled button
+  &:hover:not(:disabled) {
     background: var(--color-background-hover);
   }
 
@@ -382,7 +383,7 @@ button {
     background: var(--color-background-brand);
     color: var(--color-text-on-brand);
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: var(--color-background-brand-hover);
     }
   }
@@ -390,10 +391,6 @@ button {
   &:disabled {
     opacity: var(--opacity-disabled);
     cursor: default;
-
-    &:hover {
-      background: var(--color-background-default);
-    }
   }
 
   // Destructive action (delete)
@@ -402,7 +399,7 @@ button {
     background: var(--color-background-danger-strong);
     color: var(--color-text-on-brand);
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: var(--color-text-danger);
     }
   }
@@ -686,6 +683,10 @@ select.input {
   gap: var(--space-400);
   min-height: 0;
   overflow-y: auto;
+  // Room for the focus ring (outline offset + stroke) of the checkboxes on the edges, which the
+  // scrolling would clip; the negative margin keeps the content aligned with the title
+  padding: var(--space-100);
+  margin: calc(-1 * var(--space-100));
 }
 
 .dialog__group {

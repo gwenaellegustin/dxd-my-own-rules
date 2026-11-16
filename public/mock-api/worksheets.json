@@ -173,13 +173,33 @@
     "status": "invoiced",
     "kind": "motorcycle",
     "client": "Gwen Gustin",
-    "vehicle": "Honda CB650R",
+    "vehicle": "Honda CB 500 X",
     "date": "2026-11-01",
     "kilometers": "12'030",
     "hours": "",
-    "comments": "",
+    "comments": "• Kit chaîne usé : à changer à la prochaine intervention",
     "damages": [],
-    "lines": {}
+    "lines": {
+      "labourOther": {
+        "planned": true,
+        "done": true,
+        "note": "",
+        "values": {
+          "text": "Changement des pneus"
+        }
+      },
+      "labourOther~2": {
+        "planned": true,
+        "done": false,
+        "note": "",
+        "values": {
+          "text": "Changement du kit chaîne"
+        }
+      }
+    },
+    "carryOver": [
+      "labourOther~2"
+    ]
   },
   {
     "id": "ws-1002",

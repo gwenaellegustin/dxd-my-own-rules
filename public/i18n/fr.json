@@ -58,7 +58,8 @@
     "reopen": "Rouvrir la fiche",
     "reopenHint": "Modifier à nouveau la fiche : sa facture est masquée (conservée) jusqu’à la prochaine facturation",
     "reopenSent": "La facture a été envoyée : la fiche ne peut plus être rouverte",
-    "invoiceNeedsClient": "Choisissez d’abord le client : une facture en a besoin"
+    "invoiceNeedsClient": "Choisissez d’abord le client : une facture en a besoin",
+    "invoiceNeedsDone": "Cochez « Fait » sur au moins un élément"
   },
   "registration": {
     "open": "Infos du véhicule",
@@ -185,6 +186,16 @@
     "doneCount": "{{count}} fait(s)",
     "uncheckAll": "Tout décocher",
     "checkAll": "Tout cocher"
+  },
+  "carriedOver": {
+    "title": "Éléments reportés",
+    "hint": "Cochés : ajoutés à la fiche. Décochés : proposés à nouveau la prochaine fois. Supprimés : plus jamais proposés.",
+    "delete": "Supprimer : ne plus proposer cet élément",
+    "restore": "Rétablir",
+    "count": "{{count}} élément(s) importé(s)",
+    "deletedCount": "{{count}} supprimé(s)",
+    "later": "Plus tard",
+    "confirm": "Valider"
   },
   "invoices": {
     "title": "Factures",

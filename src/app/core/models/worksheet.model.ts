@@ -39,8 +39,17 @@ export interface Worksheet {
   damages: Damage[];
   /** Keyed by TemplateLine.id */
   lines: Record<string, LineState>;
-  /** Line keys planned but not done, to carry over to the next intervention (set when invoicing) */
+  /**
+   * Line keys planned but not done, to carry over to the next intervention (set when invoicing).
+   * A key is removed once imported into a later worksheet of the vehicle, or deleted.
+   */
   carryOver?: string[];
+}
+
+/** One carried-over line: `key` in the worksheet `sourceId` */
+export interface CarryOverRef {
+  sourceId: string;
+  key: string;
 }
 
 export const emptyLineState = (): LineState => ({

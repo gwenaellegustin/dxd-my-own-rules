@@ -36,13 +36,13 @@
           </button>
           <p class="locked-notice" role="status">{{ 'worksheet.lockedNotice' | translate }}</p>
         } @else {
-          <!-- An invoice needs a client -->
-          @let noClient = !ws.client.trim();
+          <!-- An invoice needs a client and at least one done line -->
+          @let blockedKey = !ws.client.trim() ? 'worksheet.invoiceNeedsClient' : !hasDoneLine(ws) ? 'worksheet.invoiceNeedsDone' : null;
           <button
             type="button"
             class="button button--primary"
-            [disabled]="noClient"
-            [attr.title]="noClient ? ('worksheet.invoiceNeedsClient' | translate) : null"
+            [disabled]="!!blockedKey"
+            [attr.title]="blockedKey ? (blockedKey | translate) : null"
             (click)="createInvoice(ws)"
           >
             <app-icon name="invoice" size="small" />
@@ -129,6 +129,15 @@
         [groups]="groups"
         (confirmed)="confirmCarryOver(ws, $event)"
         (cancelled)="carryOverGroups.set(null)"
+      />
+    }
+
+    <!-- Lines carried over by previous interventions on this vehicle: import, keep or delete -->
+    @if (carriedOver(); as groups) {
+      <app-carried-over-dialog
+        [groups]="groups"
+        (confirmed)="answerCarriedOver(ws, $event)"
+        (cancelled)="answerCarriedOver(ws, { imported: [], deleted: [] })"
       />
     }
   } @empty {

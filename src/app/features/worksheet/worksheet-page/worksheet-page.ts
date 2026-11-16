@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { WorksheetStore } from '../../../core/services/worksheet.store';
 import { WorksheetSettingsStore } from '../../../core/services/worksheet-settings.store';
 import { InvoiceStore } from '../../../core/services/invoice.store';
-import { LineState, Worksheet } from '../../../core/models/worksheet.model';
+import { CarryOverRef, LineState, Worksheet } from '../../../core/models/worksheet.model';
 import { TemplateSection } from '../../../core/models/worksheet-template.model';
 import { Icon } from '../../../shared/icon/icon';
 import { VehicleCardGroup, VehicleSidebar } from '../../../shared/vehicle-sidebar/vehicle-sidebar';
@@ -14,10 +14,21 @@ import { WorksheetDetails } from '../worksheet-details/worksheet-details';
 import { TaskLine } from '../task-line/task-line';
 import { CarryOverDialog, CarryOverGroup, CarryOverResult } from '../carry-over-dialog/carry-over-dialog';
 import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
+import { CarriedOverDialog, CarriedOverGroup, CarriedOverResult } from '../carried-over-dialog/carried-over-dialog';
 
 @Component({
   selector: 'app-worksheet-page',
-  imports: [TranslatePipe, Icon, PanelsLayout, VehicleSidebar, WorksheetDetails, TaskLine, CarryOverDialog, ConfirmDialog],
+  imports: [
+    TranslatePipe,
+    Icon,
+    PanelsLayout,
+    VehicleSidebar,
+    WorksheetDetails,
+    TaskLine,
+    CarryOverDialog,
+    ConfirmDialog,
+    CarriedOverDialog,
+  ],
   templateUrl: './worksheet-page.html',
   styleUrl: './worksheet-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -135,19 +146,15 @@ export class WorksheetPage {
     };
   }
 
-  /** Lines planned but not done, grouped by section; asked before creating the invoice */
-  protected createInvoice(worksheet: Worksheet): void {
-    if (!worksheet.client.trim()) return;
-    const groups = (this.settings.templateFor(worksheet.kind)?.sections ?? [])
+  /** Lines of the worksheet kept by `keep`, grouped by section (sections without any are left out) */
+  private lineGroups(worksheet: Worksheet, keep: (key: string) => boolean): CarryOverGroup[] {
+    return (this.settings.templateFor(worksheet.kind)?.sections ?? [])
       .map((section) => ({
         sectionTitleKey: section.titleKey,
         items: section.lines.flatMap((line) =>
           this.store
             .lineInstanceIds(worksheet, line)
-            .filter((key) => {
-              const state = this.lineState(worksheet, key);
-              return state.planned && !state.done;
-            })
+            .filter(keep)
             .map((key) => ({
               key,
               titleKey: line.titleKey,
@@ -157,6 +164,42 @@ export class WorksheetPage {
         ),
       }))
       .filter((group) => group.items.length > 0);
+  }
+
+  /**
+   * Lines carried over by previous interventions on the vehicle, proposed in a dialog as soon as
+   * the worksheet has its client and vehicle (e.g. a new worksheet); null when there are none.
+   * Item keys: `<source worksheet id>/<line key>`.
+   */
+  protected readonly carriedOver = computed<CarriedOverGroup[] | null>(() => {
+    const worksheet = this.worksheet();
+    const groups = (worksheet ? this.store.pendingCarryOver(worksheet) : []).flatMap((source) =>
+      this.lineGroups(source, (key) => !!source.carryOver?.includes(key)).map((group) => ({
+        ...group,
+        date: source.date,
+        items: group.items.map((item) => ({ ...item, key: `${source.id}/${item.key}` })),
+      })),
+    );
+    return groups.length ? groups : null;
+  });
+
+  /** Closing the dialog imports nothing and deletes nothing; it is not shown again */
+  protected answerCarriedOver(worksheet: Worksheet, { imported, deleted }: CarriedOverResult): void {
+    this.store.answerCarryOver(worksheet.id, imported.map(carryOverRef), deleted.map(carryOverRef));
+  }
+
+  /** The invoice lists the done lines: without any, there is nothing to invoice */
+  protected hasDoneLine(worksheet: Worksheet): boolean {
+    return Object.values(worksheet.lines).some((state) => state.done);
+  }
+
+  /** Lines planned but not done, grouped by section; asked before creating the invoice */
+  protected createInvoice(worksheet: Worksheet): void {
+    if (!worksheet.client.trim() || !this.hasDoneLine(worksheet)) return;
+    const groups = this.lineGroups(worksheet, (key) => {
+      const state = this.lineState(worksheet, key);
+      return state.planned && !state.done;
+    });
 
     if (groups.length) this.carryOverGroups.set(groups);
     else this.confirmCarryOver(worksheet, { carryOver: [], done: [] });
@@ -201,13 +244,21 @@ export class WorksheetPage {
   }
 
   /**
-   * Field edits (typing in a text field is grouped into one undo step); a new vehicle also sets
-   * the kind of worksheet (car / motorcycle lines)
+   * Field edits (typing in a text field is grouped into one undo step). A new vehicle also sets
+   * the kind of worksheet (car / motorcycle lines), and its client when none is chosen yet and
+   * only one client owns that vehicle (its postponed items are then proposed).
    */
   protected updateWorksheet(id: string, changes: Partial<Omit<Worksheet, 'id' | 'lines'>>): void {
     const worksheet = this.store.getById(id);
-    if (worksheet && changes.vehicle !== undefined) {
-      changes = { ...changes, kind: this.clients.kindOf(changes.client ?? worksheet.client, changes.vehicle) };
+    const vehicle = changes.vehicle;
+    if (worksheet && vehicle !== undefined) {
+      let client = changes.client ?? worksheet.client;
+      const owners = this.clients.ownersOf(vehicle);
+      if (!client.trim() && owners.length === 1) {
+        client = owners[0].name;
+        changes = { ...changes, client };
+      }
+      changes = { ...changes, kind: this.clients.kindOf(client, vehicle) };
     }
     this.store.update(id, changes, { typing: isTextEditing() });
   }
@@ -232,6 +283,12 @@ export class WorksheetPage {
       this.store.redo();
     }
   }
+}
+
+/** "ws-1003/labourOther~2" → its source worksheet and line key */
+function carryOverRef(itemKey: string): CarryOverRef {
+  const slash = itemKey.lastIndexOf('/');
+  return { sourceId: itemKey.slice(0, slash), key: itemKey.slice(slash + 1) };
 }
 
 /** True while the user types in a text field (not a checkbox, radio or button) */

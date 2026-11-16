@@ -58,7 +58,8 @@
     "reopen": "Reopen the worksheet",
     "reopenHint": "Edit the worksheet again: its invoice is hidden (kept) until it is invoiced again",
     "reopenSent": "The invoice has been sent: the worksheet can no longer be reopened",
-    "invoiceNeedsClient": "Choose the client first: an invoice needs one"
+    "invoiceNeedsClient": "Choose the client first: an invoice needs one",
+    "invoiceNeedsDone": "Mark at least one item “Done”"
   },
   "registration": {
     "open": "Vehicle info",
@@ -185,6 +186,16 @@
     "doneCount": "{{count}} done",
     "uncheckAll": "Uncheck all",
     "checkAll": "Check all"
+  },
+  "carriedOver": {
+    "title": "Postponed items",
+    "hint": "Checked: added to the worksheet. Unchecked: proposed again next time. Deleted: never proposed again.",
+    "delete": "Delete: stop proposing this item",
+    "restore": "Restore",
+    "count": "{{count}} item(s) imported",
+    "deletedCount": "{{count}} deleted",
+    "later": "Later",
+    "confirm": "Confirm"
   },
   "invoices": {
     "title": "Invoices",

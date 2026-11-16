@@ -260,60 +260,11 @@
         "sectionId": "labour",
         "items": [
           {
-            "id": "service",
-            "lineId": "service",
-            "text": "moto, 12'000 km",
-            "quantity": 1.5,
+            "id": "labourOther",
+            "text": "Changement des pneus",
+            "quantity": 1,
             "unit": "hour",
             "price": 110,
-            "discount": 0
-          }
-        ]
-      },
-      {
-        "sectionId": "parts",
-        "items": [
-          {
-            "id": "drainPlugWasher",
-            "lineId": "drainPlugWasher",
-            "quantity": 1,
-            "unit": "piece",
-            "price": 3,
-            "discount": 0
-          },
-          {
-            "id": "oilFilter",
-            "lineId": "oilFilter",
-            "quantity": 1,
-            "unit": "piece",
-            "price": 19,
-            "discount": 0
-          }
-        ]
-      },
-      {
-        "sectionId": "fluids",
-        "items": [
-          {
-            "id": "engineOil",
-            "lineId": "engineOil",
-            "text": "10W/40 moto",
-            "quantity": 3,
-            "unit": "litre",
-            "price": 28,
-            "discount": 0
-          }
-        ]
-      },
-      {
-        "sectionId": "various",
-        "items": [
-          {
-            "id": "smallSupplies",
-            "lineId": "smallSupplies",
-            "quantity": 1,
-            "unit": "flatRate",
-            "price": 5,
             "discount": 0
           }
         ]

@@ -54,6 +54,14 @@ export class ClientService {
     return clientName.trim() ? this.clients().find((client) => sameName(client.name, clientName)) : undefined;
   }
 
+  /** Clients (not archived) owning a vehicle with this name */
+  ownersOf(vehicleName: string): Client[] {
+    if (!vehicleName.trim()) return [];
+    return this.clients().filter(
+      (client) => !client.archived && client.vehicles.some((vehicle) => sameName(vehicle.name, vehicleName)),
+    );
+  }
+
   vehicleOf(clientName: string, vehicleName: string): Vehicle | undefined {
     return this.byName(clientName)?.vehicles.find((vehicle) => sameName(vehicle.name, vehicleName));
   }
