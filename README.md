@@ -145,7 +145,8 @@ invoiced worksheet it is read-only.
 
 - The note button opens the note field; it is hidden while the field is shown.
 - An empty note field closes when you click outside it.
-- Typing the first character of a note checks *Planned* (it can be unchecked afterwards).
+- Typing the first character of a note, or filling a field of the line (text, number, date, a
+  radio or checkbox option), checks *Planned* (it can be unchecked afterwards).
 - "Create the invoice" first lists the lines planned but not done, all checked: the checked ones
   are kept in `worksheet.carryOver` for the next intervention, then the invoice page opens.
   Each item can also be marked *Done* (it is then not carried over), and a link under each

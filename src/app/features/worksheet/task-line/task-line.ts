@@ -107,17 +107,18 @@ export class TaskLine implements OnInit {
 
   protected setValue(field: LineField, value: LineFieldValue): void {
     const changes: Partial<LineState> = { values: { ...this.state().values, [field.id]: value } };
-    // On "Other" lines the free text plays the role of the note
-    this.stateChange.emit(this.canHaveNote() ? changes : this.planIfFirstText(changes, this.value(field), value));
+    // Filling a field (text, number, date, radio, checkbox) marks the line as planned
+    this.stateChange.emit(this.planIfFirstText(changes, this.value(field), value));
   }
 
   /**
-   * Typing the first text of a note (or of an "Other" line) marks the line as planned;
-   * it can be unchecked afterwards and is not checked again while text remains.
+   * Filling an empty note or field (first character, first option chosen) marks the line as
+   * planned; it can be unchecked afterwards and is not checked again while the field stays filled.
    */
   private planIfFirstText(changes: Partial<LineState>, before: LineFieldValue, after: LineFieldValue): Partial<LineState> {
-    const hasText = (value: LineFieldValue) => typeof value === 'string' && value.trim() !== '';
-    return !this.state().planned && !hasText(before) && hasText(after) ? { ...changes, planned: true } : changes;
+    const filled = (value: LineFieldValue) =>
+      Array.isArray(value) ? value.length > 0 : typeof value === 'string' && value.trim() !== '';
+    return !this.state().planned && !filled(before) && filled(after) ? { ...changes, planned: true } : changes;
   }
 
   /** Radio group: 0 or 1 value. Clicking the selected option clears the group. */
