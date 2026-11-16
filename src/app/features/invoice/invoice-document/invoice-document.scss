@@ -30,6 +30,14 @@
   }
 }
 
+// Invoice number with its status
+.invoice__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-300);
+}
+
 .invoice__head {
   display: flex;
   align-items: flex-start;

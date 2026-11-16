@@ -767,22 +767,38 @@ select.input {
 // ---------------------------------------------------------------------------
 
 .status-chip {
-  display: inline-block;
-  padding: var(--space-100) var(--space-300);
-  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-050) var(--space-200);
+  border: var(--stroke-border) solid transparent;
+  border-radius: var(--radius-full);
   font-size: var(--font-size-small);
+  font-weight: var(--font-weight-strong);
   line-height: var(--line-height-single);
   white-space: nowrap;
 
+  // Same look as the count badges: light background, border and text of the status colour
   &--open {
     background: var(--color-background-invoice-open);
+    border-color: var(--color-border-info);
+    color: var(--color-text-info);
   }
 
   &--sent {
     background: var(--color-background-invoice-sent);
+    border-color: var(--color-border-danger);
+    color: var(--color-text-danger);
   }
 
   &--paid {
     background: var(--color-background-invoice-paid);
+    border-color: var(--color-border-success);
+    color: var(--color-text-success);
+  }
+
+  // Next to a title (e.g. the invoice number)
+  &--large {
+    padding: var(--space-100) var(--space-300);
+    font-size: var(--font-size-medium);
   }
 }
