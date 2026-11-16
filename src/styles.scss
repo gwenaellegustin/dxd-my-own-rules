@@ -331,11 +331,14 @@ button {
     background: var(--color-background-hover);
   }
 
-  // Nothing to do (e.g. no edit to undo): greyed, no hover
+  // Nothing to do (e.g. no edit to undo): faded, no hover effect
   &:disabled {
     opacity: var(--opacity-disabled);
     cursor: default;
-    background: none;
+
+    &:hover {
+      background: none;
+    }
   }
 
   &--primary {
@@ -347,6 +350,10 @@ button {
 
     &:hover {
       background: var(--color-background-brand-hover);
+    }
+
+    &:disabled:hover {
+      background: var(--color-background-brand);
     }
   }
 }
@@ -377,6 +384,26 @@ button {
 
     &:hover {
       background: var(--color-background-brand-hover);
+    }
+  }
+
+  &:disabled {
+    opacity: var(--opacity-disabled);
+    cursor: default;
+
+    &:hover {
+      background: var(--color-background-default);
+    }
+  }
+
+  // Destructive action (delete)
+  &--danger {
+    border-color: var(--color-background-danger-strong);
+    background: var(--color-background-danger-strong);
+    color: var(--color-text-on-brand);
+
+    &:hover {
+      background: var(--color-text-danger);
     }
   }
 }

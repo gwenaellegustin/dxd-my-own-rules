@@ -21,7 +21,7 @@
   }
 }
 
-// Field + icon button (vehicle → registration, hours → invoice): the label stays aligned with
+// Field + icon button (vehicle → vehicle info): the label stays aligned with
 // its row neighbour; the button sits at the top of the field, centred on its first row
 // (label height + label gap, minus half the extra size of the primary button)
 .field-row {
@@ -37,6 +37,7 @@
   .icon-button {
     margin-top: calc(var(--font-size-medium) * var(--line-height-body) + var(--space-200) - var(--space-100) / 2);
   }
+
 }
 
 .damage {

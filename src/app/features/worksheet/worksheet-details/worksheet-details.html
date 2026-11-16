@@ -59,26 +59,12 @@
     </app-clearable>
   </label>
 
-  <div class="field-row">
-    <label class="field" data-area="hours">
-      <span class="field__label">{{ 'worksheet.hours' | translate }}</span>
-      <app-clearable>
-        <textarea #clearTarget class="textarea" appAutoGrow appBulletList [disabled]="locked()" [value]="ws.hours" (input)="update('hours', $event)"></textarea>
-      </app-clearable>
-    </label>
-    <!-- Open worksheet: create its invoice. Invoiced worksheet: open its invoice -->
-    @let invoiced = locked();
-    @let invoiceLabel = (invoiced ? 'worksheet.openInvoice' : 'worksheet.createInvoice') | translate;
-    <button
-      type="button"
-      class="icon-button icon-button--primary"
-      [attr.aria-label]="invoiceLabel"
-      [attr.title]="invoiceLabel"
-      (click)="invoiced ? openInvoice.emit() : createInvoice.emit()"
-    >
-      <app-icon [name]="invoiced ? 'receipt' : 'invoice'" />
-    </button>
-  </div>
+  <label class="field" data-area="hours">
+    <span class="field__label">{{ 'worksheet.hours' | translate }}</span>
+    <app-clearable>
+      <textarea #clearTarget class="textarea" appAutoGrow appBulletList [disabled]="locked()" [value]="ws.hours" (input)="update('hours', $event)"></textarea>
+    </app-clearable>
+  </label>
 
   <label class="field" data-area="comments">
     <span class="field__label">{{ 'worksheet.comments' | translate }}</span>
@@ -86,6 +72,7 @@
       <textarea #clearTarget class="textarea" appAutoGrow appBulletList [disabled]="locked()" [value]="ws.comments" (input)="update('comments', $event)"></textarea>
     </app-clearable>
   </label>
+
 </div>
 
 <figure class="damage">

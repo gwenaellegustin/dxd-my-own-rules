@@ -86,6 +86,14 @@ export class WorksheetStore {
     return worksheet;
   }
 
+  /** Deletes an open worksheet (one undo step); an invoiced one is kept with its invoice */
+  remove(id: string): void {
+    const target = this.getById(id);
+    if (!target || isLocked(target)) return;
+    this.record();
+    this._worksheets.update((list) => list.filter((worksheet) => worksheet.id !== id));
+  }
+
   update(id: string, changes: Partial<Omit<Worksheet, 'id' | 'lines'>>, options: EditOptions = {}): void {
     const typingKey = options.typing ? `${id}:${Object.keys(changes).sort()}` : undefined;
     this.patch(id, (worksheet) => ({ ...worksheet, ...changes }), typingKey);

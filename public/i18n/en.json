@@ -42,14 +42,18 @@
   },
   "worksheet": {
     "client": "Client",
-    "vehicle": "Car",
+    "vehicle": "Vehicle",
     "date": "Date",
     "kilometers": "Kilometers",
     "hours": "Hours",
     "comments": "Comments and tips",
     "createInvoice": "Create the invoice",
     "openInvoice": "Open invoice",
-    "lockedNotice": "Invoiced: this worksheet can no longer be edited."
+    "lockedNotice": "Invoiced: this worksheet can no longer be edited.",
+    "delete": "Delete the worksheet",
+    "deleteLocked": "An invoiced worksheet cannot be deleted",
+    "deleteTitle": "Delete the worksheet?",
+    "deleteMessage": "The worksheet \"{{name}}\" will be deleted. You can still undo it (Ctrl+Z)."
   },
   "registration": {
     "open": "Vehicle info",

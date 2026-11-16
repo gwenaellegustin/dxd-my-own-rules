@@ -15,19 +15,31 @@
 
   @for (ws of displayed(); track ws.id) {
     <div class="work-area__content">
-      @if (ws.status === 'invoiced') {
-        <p class="locked-notice" role="status">
-          <app-icon name="receipt" size="small" />
-          {{ 'worksheet.lockedNotice' | translate }}
-        </p>
-      }
+      <!-- Open: create the invoice, delete. Invoiced: open the invoice, read-only notice -->
+      <div class="worksheet-actions">
+        @if (ws.status === 'invoiced') {
+          <button type="button" class="button button--primary" (click)="openInvoice(ws)">
+            <app-icon name="receipt" size="small" />
+            {{ 'worksheet.openInvoice' | translate }}
+          </button>
+          <p class="locked-notice" role="status">{{ 'worksheet.lockedNotice' | translate }}</p>
+        } @else {
+          <button type="button" class="button button--primary" (click)="createInvoice(ws)">
+            <app-icon name="invoice" size="small" />
+            {{ 'worksheet.createInvoice' | translate }}
+          </button>
+          <button type="button" class="button" aria-haspopup="dialog" (click)="deleting.set(ws)">
+            <app-icon name="delete" size="small" />
+            {{ 'worksheet.delete' | translate }}
+          </button>
+        }
+      </div>
+
       <app-worksheet-details
         [worksheet]="ws"
         (fieldChange)="updateWorksheet(ws.id, $event)"
         (damageAdd)="store.addDamage(ws.id, $event)"
         (damageRemove)="store.removeDamage(ws.id, $event)"
-        (createInvoice)="createInvoice(ws)"
-        (openInvoice)="openInvoice(ws)"
         (vehicleRenamed)="store.rename('vehicle', $event.from, $event.to, ws.client)"
       />
 
@@ -76,6 +88,19 @@
         </section>
       }
     </div>
+
+    <!-- Delete the worksheet: confirmation (can be undone) -->
+    @if (deleting(); as ws) {
+      <app-confirm-dialog
+        titleKey="worksheet.deleteTitle"
+        messageKey="worksheet.deleteMessage"
+        [params]="{ name: worksheetName(ws) }"
+        confirmKey="worksheet.delete"
+        [danger]="true"
+        (confirmed)="remove(ws)"
+        (cancelled)="deleting.set(null)"
+      />
+    }
 
     <!-- Before the invoice: choose the planned-but-not-done items to carry over -->
     @if (carryOverGroups(); as groups) {

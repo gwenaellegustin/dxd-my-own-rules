@@ -49,7 +49,11 @@
     "comments": "Observations et conseils",
     "createInvoice": "Créer la facture",
     "openInvoice": "Ouvrir la facture",
-    "lockedNotice": "Facturée : cette fiche de travail ne peut plus être modifiée."
+    "lockedNotice": "Facturée : cette fiche de travail ne peut plus être modifiée.",
+    "delete": "Supprimer la fiche",
+    "deleteLocked": "Une fiche facturée ne peut pas être supprimée",
+    "deleteTitle": "Supprimer la fiche de travail ?",
+    "deleteMessage": "La fiche « {{name}} » sera supprimée. Vous pourrez encore l’annuler (Ctrl+Z)."
   },
   "registration": {
     "open": "Infos du véhicule",

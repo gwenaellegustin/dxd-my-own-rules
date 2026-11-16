@@ -34,9 +34,6 @@ export class WorksheetDetails {
   readonly fieldChange = output<Partial<Pick<Worksheet, EditableField>>>();
   readonly damageAdd = output<Damage>();
   readonly damageRemove = output<number>();
-  readonly createInvoice = output<void>();
-  /** Invoiced worksheet: show its invoice */
-  readonly openInvoice = output<void>();
   /** Brand / model changed in the vehicle file: the worksheets of that vehicle follow */
   readonly vehicleRenamed = output<{ from: string; to: string }>();
 

@@ -13,10 +13,11 @@ import { ClientService } from '../../../core/services/client.service';
 import { WorksheetDetails } from '../worksheet-details/worksheet-details';
 import { TaskLine } from '../task-line/task-line';
 import { CarryOverDialog, CarryOverGroup, CarryOverResult } from '../carry-over-dialog/carry-over-dialog';
+import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-worksheet-page',
-  imports: [TranslatePipe, Icon, PanelsLayout, VehicleSidebar, WorksheetDetails, TaskLine, CarryOverDialog],
+  imports: [TranslatePipe, Icon, PanelsLayout, VehicleSidebar, WorksheetDetails, TaskLine, CarryOverDialog, ConfirmDialog],
   templateUrl: './worksheet-page.html',
   styleUrl: './worksheet-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -78,6 +79,22 @@ export class WorksheetPage {
 
   protected create(): void {
     this.select(this.store.create().id);
+  }
+
+  /** Worksheet whose deletion is being confirmed */
+  protected readonly deleting = signal<Worksheet | null>(null);
+
+  /** "Kia Ceed – Fabrice Favre", for the confirmation */
+  protected worksheetName(worksheet: Worksheet): string {
+    return [worksheet.vehicle, worksheet.client].filter((part) => part.trim()).join(' – ');
+  }
+
+  /** Deleted (can be undone): the first open worksheet is shown instead */
+  protected remove(worksheet: Worksheet): void {
+    this.deleting.set(null);
+    this.store.remove(worksheet.id);
+    const next = this.store.byStatus().open[0] ?? this.store.worksheets()[0];
+    this.router.navigate(next ? ['/worksheets', next.id] : ['/worksheets'], { replaceUrl: true });
   }
 
   protected lineState(worksheet: Worksheet, lineId: string): LineState {

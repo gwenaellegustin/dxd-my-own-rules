@@ -64,11 +64,21 @@
 }
 
 // Invoiced worksheet: tells why nothing can be edited
-.locked-notice {
+// Top of the worksheet: invoice button, then delete (open) or the read-only notice (invoiced)
+.worksheet-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-200);
-  padding: var(--space-300) var(--space-400);
+}
+
+.locked-notice {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  min-height: var(--control-height);
+  padding: var(--space-200) var(--space-400);
   border-radius: var(--radius-200);
   background: var(--color-background-tertiary);
 }

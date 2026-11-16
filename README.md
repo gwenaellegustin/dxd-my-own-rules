@@ -95,6 +95,10 @@ src/
 line, counted in the unit of its section: `invoiceUnit` in `worksheet-settings.json`), marks the
 worksheet invoiced and opens the invoice.
 
+At the top of an open worksheet, *Create the invoice* and *Delete* (an invoiced one shows *Open
+invoice* and the read-only notice instead); *Delete* removes an open worksheet after a confirmation (it can be undone with
+Ctrl+Z); an invoiced worksheet cannot be deleted.
+
 An **invoiced worksheet is read-only** (the store refuses its edits, the fields are disabled and a
 notice says why); its button becomes *Open invoice*. The only exception is *Observations and
 tips*, editable from the invoice while it is open. Invoicing clears the undo history.
