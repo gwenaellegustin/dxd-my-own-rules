@@ -64,7 +64,7 @@
 }
 
 // Invoiced worksheet: tells why nothing can be edited
-// Top of the worksheet: invoice button, then delete (open) or the read-only notice (invoiced)
+// Top of the worksheet: invoice button, then delete (open) or reopen + the read-only notice (invoiced)
 .worksheet-actions {
   display: flex;
   flex-wrap: wrap;

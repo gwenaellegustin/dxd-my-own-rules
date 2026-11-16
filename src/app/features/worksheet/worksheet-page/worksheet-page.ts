@@ -168,6 +168,18 @@ export class WorksheetPage {
     this.router.navigate(['/invoices', invoice.id]);
   }
 
+  /** An invoiced worksheet can be reopened while its invoice is still open (not sent) */
+  protected canReopen(worksheet: Worksheet): boolean {
+    return this.invoices.latestFor(worksheet.id)?.status === 'open';
+  }
+
+  /** Editable again; its invoice is hidden (kept, shown again when invoicing again) */
+  protected reopen(worksheet: Worksheet): void {
+    if (!this.canReopen(worksheet)) return;
+    this.invoices.hideOpenInvoiceOf(worksheet.id);
+    this.store.reopen(worksheet.id);
+  }
+
   /** Invoiced worksheet: its latest invoice */
   protected openInvoice(worksheet: Worksheet): void {
     const invoice = this.invoices.latestFor(worksheet.id);

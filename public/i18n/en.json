@@ -48,12 +48,15 @@
     "hours": "Hours",
     "comments": "Comments and tips",
     "createInvoice": "Create the invoice",
-    "openInvoice": "Open invoice",
+    "openInvoice": "Go to the invoice",
     "lockedNotice": "Invoiced: this worksheet can no longer be edited.",
     "delete": "Delete the worksheet",
     "deleteLocked": "An invoiced worksheet cannot be deleted",
     "deleteTitle": "Delete the worksheet?",
-    "deleteMessage": "The worksheet \"{{name}}\" will be deleted. You can still undo it (Ctrl+Z)."
+    "deleteMessage": "The worksheet \"{{name}}\" will be deleted. You can still undo it (Ctrl+Z).",
+    "reopen": "Reopen the worksheet",
+    "reopenHint": "Edit the worksheet again: its invoice is hidden (kept) until it is invoiced again",
+    "reopenSent": "The invoice has been sent: the worksheet can no longer be reopened"
   },
   "registration": {
     "open": "Vehicle info",

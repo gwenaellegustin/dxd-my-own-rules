@@ -102,6 +102,15 @@ export class WorksheetStore {
   }
 
   /**
+   * An invoiced worksheet can be edited again (its open invoice is hidden, see
+   * InvoiceStore.hideOpenInvoiceOf). Like invoicing, it clears the undo history.
+   */
+  reopen(id: string): void {
+    this.patch(id, (worksheet) => ({ ...worksheet, status: 'open' }), undefined, { evenInvoiced: true });
+    this.clearHistory();
+  }
+
+  /**
    * Observations and tips of the invoice = comments of its (invoiced) worksheet: the only field
    * still editable, from the invoice while it is open
    */

@@ -14,6 +14,7 @@ const MATERIAL_SYMBOLS = {
   'chevron-right': 'keyboard_arrow_right',
   close: 'close',
   delete: 'delete',
+  edit: 'edit',
   'mark-read': 'mark_chat_read',
   drag: 'drag_indicator',
   'damage-bump': 'circle',

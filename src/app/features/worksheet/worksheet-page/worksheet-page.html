@@ -15,12 +15,24 @@
 
   @for (ws of displayed(); track ws.id) {
     <div class="work-area__content">
-      <!-- Open: create the invoice, delete. Invoiced: open the invoice, read-only notice -->
+      <!-- Open: create the invoice, delete. Invoiced: open the invoice, reopen, read-only notice -->
       <div class="worksheet-actions">
         @if (ws.status === 'invoiced') {
           <button type="button" class="button button--primary" (click)="openInvoice(ws)">
             <app-icon name="receipt" size="small" />
             {{ 'worksheet.openInvoice' | translate }}
+          </button>
+          <!-- Only while its invoice is still open (not sent yet) -->
+          @let reopenable = canReopen(ws);
+          <button
+            type="button"
+            class="button"
+            [disabled]="!reopenable"
+            [attr.title]="reopenable ? ('worksheet.reopenHint' | translate) : ('worksheet.reopenSent' | translate)"
+            (click)="reopen(ws)"
+          >
+            <app-icon name="edit" size="small" />
+            {{ 'worksheet.reopen' | translate }}
           </button>
           <p class="locked-notice" role="status">{{ 'worksheet.lockedNotice' | translate }}</p>
         } @else {

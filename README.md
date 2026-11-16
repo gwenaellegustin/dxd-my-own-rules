@@ -89,18 +89,21 @@ src/
 ## Statuses
 
 - **Worksheet**: *open* (work in progress, car on the lift) → *invoiced* (its invoice exists).
+- An invoiced worksheet can be **reopened** (*Reopen the worksheet*, next to *Go to the invoice*) while
+  its invoice is still open: the worksheet is editable again and its invoice is hidden, with its
+  data kept; it comes back when the worksheet is invoiced again. Not possible once sent.
 - **Invoice**: *open* (being prepared, blue) → *sent* (waiting for payment, red) → *paid* (green).
 
 "Create the invoice" on a worksheet creates its open invoice from the done lines (one item per
 line, counted in the unit of its section: `invoiceUnit` in `worksheet-settings.json`), marks the
 worksheet invoiced and opens the invoice.
 
-At the top of an open worksheet, *Create the invoice* and *Delete* (an invoiced one shows *Open
+At the top of an open worksheet, *Create the invoice* and *Delete* (an invoiced one shows *Go to the
 invoice* and the read-only notice instead); *Delete* removes an open worksheet after a confirmation (it can be undone with
 Ctrl+Z); an invoiced worksheet cannot be deleted.
 
 An **invoiced worksheet is read-only** (the store refuses its edits, the fields are disabled and a
-notice says why); its button becomes *Open invoice*. The only exception is *Observations and
+notice says why); its button becomes *Go to the invoice*. The only exception is *Observations and
 tips*, editable from the invoice while it is open. Invoicing clears the undo history.
 
 ## Shopping list

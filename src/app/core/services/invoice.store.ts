@@ -23,14 +23,15 @@ export class InvoiceStore {
   private readonly _loaded = signal(false);
   private loading = false;
 
-  readonly invoices = this._invoices.asReadonly();
+  /** Shown invoices (not the ones of a reopened worksheet) */
+  readonly invoices = computed(() => this._invoices().filter((invoice) => !invoice.hidden));
   readonly company = this._company.asReadonly();
   readonly loaded = this._loaded.asReadonly();
 
   /** Invoices by status, newest first */
   readonly byStatus = computed(() => {
     const groups: Record<InvoiceStatus, Invoice[]> = { open: [], sent: [], paid: [] };
-    const newestFirst = [...this._invoices()].sort(
+    const newestFirst = [...this.invoices()].sort(
       (a, b) => b.date.localeCompare(a.date) || b.number.localeCompare(a.number),
     );
     for (const invoice of newestFirst) groups[invoice.status].push(invoice);
@@ -52,12 +53,12 @@ export class InvoiceStore {
   }
 
   getById(id: string | null): Invoice | undefined {
-    return this._invoices().find((invoice) => invoice.id === id);
+    return this.invoices().find((invoice) => invoice.id === id);
   }
 
   /** Most recent invoice of a worksheet */
   latestFor(worksheetId: string): Invoice | undefined {
-    return [...this._invoices()]
+    return [...this.invoices()]
       .filter((invoice) => invoice.worksheetId === worksheetId)
       .sort((a, b) => b.date.localeCompare(a.date) || b.number.localeCompare(a.number))[0];
   }
@@ -65,12 +66,15 @@ export class InvoiceStore {
   /**
    * Open invoice of the done lines of a worksheet: one item per line, counted in the unit of its
    * section; labour at the client's hourly rate (`clientRateId`, else the default one), other
-   * prices to fill in. A worksheet has at most
-   * one open invoice: asking again returns it.
+   * prices to fill in. A worksheet has at most one open invoice: asking again returns it (shown
+   * again, with its data, if the worksheet had been reopened).
    */
   createFromWorksheet(worksheet: Worksheet, sections: TemplateSection[], clientRateId?: string): Invoice {
     const existing = this._invoices().find((invoice) => invoice.worksheetId === worksheet.id && invoice.status === 'open');
-    if (existing) return existing;
+    if (existing) {
+      if (existing.hidden) this.patch(existing.id, ({ hidden: _hidden, ...invoice }) => invoice);
+      return this.getById(existing.id) ?? existing;
+    }
 
     const company = this._company();
     const known = (id: string | undefined) => !!id && !!company?.hourlyRates.some((rate) => rate.id === id);
@@ -110,6 +114,15 @@ export class InvoiceStore {
     };
     this._invoices.update((list) => [invoice, ...list]);
     return invoice;
+  }
+
+  /** The worksheet is reopened: its open invoice is hidden (kept, see `createFromWorksheet`) */
+  hideOpenInvoiceOf(worksheetId: string): void {
+    this._invoices.update((list) =>
+      list.map((invoice) =>
+        invoice.worksheetId === worksheetId && invoice.status === 'open' ? { ...invoice, hidden: true } : invoice,
+      ),
+    );
   }
 
   /** Sends an open invoice: it becomes read-only and its payment term starts today */

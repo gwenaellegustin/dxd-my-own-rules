@@ -40,6 +40,11 @@ export interface Invoice {
   /** Hourly rate applied (see Company.hourlyRates) */
   rateId: string;
   sections: InvoiceSection[];
+  /**
+   * Its worksheet was reopened: the invoice is kept (with its data) but not shown; it comes back
+   * when the worksheet is invoiced again
+   */
+  hidden?: boolean;
 }
 
 /** Amount of an item: quantity × price − discount, rounded to the cent */
