@@ -1,56 +1,64 @@
 import { Directive, ElementRef, inject } from '@angular/core';
 
 export const BULLET = '• ';
+/** Typed at the start of a line, turns it into a bullet */
+const BULLET_SHORTCUT = '- ';
 
 /**
- * Turns a <textarea> into a bulleted list: every line starts with "• ".
- * - Typing in an empty field or pasting text adds the bullets automatically.
- * - Enter starts a new bullet.
- * - Backspace right after an empty bullet removes it.
+ * Optional bulleted list in a <textarea> ("Hours", "Comments and tips"): plain text by default,
+ * a line becomes a bullet ("• ") only when "- " is typed at its start.
+ * - Enter on a bullet line starts a new bullet; Enter on an empty bullet ends the list.
+ * - Backspace right after a bullet removes the bullet (the text of the line stays).
  * Every change dispatches an `input` event so (input) handlers and AutoGrow stay in sync.
  */
 @Directive({
   selector: 'textarea[appBulletList]',
   host: {
-    '(keydown.enter)': 'newBullet($event)',
-    '(keydown.backspace)': 'removeEmptyBullet($event)',
-    '(input)': 'normalize()',
+    '(keydown.enter)': 'onEnter($event)',
+    '(keydown.backspace)': 'removeBullet($event)',
+    '(input)': 'convertShortcut()',
   },
 })
 export class BulletList {
   private readonly textarea = inject<ElementRef<HTMLTextAreaElement>>(ElementRef).nativeElement;
 
-  protected newBullet(event: Event): void {
+  protected onEnter(event: Event): void {
+    const el = this.textarea;
+    if ((event as KeyboardEvent).shiftKey || el.selectionStart !== el.selectionEnd) return;
+    const line = this.lineBefore(el.selectionStart);
+    if (!line.text.startsWith(BULLET)) return;
     event.preventDefault();
-    this.replaceSelection(`\n${BULLET}`);
+    if (line.text === BULLET) {
+      // Empty bullet: end of the list, the bullet is removed
+      this.update(el.value.slice(0, line.start) + el.value.slice(el.selectionStart), line.start);
+    } else {
+      this.replaceSelection(`\n${BULLET}`);
+    }
   }
 
-  protected removeEmptyBullet(event: Event): void {
+  protected removeBullet(event: Event): void {
     const el = this.textarea;
     const caret = el.selectionStart;
     if (caret !== el.selectionEnd) return;
-    const lineStart = el.value.lastIndexOf('\n', caret - 1) + 1;
-    if (el.value.slice(lineStart, caret) !== BULLET) return;
+    const line = this.lineBefore(caret);
+    if (line.text !== BULLET) return;
     event.preventDefault();
-    // Remove the bullet, and the line break before it when it is not the first line
-    const from = lineStart > 0 ? lineStart - 1 : lineStart;
-    this.update(el.value.slice(0, from) + el.value.slice(caret), from);
+    this.update(el.value.slice(0, line.start) + el.value.slice(caret), line.start);
   }
 
-  /** Adds the missing bullet to every non-empty line, keeping the caret in place */
-  protected normalize(): void {
+  /** "- " typed at the start of a line becomes "• " (same length: the caret does not move) */
+  protected convertShortcut(): void {
     const el = this.textarea;
-    let caret = el.selectionStart;
-    let offset = 0;
-    const lines = el.value.split('\n').map((line) => {
-      const start = offset;
-      offset += line.length + 1;
-      if (line === '' || line.startsWith(BULLET.trim())) return line;
-      if (start < caret) caret += BULLET.length;
-      return BULLET + line;
-    });
-    const value = lines.join('\n');
-    if (value !== el.value) this.update(value, caret);
+    const caret = el.selectionStart;
+    const line = this.lineBefore(caret);
+    if (line.text !== BULLET_SHORTCUT) return;
+    this.update(el.value.slice(0, line.start) + BULLET + el.value.slice(caret), caret);
+  }
+
+  /** Start of the line of `caret` and its text up to the caret */
+  private lineBefore(caret: number): { start: number; text: string } {
+    const start = this.textarea.value.lastIndexOf('\n', caret - 1) + 1;
+    return { start, text: this.textarea.value.slice(start, caret) };
   }
 
   private replaceSelection(text: string): void {

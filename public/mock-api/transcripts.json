@@ -2,7 +2,7 @@
   {
     "id": "msg-1",
     "userId": "user-1",
-    "text": "On Mr Morard's invoice, the brake fluid was one litre at 28.50, not 18.",
+    "text": "On Mr Morard's invoice, the brake fluid was 0.1 litre at 28.50, not 18.",
     "timestamp": "2026-11-05T16:42:00"
   },
   {
@@ -17,8 +17,8 @@
         },
         "area": "item:brakeFluid",
         "labelKey": "template.fluids.brakeFluid",
-        "before": "1 l × 18.00",
-        "after": "1 l × 28.50"
+        "before": "0.1 l × 18.00",
+        "after": "0.1 l × 28.50"
       }
     ]
   },

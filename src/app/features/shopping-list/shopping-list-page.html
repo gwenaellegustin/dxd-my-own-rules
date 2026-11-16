@@ -30,10 +30,16 @@
                     {{ client.name }}
                   </a>
                   @if (vehicleOf(item); as vehicle) {
-                    <a class="link-chip" [routerLink]="['/clients', client.id]">
+                    <button
+                      type="button"
+                      class="link-chip"
+                      aria-haspopup="dialog"
+                      [attr.title]="'registration.open' | translate"
+                      (click)="openVehicle.set({ clientId: client.id, vehicleId: vehicle.id })"
+                    >
                       <app-vehicle-logo class="link-chip__logo" [vehicle]="vehicle.name" [kind]="vehicle.kind" />
                       {{ vehicle.name }}
-                    </a>
+                    </button>
                   }
                 </span>
               }
@@ -91,4 +97,15 @@
       </button>
     </form>
   </div>
+
+  <!-- Vehicle info, opened from the vehicle of an item -->
+  @if (dialogVehicle(); as open) {
+    <app-vehicle-dialog
+      [vehicle]="open.vehicle"
+      [owner]="open.client.name"
+      (vehicleChange)="clients.updateVehicle(open.client.id, open.vehicle.id, $event)"
+      (renamed)="worksheets.rename('vehicle', $event.from, $event.to, open.client.name)"
+      (closed)="openVehicle.set(null)"
+    />
+  }
 </app-panels-layout>

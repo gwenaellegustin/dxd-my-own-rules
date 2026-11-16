@@ -165,7 +165,7 @@
             "id": "brakeFluid",
             "lineId": "brakeFluid",
             "text": "DOT 4",
-            "quantity": 1,
+            "quantity": 0.1,
             "unit": "litre",
             "price": 28.5,
             "discount": 0

@@ -75,14 +75,9 @@
                   }
                   <p>{{ message.text }}</p>
                   @if (problem) {
-                    <button
-                      type="button"
-                      class="icon-button message__validate"
-                      [attr.aria-label]="'transcript.validate' | translate"
-                      [attr.title]="'transcript.validate' | translate"
-                      (click)="transcript.validate(message.id)"
-                    >
-                      <app-icon name="mark-read" />
+                    <button type="button" class="button message__validate" (click)="transcript.validate(message.id)">
+                      <app-icon name="mark-read" size="small" />
+                      {{ 'transcript.validate' | translate }}
                     </button>
                   }
                   <!-- What was changed: click to open the worksheet / invoice on that element -->

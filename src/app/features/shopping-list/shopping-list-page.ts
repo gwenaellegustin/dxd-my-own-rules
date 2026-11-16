@@ -8,6 +8,8 @@ import { ShoppingListItem } from '../../core/models/shopping-list.model';
 import { PanelsLayout } from '../../layout/panels-layout/panels-layout';
 import { VehicleLogo } from '../../shared/vehicle-logo/vehicle-logo';
 import { Icon } from '../../shared/icon/icon';
+import { VehicleDialog } from '../../shared/vehicle-dialog/vehicle-dialog';
+import { WorksheetStore } from '../../core/services/worksheet.store';
 import { scrollIntoArea } from '../../shared/scroll-into-area';
 
 interface ShoppingDay {
@@ -17,12 +19,13 @@ interface ShoppingDay {
 
 /**
  * Shopping list: items in the order they were added (grouped by day), each optionally linked to
- * a client and / or one of its vehicles, checked once ordered. Opens on the first item not
+ * a client (link to its page) and / or one of its vehicles (opens its vehicle info), checked
+ * once ordered. Opens on the first item not
  * ordered yet (the older ones are above it); new items are added at the bottom.
  */
 @Component({
   selector: 'app-shopping-list-page',
-  imports: [DatePipe, RouterLink, TranslatePipe, PanelsLayout, VehicleLogo, Icon],
+  imports: [DatePipe, RouterLink, TranslatePipe, PanelsLayout, VehicleLogo, Icon, VehicleDialog],
   templateUrl: './shopping-list-page.html',
   styleUrl: './shopping-list-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +33,7 @@ interface ShoppingDay {
 export class ShoppingListPage {
   protected readonly list = inject(ShoppingListService);
   protected readonly clients = inject(ClientService);
+  protected readonly worksheets = inject(WorksheetStore);
   private readonly host = inject(ElementRef<HTMLElement>);
 
   protected readonly days = computed<ShoppingDay[]>(() => {
@@ -39,6 +43,15 @@ export class ShoppingListPage {
       days.set(day, [...(days.get(day) ?? []), item]);
     }
     return [...days].map(([date, items]) => ({ date, items }));
+  });
+
+  /** Vehicle info dialog (vehicle chip of an item); renaming the vehicle renames its worksheets */
+  protected readonly openVehicle = signal<{ clientId: string; vehicleId: string } | null>(null);
+  protected readonly dialogVehicle = computed(() => {
+    const open = this.openVehicle();
+    const client = open && this.clients.getById(open.clientId);
+    const vehicle = client?.vehicles.find((v) => v.id === open!.vehicleId);
+    return client && vehicle ? { client, vehicle } : null;
   });
 
   /** New item form */

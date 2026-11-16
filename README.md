@@ -96,8 +96,8 @@ tips*, editable from the invoice while it is open. Invoicing clears the undo his
 
 - A plain list in the order items were added (grouped by day), without side panel
   (`[withSidebar]="false"` on `app-panels-layout`); the transcript stays on the right.
-- Each item: quantity × label, optionally linked to a client and / or one of its vehicles (links
-  to the client page), a checkbox *Ordered* (green, struck through) and a delete button.
+- Each item: quantity × label, optionally linked to a client (link to its page) and / or one
+  of its vehicles (opens its *Vehicle info*), a checkbox *Ordered* (green, struck through) and a delete button.
 - The page opens with the first item not ordered yet at the top; older items are above it.
   New items are added with the form at the bottom. The menu badge counts the items not ordered.
 - The transcript can add items (example: an air filter for Fabrice's Kia).
@@ -135,7 +135,7 @@ another (`TranscriptService`). On desktop its width can be changed by dragging i
 `--transcript-min-width` and `--transcript-max-width`; the width is remembered in the browser.
 An answer the assistant could not apply (`"problem": true`, e.g. it did not know which vehicle)
 has a light red background, and a red badge next to the panel title (also on the closed panel)
-counts them. It says that no action was done; the *Ok* button ("Mark chat read" icon) removes the red status (and the count).
+counts them. It says that no action was done; the *Mark as read* button removes the red status (and the count).
 
 ## Invoice page
 
@@ -183,6 +183,9 @@ invoiced worksheet it is read-only.
 
 ## Line behaviour
 
+- *Hours* and *Comments and tips* are plain text; typing "- " at the start of a line makes it a
+  bullet ("• "). Enter continues the list, Enter on an empty bullet ends it, Backspace right after
+  a bullet removes it.
 - The note button opens the note field; it is hidden while the field is shown.
 - An empty note field closes when you click outside it.
 - Typing the first character of a note, or filling a field of the line (text, number, date, a

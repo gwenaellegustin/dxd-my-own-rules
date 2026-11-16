@@ -99,7 +99,7 @@
     "nothingToday": "Rien n’a encore été dit aujourd’hui.",
     "problems": "{{count}} réponse(s) à vérifier",
     "noAction": "Aucune action effectuée",
-    "validate": "Ok",
+    "validate": "Marqué comme lu",
     "shoppingList": "Liste d’achats",
     "resize": "Glisser pour redimensionner le panneau (double clic : largeur par défaut)"
   },
@@ -158,8 +158,8 @@
       "tpmsSensor": "Capteur TPMS",
       "runFlat": "RunF",
       "largeSize": "Grande dim.",
-      "winterTyres": "D'hiver",
-      "summerTyres": "D'été"
+      "winterTyres": "d'hiver",
+      "summerTyres": "d'été"
     }
   },
   "section": {
