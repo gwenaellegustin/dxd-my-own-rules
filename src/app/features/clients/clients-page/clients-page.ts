@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, signal, untracked, viewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -7,11 +7,12 @@ import { WorksheetStore } from '../../../core/services/worksheet.store';
 import { InvoiceStore } from '../../../core/services/invoice.store';
 import { ClientActivityService } from '../../../core/services/client-activity.service';
 import { invoiceTotals } from '../../../core/models/invoice.model';
-import { Address, Client, Vehicle } from '../../../core/models/client.model';
+import { Address, Client, ClientChanges, Vehicle } from '../../../core/models/client.model';
 import { PanelsLayout } from '../../../layout/panels-layout/panels-layout';
 import { CardBadge, SortOption, VehicleCardGroup, VehicleSidebar } from '../../../shared/vehicle-sidebar/vehicle-sidebar';
 import { VehicleLogo } from '../../../shared/vehicle-logo/vehicle-logo';
 import { VehicleDialog } from '../../../shared/vehicle-dialog/vehicle-dialog';
+import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
 import { Clearable } from '../../../shared/clearable/clearable';
 import { Icon } from '../../../shared/icon/icon';
 import { MoneyPipe } from '../../../shared/money/money.pipe';
@@ -34,6 +35,7 @@ import { familyName, sameName } from '../../../core/utils/names';
     VehicleSidebar,
     VehicleLogo,
     VehicleDialog,
+    ConfirmDialog,
     Clearable,
     Icon,
     MoneyPipe,
@@ -137,8 +139,21 @@ export class ClientsPage {
     return open ? this.client()?.vehicles.find((vehicle) => vehicle.id === open.id) : undefined;
   });
 
-  /** Client name when its field got the focus */
-  private nameBefore = '';
+  /** Details being edited (name, address, rate): saved with "Save"; reset when another client is shown */
+  protected readonly draft = linkedSignal({
+    source: () => this.client()?.id,
+    computation: () => untracked(() => this.snapshot(this.client())),
+  });
+
+  /** The draft differs from the saved client */
+  protected readonly dirty = computed(() => {
+    const draft = this.draft();
+    return !!draft && JSON.stringify(draft) !== JSON.stringify(this.snapshot(this.client()));
+  });
+
+  /** A client with worksheets (and their invoices) cannot be deleted */
+  protected readonly hasWorksheets = computed(() => this.clientWorksheets().length > 0);
+  protected readonly confirmDelete = signal(false);
 
   constructor() {
     this.worksheets.load();
@@ -174,23 +189,33 @@ export class ClientsPage {
     this.layout().closeSidebarOnSmallScreens();
   }
 
-  protected updateName(client: Client, event: Event): void {
-    this.clients.update(client.id, { name: (event.target as HTMLInputElement).value });
+  private snapshot(client: Client | undefined): Required<ClientChanges> | null {
+    return client ? { name: client.name, address: { ...client.address }, rateId: client.rateId } : null;
   }
 
-  protected onNameFocus(event: Event): void {
-    this.nameBefore = (event.target as HTMLInputElement).value;
+  protected setDraft(changes: ClientChanges): void {
+    this.draft.update((draft) => (draft ? { ...draft, ...changes } : draft));
   }
 
-  /** Worksheets refer to their client by name: they follow the new name */
-  protected onNameCommit(event: Event): void {
-    const name = (event.target as HTMLInputElement).value;
-    this.worksheets.rename('client', this.nameBefore, name);
-    this.nameBefore = name;
+  protected setAddress(changes: Partial<Address>): void {
+    this.draft.update((draft) => (draft ? { ...draft, address: { ...draft.address, ...changes } } : draft));
   }
 
-  protected updateAddress(client: Client, field: keyof Address, event: Event): void {
-    this.clients.updateAddress(client.id, { [field]: (event.target as HTMLInputElement).value });
+  /** Saves the draft; worksheets refer to their client by name: they follow a new name */
+  protected save(client: Client): void {
+    const draft = this.draft();
+    if (!draft || !this.dirty()) return;
+    this.clients.update(client.id, draft);
+    this.worksheets.rename('client', client.name, draft.name);
+    this.draft.set(this.snapshot(this.clients.getById(client.id)));
+  }
+
+  /** Deleted after confirmation; the first client of the list is shown instead */
+  protected remove(client: Client): void {
+    this.confirmDelete.set(false);
+    this.clients.remove(client.id);
+    const next = this.sortedClients()[0];
+    this.router.navigate(next ? ['/clients', next.id] : ['/clients'], { replaceUrl: true });
   }
 
   protected toggleVehicle(id: string): void {

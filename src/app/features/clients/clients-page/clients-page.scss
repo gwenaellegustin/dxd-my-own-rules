@@ -12,6 +12,14 @@
 }
 
 // Client details: name, street and rate on a full row; postcode and city side by side
+// Save / delete, where the client name heading was
+.client-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-200);
+}
+
 .client-fields {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);

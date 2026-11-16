@@ -255,7 +255,13 @@
       "openWorksheets": "{{count}} fiche(s) de travail ouverte(s)",
       "openInvoices": "{{count}} facture(s) ouverte(s)",
       "sentInvoices": "{{count}} facture(s) envoyée(s), non payée(s)"
-    }
+    },
+    "save": "Enregistrer",
+    "unsaved": "Modifications non enregistrées",
+    "delete": "Supprimer le client",
+    "deleteHasWorksheets": "Un client avec des fiches de travail ne peut pas être supprimé",
+    "deleteTitle": "Supprimer le client ?",
+    "deleteMessage": "Le client « {{name}} » et ses véhicules seront supprimés."
   },
   "settings": {
     "title": "Paramètres des fiches de travail",

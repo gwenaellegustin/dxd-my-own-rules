@@ -177,11 +177,12 @@ counts them. It says that no action was done; the *Mark as read* button removes 
   name) or by last date (latest worksheet or invoice) with the sort button next to the search.
   Each card counts, with an icon, the client's open worksheets (tool, grey), open invoices
   (receipt, blue like the *Open* chip) and sent, unpaid invoices (send, red like the *Sent* chip).
-- Right: the client's name, address and hourly
-  rate of its invoices (editable, saved while typing), its vehicles, its open worksheets and its
+- Right: *Save* and *Delete the client* (with confirmation; not possible for a client with
+  worksheets), then the client's name, address and hourly rate of its invoices (edited, then
+  saved with *Save*), its vehicles, its open worksheets and its
   invoices (total and status open / sent / paid); each row links to the worksheet or invoice.
 - Worksheets refer to their client and vehicle by name: renaming a client or a vehicle renames
-  them in its worksheets too (`WorksheetStore.rename`, when the field is left).
+  them in its worksheets too (`WorksheetStore.rename`, when saved / when the field is left).
 - Vehicle tiles (brand logo, plate) filter the worksheets and invoices; all are selected when a
   client is opened. The button of a tile opens its *Vehicle info*; *Add a vehicle* creates one
   (not kept if closed empty).

@@ -255,7 +255,13 @@
       "openWorksheets": "{{count}} open worksheet(s)",
       "openInvoices": "{{count}} open invoice(s)",
       "sentInvoices": "{{count}} sent invoice(s), not paid"
-    }
+    },
+    "save": "Save",
+    "unsaved": "Unsaved changes",
+    "delete": "Delete the client",
+    "deleteHasWorksheets": "A client with worksheets cannot be deleted",
+    "deleteTitle": "Delete the client?",
+    "deleteMessage": "The client \"{{name}}\" and its vehicles will be deleted."
   },
   "settings": {
     "title": "Worksheet settings",

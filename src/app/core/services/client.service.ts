@@ -70,6 +70,11 @@ export class ClientService {
     this.patch(id, (client) => ({ ...client, address: { ...client.address, ...changes } }));
   }
 
+  /** Deletes a client and its vehicle files (only clients without worksheet, see ClientsPage) */
+  remove(id: string): void {
+    this._clients.update((list) => list.filter((client) => client.id !== id));
+  }
+
   addVehicle(clientId: string, name = ''): Vehicle {
     const vehicle: Vehicle = {
       id: crypto.randomUUID(),
