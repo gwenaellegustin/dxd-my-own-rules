@@ -30,6 +30,11 @@ export interface Client {
   rateId: string;
   /** Vehicles known for this client */
   vehicles: Vehicle[];
+  /**
+   * No longer active, but kept with its worksheets and invoices (a client with documents is
+   * archived instead of deleted): listed apart, not suggested on new worksheets
+   */
+  archived?: boolean;
 }
 
 export type ClientChanges = Partial<Pick<Client, 'name' | 'address' | 'rateId'>>;

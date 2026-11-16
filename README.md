@@ -86,6 +86,11 @@ src/
 - Right: *Undo* / *Redo* (worksheet edits, like Ctrl+Z / Ctrl+Y) and the user menu (company
   logo): worksheet settings and the EN / FR language switch.
 
+## New items left empty
+
+A new worksheet or a new client left without any edit (another one is opened, or another page)
+is removed silently, without confirmation.
+
 ## Statuses
 
 - **Worksheet**: *open* (work in progress, car on the lift) → *invoiced* (its invoice exists).
@@ -94,7 +99,8 @@ src/
   data kept; it comes back when the worksheet is invoiced again. Not possible once sent.
 - **Invoice**: *open* (being prepared, blue) → *sent* (waiting for payment, red) → *paid* (green).
 
-"Create the invoice" on a worksheet creates its open invoice from the done lines (one item per
+"Create the invoice" (disabled while the worksheet has no client; a worksheet without date is
+dated the day it is invoiced) on a worksheet creates its open invoice from the done lines (one item per
 line, counted in the unit of its section: `invoiceUnit` in `worksheet-settings.json`), marks the
 worksheet invoiced and opens the invoice.
 
@@ -177,12 +183,13 @@ counts them. It says that no action was done; the *Mark as read* button removes 
   name) or by last date (latest worksheet or invoice) with the sort button next to the search.
   Each card counts, with an icon, the client's open worksheets (tool, grey), open invoices
   (receipt, blue like the *Open* chip) and sent, unpaid invoices (send, red like the *Sent* chip).
-- Right: *Save* and *Delete the client* (with confirmation; not possible for a client with
-  worksheets), then the client's name, address and hourly rate of its invoices (edited, then
-  saved with *Save*), its vehicles, its open worksheets and its
+- Right: *Delete the client* (with confirmation) for a client without worksheet; a client with
+  worksheets / invoices is *archived* instead (kept with its documents, listed under *Archived* at
+  the bottom of the list, not suggested on new worksheets; *Restore the client* brings it back),
+  then the client's name, address and hourly rate of its invoices (saved while typing), its vehicles, its open worksheets and its
   invoices (total and status open / sent / paid); each row links to the worksheet or invoice.
 - Worksheets refer to their client and vehicle by name: renaming a client or a vehicle renames
-  them in its worksheets too (`WorksheetStore.rename`, when saved / when the field is left).
+  them in its worksheets too (`WorksheetStore.rename`, when the field is left).
 - Vehicle tiles (brand logo, plate) filter the worksheets and invoices; all are selected when a
   client is opened. The buttons of a tile open its *Vehicle info* and create a new worksheet for that vehicle
   (then opened); *Add a vehicle* creates one

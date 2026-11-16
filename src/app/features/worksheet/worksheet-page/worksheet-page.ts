@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, input, signal, untracked, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WorksheetStore } from '../../../core/services/worksheet.store';
@@ -60,6 +60,17 @@ export class WorksheetPage {
   });
 
   constructor() {
+    // A new worksheet left without any edit (another one shown, other page) is removed silently
+    let shownId: string | undefined;
+    effect(() => {
+      const id = this.id();
+      untracked(() => {
+        if (shownId && shownId !== id) this.store.discardIfUntouched(shownId);
+        shownId = id;
+      });
+    });
+    inject(DestroyRef).onDestroy(() => shownId && this.store.discardIfUntouched(shownId));
+
     this.store.load();
     // Hourly rates are needed to create an invoice
     this.invoices.load();
@@ -126,6 +137,7 @@ export class WorksheetPage {
 
   /** Lines planned but not done, grouped by section; asked before creating the invoice */
   protected createInvoice(worksheet: Worksheet): void {
+    if (!worksheet.client.trim()) return;
     const groups = (this.settings.templateFor(worksheet.kind)?.sections ?? [])
       .map((section) => ({
         sectionTitleKey: section.titleKey,
@@ -157,7 +169,9 @@ export class WorksheetPage {
    */
   protected confirmCarryOver(worksheet: Worksheet, { carryOver, done }: CarryOverResult): void {
     for (const key of done) this.store.updateLine(worksheet.id, key, { done: true });
-    this.store.update(worksheet.id, { carryOver, status: 'invoiced' });
+    // Without a date, the worksheet is dated the day it is invoiced
+    const date = worksheet.date || new Date().toLocaleDateString('sv');
+    this.store.update(worksheet.id, { carryOver, date, status: 'invoiced' });
     this.carryOverGroups.set(null);
     const updated = this.store.getById(worksheet.id) ?? worksheet;
     const invoice = this.invoices.createFromWorksheet(

@@ -6,6 +6,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
  */
 const MATERIAL_SYMBOLS = {
   back: 'arrow_back',
+  archive: 'archive',
   calendar: 'calendar_today',
   cart: 'shopping_cart',
   car: 'directions_car',
@@ -29,6 +30,7 @@ const MATERIAL_SYMBOLS = {
   redo: 'redo',
   forward: 'arrow_forward',
   undo: 'undo',
+  unarchive: 'unarchive',
   'left-panel-close': 'left_panel_close',
   language: 'language',
   lift: 'car_repair',

@@ -18,67 +18,66 @@
 
   @if (client(); as c) {
     <div class="content">
-      <!-- Client details: edited in a draft, saved with "Save" -->
-      @let d = draft()!;
-      <form class="block" aria-labelledby="client-details" (submit)="$event.preventDefault(); save(c)">
+      <!-- Client details: saved while typing -->
+      <section class="block" aria-labelledby="client-details">
         <h2 class="visually-hidden" id="client-details">{{ c.name || ('clients.untitled' | translate) }}</h2>
+        <!-- With worksheets / invoices: archive (kept, can be restored). Without: delete -->
         <div class="client-actions">
-          <button type="submit" class="button button--primary" [disabled]="!dirty()">
-            <app-icon name="check" size="small" />
-            {{ 'clients.save' | translate }}
-          </button>
-          <button
-            type="button"
-            class="button"
-            aria-haspopup="dialog"
-            [disabled]="hasWorksheets()"
-            [attr.title]="hasWorksheets() ? ('clients.deleteHasWorksheets' | translate) : null"
-            (click)="confirmDelete.set(true)"
-          >
-            <app-icon name="delete" size="small" />
-            {{ 'clients.delete' | translate }}
-          </button>
-          @if (dirty()) {
-            <span class="text-secondary text-small">{{ 'clients.unsaved' | translate }}</span>
+          @if (c.archived) {
+            <button type="button" class="button" (click)="setArchived(c, false)">
+              <app-icon name="unarchive" size="small" />
+              {{ 'clients.restore' | translate }}
+            </button>
+            <p class="archived-notice" role="status">{{ 'clients.archivedNotice' | translate }}</p>
+          } @else if (hasWorksheets()) {
+            <button type="button" class="button" [attr.title]="'clients.archiveHint' | translate" (click)="setArchived(c, true)">
+              <app-icon name="archive" size="small" />
+              {{ 'clients.archive' | translate }}
+            </button>
+          } @else {
+            <button type="button" class="button" aria-haspopup="dialog" (click)="confirmDelete.set(true)">
+              <app-icon name="delete" size="small" />
+              {{ 'clients.delete' | translate }}
+            </button>
           }
         </div>
         <div class="client-fields">
           <label class="field client-fields__wide">
             <span class="field__label">{{ 'clients.name' | translate }}</span>
             <app-clearable>
-              <input #clearTarget class="input" type="text" autocomplete="off" [value]="d.name" (input)="setDraft({ name: $any($event.target).value })" />
+              <input #clearTarget class="input" type="text" autocomplete="off" [value]="c.name" (focus)="onNameFocus($event)" (input)="clients.update(c.id, { name: $any($event.target).value })" (change)="onNameCommit($event)" />
             </app-clearable>
           </label>
           <label class="field client-fields__wide">
             <span class="field__label">{{ 'clients.street' | translate }}</span>
             <app-clearable>
-              <input #clearTarget class="input" type="text" autocomplete="off" [value]="d.address.street" (input)="setAddress({ street: $any($event.target).value })" />
+              <input #clearTarget class="input" type="text" autocomplete="off" [value]="c.address.street" (input)="clients.updateAddress(c.id, { street: $any($event.target).value })" />
             </app-clearable>
           </label>
           <label class="field">
             <span class="field__label">{{ 'clients.postcode' | translate }}</span>
             <app-clearable>
-              <input #clearTarget class="input" type="text" inputmode="numeric" autocomplete="off" [value]="d.address.postcode" (input)="setAddress({ postcode: $any($event.target).value })" />
+              <input #clearTarget class="input" type="text" inputmode="numeric" autocomplete="off" [value]="c.address.postcode" (input)="clients.updateAddress(c.id, { postcode: $any($event.target).value })" />
             </app-clearable>
           </label>
           <label class="field">
             <span class="field__label">{{ 'clients.city' | translate }}</span>
             <app-clearable>
-              <input #clearTarget class="input" type="text" autocomplete="off" [value]="d.address.city" (input)="setAddress({ city: $any($event.target).value })" />
+              <input #clearTarget class="input" type="text" autocomplete="off" [value]="c.address.city" (input)="clients.updateAddress(c.id, { city: $any($event.target).value })" />
             </app-clearable>
           </label>
           <label class="field client-fields__wide">
             <span class="field__label">{{ 'clients.rate' | translate }}</span>
-            <select class="input" (change)="setDraft({ rateId: $any($event.target).value })">
+            <select class="input" (change)="clients.update(c.id, { rateId: $any($event.target).value })">
               @for (rate of invoices.company()?.hourlyRates ?? []; track rate.id) {
-                <option [value]="rate.id" [selected]="rate.id === (d.rateId || invoices.company()?.defaultRateId)">
+                <option [value]="rate.id" [selected]="rate.id === (c.rateId || invoices.company()?.defaultRateId)">
                   {{ rate.nameKey | translate }} ({{ rate.price }}.-/h)
                 </option>
               }
             </select>
           </label>
         </div>
-      </form>
+      </section>
 
       <!-- Vehicles: each tile shows / hides the worksheets and invoices of that vehicle -->
       <section class="block" aria-labelledby="client-vehicles">

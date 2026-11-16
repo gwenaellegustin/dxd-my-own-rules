@@ -39,6 +39,8 @@ export class WorksheetStore {
   private readonly redoStack = signal<Worksheet[][]>([]);
   /** Last recorded edit, to group typing: field key + time */
   private lastEdit: { key: string; time: number } | null = null;
+  /** Worksheets created and not edited yet: dropped when left (see `discardIfUntouched`) */
+  private readonly untouched = new Set<string>();
 
   readonly worksheets = this._worksheets.asReadonly();
   readonly loaded = this._loaded.asReadonly();
@@ -86,7 +88,14 @@ export class WorksheetStore {
     };
     this.record();
     this._worksheets.update((list) => [worksheet, ...list]);
+    this.untouched.add(worksheet.id);
     return worksheet;
+  }
+
+  /** A new worksheet left without any edit is removed silently (nothing to keep, no undo step) */
+  discardIfUntouched(id: string): void {
+    if (!this.untouched.delete(id)) return;
+    this._worksheets.update((list) => list.filter((worksheet) => worksheet.id !== id));
   }
 
   /** Deletes an open worksheet (one undo step); an invoiced one is kept with its invoice */
@@ -235,6 +244,7 @@ export class WorksheetStore {
   ): void {
     const target = this.getById(id);
     if (!target || (isLocked(target) && !evenInvoiced)) return;
+    this.untouched.delete(id);
     this.record(typingKey);
     this._worksheets.update((list) => list.map((worksheet) => (worksheet.id === id ? fn(worksheet) : worksheet)));
   }

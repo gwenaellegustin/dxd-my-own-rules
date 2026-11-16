@@ -57,7 +57,8 @@
     "deleteMessage": "La fiche « {{name}} » sera supprimée. Vous pourrez encore l’annuler (Ctrl+Z).",
     "reopen": "Rouvrir la fiche",
     "reopenHint": "Modifier à nouveau la fiche : sa facture est masquée (conservée) jusqu’à la prochaine facturation",
-    "reopenSent": "La facture a été envoyée : la fiche ne peut plus être rouverte"
+    "reopenSent": "La facture a été envoyée : la fiche ne peut plus être rouverte",
+    "invoiceNeedsClient": "Choisissez d’abord le client : une facture en a besoin"
   },
   "registration": {
     "open": "Infos du véhicule",
@@ -257,13 +258,15 @@
       "openInvoices": "{{count}} facture(s) ouverte(s)",
       "sentInvoices": "{{count}} facture(s) envoyée(s), non payée(s)"
     },
-    "save": "Enregistrer",
-    "unsaved": "Modifications non enregistrées",
     "delete": "Supprimer le client",
-    "deleteHasWorksheets": "Un client avec des fiches de travail ne peut pas être supprimé",
     "deleteTitle": "Supprimer le client ?",
     "deleteMessage": "Le client « {{name}} » et ses véhicules seront supprimés.",
-    "newWorksheet": "Nouvelle fiche de travail pour ce véhicule"
+    "newWorksheet": "Nouvelle fiche de travail pour ce véhicule",
+    "archive": "Archiver le client",
+    "archiveHint": "Le client a des fiches de travail : il est archivé (conservé avec ses documents) au lieu d’être supprimé",
+    "restore": "Restaurer le client",
+    "archivedNotice": "Archivé : conservé avec ses fiches et factures, plus proposé sur les nouvelles fiches.",
+    "archivedGroup": "Archivés"
   },
   "settings": {
     "title": "Paramètres des fiches de travail",

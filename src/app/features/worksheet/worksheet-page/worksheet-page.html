@@ -36,7 +36,15 @@
           </button>
           <p class="locked-notice" role="status">{{ 'worksheet.lockedNotice' | translate }}</p>
         } @else {
-          <button type="button" class="button button--primary" (click)="createInvoice(ws)">
+          <!-- An invoice needs a client -->
+          @let noClient = !ws.client.trim();
+          <button
+            type="button"
+            class="button button--primary"
+            [disabled]="noClient"
+            [attr.title]="noClient ? ('worksheet.invoiceNeedsClient' | translate) : null"
+            (click)="createInvoice(ws)"
+          >
             <app-icon name="invoice" size="small" />
             {{ 'worksheet.createInvoice' | translate }}
           </button>

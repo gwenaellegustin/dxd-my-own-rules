@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, linkedSignal, signal, untracked, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, input, linkedSignal, signal, untracked, viewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -7,7 +7,7 @@ import { WorksheetStore } from '../../../core/services/worksheet.store';
 import { InvoiceStore } from '../../../core/services/invoice.store';
 import { ClientActivityService } from '../../../core/services/client-activity.service';
 import { invoiceTotals } from '../../../core/models/invoice.model';
-import { Address, Client, ClientChanges, Vehicle } from '../../../core/models/client.model';
+import { Client, Vehicle } from '../../../core/models/client.model';
 import { PanelsLayout } from '../../../layout/panels-layout/panels-layout';
 import { CardBadge, SortOption, VehicleCardGroup, VehicleSidebar } from '../../../shared/vehicle-sidebar/vehicle-sidebar';
 import { VehicleLogo } from '../../../shared/vehicle-logo/vehicle-logo';
@@ -77,22 +77,28 @@ export class ClientsPage {
 
   protected readonly client = computed(() => this.clients.getById(this.id()));
 
-  protected readonly cardGroups = computed<VehicleCardGroup[]>(() => [
-    {
-      id: 'clients',
-      titleKey: null,
-      cards: this.sortedClients().map((client) => ({
-        id: client.id,
-        vehicle: '',
-        client: client.name,
-        date: null,
-        title: client.name,
-        subtitle: `${client.address.postcode} ${client.address.city}`.trim(),
-        icon: 'person' as const,
-        badges: this.badgesOf(client),
-      })),
-    },
-  ]);
+  /** Active clients, then the archived ones in their own group */
+  protected readonly cardGroups = computed<VehicleCardGroup[]>(() =>
+    [
+      { id: 'clients', titleKey: null, archived: false },
+      { id: 'archived', titleKey: 'clients.archivedGroup', archived: true },
+    ].map(({ id, titleKey, archived }) => ({
+      id,
+      titleKey,
+      cards: this.sortedClients()
+        .filter((client) => !!client.archived === archived)
+        .map((client) => ({
+          id: client.id,
+          vehicle: '',
+          client: client.name,
+          date: null,
+          title: client.name,
+          subtitle: `${client.address.postcode} ${client.address.city}`.trim(),
+          icon: 'person' as const,
+          badges: this.badgesOf(client),
+        })),
+    })),
+  );
 
   private readonly clientWorksheets = computed(() => {
     const client = this.client();
@@ -139,29 +145,31 @@ export class ClientsPage {
     return open ? this.client()?.vehicles.find((vehicle) => vehicle.id === open.id) : undefined;
   });
 
-  /** Details being edited (name, address, rate): saved with "Save"; reset when another client is shown */
-  protected readonly draft = linkedSignal({
-    source: () => this.client()?.id,
-    computation: () => untracked(() => this.snapshot(this.client())),
-  });
+  /** Client name when its field got the focus (worksheets follow a new name, see onNameCommit) */
+  private nameBefore = '';
 
-  /** The draft differs from the saved client */
-  protected readonly dirty = computed(() => {
-    const draft = this.draft();
-    return !!draft && JSON.stringify(draft) !== JSON.stringify(this.snapshot(this.client()));
-  });
-
-  /** A client with worksheets (and their invoices) cannot be deleted */
+  /** A client with worksheets (and their invoices) is archived instead of deleted */
   protected readonly hasWorksheets = computed(() => this.clientWorksheets().length > 0);
   protected readonly confirmDelete = signal(false);
 
   constructor() {
+    // A new client left without any edit (another one shown, other page) is removed silently
+    let shownId: string | undefined;
+    effect(() => {
+      const id = this.id();
+      untracked(() => {
+        if (shownId && shownId !== id) this.clients.discardIfUntouched(shownId);
+        shownId = id;
+      });
+    });
+    inject(DestroyRef).onDestroy(() => shownId && this.clients.discardIfUntouched(shownId));
+
     this.worksheets.load();
     this.invoices.load();
 
     // Without a valid id, show the first client
     effect(() => {
-      const first = this.sortedClients()[0];
+      const first = this.sortedClients().find((client) => !client.archived) ?? this.sortedClients()[0];
       if (first && !this.client()) this.router.navigate(['/clients', first.id], { replaceUrl: true });
     });
   }
@@ -189,32 +197,27 @@ export class ClientsPage {
     this.layout().closeSidebarOnSmallScreens();
   }
 
-  private snapshot(client: Client | undefined): Required<ClientChanges> | null {
-    return client ? { name: client.name, address: { ...client.address }, rateId: client.rateId } : null;
+  protected onNameFocus(event: Event): void {
+    this.nameBefore = (event.target as HTMLInputElement).value;
   }
 
-  protected setDraft(changes: ClientChanges): void {
-    this.draft.update((draft) => (draft ? { ...draft, ...changes } : draft));
+  /** Worksheets refer to their client by name: they follow the new name (when the field is left) */
+  protected onNameCommit(event: Event): void {
+    const name = (event.target as HTMLInputElement).value;
+    this.worksheets.rename('client', this.nameBefore, name);
+    this.nameBefore = name;
   }
 
-  protected setAddress(changes: Partial<Address>): void {
-    this.draft.update((draft) => (draft ? { ...draft, address: { ...draft.address, ...changes } } : draft));
-  }
-
-  /** Saves the draft; worksheets refer to their client by name: they follow a new name */
-  protected save(client: Client): void {
-    const draft = this.draft();
-    if (!draft || !this.dirty()) return;
-    this.clients.update(client.id, draft);
-    this.worksheets.rename('client', client.name, draft.name);
-    this.draft.set(this.snapshot(this.clients.getById(client.id)));
+  /** Archived: kept with its documents, listed under "Archived"; can be restored */
+  protected setArchived(client: Client, archived: boolean): void {
+    this.clients.setArchived(client.id, archived);
   }
 
   /** Deleted after confirmation; the first client of the list is shown instead */
   protected remove(client: Client): void {
     this.confirmDelete.set(false);
     this.clients.remove(client.id);
-    const next = this.sortedClients()[0];
+    const next = this.sortedClients().find((other) => !other.archived);
     this.router.navigate(next ? ['/clients', next.id] : ['/clients'], { replaceUrl: true });
   }
 

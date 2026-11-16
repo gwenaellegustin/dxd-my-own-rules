@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-800);
-  max-width: var(--invoice-max-width);
+  // Full width of the work area, like the worksheet page
   padding: var(--space-400);
 }
 
@@ -18,6 +18,18 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-200);
+}
+
+// Archived client: grey notice next to "Restore"
+.archived-notice {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  min-height: var(--control-height);
+  padding: var(--space-200) var(--space-400);
+  border-radius: var(--radius-200);
+  background: var(--color-background-tertiary);
 }
 
 .client-fields {

@@ -17,9 +17,17 @@ export class ClientService {
   private readonly brands = inject(VehicleBrandService);
 
   private readonly _clients = signal<Client[]>([]);
+  /** Clients created and not edited yet: dropped when left (see `discardIfUntouched`) */
+  private readonly untouched = new Set<string>();
   readonly clients = this._clients.asReadonly();
 
-  readonly clientNames = computed(() => this.clients().map((client) => client.name).filter(Boolean));
+  /** Names suggested on worksheets (not the archived clients) */
+  readonly clientNames = computed(() =>
+    this.clients()
+      .filter((client) => !client.archived)
+      .map((client) => client.name)
+      .filter(Boolean),
+  );
 
   constructor() {
     this.api.get<Client[]>(API_ENDPOINTS.clients).subscribe((clients) => this._clients.set(clients));
@@ -59,7 +67,13 @@ export class ClientService {
       vehicles: [],
     };
     this._clients.update((list) => [...list, client]);
+    this.untouched.add(client.id);
     return client;
+  }
+
+  /** A new client left without any edit is removed silently */
+  discardIfUntouched(id: string): void {
+    if (this.untouched.delete(id)) this.remove(id);
   }
 
   update(id: string, changes: ClientChanges): void {
@@ -68,6 +82,11 @@ export class ClientService {
 
   updateAddress(id: string, changes: Partial<Address>): void {
     this.patch(id, (client) => ({ ...client, address: { ...client.address, ...changes } }));
+  }
+
+  /** Archived (a client with documents) or active again */
+  setArchived(id: string, archived: boolean): void {
+    this.patch(id, ({ archived: _was, ...client }) => (archived ? { ...client, archived: true } : client));
   }
 
   /** Deletes a client and its vehicle files (only clients without worksheet, see ClientsPage) */
@@ -125,6 +144,7 @@ export class ClientService {
   }
 
   private patch(id: string, fn: (client: Client) => Client): void {
+    this.untouched.delete(id);
     this._clients.update((list) => list.map((client) => (client.id === id ? fn(client) : client)));
   }
 }

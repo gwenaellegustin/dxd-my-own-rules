@@ -57,7 +57,8 @@
     "deleteMessage": "The worksheet \"{{name}}\" will be deleted. You can still undo it (Ctrl+Z).",
     "reopen": "Reopen the worksheet",
     "reopenHint": "Edit the worksheet again: its invoice is hidden (kept) until it is invoiced again",
-    "reopenSent": "The invoice has been sent: the worksheet can no longer be reopened"
+    "reopenSent": "The invoice has been sent: the worksheet can no longer be reopened",
+    "invoiceNeedsClient": "Choose the client first: an invoice needs one"
   },
   "registration": {
     "open": "Vehicle info",
@@ -257,13 +258,15 @@
       "openInvoices": "{{count}} open invoice(s)",
       "sentInvoices": "{{count}} sent invoice(s), not paid"
     },
-    "save": "Save",
-    "unsaved": "Unsaved changes",
     "delete": "Delete the client",
-    "deleteHasWorksheets": "A client with worksheets cannot be deleted",
     "deleteTitle": "Delete the client?",
     "deleteMessage": "The client \"{{name}}\" and its vehicles will be deleted.",
-    "newWorksheet": "New worksheet for this vehicle"
+    "newWorksheet": "New worksheet for this vehicle",
+    "archive": "Archive the client",
+    "archiveHint": "The client has worksheets: it is archived (kept with its documents) instead of deleted",
+    "restore": "Restore the client",
+    "archivedNotice": "Archived: kept with its worksheets and invoices, not suggested on new worksheets.",
+    "archivedGroup": "Archived"
   },
   "settings": {
     "title": "Worksheet settings",
