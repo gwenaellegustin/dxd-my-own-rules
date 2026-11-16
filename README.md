@@ -81,10 +81,10 @@ src/
 
 ## Header
 
-- Left: logo and the pages (icon + name; a menu on phones).
-- Right: *Back* / *Forward* (browser history; greyed when there is no page to go to, in Chromium
-  browsers; hidden on phones), *Undo* / *Redo* (worksheet edits, like Ctrl+Z / Ctrl+Y) and the
-  user menu: worksheet settings and the EN / FR language switch.
+- Left: the pages (icon + name; a menu on phones), then *Back* / *Forward* (browser history;
+  greyed when there is no page to go to, in Chromium browsers; hidden on phones).
+- Right: *Undo* / *Redo* (worksheet edits, like Ctrl+Z / Ctrl+Y) and the user menu (company
+  logo): worksheet settings and the EN / FR language switch.
 
 ## Statuses
 

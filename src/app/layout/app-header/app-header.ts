@@ -21,8 +21,8 @@ const navigationHistory = (): NavigationHistory | undefined =>
   (globalThis as { navigation?: NavigationHistory }).navigation;
 
 /**
- * Header: logo and the pages on the left; back / forward (browser history), undo / redo
- * (worksheet edits, also Ctrl+Z / Ctrl+Y) and the user menu (settings, language) on the right.
+ * Header: the pages and back / forward (browser history) on the left; undo / redo (worksheet
+ * edits, also Ctrl+Z / Ctrl+Y) and the user menu (company logo: settings, language) on the right.
  */
 @Component({
   selector: 'app-header',

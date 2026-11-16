@@ -18,33 +18,17 @@
   }
 }
 
-.logo {
-  flex: none;
-  display: inline-flex;
-  border-radius: var(--radius-full);
-}
-
-// Company logo (round image)
-.logo__image {
-  display: block;
-  width: var(--logo-size);
-  height: var(--logo-size);
-}
-
 // Back / forward, undo / redo
 .tools {
   flex: none;
   display: flex;
   align-items: center;
-  gap: var(--space-200);
-}
 
-.tools__group {
-  display: flex;
-  align-items: center;
-
+  // Back / forward: the free space of the header comes after them (undo / redo on the right).
   // Phones: the browser has its own back / forward, keep the room for the rest
   &--history {
+    flex: 1;
+
     @include bp.mobile {
       display: none;
     }
@@ -100,14 +84,12 @@
   color: var(--color-icon-default);
 }
 
-.account__avatar {
-  display: grid;
-  place-content: center;
-  width: var(--avatar-size);
-  height: var(--avatar-size);
-  border-radius: var(--radius-200);
-  background: var(--color-background-brand);
-  color: var(--color-text-on-brand);
+// Company logo (round image): opens the user menu
+.account__logo {
+  display: block;
+  width: var(--logo-size);
+  height: var(--logo-size);
+  border-radius: var(--radius-full);
 }
 
 .account__name {

@@ -1,57 +1,52 @@
-<a class="logo" routerLink="/worksheets" [attr.aria-label]="'app.name' | translate">
-  <img class="logo__image" src="images/logo.png" alt="" />
-</a>
+<!-- Left: the pages, then back / forward (browser history) -->
 
-<!-- Left: the pages -->
 <app-main-nav />
 
-<!-- Right: browser history (back / forward), worksheet edits (undo / redo), then the user menu -->
-<div class="tools">
-  <div class="tools__group tools__group--history" role="group" [attr.aria-label]="'header.history' | translate">
-    <button
-      type="button"
-      class="icon-button"
-      [disabled]="!canGoBack()"
-      [attr.aria-label]="'header.back' | translate"
-      [attr.title]="'header.back' | translate"
-      (click)="location.back()"
-    >
-      <app-icon name="back" />
-    </button>
-    <button
-      type="button"
-      class="icon-button"
-      [disabled]="!canGoForward()"
-      [attr.aria-label]="'header.forward' | translate"
-      [attr.title]="'header.forward' | translate"
-      (click)="location.forward()"
-    >
-      <app-icon name="forward" />
-    </button>
-  </div>
+<div class="tools tools--history" role="group" [attr.aria-label]="'header.history' | translate">
+  <button
+    type="button"
+    class="icon-button"
+    [disabled]="!canGoBack()"
+    [attr.aria-label]="'header.back' | translate"
+    [attr.title]="'header.back' | translate"
+    (click)="location.back()"
+  >
+    <app-icon name="back" />
+  </button>
+  <button
+    type="button"
+    class="icon-button"
+    [disabled]="!canGoForward()"
+    [attr.aria-label]="'header.forward' | translate"
+    [attr.title]="'header.forward' | translate"
+    (click)="location.forward()"
+  >
+    <app-icon name="forward" />
+  </button>
+</div>
 
-  <div class="tools__group" role="group" [attr.aria-label]="'header.edits' | translate">
-    <button
-      type="button"
-      class="icon-button"
-      [disabled]="!worksheets.canUndo()"
-      [attr.aria-label]="'header.undo' | translate"
-      [attr.title]="'header.undo' | translate"
-      (click)="worksheets.undo()"
-    >
-      <app-icon name="undo" />
-    </button>
-    <button
-      type="button"
-      class="icon-button"
-      [disabled]="!worksheets.canRedo()"
-      [attr.aria-label]="'header.redo' | translate"
-      [attr.title]="'header.redo' | translate"
-      (click)="worksheets.redo()"
-    >
-      <app-icon name="redo" />
-    </button>
-  </div>
+<!-- Right: undo / redo (worksheet edits), then the user menu (settings, language) -->
+<div class="tools" role="group" [attr.aria-label]="'header.edits' | translate">
+  <button
+    type="button"
+    class="icon-button"
+    [disabled]="!worksheets.canUndo()"
+    [attr.aria-label]="'header.undo' | translate"
+    [attr.title]="'header.undo' | translate"
+    (click)="worksheets.undo()"
+  >
+    <app-icon name="undo" />
+  </button>
+  <button
+    type="button"
+    class="icon-button"
+    [disabled]="!worksheets.canRedo()"
+    [attr.aria-label]="'header.redo' | translate"
+    [attr.title]="'header.redo' | translate"
+    (click)="worksheets.redo()"
+  >
+    <app-icon name="redo" />
+  </button>
 </div>
 
 <div class="account" appDropdown #account="appDropdown">
@@ -63,7 +58,7 @@
     [attr.aria-label]="'account.menu' | translate"
     (click)="account.toggle()"
   >
-    <span class="account__avatar">{{ user.initials() }}</span>
+    <img class="account__logo" src="images/logo.png" alt="" />
     <app-icon name="chevron-down" size="small" />
   </button>
 
