@@ -3,7 +3,7 @@
 :host {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: scroll; // always shown, like the work area of the other pages
   background: var(--color-background-secondary);
   container: work-area / inline-size;
 }

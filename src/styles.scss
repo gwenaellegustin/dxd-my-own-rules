@@ -397,6 +397,37 @@ button {
   transition: outline-color var(--transition-fast);
 }
 
+// Scrollbars of the whole app: thin rounded thumb (pill like the search field and the buttons),
+// transparent track. Standard properties (Firefox, recent Chrome) + WebKit fallback.
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar-thumb) transparent;
+}
+
+::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  // The transparent border leaves a margin around the thumb
+  background: var(--color-scrollbar-thumb) padding-box;
+  border: 3px solid transparent;
+  border-radius: var(--radius-full);
+
+  &:hover {
+    background-color: var(--color-scrollbar-thumb-hover);
+  }
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 // Select: the text box of a select is not shrunk by the vertical padding like an input's
 select.input {
   padding-block: 0;
