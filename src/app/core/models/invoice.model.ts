@@ -16,6 +16,13 @@ export interface InvoiceItem {
   price: number;
   /** Discount in % */
   discount: number;
+  /**
+   * Note of the worksheet line ("sans les bougies"), copied when the invoice is created and shown
+   * under the item; editable while open, or deleted from the invoice (the worksheet keeps it)
+   */
+  note?: string;
+  /** The note is kept (shown dimmed) but not printed nor in the PDF */
+  hideNote?: boolean;
 }
 
 export interface InvoiceSection {

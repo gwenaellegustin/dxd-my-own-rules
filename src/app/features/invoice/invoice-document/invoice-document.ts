@@ -5,8 +5,8 @@ import { MoneyPipe } from '../../../shared/money/money.pipe';
 import { InvoiceFooter } from '../invoice-footer/invoice-footer';
 import { AutoGrow } from '../../../shared/auto-grow/auto-grow';
 import { BulletList } from '../../../shared/bullet-list/bullet-list';
-import { Clearable } from '../../../shared/clearable/clearable';
 import { DecimalInput } from '../../../shared/decimal-input/decimal-input';
+import { HideableField } from '../hideable-field/hideable-field';
 import { Company } from '../../../core/models/company.model';
 import { Address } from '../../../core/models/client.model';
 import { Invoice, InvoiceItem, invoiceTotals, itemAmount } from '../../../core/models/invoice.model';
@@ -26,12 +26,12 @@ const QUANTITY_STEP = { hour: 0.25, litre: 0.1, piece: 1, flatRate: 1 } as const
 /**
  * An invoice laid out like the garage's paper invoice: client, vehicle, one table per section
  * (quantity, price, % discount, amount), totals with VAT, payment term and observation.
- * Open invoices are being prepared: hourly rate, quantities, prices, discounts and observations
- * are editable.
+ * Open invoices are being prepared: hourly rate, quantities, prices, discounts, notes of the items
+ * and observations are editable (notes and observations can be hidden or deleted).
  */
 @Component({
   selector: 'app-invoice-document',
-  imports: [DatePipe, TranslatePipe, MoneyPipe, AutoGrow, BulletList, Clearable, DecimalInput, InvoiceFooter],
+  imports: [DatePipe, TranslatePipe, MoneyPipe, AutoGrow, BulletList, DecimalInput, HideableField, InvoiceFooter],
   templateUrl: './invoice-document.html',
   styleUrl: './invoice-document.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,7 +52,7 @@ export class InvoiceDocument {
   readonly rateChange = output<string>();
   /** Observations and tips: the comments of the worksheet */
   readonly observationChange = output<string>();
-  /** "Show on the invoice" unchecked: the observations are kept but hidden */
+  /** Hide / Show in the field: hidden observations stay shown, dimmed, but are not printed nor in the PDF */
   readonly observationHiddenChange = output<boolean>();
 
   protected readonly editable = computed(() => this.invoice().status === 'open');
@@ -94,7 +94,12 @@ export class InvoiceDocument {
     }
   }
 
-  protected change(sectionId: string, item: InvoiceItem, field: keyof EditableItemFields, event: Event): void {
+  /** Note of an item: edited, hidden / shown, or deleted (`note: undefined`) */
+  protected changeNote(sectionId: string, item: InvoiceItem, changes: Pick<EditableItemFields, 'note' | 'hideNote'>): void {
+    this.itemChange.emit({ sectionId, itemId: item.id, changes });
+  }
+
+  protected change(sectionId: string, item: InvoiceItem, field: 'quantity' | 'price' | 'discount', event: Event): void {
     const value = (event.target as HTMLInputElement).valueAsNumber;
     // An emptied field counts as 0 (the amount stays readable while typing)
     this.itemChange.emit({ sectionId, itemId: item.id, changes: { [field]: Number.isNaN(value) ? 0 : value } });

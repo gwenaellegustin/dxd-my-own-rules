@@ -29,6 +29,8 @@ const MATERIAL_SYMBOLS = {
   receipt: 'receipt',
   redo: 'redo',
   forward: 'arrow_forward',
+  hide: 'visibility_off',
+  show: 'visibility',
   undo: 'undo',
   unarchive: 'unarchive',
   'left-panel-close': 'left_panel_close',

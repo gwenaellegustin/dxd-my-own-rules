@@ -83,6 +83,33 @@
                 {{ key | translate }}
               }
               {{ item.text }}
+              <!-- Note of the worksheet line: a field with Hide / Delete while open; hidden = dimmed,
+                   not printed -->
+              @if (item.note !== undefined) {
+                @if (editable()) {
+                  <app-hideable-field
+                    class="items__note no-print"
+                    [hidden]="!!item.hideNote"
+                    (hiddenChange)="changeNote(section.sectionId, item, { hideNote: $event })"
+                    (remove)="changeNote(section.sectionId, item, { note: undefined, hideNote: undefined })"
+                  >
+                    <textarea
+                      class="textarea textarea--single-line"
+                      appAutoGrow
+                      [value]="item.note"
+                      [attr.aria-label]="'line.note' | translate"
+                      (input)="changeNote(section.sectionId, item, { note: $any($event.target).value })"
+                    ></textarea>
+                  </app-hideable-field>
+                  @if (item.note && !item.hideNote) {
+                    <span class="items__note-text print-only">{{ item.note }}</span>
+                  }
+                } @else if (item.note) {
+                  <span class="items__note-text" [class.items__note-text--hidden]="item.hideNote" [class.no-print]="item.hideNote">
+                    {{ item.note }}
+                  </span>
+                }
+              }
             </td>
             <td class="items__number" [attr.data-label]="'invoice.columns.quantity' | translate">
               @if (editable() && item.unit !== 'flatRate') {
@@ -169,44 +196,34 @@
     }
   </p>
 
-  <!-- The worksheet "Comments and tips". Can be hidden: kept (and editable while the invoice is
-       open, dimmed), but not printed nor shown once the invoice is sent -->
-  @if (editable() || !inv.hideObservation) {
-    <div
-      class="invoice__observation"
-      data-area="observation"
-      [class.invoice__observation--hidden]="inv.hideObservation"
-      [class.no-print]="inv.hideObservation"
-    >
-      <div class="invoice__observation-head">
-        <span class="text-strong" id="invoice-observation">{{ 'invoice.observation' | translate }}</span>
-        @if (editable()) {
-          <label class="choice text-small no-print">
-            <input
-              type="checkbox"
-              [checked]="!inv.hideObservation"
-              (change)="observationHiddenChange.emit(!$any($event.target).checked)"
-            />
-            {{ 'invoice.showObservation' | translate }}
-          </label>
-        }
-      </div>
-      @if (editable()) {
-        <app-clearable class="invoice__observation-field no-print">
-          <textarea
-            #clearTarget
-            class="textarea"
-            appAutoGrow
-            appBulletList
-            aria-labelledby="invoice-observation"
-            [value]="ws?.comments ?? ''"
-            (input)="observationChange.emit($any($event.target).value)"
-          ></textarea>
-        </app-clearable>
-      }
-      <p class="invoice__observation-text" [class.print-only]="editable()">{{ ws?.comments }}</p>
-    </div>
-  }
+  <!-- The worksheet "Comments and tips", with Hide / Delete in the field while open. Hidden: still
+       shown, dimmed (and editable while open), but not printed nor in the PDF -->
+  <div
+    class="invoice__observation"
+    data-area="observation"
+    [class.invoice__observation--hidden]="inv.hideObservation"
+    [class.no-print]="inv.hideObservation"
+  >
+    <span class="text-strong" id="invoice-observation">{{ 'invoice.observation' | translate }}</span>
+    @if (editable()) {
+      <app-hideable-field
+        class="invoice__observation-field no-print"
+        [hidden]="!!inv.hideObservation"
+        (hiddenChange)="observationHiddenChange.emit($event)"
+        (remove)="observationChange.emit('')"
+      >
+        <textarea
+          class="textarea"
+          appAutoGrow
+          appBulletList
+          aria-labelledby="invoice-observation"
+          [value]="ws?.comments ?? ''"
+          (input)="observationChange.emit($any($event.target).value)"
+        ></textarea>
+      </app-hideable-field>
+    }
+    <p class="invoice__observation-text" [class.print-only]="editable()">{{ ws?.comments }}</p>
+  </div>
 
   <app-invoice-footer [company]="company()" />
 </article>

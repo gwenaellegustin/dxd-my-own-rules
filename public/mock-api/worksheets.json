@@ -138,7 +138,7 @@
       "brakes": {
         "planned": true,
         "done": true,
-        "note": "",
+        "note": "Disques au minimum, à contrôler à la prochaine expertise",
         "values": {
           "axle": [
             "front"

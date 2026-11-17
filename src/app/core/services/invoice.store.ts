@@ -7,8 +7,8 @@ import { Invoice, InvoiceItem, InvoiceSection, InvoiceStatus } from '../models/i
 import { TemplateSection } from '../models/worksheet-template.model';
 import { Worksheet, parseQuantity } from '../models/worksheet.model';
 
-/** Fields of an item that can be edited while the invoice is open */
-export type EditableItemFields = Partial<Pick<InvoiceItem, 'quantity' | 'price' | 'discount'>>;
+/** Fields of an item that can be edited while the invoice is open (note: undefined = deleted) */
+export type EditableItemFields = Partial<Pick<InvoiceItem, 'quantity' | 'price' | 'discount' | 'note' | 'hideNote'>>;
 
 /**
  * Invoices and the garage settings (VAT, hourly rates…), kept in memory for the prototype;
@@ -64,7 +64,7 @@ export class InvoiceStore {
   }
 
   /**
-   * Open invoice of the done lines of a worksheet: one item per line, counted in the unit of its
+   * Open invoice of the done lines of a worksheet: one item per line (with the note of the line), counted in the unit of its
    * section (fluids: the quantity filled in the worksheet, else 1); labour at the client's hourly rate (`clientRateId`, else the default one), other
    * prices to fill in. A worksheet has at most one open invoice: asking again returns it (shown
    * again, with its data, if the worksheet had been reopened).
@@ -91,6 +91,7 @@ export class InvoiceStore {
           .map((key): InvoiceItem => {
             const state = worksheet.lines[key];
             const text = line.titleKey ? undefined : String(state.values[line.fields?.[0]?.id ?? ''] ?? '');
+            const note = state.note?.trim();
             return {
               id: key,
               ...(line.titleKey ? { lineId: line.id } : { text }),
@@ -98,6 +99,8 @@ export class InvoiceStore {
               unit: section.invoiceUnit,
               price: section.invoiceUnit === 'hour' ? hourlyPrice : 0,
               discount: 0,
+              // The note of the line ("sans les bougies"), under the item
+              ...(note ? { note } : {}),
             };
           }),
       ),

@@ -18,7 +18,8 @@
             "quantity": 1.5,
             "unit": "hour",
             "price": 100,
-            "discount": 0
+            "discount": 0,
+            "note": "sans les bougies"
           },
           {
             "id": "wheelChange",
@@ -133,7 +134,8 @@
             "quantity": 1.5,
             "unit": "hour",
             "price": 110,
-            "discount": 0
+            "discount": 0,
+            "note": "Disques au minimum, à contrôler à la prochaine expertise"
           }
         ]
       },

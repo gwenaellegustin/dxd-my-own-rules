@@ -150,6 +150,24 @@
   width: 100%;
 }
 
+// Note of the worksheet line, under the item: a field while open, a text on paper / once sent
+.items__note {
+  margin-top: var(--space-100);
+}
+
+.items__note-text {
+  display: block;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+  white-space: pre-line;
+
+  // Hidden: kept on screen, dimmed and struck through (not printed: .no-print)
+  &--hidden {
+    opacity: var(--opacity-disabled);
+    text-decoration: line-through;
+  }
+}
+
 .items__number {
   text-align: right;
   white-space: nowrap;
@@ -232,18 +250,17 @@
   }
 }
 
-.invoice__observation-head {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-200);
-}
-
-// Hidden on the invoice: still editable while open, dimmed
+// Hidden on the invoice: still shown (editable while open), dimmed and the text struck through;
+// not printed (.no-print). The field does it for its own text (.hideable-field--hidden), its
+// buttons stay clear
 .invoice__observation--hidden {
-  .invoice__observation-field,
-  .invoice__observation-head > .text-strong {
+  .invoice__observation-text,
+  > .text-strong {
     opacity: var(--opacity-disabled);
+  }
+
+  .invoice__observation-text {
+    text-decoration: line-through;
   }
 }
 
