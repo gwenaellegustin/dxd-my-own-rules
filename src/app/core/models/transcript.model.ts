@@ -38,11 +38,18 @@ export interface TranscriptPatch {
 
 export type LineStatus = 'planned' | 'done';
 
+/**
+ * A text in each language of the app ({ "en": …, "fr": … }), or the same in all of them. The demo
+ * messages are given in both, so they follow the language of the app.
+ */
+export type LocalizedText = string | Partial<Record<string, string>>;
+
 export interface TranscriptMessage {
   id: string;
   /** User who sent the message (User.id). Absent for replies from the assistant. */
   userId?: string;
-  text: string;
+  /** Shown with TranscriptService.text (in the language of the app) */
+  text: LocalizedText;
   /** ISO date-time */
   timestamp: string;
   /** Worksheet the message relates to, if any */

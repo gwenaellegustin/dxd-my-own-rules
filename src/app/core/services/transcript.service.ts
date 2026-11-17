@@ -4,16 +4,25 @@ import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
 import { TranscriptMessage } from '../models/transcript.model';
 import { readPreference, writePreference } from '../utils/local-storage';
+import { LanguageService } from './language.service';
 
 const WIDTH_KEY = 'transcriptWidth';
 
 @Injectable({ providedIn: 'root' })
 export class TranscriptService {
   private readonly api = inject(ApiService);
+  private readonly language = inject(LanguageService);
 
   readonly messages = toSignal(this.api.get<TranscriptMessage[]>(API_ENDPOINTS.transcripts), {
     initialValue: [] as TranscriptMessage[],
   });
+
+  /** Text of a message in the language of the app (else in English, else in the first one given) */
+  text(message: TranscriptMessage): string {
+    const text = message.text;
+    if (typeof text === 'string') return text;
+    return text[this.language.current() ?? ''] ?? text['en'] ?? Object.values(text)[0] ?? '';
+  }
 
   /**
    * The panel is open: kept here (not in each page) so it stays open when going from a worksheet

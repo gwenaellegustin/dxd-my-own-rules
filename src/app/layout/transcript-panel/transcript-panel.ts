@@ -100,7 +100,7 @@ export class TranscriptPanel {
     const days = new Map<string, TranscriptMessage[]>();
     const sorted = [...this.messages()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
     for (const message of sorted) {
-      if (query && !message.text.toLowerCase().includes(query)) continue;
+      if (query && !this.transcript.text(message).toLowerCase().includes(query)) continue;
       const day = message.timestamp.slice(0, 10);
       if (date && day !== date) continue;
       days.set(day, [...(days.get(day) ?? []), message]);

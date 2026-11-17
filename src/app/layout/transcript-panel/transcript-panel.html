@@ -76,7 +76,7 @@
                 <time class="message__time text-small" [attr.datetime]="message.timestamp">
                   {{ message.timestamp | date: 'HH:mm' }}
                 </time>
-                <p class="message__bubble">{{ message.text }}</p>
+                <p class="message__bubble">{{ transcript.text(message) }}</p>
               </div>
             } @else {
               @let problem = transcript.isProblem(message);
@@ -88,7 +88,7 @@
                       {{ 'transcript.noAction' | translate }}
                     </p>
                   }
-                  <p>{{ message.text }}</p>
+                  <p>{{ transcript.text(message) }}</p>
                   @if (problem) {
                     <button type="button" class="button message__validate" (click)="transcript.validate(message.id)">
                       <app-icon name="mark-read" size="small" />
