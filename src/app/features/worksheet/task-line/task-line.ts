@@ -40,6 +40,7 @@ import { LineFieldValue, LineState, hasLineValues } from '../../../core/models/w
   host: {
     '[class.line--planned]': 'state().planned && !state().done',
     '[class.line--done]': 'state().done',
+    '[class.line--repeatable]': '!!line().repeatable',
   },
 })
 export class TaskLine implements OnInit {
