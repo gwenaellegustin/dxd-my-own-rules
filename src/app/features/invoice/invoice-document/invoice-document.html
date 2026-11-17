@@ -90,6 +90,7 @@
                   <app-hideable-field
                     class="items__note no-print"
                     [hidden]="!!item.hideNote"
+                    [empty]="!item.note"
                     (hiddenChange)="changeNote(section.sectionId, item, { hideNote: $event })"
                     (remove)="changeNote(section.sectionId, item, { note: undefined, hideNote: undefined })"
                   >
@@ -99,6 +100,7 @@
                       [value]="item.note"
                       [attr.aria-label]="'line.note' | translate"
                       (input)="changeNote(section.sectionId, item, { note: $any($event.target).value })"
+                      (blur)="removeNoteIfEmpty(section.sectionId, item, $any($event.target).value)"
                     ></textarea>
                   </app-hideable-field>
                   @if (item.note && !item.hideNote) {
@@ -135,8 +137,10 @@
             </td>
             <td class="items__number" [attr.data-label]="'invoice.columns.price' | translate">
               @if (editable()) {
+                <!-- Price still 0 (parts, fluids…): grey, so it is noticed and filled in -->
                 <input
                   class="input items__input no-print"
+                  [class.items__input--to-fill]="item.price === 0"
                   type="number"
                   min="0"
                   step="0.05"
@@ -209,6 +213,7 @@
       <app-hideable-field
         class="invoice__observation-field no-print"
         [hidden]="!!inv.hideObservation"
+        [empty]="!ws?.comments"
         (hiddenChange)="observationHiddenChange.emit($event)"
         (remove)="observationChange.emit('')"
       >

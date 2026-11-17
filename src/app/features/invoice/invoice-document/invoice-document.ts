@@ -99,6 +99,11 @@ export class InvoiceDocument {
     this.itemChange.emit({ sectionId, itemId: item.id, changes });
   }
 
+  /** A note left empty is removed from the invoice (an empty field has no Delete button) */
+  protected removeNoteIfEmpty(sectionId: string, item: InvoiceItem, value: string): void {
+    if (!value.trim()) this.changeNote(sectionId, item, { note: undefined, hideNote: undefined });
+  }
+
   protected change(sectionId: string, item: InvoiceItem, field: 'quantity' | 'price' | 'discount', event: Event): void {
     const value = (event.target as HTMLInputElement).valueAsNumber;
     // An emptied field counts as 0 (the amount stays readable while typing)

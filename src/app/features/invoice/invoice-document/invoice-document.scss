@@ -178,6 +178,11 @@
   height: auto;
   padding: var(--space-100) var(--space-200);
   text-align: right;
+
+  // Price still 0: grey background, to be noticed and filled in
+  &--to-fill {
+    background: var(--color-background-tertiary);
+  }
 }
 
 // Quantity input + its unit (h), kept on one line
