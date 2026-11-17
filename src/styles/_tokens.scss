@@ -151,6 +151,8 @@
   --invoice-number-input-width: 88px;
   --invoice-observation-min-height: 120px;
   --invoice-footer-drawing-height: 44px;
+  // On paper: room kept at the bottom of every page for the footer (its height + a gap above it)
+  --invoice-print-footer-space: 32mm;
   --registration-note-max-height: 120px;
   --registration-zoom: 2.5;
 

@@ -9,6 +9,11 @@
   gap: var(--space-400);
   padding: var(--space-400);
   padding-bottom: var(--page-bottom-space);
+
+  // On paper the page margins are enough (no blank page from the space under the content)
+  @media print {
+    padding: 0;
+  }
 }
 
 // Under the invoice, aligned with its right edge

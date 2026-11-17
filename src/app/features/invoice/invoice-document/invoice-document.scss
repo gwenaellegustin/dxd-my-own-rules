@@ -23,6 +23,65 @@
   }
 }
 
+// Page table: transparent on screen (the content is laid out by .invoice, as if not wrapped)
+.pages,
+.pages > tbody,
+.pages > tbody > tr,
+.pages > tbody > tr > td,
+.pages__content {
+  display: contents;
+}
+
+.pages__footer-space {
+  display: none;
+}
+
+// On paper: the empty footer row of the table repeats at the bottom of every page and keeps the
+// room of the invoice footer, which is fixed (= printed at the bottom of every page)
+@media print {
+  .pages {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .pages > tbody {
+    display: table-row-group;
+  }
+
+  .pages > tbody > tr {
+    display: table-row;
+  }
+
+  .pages > tbody > tr > td {
+    display: table-cell;
+    padding: 0;
+  }
+
+  // The gap of the sheet between its parts
+  .pages__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-600);
+  }
+
+  .pages__footer-space {
+    display: table-footer-group;
+
+    td {
+      height: var(--invoice-print-footer-space);
+      padding: 0;
+    }
+  }
+
+  .invoice__footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
 // Status chip (global .status-chip): for the app only, not on paper
 .invoice__status {
   @media print {

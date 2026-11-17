@@ -29,6 +29,48 @@
             "unit": "hour",
             "price": 100,
             "discount": 0
+          },
+          {
+            "discount": 0,
+            "id": "inspectionPreparation",
+            "lineId": "inspectionPreparation",
+            "quantity": 1,
+            "unit": "hour",
+            "price": 100
+          },
+          {
+            "discount": 0,
+            "id": "brakes",
+            "lineId": "brakes",
+            "text": "avant, disques et plaquettes",
+            "quantity": 1.5,
+            "unit": "hour",
+            "price": 100,
+            "note": "Disques avant au minimum"
+          },
+          {
+            "discount": 0,
+            "id": "alignment",
+            "lineId": "alignment",
+            "quantity": 1,
+            "unit": "hour",
+            "price": 100
+          },
+          {
+            "discount": 0,
+            "id": "labourOther",
+            "text": "Remplacement des ampoules des feux avant",
+            "quantity": 0.5,
+            "unit": "hour",
+            "price": 100
+          },
+          {
+            "discount": 0,
+            "id": "labourOther~2",
+            "text": "Diagnostic du voyant moteur et effacement des défauts",
+            "quantity": 0.75,
+            "unit": "hour",
+            "price": 100
           }
         ]
       },
@@ -52,6 +94,14 @@
             "discount": 0
           },
           {
+            "discount": 0,
+            "id": "airFilter",
+            "lineId": "airFilter",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 28
+          },
+          {
             "id": "partsOther",
             "text": "H7 longue vision croisement gauche",
             "quantity": 1,
@@ -66,6 +116,22 @@
             "unit": "piece",
             "price": 15,
             "discount": 0
+          },
+          {
+            "discount": 0,
+            "id": "partsOther~3",
+            "text": "Plaquettes de frein avant",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 85
+          },
+          {
+            "discount": 0,
+            "id": "partsOther~4",
+            "text": "Disques de frein avant (paire)",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 140
           }
         ]
       },
@@ -97,6 +163,15 @@
             "unit": "litre",
             "price": 2,
             "discount": 0
+          },
+          {
+            "discount": 0,
+            "id": "brakeFluid",
+            "lineId": "brakeFluid",
+            "text": "DOT 4",
+            "quantity": 1,
+            "unit": "litre",
+            "price": 28.5
           }
         ]
       },

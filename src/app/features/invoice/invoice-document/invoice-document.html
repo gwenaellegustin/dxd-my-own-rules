@@ -2,233 +2,249 @@
 @let ws = worksheet();
 
 <article class="invoice" [attr.aria-label]="'invoice.number' | translate: { number: inv.number }">
-  <header class="invoice__head">
-    <img class="invoice__logo" src="images/logo.png" [alt]="company().name" />
-    <div class="invoice__client">
-      @if (ws?.client; as client) {
-        <address class="invoice__address">
-          <span class="text-strong">{{ client }}</span>
-          @if (address(); as a) {
-            <span>{{ a.street }}</span>
-            <span>{{ a.postcode }} {{ a.city }}</span>
-          }
-        </address>
-      }
-    </div>
-  </header>
-
-  <div class="invoice__title">
-    <h2 class="text-heading">{{ 'invoice.number' | translate: { number: inv.number } }}</h2>
-    <span class="status-chip status-chip--large status-chip--{{ inv.status }} invoice__status">
-      {{ 'invoice.status.' + inv.status | translate }}
-    </span>
-  </div>
-
-  <dl class="invoice__facts">
-    <div>
-      <dt>{{ 'invoice.vehicle' | translate }}</dt>
-      <dd>{{ ws?.vehicle }}</dd>
-    </div>
-    <div>
-      <dt>{{ 'invoice.plate' | translate }}</dt>
-      <dd>
-        {{ plate() }}
-      </dd>
-    </div>
-    <div>
-      <dt>{{ 'invoice.kilometers' | translate }}</dt>
-      <dd>{{ ws?.kilometers }}</dd>
-    </div>
-    <div>
-      <dt>{{ 'invoice.hourlyRate' | translate }}</dt>
-      <dd>
-        @if (editable()) {
-          <select
-            class="input input--medium invoice__rate no-print"
-            [attr.aria-label]="'invoice.hourlyRate' | translate"
-            (change)="rateChange.emit($any($event.target).value)"
-          >
-            @for (r of company().hourlyRates; track r.id) {
-              <option [value]="r.id" [selected]="r.id === inv.rateId">{{ r.nameKey | translate }} ({{ r.price }}.-/h)</option>
-            }
-          </select>
-        }
-        @if (rate(); as r) {
-          <span [class.print-only]="editable()">{{ r.nameKey | translate }} ({{ r.price }}.-/h)</span>
-        }
-      </dd>
-    </div>
-    <div>
-      <dt>{{ 'invoice.date' | translate }}</dt>
-      <dd>{{ inv.date | date: 'dd.MM.yyyy' }}</dd>
-    </div>
-  </dl>
-
-  @for (section of invoiceSections(); track section.sectionId) {
-    <table class="items">
-      <thead>
-        <tr>
-          <th scope="col" class="items__description">{{ section.titleKey | translate }}</th>
-          <th scope="col" class="items__number">{{ 'invoice.columns.quantity' | translate }}</th>
-          <th scope="col" class="items__number">{{ 'invoice.columns.price' | translate }}</th>
-          <th scope="col" class="items__number">{{ 'invoice.columns.discount' | translate }}</th>
-          <th scope="col" class="items__number">{{ 'invoice.columns.amount' | translate }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of section.items; track item.id) {
-          <tr [attr.data-area]="'item:' + item.id">
-            <td class="items__description">
-              @if (titleKey(item); as key) {
-                {{ key | translate }}
-              }
-              {{ item.text }}
-              <!-- Note of the worksheet line: a field with Hide / Delete while open; hidden = dimmed,
-                   not printed -->
-              @if (item.note !== undefined) {
-                @if (editable()) {
-                  <app-hideable-field
-                    class="items__note no-print"
-                    [hidden]="!!item.hideNote"
-                    [empty]="!item.note"
-                    (hiddenChange)="changeNote(section.sectionId, item, { hideNote: $event })"
-                    (remove)="changeNote(section.sectionId, item, { note: undefined, hideNote: undefined })"
-                  >
-                    <textarea
-                      class="textarea textarea--single-line"
-                      appAutoGrow
-                      [value]="item.note"
-                      [attr.aria-label]="'line.note' | translate"
-                      (input)="changeNote(section.sectionId, item, { note: $any($event.target).value })"
-                      (blur)="removeNoteIfEmpty(section.sectionId, item, $any($event.target).value)"
-                    ></textarea>
-                  </app-hideable-field>
-                  @if (item.note && !item.hideNote) {
-                    <span class="items__note-text print-only">{{ item.note }}</span>
-                  }
-                } @else if (item.note) {
-                  <span class="items__note-text" [class.items__note-text--hidden]="item.hideNote" [class.no-print]="item.hideNote">
-                    {{ item.note }}
-                  </span>
+  <!-- Print: the content is in a table whose empty footer row repeats at the bottom of every page,
+       keeping room for the invoice footer, fixed at the bottom of every page. On screen these
+       wrappers are transparent (display: contents) -->
+  <table class="pages" role="presentation">
+    <tbody>
+      <tr>
+        <td>
+          <div class="pages__content">
+            <header class="invoice__head">
+              <img class="invoice__logo" src="images/logo.png" [alt]="company().name" />
+              <div class="invoice__client">
+                @if (ws?.client; as client) {
+                  <address class="invoice__address">
+                    <span class="text-strong">{{ client }}</span>
+                    @if (address(); as a) {
+                      <span>{{ a.street }}</span>
+                      <span>{{ a.postcode }} {{ a.city }}</span>
+                    }
+                  </address>
                 }
-              }
-            </td>
-            <td class="items__number" [attr.data-label]="'invoice.columns.quantity' | translate">
-              @if (editable() && item.unit !== 'flatRate') {
-                <span class="items__field no-print">
-                  <input
-                    class="input items__input"
-                    type="number"
-                    min="0"
-                    [step]="quantityStep[item.unit]"
-                    [value]="item.quantity"
-                    [attr.aria-label]="'invoice.columns.quantity' | translate"
-                    (input)="change(section.sectionId, item, 'quantity', $event)"
-                  />
-                  @if (item.unit === 'hour') {
-                    <span>{{ 'invoice.units.hour' | translate }}</span>
-                  }
-                </span>
-              }
-              <!-- Read-only value (printed for open invoices, whose fields are not) -->
-              <span [class.print-only]="editable() && item.unit !== 'flatRate'">
-                {{ item.unit === 'flatRate' ? ('invoice.units.flatRate' | translate) : formatQuantity(item) }}
+              </div>
+            </header>
+
+            <div class="invoice__title">
+              <h2 class="text-heading">{{ 'invoice.number' | translate: { number: inv.number } }}</h2>
+              <span class="status-chip status-chip--large status-chip--{{ inv.status }} invoice__status">
+                {{ 'invoice.status.' + inv.status | translate }}
               </span>
-            </td>
-            <td class="items__number" [attr.data-label]="'invoice.columns.price' | translate">
+            </div>
+
+            <dl class="invoice__facts">
+              <div>
+                <dt>{{ 'invoice.vehicle' | translate }}</dt>
+                <dd>{{ ws?.vehicle }}</dd>
+              </div>
+              <div>
+                <dt>{{ 'invoice.plate' | translate }}</dt>
+                <dd>
+                  {{ plate() }}
+                </dd>
+              </div>
+              <div>
+                <dt>{{ 'invoice.kilometers' | translate }}</dt>
+                <dd>{{ ws?.kilometers }}</dd>
+              </div>
+              <div>
+                <dt>{{ 'invoice.hourlyRate' | translate }}</dt>
+                <dd>
+                  @if (editable()) {
+                    <select
+                      class="input input--medium invoice__rate no-print"
+                      [attr.aria-label]="'invoice.hourlyRate' | translate"
+                      (change)="rateChange.emit($any($event.target).value)"
+                    >
+                      @for (r of company().hourlyRates; track r.id) {
+                        <option [value]="r.id" [selected]="r.id === inv.rateId">{{ r.nameKey | translate }} ({{ r.price }}.-/h)</option>
+                      }
+                    </select>
+                  }
+                  @if (rate(); as r) {
+                    <span [class.print-only]="editable()">{{ r.nameKey | translate }} ({{ r.price }}.-/h)</span>
+                  }
+                </dd>
+              </div>
+              <div>
+                <dt>{{ 'invoice.date' | translate }}</dt>
+                <dd>{{ inv.date | date: 'dd.MM.yyyy' }}</dd>
+              </div>
+            </dl>
+
+            @for (section of invoiceSections(); track section.sectionId) {
+              <table class="items">
+                <thead>
+                  <tr>
+                    <th scope="col" class="items__description">{{ section.titleKey | translate }}</th>
+                    <th scope="col" class="items__number">{{ 'invoice.columns.quantity' | translate }}</th>
+                    <th scope="col" class="items__number">{{ 'invoice.columns.price' | translate }}</th>
+                    <th scope="col" class="items__number">{{ 'invoice.columns.discount' | translate }}</th>
+                    <th scope="col" class="items__number">{{ 'invoice.columns.amount' | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of section.items; track item.id) {
+                    <tr [attr.data-area]="'item:' + item.id">
+                      <td class="items__description">
+                        @if (titleKey(item); as key) {
+                          {{ key | translate }}
+                        }
+                        {{ item.text }}
+                        <!-- Note of the worksheet line: a field with Hide / Delete while open; hidden = dimmed,
+                             not printed -->
+                        @if (item.note !== undefined) {
+                          @if (editable()) {
+                            <app-hideable-field
+                              class="items__note no-print"
+                              [hidden]="!!item.hideNote"
+                              [empty]="!item.note"
+                              (hiddenChange)="changeNote(section.sectionId, item, { hideNote: $event })"
+                              (remove)="changeNote(section.sectionId, item, { note: undefined, hideNote: undefined })"
+                            >
+                              <textarea
+                                class="textarea textarea--single-line"
+                                appAutoGrow
+                                [value]="item.note"
+                                [attr.aria-label]="'line.note' | translate"
+                                (input)="changeNote(section.sectionId, item, { note: $any($event.target).value })"
+                                (blur)="removeNoteIfEmpty(section.sectionId, item, $any($event.target).value)"
+                              ></textarea>
+                            </app-hideable-field>
+                            @if (item.note && !item.hideNote) {
+                              <div class="items__note-text print-only">{{ item.note }}</div>
+                            }
+                          } @else if (item.note) {
+                            <div class="items__note-text" [class.items__note-text--hidden]="item.hideNote" [class.no-print]="item.hideNote">
+                              {{ item.note }}
+                            </div>
+                          }
+                        }
+                      </td>
+                      <td class="items__number" [attr.data-label]="'invoice.columns.quantity' | translate">
+                        @if (editable() && item.unit !== 'flatRate') {
+                          <span class="items__field no-print">
+                            <input
+                              class="input items__input"
+                              type="number"
+                              min="0"
+                              [step]="quantityStep[item.unit]"
+                              [value]="item.quantity"
+                              [attr.aria-label]="'invoice.columns.quantity' | translate"
+                              (input)="change(section.sectionId, item, 'quantity', $event)"
+                            />
+                            @if (item.unit === 'hour') {
+                              <span>{{ 'invoice.units.hour' | translate }}</span>
+                            }
+                          </span>
+                        }
+                        <!-- Read-only value (printed for open invoices, whose fields are not) -->
+                        <span [class.print-only]="editable() && item.unit !== 'flatRate'">
+                          {{ item.unit === 'flatRate' ? ('invoice.units.flatRate' | translate) : formatQuantity(item) }}
+                        </span>
+                      </td>
+                      <td class="items__number" [attr.data-label]="'invoice.columns.price' | translate">
+                        @if (editable()) {
+                          <!-- Price still 0 (parts, fluids…): grey, so it is noticed and filled in -->
+                          <input
+                            class="input items__input no-print"
+                            [class.items__input--to-fill]="item.price === 0"
+                            type="number"
+                            min="0"
+                            step="0.05"
+                            [appDecimal]="item.price"
+                            [attr.aria-label]="'invoice.columns.price' | translate"
+                            (input)="change(section.sectionId, item, 'price', $event)"
+                          />
+                        }
+                        <span [class.print-only]="editable()">{{ item.price | money }}</span>
+                      </td>
+                      <td class="items__number" [attr.data-label]="'invoice.columns.discount' | translate">
+                        @if (editable()) {
+                          <input
+                            class="input items__input no-print"
+                            type="number"
+                            min="0"
+                            max="100"
+                            step="1"
+                            [value]="item.discount"
+                            [attr.aria-label]="'invoice.columns.discount' | translate"
+                            (input)="change(section.sectionId, item, 'discount', $event)"
+                          />
+                        }
+                        @if (item.discount) {
+                          <span [class.print-only]="editable()">{{ item.discount }}</span>
+                        }
+                      </td>
+                      <td class="items__number items__amount" [attr.data-label]="'invoice.columns.amount' | translate">
+                        {{ amount(item) | money }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
+
+            <dl class="totals">
+              <div>
+                <dt>{{ 'invoice.totalNet' | translate: { currency: company().currency } }}</dt>
+                <dd>{{ totals().net | money }}</dd>
+              </div>
+              <div class="text-secondary">
+                <dt>{{ 'invoice.vat' | translate: { rate: company().vatRate } }} {{ company().vatNumber }}</dt>
+                <dd>{{ totals().vat | money }}</dd>
+              </div>
+              <div class="totals__total">
+                <dt>{{ 'invoice.total' | translate }}</dt>
+                <dd>{{ totals().total | money }}</dd>
+              </div>
+            </dl>
+
+            <p class="invoice__term">
+              @if (inv.sentOn; as sentOn) {
+                {{ 'invoice.paymentTerm' | translate: { days: company().paymentTermDays, date: (sentOn | date: 'dd.MM.yyyy') } }}
+              } @else {
+                {{ 'invoice.paymentTermOpen' | translate: { days: company().paymentTermDays } }}
+              }
+            </p>
+
+            <!-- The worksheet "Comments and tips", with Hide / Delete in the field while open. Hidden: still
+                 shown, dimmed (and editable while open), but not printed nor in the PDF -->
+            <div
+              class="invoice__observation"
+              data-area="observation"
+              [class.invoice__observation--hidden]="inv.hideObservation"
+              [class.no-print]="inv.hideObservation"
+            >
+              <span class="text-strong" id="invoice-observation">{{ 'invoice.observation' | translate }}</span>
               @if (editable()) {
-                <!-- Price still 0 (parts, fluids…): grey, so it is noticed and filled in -->
-                <input
-                  class="input items__input no-print"
-                  [class.items__input--to-fill]="item.price === 0"
-                  type="number"
-                  min="0"
-                  step="0.05"
-                  [appDecimal]="item.price"
-                  [attr.aria-label]="'invoice.columns.price' | translate"
-                  (input)="change(section.sectionId, item, 'price', $event)"
-                />
+                <app-hideable-field
+                  class="invoice__observation-field no-print"
+                  [hidden]="!!inv.hideObservation"
+                  [empty]="!ws?.comments"
+                  (hiddenChange)="observationHiddenChange.emit($event)"
+                  (remove)="observationChange.emit('')"
+                >
+                  <textarea
+                    class="textarea"
+                    appAutoGrow
+                    appBulletList
+                    aria-labelledby="invoice-observation"
+                    [value]="ws?.comments ?? ''"
+                    (input)="observationChange.emit($any($event.target).value)"
+                  ></textarea>
+                </app-hideable-field>
               }
-              <span [class.print-only]="editable()">{{ item.price | money }}</span>
-            </td>
-            <td class="items__number" [attr.data-label]="'invoice.columns.discount' | translate">
-              @if (editable()) {
-                <input
-                  class="input items__input no-print"
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="1"
-                  [value]="item.discount"
-                  [attr.aria-label]="'invoice.columns.discount' | translate"
-                  (input)="change(section.sectionId, item, 'discount', $event)"
-                />
-              }
-              @if (item.discount) {
-                <span [class.print-only]="editable()">{{ item.discount }}</span>
-              }
-            </td>
-            <td class="items__number items__amount" [attr.data-label]="'invoice.columns.amount' | translate">
-              {{ amount(item) | money }}
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  }
+              <p class="invoice__observation-text" [class.print-only]="editable()">{{ ws?.comments }}</p>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot class="pages__footer-space" aria-hidden="true">
+      <tr><td></td></tr>
+    </tfoot>
+  </table>
 
-  <dl class="totals">
-    <div>
-      <dt>{{ 'invoice.totalNet' | translate: { currency: company().currency } }}</dt>
-      <dd>{{ totals().net | money }}</dd>
-    </div>
-    <div class="text-secondary">
-      <dt>{{ 'invoice.vat' | translate: { rate: company().vatRate } }} {{ company().vatNumber }}</dt>
-      <dd>{{ totals().vat | money }}</dd>
-    </div>
-    <div class="totals__total">
-      <dt>{{ 'invoice.total' | translate }}</dt>
-      <dd>{{ totals().total | money }}</dd>
-    </div>
-  </dl>
-
-  <p class="invoice__term">
-    @if (inv.sentOn; as sentOn) {
-      {{ 'invoice.paymentTerm' | translate: { days: company().paymentTermDays, date: (sentOn | date: 'dd.MM.yyyy') } }}
-    } @else {
-      {{ 'invoice.paymentTermOpen' | translate: { days: company().paymentTermDays } }}
-    }
-  </p>
-
-  <!-- The worksheet "Comments and tips", with Hide / Delete in the field while open. Hidden: still
-       shown, dimmed (and editable while open), but not printed nor in the PDF -->
-  <div
-    class="invoice__observation"
-    data-area="observation"
-    [class.invoice__observation--hidden]="inv.hideObservation"
-    [class.no-print]="inv.hideObservation"
-  >
-    <span class="text-strong" id="invoice-observation">{{ 'invoice.observation' | translate }}</span>
-    @if (editable()) {
-      <app-hideable-field
-        class="invoice__observation-field no-print"
-        [hidden]="!!inv.hideObservation"
-        [empty]="!ws?.comments"
-        (hiddenChange)="observationHiddenChange.emit($event)"
-        (remove)="observationChange.emit('')"
-      >
-        <textarea
-          class="textarea"
-          appAutoGrow
-          appBulletList
-          aria-labelledby="invoice-observation"
-          [value]="ws?.comments ?? ''"
-          (input)="observationChange.emit($any($event.target).value)"
-        ></textarea>
-      </app-hideable-field>
-    }
-    <p class="invoice__observation-text" [class.print-only]="editable()">{{ ws?.comments }}</p>
-  </div>
-
-  <app-invoice-footer [company]="company()" />
+  <app-invoice-footer class="invoice__footer" [company]="company()" />
 </article>
