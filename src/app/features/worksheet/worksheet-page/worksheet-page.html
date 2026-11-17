@@ -15,53 +15,54 @@
 
   @for (ws of displayed(); track ws.id) {
     <div class="work-area__content">
-      <!-- Open: create the invoice, delete. Invoiced: open the invoice, reopen, read-only notice -->
-      <div class="worksheet-actions">
-        @if (ws.status === 'invoiced') {
-          <button type="button" class="button button--primary" (click)="openInvoice(ws)">
-            <app-icon name="receipt" size="small" />
-            {{ 'worksheet.openInvoice' | translate }}
-          </button>
-          <!-- Only while its invoice is still open (not sent yet) -->
-          @let reopenable = canReopen(ws);
-          <button
-            type="button"
-            class="button"
-            [disabled]="!reopenable"
-            [attr.title]="reopenable ? ('worksheet.reopenHint' | translate) : ('worksheet.reopenSent' | translate)"
-            (click)="reopen(ws)"
-          >
-            <app-icon name="edit" size="small" />
-            {{ 'worksheet.reopen' | translate }}
-          </button>
-          <p class="locked-notice" role="status">{{ 'worksheet.lockedNotice' | translate }}</p>
-        } @else {
-          <!-- An invoice needs a client and at least one done line -->
-          @let blockedKey = !ws.client.trim() ? 'worksheet.invoiceNeedsClient' : !hasDoneLine(ws) ? 'worksheet.invoiceNeedsDone' : null;
-          <button
-            type="button"
-            class="button button--primary"
-            [disabled]="!!blockedKey"
-            [attr.title]="blockedKey ? (blockedKey | translate) : null"
-            (click)="createInvoice(ws)"
-          >
-            <app-icon name="invoice" size="small" />
-            {{ 'worksheet.createInvoice' | translate }}
-          </button>
-          <button type="button" class="button" aria-haspopup="dialog" (click)="deleting.set(ws)">
-            <app-icon name="delete" size="small" />
-            {{ 'worksheet.delete' | translate }}
-          </button>
-        }
-      </div>
-
       <app-worksheet-details
         [worksheet]="ws"
         (fieldChange)="updateWorksheet(ws.id, $event)"
         (damageAdd)="store.addDamage(ws.id, $event)"
         (damageRemove)="store.removeDamage(ws.id, $event)"
         (vehicleRenamed)="store.rename('vehicle', $event.from, $event.to, ws.client)"
-      />
+      >
+        <!-- Above the fields (the damage diagram is on the right of both): secondary action on the
+             left, primary action on the right. Open: delete, create the invoice. Invoiced: reopen,
+             open the invoice -->
+        <div class="worksheet-actions" actions>
+          @if (ws.status === 'invoiced') {
+            <!-- Only while its invoice is still open (not sent yet) -->
+            @let reopenable = canReopen(ws);
+            <button
+              type="button"
+              class="button"
+              [disabled]="!reopenable"
+              [attr.title]="reopenable ? ('worksheet.reopenHint' | translate) : ('worksheet.reopenSent' | translate)"
+              (click)="reopen(ws)"
+            >
+              <app-icon name="edit" size="small" />
+              {{ 'worksheet.reopen' | translate }}
+            </button>
+            <button type="button" class="button button--primary" (click)="openInvoice(ws)">
+              <app-icon name="receipt" size="small" />
+              {{ 'worksheet.openInvoice' | translate }}
+            </button>
+          } @else {
+            <button type="button" class="button" aria-haspopup="dialog" (click)="deleting.set(ws)">
+              <app-icon name="delete" size="small" />
+              {{ 'worksheet.delete' | translate }}
+            </button>
+            <!-- An invoice needs a client and at least one done line -->
+            @let blockedKey = !ws.client.trim() ? 'worksheet.invoiceNeedsClient' : !hasDoneLine(ws) ? 'worksheet.invoiceNeedsDone' : null;
+            <button
+              type="button"
+              class="button button--primary"
+              [disabled]="!!blockedKey"
+              [attr.title]="blockedKey ? (blockedKey | translate) : null"
+              (click)="createInvoice(ws)"
+            >
+              <app-icon name="invoice" size="small" />
+              {{ 'worksheet.createInvoice' | translate }}
+            </button>
+          }
+        </div>
+      </app-worksheet-details>
 
       @for (section of settings.templateFor(ws.kind)?.sections ?? []; track section.id) {
         @let collapsed = isCollapsed(section.id);

@@ -50,7 +50,6 @@
     "comments": "Observations et conseils",
     "createInvoice": "Créer la facture",
     "openInvoice": "Aller à la facture",
-    "lockedNotice": "Facturée : cette fiche de travail ne peut plus être modifiée.",
     "delete": "Supprimer la fiche",
     "deleteLocked": "Une fiche facturée ne peut pas être supprimée",
     "deleteTitle": "Supprimer la fiche de travail ?",
@@ -116,7 +115,11 @@
     "resize": "Glisser pour redimensionner le panneau (double clic : largeur par défaut)",
     "filterDate": "Afficher un jour",
     "clearDate": "Afficher tous les jours",
-    "nothingThatDay": "Rien n’a été dit ce jour-là."
+    "nothingThatDay": "Rien n’a été dit ce jour-là.",
+    "rollback": "Annuler ce changement",
+    "reapply": "Rétablir ce changement",
+    "rollbackChanged": "Modifié depuis : ce changement ne peut plus être annulé",
+    "rollbackLocked": "Fiche facturée ou facture envoyée : ce changement ne peut plus être annulé"
   },
   "template": {
     "labour": {

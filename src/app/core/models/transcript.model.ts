@@ -20,6 +20,20 @@ export interface TranscriptChange {
   /** Lines: Planned / Done before and after the change (none = neither) */
   statusBefore?: LineStatus;
   statusAfter?: LineStatus;
+  /** Raw values, to roll the change back and apply it again; none = it cannot be rolled back */
+  patch?: TranscriptPatch;
+}
+
+/**
+ * Raw values of a change: `before` restores the previous state (rollback), `after` applies the
+ * change again.
+ * - worksheet: its changed fields (area "hours"…), or those of the line state (area "line:<key>");
+ * - invoice: the changed fields of the item (area "item:<id>");
+ * - shopping list: the whole item, null = not on the list.
+ */
+export interface TranscriptPatch {
+  before: Record<string, unknown> | null;
+  after: Record<string, unknown> | null;
 }
 
 export type LineStatus = 'planned' | 'done';

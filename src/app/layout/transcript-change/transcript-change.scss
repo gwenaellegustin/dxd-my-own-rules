@@ -1,5 +1,6 @@
 // A change: a card that opens the worksheet / invoice on the changed element
 :host {
+  position: relative;
   display: block;
   min-width: 0;
 }
@@ -112,4 +113,53 @@
   font-style: italic;
   font-weight: normal;
   text-decoration: none;
+}
+
+// Rolled back: the new value is struck through in turn (the card takes the previous status)
+.change--rolled-back .change__after {
+  background: none;
+  color: var(--color-text-secondary);
+  font-weight: normal;
+
+  .change__text {
+    text-decoration: line-through;
+  }
+}
+
+// Room for the rollback button, so the values never run under it
+.change--with-rollback .change__values {
+  padding-right: calc(var(--icon-size-small) + 2 * var(--space-100) + var(--space-100));
+}
+
+// Small round button in the bottom right corner of the card (over it, outside the card button)
+.rollback {
+  position: absolute;
+  right: var(--space-200);
+  bottom: var(--space-200);
+  display: grid;
+  place-content: center;
+  width: calc(var(--icon-size-small) + 2 * var(--space-100));
+  height: calc(var(--icon-size-small) + 2 * var(--space-100));
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-pill);
+  background: var(--color-background-default);
+  color: var(--color-icon-default);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+
+  &:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-background-hover);
+  }
+
+  &:disabled {
+    opacity: var(--opacity-disabled);
+    cursor: default;
+
+    &:hover {
+      border-color: var(--color-border-default);
+      background: var(--color-background-default);
+    }
+  }
 }

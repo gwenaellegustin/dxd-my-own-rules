@@ -123,6 +123,8 @@
 
   // ---- Layout -------------------------------------------------------------
   --header-height: 64px;
+  // Empty space under the content of every page (not the side panels), the height of the header
+  --page-bottom-space: var(--header-height);
   --panel-width: 300px; // left sidebar & transcript when open
   --rail-width: 76px; // left sidebar & transcript when collapsed
   // Transcript width chosen by dragging its left edge (desktop only)

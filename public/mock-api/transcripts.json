@@ -18,7 +18,15 @@
         "area": "item:brakeFluid",
         "labelKey": "template.fluids.brakeFluid",
         "before": "0.1 l × 18.00",
-        "after": "0.1 l × 28.50"
+        "after": "0.1 l × 28.50",
+        "patch": {
+          "before": {
+            "price": 18
+          },
+          "after": {
+            "price": 28.5
+          }
+        }
       }
     ]
   },
@@ -43,7 +51,15 @@
         "area": "hours",
         "labelKey": "worksheet.hours",
         "before": "• 20h → 21h\n• 11h → 12h",
-        "after": "• 20h → 21h\n• 11h → 12h\n• 13h15 →"
+        "after": "• 20h → 21h\n• 11h → 12h\n• 13h15 →",
+        "patch": {
+          "before": {
+            "hours": "• 20h → 21h\n• 11h → 12h"
+          },
+          "after": {
+            "hours": "• 20h → 21h\n• 11h → 12h\n• 13h15 →"
+          }
+        }
       }
     ]
   },
@@ -70,7 +86,21 @@
         "before": "",
         "after": "5W30 · 3.50",
         "statusBefore": "planned",
-        "statusAfter": "done"
+        "statusAfter": "done",
+        "patch": {
+          "before": {
+            "done": false,
+            "values": {},
+            "quantity": ""
+          },
+          "after": {
+            "done": true,
+            "values": {
+              "grade": "5W30"
+            },
+            "quantity": "3.50"
+          }
+        }
       },
       {
         "target": {
@@ -82,7 +112,17 @@
         "before": "",
         "after": "1566",
         "statusBefore": "planned",
-        "statusAfter": "done"
+        "statusAfter": "done",
+        "patch": {
+          "before": {
+            "done": false,
+            "note": ""
+          },
+          "after": {
+            "done": true,
+            "note": "1566"
+          }
+        }
       }
     ]
   },
@@ -108,7 +148,19 @@
         "labelKey": "template.fluids.brakeFluid",
         "before": "",
         "after": "DOT 4",
-        "statusAfter": "planned"
+        "statusAfter": "planned",
+        "patch": {
+          "before": {
+            "planned": false,
+            "values": {}
+          },
+          "after": {
+            "planned": true,
+            "values": {
+              "grade": "DOT 4"
+            }
+          }
+        }
       }
     ]
   },
@@ -143,7 +195,19 @@
         "area": "item:sl-12",
         "labelKey": "shoppingList.item",
         "before": "",
-        "after": "1 × Air filter · Kia Ceed 1.5 T-GDi – Fabrice Favre"
+        "after": "1 × Air filter · Kia Ceed 1.5 T-GDi – Fabrice Favre",
+        "patch": {
+          "before": null,
+          "after": {
+            "id": "sl-12",
+            "label": "Air filter",
+            "quantity": 1,
+            "addedAt": "2026-11-16T08:30:03",
+            "clientId": "client-1",
+            "vehicleId": "vehicle-1",
+            "ordered": false
+          }
+        }
       }
     ]
   }

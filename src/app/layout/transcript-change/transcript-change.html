@@ -1,9 +1,12 @@
 @let target = targetLabel();
+@let rollbackState = state();
 <button
   type="button"
   class="change"
-  [class.change--planned]="change().statusAfter === 'planned'"
-  [class.change--done]="change().statusAfter === 'done'"
+  [class.change--planned]="status() === 'planned'"
+  [class.change--done]="status() === 'done'"
+  [class.change--rolled-back]="rollbackState === 'rolled-back'"
+  [class.change--with-rollback]="!!rollbackState"
   (click)="show.emit()"
 >
   <span class="change__head">
@@ -25,6 +28,21 @@
     </span>
   </span>
 </button>
+
+<!-- Bottom right of the card (not inside it: a button cannot hold another one): rolls the change
+     back, then applies it again; disabled once edited since or locked (invoiced, sent) -->
+@if (rollbackState) {
+  <button
+    type="button"
+    class="rollback"
+    [disabled]="rollbackState === 'changed' || rollbackState === 'locked'"
+    [attr.aria-label]="rollbackLabelKey() | translate"
+    [attr.title]="rollbackLabelKey() | translate"
+    (click)="toggleRollback()"
+  >
+    <app-icon [name]="rollbackState === 'rolled-back' ? 'redo' : 'undo'" size="small" />
+  </button>
+}
 
 <!-- A value of a change: Planned / Done (the new status with a check of its colour), then the
      text; "empty" if none -->

@@ -42,11 +42,21 @@
           }
         </div>
         <div class="client-fields">
-          <label class="field client-fields__wide">
+          <label class="field client-fields__double">
             <span class="field__label">{{ 'clients.name' | translate }}</span>
             <app-clearable>
               <input #clearTarget class="input" type="text" autocomplete="off" [value]="c.name" (focus)="onNameFocus($event)" (input)="clients.update(c.id, { name: $any($event.target).value })" (change)="onNameCommit($event)" />
             </app-clearable>
+          </label>
+          <label class="field">
+            <span class="field__label">{{ 'clients.rate' | translate }}</span>
+            <select class="input" (change)="clients.update(c.id, { rateId: $any($event.target).value })">
+              @for (rate of invoices.company()?.hourlyRates ?? []; track rate.id) {
+                <option [value]="rate.id" [selected]="rate.id === (c.rateId || invoices.company()?.defaultRateId)">
+                  {{ rate.nameKey | translate }} ({{ rate.price }}.-/h)
+                </option>
+              }
+            </select>
           </label>
           <label class="field client-fields__wide">
             <span class="field__label">{{ 'clients.street' | translate }}</span>
@@ -60,21 +70,11 @@
               <input #clearTarget class="input" type="text" inputmode="numeric" autocomplete="off" [value]="c.address.postcode" (input)="clients.updateAddress(c.id, { postcode: $any($event.target).value })" />
             </app-clearable>
           </label>
-          <label class="field">
+          <label class="field client-fields__double">
             <span class="field__label">{{ 'clients.city' | translate }}</span>
             <app-clearable>
               <input #clearTarget class="input" type="text" autocomplete="off" [value]="c.address.city" (input)="clients.updateAddress(c.id, { city: $any($event.target).value })" />
             </app-clearable>
-          </label>
-          <label class="field client-fields__wide">
-            <span class="field__label">{{ 'clients.rate' | translate }}</span>
-            <select class="input" (change)="clients.update(c.id, { rateId: $any($event.target).value })">
-              @for (rate of invoices.company()?.hourlyRates ?? []; track rate.id) {
-                <option [value]="rate.id" [selected]="rate.id === (c.rateId || invoices.company()?.defaultRateId)">
-                  {{ rate.nameKey | translate }} ({{ rate.price }}.-/h)
-                </option>
-              }
-            </select>
           </label>
         </div>
       </section>

@@ -50,7 +50,6 @@
     "comments": "Comments and tips",
     "createInvoice": "Create the invoice",
     "openInvoice": "Go to the invoice",
-    "lockedNotice": "Invoiced: this worksheet can no longer be edited.",
     "delete": "Delete the worksheet",
     "deleteLocked": "An invoiced worksheet cannot be deleted",
     "deleteTitle": "Delete the worksheet?",
@@ -116,7 +115,11 @@
     "resize": "Drag to resize the panel (double click: default width)",
     "filterDate": "Show one day",
     "clearDate": "Show every day",
-    "nothingThatDay": "Nothing was said that day."
+    "nothingThatDay": "Nothing was said that day.",
+    "rollback": "Undo this change",
+    "reapply": "Redo this change",
+    "rollbackChanged": "Edited since: this change can no longer be undone",
+    "rollbackLocked": "Worksheet invoiced or invoice sent: this change can no longer be undone"
   },
   "template": {
     "labour": {

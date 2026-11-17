@@ -39,4 +39,9 @@ export class ShoppingListService {
   remove(id: string): void {
     this._items.update((items) => items.filter((item) => item.id !== id));
   }
+
+  /** Puts a removed item back as it was (same id and date); nothing if it is already there */
+  restore(item: ShoppingListItem): void {
+    this._items.update((items) => (items.some((existing) => existing.id === item.id) ? items : [...items, item]));
+  }
 }

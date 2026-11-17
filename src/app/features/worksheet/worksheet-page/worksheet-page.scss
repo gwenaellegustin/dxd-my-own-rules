@@ -8,6 +8,7 @@
   flex-direction: column;
   gap: var(--space-400);
   padding: var(--space-400);
+  padding-bottom: var(--page-bottom-space);
 }
 
 .work-area__empty {
@@ -63,22 +64,12 @@
   }
 }
 
-// Invoiced worksheet: tells why nothing can be edited
-// Top of the worksheet: invoice button, then delete (open) or reopen + the read-only notice (invoiced)
+// Above the worksheet fields (projected into WorksheetDetails): secondary button (delete /
+// reopen) on the left edge of the fields, primary button (create / open the invoice) on their right edge
 .worksheet-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
   gap: var(--space-200);
-}
-
-.locked-notice {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  min-height: var(--control-height);
-  padding: var(--space-200) var(--space-400);
-  border-radius: var(--radius-200);
-  background: var(--color-background-tertiary);
 }

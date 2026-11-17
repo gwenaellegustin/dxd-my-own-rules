@@ -9,6 +9,7 @@
   gap: var(--space-800);
   // Full width of the work area, like the worksheet page
   padding: var(--space-400);
+  padding-bottom: var(--page-bottom-space);
 }
 
 // Client details: name, street and rate on a full row; postcode and city side by side
@@ -32,9 +33,10 @@
   background: var(--color-background-tertiary);
 }
 
+// Three columns: name (2) + rate (1), street (3), postcode (1) + city (2)
 .client-fields {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-400);
 
   @container work-area (max-width: 480px) {
@@ -44,6 +46,15 @@
 
 .client-fields__wide {
   grid-column: 1 / -1;
+}
+
+.client-fields__double {
+  grid-column: span 2;
+
+  // Single column: no span, or it would add an implicit column
+  @container work-area (max-width: 480px) {
+    grid-column: auto;
+  }
 }
 
 .block {

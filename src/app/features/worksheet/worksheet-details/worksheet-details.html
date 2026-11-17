@@ -1,78 +1,83 @@
 @let ws = worksheet();
 
-<div class="fields">
-  <label class="field" data-area="client">
-    <span class="field__label">{{ 'worksheet.client' | translate }}</span>
-    <app-combobox
-      [value]="ws.client"
-      [options]="clients.clientNames()"
-      [disabled]="locked()"
-      (valueChange)="fieldChange.emit({ client: $event })"
-    />
-  </label>
+<!-- Left column: the page's actions (projected, aligned with the fields), then the fields -->
+<div class="main">
+  <ng-content select="[actions]" />
 
-  <div class="field-row">
-    <label class="field" data-area="vehicle">
-      <span class="field__label">{{ 'worksheet.vehicle' | translate }}</span>
+  <div class="fields">
+    <label class="field" data-area="client">
+      <span class="field__label">{{ 'worksheet.client' | translate }}</span>
       <app-combobox
-        [value]="ws.vehicle"
-        [options]="clients.vehiclesFor(ws.client)"
+        [value]="ws.client"
+        [options]="clients.clientNames()"
         [disabled]="locked()"
-        (valueChange)="fieldChange.emit({ vehicle: $event })"
+        (valueChange)="fieldChange.emit({ client: $event })"
       />
     </label>
-    <button
-      type="button"
-      class="icon-button icon-button--primary registration-button"
-      aria-haspopup="dialog"
-      [attr.aria-label]="'registration.open' | translate"
-      [attr.title]="'registration.open' | translate"
-      (click)="openVehicle()"
-    >
-      <app-icon name="registration" />
-    </button>
+
+    <div class="field-row">
+      <label class="field" data-area="vehicle">
+        <span class="field__label">{{ 'worksheet.vehicle' | translate }}</span>
+        <app-combobox
+          [value]="ws.vehicle"
+          [options]="clients.vehiclesFor(ws.client)"
+          [disabled]="locked()"
+          (valueChange)="fieldChange.emit({ vehicle: $event })"
+        />
+      </label>
+      <button
+        type="button"
+        class="icon-button icon-button--primary registration-button"
+        aria-haspopup="dialog"
+        [attr.aria-label]="'registration.open' | translate"
+        [attr.title]="'registration.open' | translate"
+        (click)="openVehicle()"
+      >
+        <app-icon name="registration" />
+      </button>
+    </div>
+
+    @if (vehicleFile(); as file) {
+      <app-vehicle-dialog
+        [vehicle]="file.vehicle"
+        [owner]="ws.client"
+        [locked]="locked() || !file.clientId"
+        (vehicleChange)="clients.updateVehicle(file.clientId, file.vehicle.id, $event)"
+        (renamed)="vehicleRenamed.emit($event)"
+        (closed)="vehicleRef.set(null)"
+      />
+    }
+
+    <label class="field" data-area="date">
+      <span class="field__label">{{ 'worksheet.date' | translate }}</span>
+      <span class="date-field date-field--full">
+        <input class="input" type="date" [disabled]="locked()" [value]="ws.date ?? ''" (change)="update('date', $event)" />
+        <app-icon name="calendar" size="small" />
+      </span>
+    </label>
+
+    <label class="field" data-area="kilometers">
+      <span class="field__label">{{ 'worksheet.kilometers' | translate }}</span>
+      <app-clearable>
+        <input #clearTarget class="input" type="text" inputmode="numeric" [disabled]="locked()" [value]="ws.kilometers" (input)="update('kilometers', $event)" />
+      </app-clearable>
+    </label>
+
+    <label class="field" data-area="hours">
+      <span class="field__label">{{ 'worksheet.hours' | translate }}</span>
+      <app-clearable>
+        <textarea #clearTarget class="textarea" appAutoGrow appBulletList [disabled]="locked()" [value]="ws.hours" (input)="update('hours', $event)"></textarea>
+      </app-clearable>
+    </label>
+
+    <label class="field" data-area="comments">
+      <span class="field__label">{{ 'worksheet.comments' | translate }}</span>
+      <app-clearable>
+        <textarea #clearTarget class="textarea" appAutoGrow appBulletList [disabled]="locked()" [value]="ws.comments" (input)="update('comments', $event)"></textarea>
+      </app-clearable>
+    </label>
+
   </div>
-
-  @if (vehicleFile(); as file) {
-    <app-vehicle-dialog
-      [vehicle]="file.vehicle"
-      [owner]="ws.client"
-      [locked]="locked() || !file.clientId"
-      (vehicleChange)="clients.updateVehicle(file.clientId, file.vehicle.id, $event)"
-      (renamed)="vehicleRenamed.emit($event)"
-      (closed)="vehicleRef.set(null)"
-    />
-  }
-
-  <label class="field" data-area="date">
-    <span class="field__label">{{ 'worksheet.date' | translate }}</span>
-    <span class="date-field date-field--full">
-      <input class="input" type="date" [disabled]="locked()" [value]="ws.date ?? ''" (change)="update('date', $event)" />
-      <app-icon name="calendar" size="small" />
-    </span>
-  </label>
-
-  <label class="field" data-area="kilometers">
-    <span class="field__label">{{ 'worksheet.kilometers' | translate }}</span>
-    <app-clearable>
-      <input #clearTarget class="input" type="text" inputmode="numeric" [disabled]="locked()" [value]="ws.kilometers" (input)="update('kilometers', $event)" />
-    </app-clearable>
-  </label>
-
-  <label class="field" data-area="hours">
-    <span class="field__label">{{ 'worksheet.hours' | translate }}</span>
-    <app-clearable>
-      <textarea #clearTarget class="textarea" appAutoGrow appBulletList [disabled]="locked()" [value]="ws.hours" (input)="update('hours', $event)"></textarea>
-    </app-clearable>
-  </label>
-
-  <label class="field" data-area="comments">
-    <span class="field__label">{{ 'worksheet.comments' | translate }}</span>
-    <app-clearable>
-      <textarea #clearTarget class="textarea" appAutoGrow appBulletList [disabled]="locked()" [value]="ws.comments" (input)="update('comments', $event)"></textarea>
-    </app-clearable>
-  </label>
-
 </div>
 
 <figure class="damage">
