@@ -1,22 +1,14 @@
 # Netlify (branch dev): build settings. GitHub Pages (branch main) ignores this file.
-#
-# The project requires a recent npm (devEngines in package.json: >= 11.21.0, npm 12.2.2 in
-# packageManager). Netlify installs the dependencies of the base directory before the build,
-# with the npm that comes with Node (11.20.0 for Node 26), which devEngines refuses; inside the
-# project that npm cannot even upgrade itself. So the build starts in netlify/, which has no
-# package.json (Netlify installs nothing there), and the command:
-#   1. upgrades npm from /tmp, outside the project, where devEngines is not read
-#   2. goes back to the root, installs the dependencies and builds with that npm
 
 [build]
-  base = "netlify"
-  command = "(cd /tmp && npm install -g npm@12.2.2) && cd .. && npm ci && npx ng build"
-  # Relative to the base directory
-  publish = "../dist/greasy-notes/browser"
+  command = "npx ng build"
+  publish = "dist/greasy-notes/browser"
 
 [build.environment]
   # Latest Node, like the developers' machines
   NODE_VERSION = "26"
+  # The npm of "packageManager" in package.json (Node 26 comes with npm 11.20.0)
+  NPM_VERSION = "12.2.2"
 
 # Single-page app: every URL serves index.html, so deep links (/worksheets/ws-1006,
 # /design-system) work on refresh
