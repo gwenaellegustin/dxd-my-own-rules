@@ -1,0 +1,76 @@
+@use 'side-panel';
+
+@include side-panel.side-panel(left);
+
+.panel {
+  background: var(--color-background-secondary);
+}
+
+.panel__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+  padding: var(--space-400);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+.sort__check--hidden {
+  visibility: hidden;
+}
+
+// Counts under the title of a card: icon + number; grey, blue (open invoices), red (sent)
+.card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-100);
+  margin-top: var(--space-100);
+}
+
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-300);
+  width: 100%;
+  padding: var(--space-400);
+  text-align: left;
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  color: var(--color-icon-default);
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+
+  // "Variant3" of the Left sidebar: the worksheet currently displayed
+  &--selected,
+  &--selected:hover {
+    background: var(--color-background-tertiary);
+    border: var(--stroke-focus) solid var(--color-border-strong);
+    padding: calc(var(--space-400) - var(--stroke-focus) + var(--stroke-border));
+  }
+}
+
+.card__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.card__title {
+  font-weight: var(--font-weight-strong);
+  color: var(--color-text-default);
+}
+
+.card__subtitle,
+.card__date {
+  color: var(--color-text-secondary);
+}

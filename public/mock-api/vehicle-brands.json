@@ -1,0 +1,10 @@
+[
+  { "id": "audi", "name": "Audi", "aliases": ["audi"], "logo": "images/brands/audi.svg" },
+  { "id": "ducati", "name": "Ducati", "aliases": ["ducati"], "logo": "images/brands/ducati.svg" },
+  { "id": "honda", "name": "Honda", "aliases": ["honda"], "logo": "images/brands/honda.svg" },
+  { "id": "kia", "name": "Kia", "aliases": ["kia"], "logo": "images/brands/kia.svg" },
+  { "id": "peugeot", "name": "Peugeot", "aliases": ["peugeot"], "logo": "images/brands/peugeot.svg" },
+  { "id": "triumph", "name": "Triumph", "aliases": ["triumph"], "logo": "images/brands/triumph.svg", "kind": "motorcycle" },
+  { "id": "toyota", "name": "Toyota", "aliases": ["toyota"], "logo": "images/brands/toyota.svg" },
+  { "id": "volkswagen", "name": "Volkswagen", "aliases": ["volkswagen", "vw"], "logo": "images/brands/volkswagen.svg" }
+]

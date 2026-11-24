@@ -1,0 +1,74 @@
+@use 'breakpoints' as bp;
+
+// The pages, on the left (the free space of the header is after back / forward; on phones,
+// where back / forward are hidden, after the pages)
+:host {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+
+  @include bp.mobile {
+    flex: 1;
+  }
+}
+
+.pills {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-100);
+  padding: var(--space-100) 0;
+  // Narrow tablets: the pills scroll sideways instead of wrapping
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  @include bp.mobile {
+    display: none;
+  }
+}
+
+.pill {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-200);
+  border-radius: var(--radius-200);
+  color: var(--color-text-default);
+  line-height: var(--line-height-single);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+
+  // Current page: dark pill, like the selected language (EN / FR)
+  &--active,
+  &--active:hover {
+    background: var(--color-background-brand);
+    color: var(--color-text-on-brand);
+    font-weight: var(--font-weight-strong);
+  }
+}
+
+// Number of items (e.g. shopping list): the red badge of the transcript (.problem-badge), inside
+// the pill after its name
+.badge {
+  margin-left: var(--space-050);
+}
+
+.mobile {
+  display: none;
+
+  @include bp.mobile {
+    display: block;
+  }
+}
+
+// In the mobile menu, the badge stays on the right of the row
+.dropdown-menu .badge {
+  margin-left: auto;
+}

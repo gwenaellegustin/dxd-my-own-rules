@@ -1,0 +1,719 @@
+[
+  {
+    "id": "inv-2261025",
+    "number": "2261025",
+    "worksheetId": "ws-1002",
+    "status": "open",
+    "date": "2026-10-25",
+    "sentOn": null,
+    "rateId": "loyalty",
+    "sections": [
+      {
+        "sectionId": "labour",
+        "items": [
+          {
+            "id": "service",
+            "lineId": "service",
+            "text": "intermédiaire 105'000 km avec vidange de l'huile moteur (petit)",
+            "quantity": 1.5,
+            "unit": "hour",
+            "price": 100,
+            "discount": 0,
+            "note": "sans les bougies"
+          },
+          {
+            "id": "wheelChange",
+            "lineId": "wheelChange",
+            "text": "d'été",
+            "quantity": 0.5,
+            "unit": "hour",
+            "price": 100,
+            "discount": 0
+          },
+          {
+            "discount": 0,
+            "id": "inspectionPreparation",
+            "lineId": "inspectionPreparation",
+            "quantity": 1,
+            "unit": "hour",
+            "price": 100
+          },
+          {
+            "discount": 0,
+            "id": "brakes",
+            "lineId": "brakes",
+            "text": "avant, disques et plaquettes",
+            "quantity": 1.5,
+            "unit": "hour",
+            "price": 100,
+            "note": "Disques avant au minimum"
+          },
+          {
+            "discount": 0,
+            "id": "alignment",
+            "lineId": "alignment",
+            "quantity": 1,
+            "unit": "hour",
+            "price": 100
+          },
+          {
+            "discount": 0,
+            "id": "labourOther",
+            "text": "Remplacement des ampoules des feux avant",
+            "quantity": 0.5,
+            "unit": "hour",
+            "price": 100
+          },
+          {
+            "discount": 0,
+            "id": "labourOther~2",
+            "text": "Diagnostic du voyant moteur et effacement des défauts",
+            "quantity": 0.75,
+            "unit": "hour",
+            "price": 100
+          }
+        ]
+      },
+      {
+        "sectionId": "parts",
+        "items": [
+          {
+            "id": "drainPlugWasher",
+            "lineId": "drainPlugWasher",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 3,
+            "discount": 0
+          },
+          {
+            "id": "oilFilter",
+            "lineId": "oilFilter",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 14,
+            "discount": 0
+          },
+          {
+            "discount": 0,
+            "id": "airFilter",
+            "lineId": "airFilter",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 28
+          },
+          {
+            "id": "partsOther",
+            "text": "H7 longue vision croisement gauche",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 30,
+            "discount": 0
+          },
+          {
+            "id": "partsOther~2",
+            "text": "H7 12V 55W feux de direction gauche",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 15,
+            "discount": 0
+          },
+          {
+            "discount": 0,
+            "id": "partsOther~3",
+            "text": "Plaquettes de frein avant",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 85
+          },
+          {
+            "discount": 0,
+            "id": "partsOther~4",
+            "text": "Disques de frein avant (paire)",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 140
+          }
+        ]
+      },
+      {
+        "sectionId": "fluids",
+        "items": [
+          {
+            "id": "engineOil",
+            "lineId": "engineOil",
+            "text": "5W/30 spécial VX LL",
+            "quantity": 3.5,
+            "unit": "litre",
+            "price": 25,
+            "discount": 0
+          },
+          {
+            "id": "engineCoolant",
+            "lineId": "engineCoolant",
+            "quantity": 0.5,
+            "unit": "litre",
+            "price": 10,
+            "discount": 0
+          },
+          {
+            "id": "washerFluid",
+            "lineId": "washerFluid",
+            "text": "été",
+            "quantity": 2,
+            "unit": "litre",
+            "price": 2,
+            "discount": 0
+          },
+          {
+            "discount": 0,
+            "id": "brakeFluid",
+            "lineId": "brakeFluid",
+            "text": "DOT 4",
+            "quantity": 1,
+            "unit": "litre",
+            "price": 28.5
+          }
+        ]
+      },
+      {
+        "sectionId": "various",
+        "items": [
+          {
+            "id": "smallSupplies",
+            "lineId": "smallSupplies",
+            "quantity": 1,
+            "unit": "flatRate",
+            "price": 5,
+            "discount": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "inv-2261105",
+    "number": "2261105",
+    "worksheetId": "ws-1005",
+    "status": "open",
+    "date": "2026-11-05",
+    "sentOn": null,
+    "rateId": "standard",
+    "sections": [
+      {
+        "sectionId": "labour",
+        "items": [
+          {
+            "id": "brakes",
+            "lineId": "brakes",
+            "text": "avant, disques et plaquettes",
+            "quantity": 1.5,
+            "unit": "hour",
+            "price": 110,
+            "discount": 0,
+            "note": "Disques au minimum, à contrôler à la prochaine expertise"
+          }
+        ]
+      },
+      {
+        "sectionId": "parts",
+        "items": [
+          {
+            "id": "partsOther",
+            "text": "Disques de frein avant (paire)",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 165,
+            "discount": 0
+          },
+          {
+            "id": "partsOther~2",
+            "text": "Plaquettes de frein avant",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 68,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "fluids",
+        "items": [
+          {
+            "id": "brakeFluid",
+            "lineId": "brakeFluid",
+            "text": "DOT 4",
+            "quantity": 0.1,
+            "unit": "litre",
+            "price": 28.5,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "various",
+        "items": [
+          {
+            "id": "smallSupplies",
+            "lineId": "smallSupplies",
+            "quantity": 1,
+            "unit": "flatRate",
+            "price": 5,
+            "discount": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "inv-2261106",
+    "number": "2261106",
+    "worksheetId": "ws-1004",
+    "status": "open",
+    "date": "2026-11-05",
+    "sentOn": null,
+    "rateId": "loyalty",
+    "sections": [
+      {
+        "sectionId": "labour",
+        "items": [
+          {
+            "id": "wheelChange",
+            "lineId": "wheelChange",
+            "text": "d'hiver",
+            "quantity": 0.5,
+            "unit": "hour",
+            "price": 100,
+            "discount": 0
+          },
+          {
+            "id": "alignment",
+            "lineId": "alignment",
+            "quantity": 1,
+            "unit": "hour",
+            "price": 100,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "fluids",
+        "items": [
+          {
+            "id": "washerFluid",
+            "lineId": "washerFluid",
+            "text": "hiver -20°C",
+            "quantity": 2,
+            "unit": "litre",
+            "price": 2,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "various",
+        "items": [
+          {
+            "id": "smallSupplies",
+            "lineId": "smallSupplies",
+            "quantity": 1,
+            "unit": "flatRate",
+            "price": 5,
+            "discount": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "inv-2261101",
+    "number": "2261101",
+    "worksheetId": "ws-1003",
+    "status": "open",
+    "date": "2026-11-01",
+    "sentOn": null,
+    "rateId": "standard",
+    "sections": [
+      {
+        "sectionId": "labour",
+        "items": [
+          {
+            "id": "labourOther",
+            "text": "Changement des pneus",
+            "quantity": 1,
+            "unit": "hour",
+            "price": 110,
+            "discount": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "inv-2261024",
+    "number": "2261024",
+    "worksheetId": "ws-1001",
+    "status": "sent",
+    "date": "2026-10-24",
+    "sentOn": "2026-10-27",
+    "rateId": "standard",
+    "sections": [
+      {
+        "sectionId": "labour",
+        "items": [
+          {
+            "id": "service",
+            "lineId": "service",
+            "text": "60'000 km (grand)",
+            "quantity": 2.5,
+            "unit": "hour",
+            "price": 110,
+            "discount": 0
+          },
+          {
+            "id": "wheelChange",
+            "lineId": "wheelChange",
+            "text": "d'hiver",
+            "quantity": 1,
+            "unit": "hour",
+            "price": 110,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "parts",
+        "items": [
+          {
+            "id": "drainPlugWasher",
+            "lineId": "drainPlugWasher",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 3,
+            "discount": 0
+          },
+          {
+            "id": "oilFilter",
+            "lineId": "oilFilter",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 18,
+            "discount": 0
+          },
+          {
+            "id": "airFilter",
+            "lineId": "airFilter",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 32,
+            "discount": 0
+          },
+          {
+            "id": "cabinAirFilter",
+            "lineId": "cabinAirFilter",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 28,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "fluids",
+        "items": [
+          {
+            "id": "engineOil",
+            "lineId": "engineOil",
+            "text": "5W/30",
+            "quantity": 7.5,
+            "unit": "litre",
+            "price": 25,
+            "discount": 10
+          },
+          {
+            "id": "washerFluid",
+            "lineId": "washerFluid",
+            "text": "hiver -20°C",
+            "quantity": 3,
+            "unit": "litre",
+            "price": 2,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "various",
+        "items": [
+          {
+            "id": "smallSupplies",
+            "lineId": "smallSupplies",
+            "quantity": 1,
+            "unit": "flatRate",
+            "price": 8,
+            "discount": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "inv-2261020",
+    "number": "2261020",
+    "worksheetId": "ws-1000",
+    "status": "paid",
+    "date": "2026-10-20",
+    "sentOn": "2026-10-21",
+    "rateId": "loyalty",
+    "sections": [
+      {
+        "sectionId": "labour",
+        "items": [
+          {
+            "id": "service",
+            "lineId": "service",
+            "text": "45'000 km (petit)",
+            "quantity": 1,
+            "unit": "hour",
+            "price": 100,
+            "discount": 0
+          },
+          {
+            "id": "technicalInspection",
+            "lineId": "technicalInspection",
+            "quantity": 1,
+            "unit": "hour",
+            "price": 100,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "parts",
+        "items": [
+          {
+            "id": "drainPlugWasher",
+            "lineId": "drainPlugWasher",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 3,
+            "discount": 0
+          },
+          {
+            "id": "oilFilter",
+            "lineId": "oilFilter",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 15,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "fluids",
+        "items": [
+          {
+            "id": "engineOil",
+            "lineId": "engineOil",
+            "text": "0W/20",
+            "quantity": 4.2,
+            "unit": "litre",
+            "price": 26,
+            "discount": 0
+          },
+          {
+            "id": "brakeFluid",
+            "lineId": "brakeFluid",
+            "text": "DOT 4",
+            "quantity": 1,
+            "unit": "litre",
+            "price": 18,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "various",
+        "items": [
+          {
+            "id": "smallSupplies",
+            "lineId": "smallSupplies",
+            "quantity": 1,
+            "unit": "flatRate",
+            "price": 5,
+            "discount": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "inv-2261021",
+    "number": "2261021",
+    "worksheetId": "ws-0999",
+    "status": "paid",
+    "date": "2026-10-20",
+    "sentOn": "2026-10-21",
+    "rateId": "loyalty",
+    "sections": [
+      {
+        "sectionId": "labour",
+        "items": [
+          {
+            "id": "brakes",
+            "lineId": "brakes",
+            "text": "disques et plaquettes avant",
+            "quantity": 2,
+            "unit": "hour",
+            "price": 100,
+            "discount": 0
+          },
+          {
+            "id": "wheelChange",
+            "lineId": "wheelChange",
+            "text": "d'hiver",
+            "quantity": 0.5,
+            "unit": "hour",
+            "price": 100,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "parts",
+        "items": [
+          {
+            "id": "partsOther",
+            "text": "Disques de frein avant (paire)",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 189,
+            "discount": 10
+          },
+          {
+            "id": "partsOther~2",
+            "text": "Plaquettes de frein avant",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 76,
+            "discount": 10
+          }
+        ]
+      },
+      {
+        "sectionId": "fluids",
+        "items": [
+          {
+            "id": "brakeFluid",
+            "lineId": "brakeFluid",
+            "text": "DOT 4",
+            "quantity": 1,
+            "unit": "litre",
+            "price": 18,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "various",
+        "items": [
+          {
+            "id": "smallSupplies",
+            "lineId": "smallSupplies",
+            "quantity": 1,
+            "unit": "flatRate",
+            "price": 5,
+            "discount": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "inv-2261015",
+    "number": "2261015",
+    "worksheetId": "ws-0998",
+    "status": "paid",
+    "date": "2026-10-15",
+    "sentOn": "2026-10-16",
+    "rateId": "standard",
+    "sections": [
+      {
+        "sectionId": "labour",
+        "items": [
+          {
+            "id": "service",
+            "lineId": "service",
+            "text": "20'000 km",
+            "quantity": 2,
+            "unit": "hour",
+            "price": 110,
+            "discount": 0
+          },
+          {
+            "id": "labourOther",
+            "text": "Contrôle, nettoyage et réglage de la chaîne",
+            "quantity": 0.5,
+            "unit": "hour",
+            "price": 110,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "parts",
+        "items": [
+          {
+            "id": "oilFilter",
+            "lineId": "oilFilter",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 22,
+            "discount": 0
+          },
+          {
+            "id": "airFilter",
+            "lineId": "airFilter",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 38,
+            "discount": 0
+          },
+          {
+            "id": "partsOther",
+            "text": "Kit chaîne + pignons",
+            "quantity": 1,
+            "unit": "piece",
+            "price": 245,
+            "discount": 5
+          }
+        ]
+      },
+      {
+        "sectionId": "fluids",
+        "items": [
+          {
+            "id": "engineOil",
+            "lineId": "engineOil",
+            "text": "10W/40 moto",
+            "quantity": 3.5,
+            "unit": "litre",
+            "price": 28,
+            "discount": 0
+          }
+        ]
+      },
+      {
+        "sectionId": "various",
+        "items": [
+          {
+            "id": "smallSupplies",
+            "lineId": "smallSupplies",
+            "quantity": 1,
+            "unit": "flatRate",
+            "price": 5,
+            "discount": 0
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+<!-- Like the paper invoice: car | slogan | motorbike drawings on a line, then the contact details -->
+@let contact = company().contact;
+<footer class="footer text-small">
+  <div class="footer__brand">
+    <img class="footer__drawing" src="images/footer-car.png" alt="" />
+    <span class="footer__tagline">{{ company().tagline }}</span>
+    <img class="footer__drawing" src="images/footer-bike.png" alt="" />
+  </div>
+  <div class="footer__contact">
+    <span>{{ 'invoice.contact' | translate }} : {{ contact.person }} {{ contact.phone }}</span>
+    <span>{{ 'invoice.workshop' | translate }} : {{ contact.workshop }}</span>
+  </div>
+  <a class="footer__website" [href]="'https://' + contact.website" target="_blank" rel="noopener">{{ contact.website }}</a>
+  <div class="footer__office">
+    <a [href]="'mailto:' + contact.email">{{ contact.email }}</a>
+    <span>{{ 'invoice.office' | translate }} : {{ contact.office }}</span>
+  </div>
+</footer>

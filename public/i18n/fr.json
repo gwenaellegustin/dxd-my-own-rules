@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Garage"
+    "name": "Greasy Notes"
   },
   "nav": {
     "label": "Navigation principale",
@@ -8,7 +8,8 @@
     "invoice": "Facture",
     "clients": "Clients",
     "shoppingList": "Liste d'achats",
-    "badgeCount": "{{count}} articles"
+    "badgeCount": "{{count}} articles",
+    "menu": "Pages"
   },
   "account": {
     "menu": "Menu du compte",
@@ -24,9 +25,12 @@
     "other": "Autre",
     "ellipsis": "...",
     "km": "km",
-    "notDesignedYet": "Cette page n'a pas encore été conçue.",
     "clear": "Effacer",
-    "showOptions": "Afficher les options"
+    "showOptions": "Afficher les options",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "sortBy": "Trier par",
+    "save": "Enregistrer"
   },
   "worksheets": {
     "title": "Fiches de travail",
@@ -34,7 +38,6 @@
     "untitled": "Nouvelle fiche",
     "empty": "Aucune fiche",
     "groups": {
-      "toBeBilled": "À facturer",
       "invoiced": "Facturées"
     }
   },
@@ -43,27 +46,81 @@
     "vehicle": "Véhicule",
     "date": "Date",
     "kilometers": "Kilomètres",
-    "hours": "Remarques",
+    "hours": "Heures",
     "comments": "Observations et conseils",
-    "createInvoice": "Créer la facture"
+    "createInvoice": "Créer la facture",
+    "openInvoice": "Aller à la facture",
+    "delete": "Supprimer la fiche",
+    "deleteLocked": "Une fiche facturée ne peut pas être supprimée",
+    "deleteTitle": "Supprimer la fiche de travail ?",
+    "deleteMessage": "La fiche « {{name}} » sera supprimée. Vous pourrez encore l’annuler (Ctrl+Z).",
+    "reopen": "Rouvrir la fiche",
+    "reopenHint": "Modifier à nouveau la fiche : sa facture est masquée (conservée) jusqu’à la prochaine facturation",
+    "reopenSent": "La facture a été envoyée : la fiche ne peut plus être rouverte",
+    "invoiceNeedsClient": "Choisissez d’abord le client : une facture en a besoin",
+    "invoiceNeedsDone": "Cochez « Fait » sur au moins un élément"
+  },
+  "registration": {
+    "open": "Infos du véhicule",
+    "title": "Infos du véhicule",
+    "imageAlt": "Photo de la carte grise du véhicule",
+    "note": "Note",
+    "zoomIn": "Agrandir",
+    "zoomOut": "Réduire",
+    "removeImage": "Supprimer la photo",
+    "upload": "Déposez une photo de la carte grise ici, ou cliquez pour en choisir une",
+    "uploadHint": "Prototype : la photo est gardée jusqu’au rechargement de la page",
+    "none": "Pas de carte grise pour ce véhicule.",
+    "name": "Marque / modèle",
+    "plate": "Plaque",
+    "kind": "Type",
+    "kinds": {
+      "car": "Voiture",
+      "motorcycle": "Moto"
+    },
+    "owner": "Propriétaire"
   },
   "damage": {
     "bump": "Bosse",
     "scratch": "Rayure",
     "impact": "Impact",
     "remove": "Supprimer",
-    "diagramAlt": "Schéma du véhicule : choisissez un type de dégât dans la légende, puis cliquez sur le véhicule pour le marquer"
+    "diagramAlt": "Schéma du véhicule : choisissez un type de dégât dans la légende, puis cliquez sur le véhicule pour le marquer",
+    "tools": "Type de dégât à marquer sur le véhicule"
   },
   "line": {
     "planned": "Prévu",
     "done": "Fait",
     "addNote": "Ajouter une note",
-    "note": "Note"
+    "note": "Note",
+    "quantity": "Quantité (litres)",
+    "litres": "L",
+    "remove": "Supprimer la ligne"
   },
   "transcript": {
-    "title": "Transcriptions",
+    "title": "Transcription",
     "rail": "Transcription",
-    "empty": "Aucun message"
+    "empty": "Aucun message",
+    "worksheet": "Fiche · {{vehicle}} – {{client}}",
+    "invoice": "Facture N° {{number}}",
+    "show": "Voir",
+    "before": "Ancienne valeur",
+    "after": "Nouvelle valeur",
+    "emptyValue": "vide",
+    "today": "Aujourd’hui",
+    "nothingToday": "Rien n’a encore été dit aujourd’hui.",
+    "problems": "{{count}} réponse(s) à vérifier",
+    "noAction": "Aucune action effectuée",
+    "validate": "Marqué comme lu",
+    "shoppingList": "Liste d’achats",
+    "resize": "Glisser pour redimensionner le panneau (double clic : largeur par défaut)",
+    "filterDate": "Afficher un jour",
+    "clearDate": "Afficher tous les jours",
+    "nothingThatDay": "Rien n’a été dit ce jour-là.",
+    "rollback": "Annuler ce changement",
+    "reapply": "Rétablir ce changement",
+    "rollbackChanged": "Modifié depuis : ce changement ne peut plus être annulé",
+    "rollbackLocked": "Fiche facturée ou facture envoyée : ce changement ne peut plus être annulé"
   },
   "template": {
     "labour": {
@@ -120,8 +177,182 @@
       "tpmsSensor": "Capteur TPMS",
       "runFlat": "RunF",
       "largeSize": "Grande dim.",
-      "winterTyres": "D'hiver",
-      "summerTyres": "D'été"
+      "winterTyres": "d'hiver",
+      "summerTyres": "d'été"
     }
+  },
+  "section": {
+    "summary": "{{planned}} prévu(s) · {{done}} fait(s)"
+  },
+  "carryOver": {
+    "title": "Quels éléments doivent être reportés à la prochaine intervention ?",
+    "count": "{{count}} élément(s) reporté(s)",
+    "doneCount": "{{count}} fait(s)",
+    "uncheckAll": "Tout décocher",
+    "checkAll": "Tout cocher"
+  },
+  "carriedOver": {
+    "title": "Éléments reportés",
+    "hint": "Cochés : ajoutés à la fiche. Décochés : proposés à nouveau la prochaine fois. Supprimés : plus jamais proposés.",
+    "delete": "Supprimer : ne plus proposer cet élément",
+    "restore": "Rétablir",
+    "count": "{{count}} élément(s) importé(s)",
+    "deletedCount": "{{count}} supprimé(s)",
+    "later": "Plus tard",
+    "confirm": "Valider"
+  },
+  "invoices": {
+    "title": "Factures",
+    "empty": "Aucune facture pour le moment.",
+    "groups": {
+      "sent": "Envoyées",
+      "paid": "Payées"
+    }
+  },
+  "invoice": {
+    "number": "Facture N° {{number}}",
+    "status": {
+      "open": "Ouverte",
+      "sent": "Envoyée",
+      "paid": "Payée"
+    },
+    "vehicle": "Véhicule",
+    "plate": "Plaque",
+    "kilometers": "Kilomètres",
+    "hourlyRate": "Tarif horaire",
+    "date": "Date",
+    "columns": {
+      "quantity": "Quantité",
+      "price": "Prix",
+      "discount": "%Remise",
+      "amount": "Montant"
+    },
+    "units": {
+      "hour": "h",
+      "flatRate": "Forfait"
+    },
+    "rates": {
+      "standard": "Standard",
+      "loyalty": "Fidélité"
+    },
+    "totalNet": "Total net {{currency}}",
+    "vat": "TVA {{rate}}%",
+    "total": "Total",
+    "paymentTerm": "Paiement net à {{days}} jours à partir du {{date}}",
+    "paymentTermOpen": "Paiement net à {{days}} jours à partir de l'envoi",
+    "observation": "Observation et conseil",
+    "fieldHide": "Masquer : gardé (grisé) mais retiré de l’impression et du PDF",
+    "fieldShow": "Afficher : remettre sur l’impression et le PDF",
+    "fieldDelete": "Supprimer",
+    "contact": "Contact",
+    "workshop": "Atelier",
+    "office": "Bureau",
+    "send": "Marquer comme envoyée",
+    "savePdf": "Enregistrer en PDF",
+    "markPaid": "Marquer comme payée"
+  },
+  "clients": {
+    "title": "Clients",
+    "empty": "Aucun client.",
+    "vehicles": "Véhicules",
+    "vehiclesHint": "Sélectionnez un véhicule pour afficher ou masquer ses fiches de travail et factures.",
+    "openWorksheets": "Fiches de travail ouvertes",
+    "invoices": "Factures",
+    "noWorksheet": "Aucune fiche de travail ouverte.",
+    "noInvoice": "Aucune facture.",
+    "new": "Nouveau client",
+    "untitled": "Nouveau client",
+    "name": "Nom",
+    "street": "Rue",
+    "postcode": "NPA",
+    "city": "Localité",
+    "rate": "Tarif horaire",
+    "addVehicle": "Ajouter un véhicule",
+    "unnamedVehicle": "Nouveau véhicule",
+    "sort": {
+      "name": "Nom",
+      "date": "Dernière date"
+    },
+    "badges": {
+      "openWorksheets": "{{count}} fiche(s) de travail ouverte(s)",
+      "openInvoices": "{{count}} facture(s) ouverte(s)",
+      "sentInvoices": "{{count}} facture(s) envoyée(s), non payée(s)"
+    },
+    "delete": "Supprimer le client",
+    "deleteTitle": "Supprimer le client ?",
+    "deleteMessage": "Le client « {{name}} » et ses véhicules seront supprimés.",
+    "newWorksheet": "Nouvelle fiche de travail pour ce véhicule",
+    "archive": "Archiver le client",
+    "archiveHint": "Le client a des fiches de travail : il est archivé (conservé avec ses documents) au lieu d’être supprimé",
+    "restore": "Restaurer le client",
+    "archivedNotice": "Archivé : conservé avec ses fiches et factures, plus proposé sur les nouvelles fiches.",
+    "archivedGroup": "Archivés"
+  },
+  "settings": {
+    "title": "Paramètres des fiches de travail",
+    "tabs": {
+      "lines": "Lignes",
+      "rules": "Règles"
+    },
+    "linesHint": "La fiche de travail telle qu’elle s’affichera : cliquez sur une ligne pour modifier son titre (français et anglais) et ses champs, glissez-la pour la déplacer dans sa section (ou Alt + flèche haut / bas), et utilisez le + entre deux lignes pour en ajouter une.",
+    "rulesHint": "Quand une ligne est prévue ou faite (avec l’option choisie, si elle en a), les lignes cochées sont aussi marquées comme prévues ou faites.",
+    "when": "Quand cette ligne est",
+    "status": {
+      "planned": "Prévue",
+      "done": "Faite"
+    },
+    "also": {
+      "planned": "Marquer aussi comme prévues",
+      "done": "Marquer aussi comme faites"
+    },
+    "addRule": "Ajouter une règle",
+    "removeRule": "Supprimer la règle",
+    "rule": "Règle {{number}}",
+    "noRule": "Aucune règle.",
+    "noRuleLine": "Cette fiche n’a que des lignes « Autre » : aucune ligne à utiliser dans une règle.",
+    "planNone": "Aucune ligne à planifier pour l’instant",
+    "anyOption": "Toutes les options",
+    "drag": "Cliquer pour modifier la ligne, glisser pour la déplacer",
+    "noLine": "Ajoutez une ligne pour la modifier ici.",
+    "lineTitle": "Titre",
+    "slots": {
+      "fields": "Champs sur la ligne du titre",
+      "details": "Champs sous le titre"
+    },
+    "types": {
+      "text": "Champ texte",
+      "date": "Date",
+      "label": "Texte fixe",
+      "radio": "Boutons radio (un choix)",
+      "checkbox": "Cases à cocher (plusieurs choix)"
+    },
+    "removeLine": "Supprimer la ligne",
+    "removeField": "Supprimer le champ",
+    "placeholder": "Texte indicatif",
+    "option": "Option",
+    "removeOption": "Supprimer l’option",
+    "addOption": "Ajouter une option",
+    "addField": "Ajouter un champ",
+    "preview": "Aperçu",
+    "addLine": "Ajouter une ligne ici"
+  },
+  "shoppingList": {
+    "ordered": "Commandé",
+    "remove": "Retirer de la liste",
+    "empty": "Rien à acheter.",
+    "item": "Article",
+    "quantity": "Quantité",
+    "client": "Client",
+    "vehicle": "Véhicule",
+    "none": "—",
+    "add": "Ajouter"
+  },
+  "header": {
+    "history": "Historique",
+    "back": "Précédent",
+    "forward": "Suivant",
+    "edits": "Modifications",
+    "undo": "Annuler (Ctrl+Z)",
+    "redo": "Rétablir (Ctrl+Y)"
   }
 }

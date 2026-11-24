@@ -1,0 +1,140 @@
+<dialog class="dialog dialog--wide" aria-labelledby="registration-title" appModalDialog [closeOnBackdrop]="false" (dismiss)="closed.emit()">
+  <div class="dialog__box">
+    <h2 id="registration-title" class="text-subheading">{{ 'registration.title' | translate }}</h2>
+
+    <div class="dialog__body registration">
+      @let v = draft();
+      <div class="vehicle-fields">
+        <label class="field">
+          <span class="field__label">{{ 'registration.name' | translate }}</span>
+          <input
+            class="input"
+            type="text"
+            [value]="v.name"
+            [disabled]="locked()"
+            (input)="set({ name: $any($event.target).value })"
+          />
+        </label>
+        <label class="field">
+          <span class="field__label">{{ 'registration.plate' | translate }}</span>
+          <input
+            class="input"
+            type="text"
+            [value]="v.plate"
+            [disabled]="locked()"
+            (input)="set({ plate: $any($event.target).value })"
+          />
+        </label>
+        <fieldset class="field vehicle-fields__kind">
+          <legend class="field__label">{{ 'registration.kind' | translate }}</legend>
+          <div class="vehicle-fields__choices">
+            @for (kind of kinds; track kind) {
+              <label class="choice">
+                <input
+                  type="radio"
+                  name="vehicle-kind"
+                  [checked]="v.kind === kind"
+                  [disabled]="locked()"
+                  (change)="set({ kind })"
+                />
+                {{ 'registration.kinds.' + kind | translate }}
+              </label>
+            }
+          </div>
+        </fieldset>
+        <label class="field">
+          <span class="field__label">{{ 'registration.owner' | translate }}</span>
+          <input class="input" type="text" [value]="owner()" readonly disabled />
+        </label>
+      </div>
+
+      @if (v.registrationImage; as src) {
+        <div class="registration__document">
+          <!-- Click zooms in where you click, the zoomed image follows the mouse; click again to zoom out -->
+          <button
+            type="button"
+            class="registration__viewer"
+            [class.registration__viewer--zoomed]="zoomed()"
+            [attr.aria-pressed]="zoomed()"
+            [attr.aria-label]="(zoomed() ? 'registration.zoomOut' : 'registration.zoomIn') | translate"
+            [attr.title]="(zoomed() ? 'registration.zoomOut' : 'registration.zoomIn') | translate"
+            (click)="toggleZoom($event)"
+            (mousemove)="pan($event)"
+          >
+            <img
+              #image
+              class="registration__image"
+              [src]="src"
+              [alt]="'registration.imageAlt' | translate"
+              [style.transform-origin]="origin()"
+              draggable="false"
+            />
+          </button>
+          @if (!locked()) {
+            <!-- Removed from the draft: done on Save, Cancel keeps the photo -->
+            <button
+              type="button"
+              class="icon-button registration__remove"
+              [attr.aria-label]="'registration.removeImage' | translate"
+              [attr.title]="'registration.removeImage' | translate"
+              (click)="removeImage()"
+            >
+              <app-icon name="delete" />
+            </button>
+          }
+        </div>
+      } @else if (locked()) {
+        <p class="text-secondary">{{ 'registration.none' | translate }}</p>
+      } @else {
+        <!-- No document yet: drop a photo or click to choose one (kept in memory, no backend yet) -->
+        <label
+          class="registration__upload"
+          [class.registration__upload--over]="dragOver()"
+          (dragover)="$event.preventDefault(); dragOver.set(true)"
+          (dragleave)="dragOver.set(false)"
+          (drop)="onDrop($event)"
+        >
+          <input
+            class="visually-hidden"
+            type="file"
+            accept="image/*"
+            (change)="onFileChosen($event)"
+          />
+          <app-icon name="upload" size="xlarge" />
+          <span>{{ 'registration.upload' | translate }}</span>
+          <span class="text-secondary text-small">{{ 'registration.uploadHint' | translate }}</span>
+        </label>
+      }
+
+      <label class="field">
+        <span class="field__label">{{ 'registration.note' | translate }}</span>
+        <app-clearable>
+          <textarea
+            #clearTarget
+            class="textarea registration__note"
+            appAutoGrow
+            [value]="v.registrationNote"
+            [disabled]="locked()"
+            (input)="set({ registrationNote: $any($event.target).value })"
+          ></textarea>
+        </app-clearable>
+      </label>
+    </div>
+
+    <div class="dialog__actions dialog__actions--end">
+      @if (locked()) {
+        <button type="button" class="button button--primary" (click)="closed.emit()">
+          {{ 'common.close' | translate }}
+        </button>
+      } @else {
+        <!-- Nothing changed: Close. Something changed, or a new vehicle: Cancel or Save -->
+        @if (dirty() || isNew()) {
+          <button type="button" class="button" (click)="closed.emit()">{{ 'common.cancel' | translate }}</button>
+          <button type="button" class="button button--primary" (click)="save()">{{ 'common.save' | translate }}</button>
+        } @else {
+          <button type="button" class="button button--primary" (click)="closed.emit()">{{ 'common.close' | translate }}</button>
+        }
+      }
+    </div>
+  </div>
+</dialog>

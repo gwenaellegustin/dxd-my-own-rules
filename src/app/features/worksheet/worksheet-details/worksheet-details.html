@@ -1,68 +1,89 @@
 @let ws = worksheet();
 
-<div class="fields">
-  <label class="field">
-    <span class="field__label">{{ 'worksheet.client' | translate }}</span>
-    <app-combobox
-      [value]="ws.client"
-      [options]="clients.clientNames()"
-      (valueChange)="fieldChange.emit({ client: $event })"
-    />
-  </label>
+<!-- Left column: the page's actions (projected, aligned with the fields), then the fields -->
+<div class="main">
+  <ng-content select="[actions]" />
 
-  <label class="field">
-    <span class="field__label">{{ 'worksheet.vehicle' | translate }}</span>
-    <app-combobox
-      [value]="ws.vehicle"
-      [options]="clients.vehiclesFor(ws.client)"
-      (valueChange)="fieldChange.emit({ vehicle: $event })"
-    />
-  </label>
+  <div class="fields">
+    <label class="field" data-area="client">
+      <span class="field__label">{{ 'worksheet.client' | translate }}</span>
+      <app-combobox
+        [value]="ws.client"
+        [options]="clients.clientNames()"
+        [disabled]="locked()"
+        (valueChange)="fieldChange.emit({ client: $event })"
+      />
+    </label>
 
-  <label class="field">
-    <span class="field__label">{{ 'worksheet.date' | translate }}</span>
-    <span class="date-field date-field--full">
-      <input class="input" type="date" [value]="ws.date ?? ''" (change)="update('date', $event)" />
-      <app-icon name="calendar" size="small" />
-    </span>
-  </label>
+    <div class="field-row">
+      <label class="field" data-area="vehicle">
+        <span class="field__label">{{ 'worksheet.vehicle' | translate }}</span>
+        <app-combobox
+          [value]="ws.vehicle"
+          [options]="clients.vehiclesFor(ws.client)"
+          [disabled]="locked()"
+          (valueChange)="fieldChange.emit({ vehicle: $event })"
+        />
+      </label>
+      <button
+        type="button"
+        class="icon-button icon-button--primary registration-button"
+        aria-haspopup="dialog"
+        [attr.aria-label]="'registration.open' | translate"
+        [attr.title]="'registration.open' | translate"
+        (click)="openVehicle()"
+      >
+        <app-icon name="registration" />
+      </button>
+    </div>
 
-  <label class="field">
-    <span class="field__label">{{ 'worksheet.kilometers' | translate }}</span>
-    <app-clearable>
-      <input #clearTarget class="input" type="text" inputmode="numeric" [value]="ws.kilometers" (input)="update('kilometers', $event)" />
-    </app-clearable>
-  </label>
+    @if (vehicleFile(); as file) {
+      <app-vehicle-dialog
+        [vehicle]="file.vehicle"
+        [owner]="ws.client"
+        [locked]="locked() || !file.clientId"
+        (vehicleChange)="clients.updateVehicle(file.clientId, file.vehicle.id, $event)"
+        (renamed)="vehicleRenamed.emit($event)"
+        (closed)="vehicleRef.set(null)"
+      />
+    }
 
-  <div class="hours">
-    <label class="field">
-      <span class="field__label">{{ 'worksheet.hours' | translate }}</span>
+    <label class="field" data-area="date">
+      <span class="field__label">{{ 'worksheet.date' | translate }}</span>
+      <span class="date-field date-field--full">
+        <input class="input" type="date" [disabled]="locked()" [value]="ws.date ?? ''" (change)="update('date', $event)" />
+        <app-icon name="calendar" size="small" />
+      </span>
+    </label>
+
+    <label class="field" data-area="kilometers">
+      <span class="field__label">{{ 'worksheet.kilometers' | translate }}</span>
       <app-clearable>
-        <textarea #clearTarget class="textarea" appAutoGrow [value]="ws.hours" (input)="update('hours', $event)"></textarea>
+        <input #clearTarget class="input" type="text" inputmode="numeric" [disabled]="locked()" [value]="ws.kilometers" (input)="update('kilometers', $event)" />
       </app-clearable>
     </label>
-    <a
-      class="icon-button icon-button--primary"
-      routerLink="/invoices"
-      [attr.aria-label]="'worksheet.createInvoice' | translate"
-      [attr.title]="'worksheet.createInvoice' | translate"
-    >
-      <app-icon name="invoice" />
-    </a>
-  </div>
 
-  <label class="field">
-    <span class="field__label">{{ 'worksheet.comments' | translate }}</span>
-    <app-clearable>
-      <textarea #clearTarget class="textarea" appAutoGrow [value]="ws.comments" (input)="update('comments', $event)"></textarea>
-    </app-clearable>
-  </label>
+    <label class="field" data-area="hours">
+      <span class="field__label">{{ 'worksheet.hours' | translate }}</span>
+      <app-clearable>
+        <textarea #clearTarget class="textarea" appAutoGrow appBulletList [disabled]="locked()" [value]="ws.hours" (input)="update('hours', $event)"></textarea>
+      </app-clearable>
+    </label>
+
+    <label class="field" data-area="comments">
+      <span class="field__label">{{ 'worksheet.comments' | translate }}</span>
+      <app-clearable>
+        <textarea #clearTarget class="textarea" appAutoGrow appBulletList [disabled]="locked()" [value]="ws.comments" (input)="update('comments', $event)"></textarea>
+      </app-clearable>
+    </label>
+
+  </div>
 </div>
 
 <figure class="damage">
   <div
     class="damage__diagram"
-    [class.damage__diagram--placing]="activeDamage()"
+    [class.damage__diagram--placing]="activeDamage() && !locked()"
     (click)="placeDamage($event)"
   >
     <img src="images/car-damage-diagram.png" [alt]="'damage.diagramAlt' | translate" draggable="false" />
@@ -72,6 +93,7 @@
         class="damage__marker"
         [style.left.%]="damage.x"
         [style.top.%]="damage.y"
+        [disabled]="locked()"
         [attr.aria-label]="('damage.remove' | translate) + ' ' + ('damage.' + damage.type | translate)"
         (click)="$event.stopPropagation(); damageRemove.emit($index)"
       >
@@ -80,13 +102,15 @@
     }
   </div>
 
-  <figcaption class="damage__legend">
+  <figcaption class="damage__legend" role="radiogroup" [attr.aria-label]="'damage.tools' | translate">
     @for (item of legend; track item.type) {
       <button
         type="button"
         class="damage__legend-item"
         [class.damage__legend-item--active]="activeDamage() === item.type"
-        [attr.aria-pressed]="activeDamage() === item.type"
+        role="radio"
+        [attr.aria-checked]="activeDamage() === item.type"
+        [disabled]="locked()"
         (click)="toggleDamage(item.type)"
       >
         <app-icon [name]="item.icon" size="small" />

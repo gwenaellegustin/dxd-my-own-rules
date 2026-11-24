@@ -1,51 +1,149 @@
-<app-worksheet-sidebar
-  class="sidebar"
-  [worksheets]="store.worksheets()"
-  [selectedId]="worksheet()?.id ?? null"
-  [open]="sidebarOpen()"
-  (openChange)="sidebarOpen.set($event)"
-  (selectWorksheet)="select($event)"
-  (createWorksheet)="create()"
-/>
+<app-panels-layout #layout>
+  <app-vehicle-sidebar
+    sidebar
+    titleKey="worksheets.title"
+    icon="tool"
+    newLabelKey="worksheets.new"
+    emptyKey="worksheets.empty"
+    [groups]="cardGroups()"
+    [selectedId]="worksheet()?.id ?? null"
+    [open]="layout.sidebarOpen()"
+    (openChange)="layout.sidebarOpen.set($event)"
+    (selectCard)="select($event)"
+    (create)="create()"
+  />
 
-<div class="work-area">
   @for (ws of displayed(); track ws.id) {
     <div class="work-area__content">
       <app-worksheet-details
         [worksheet]="ws"
-        (fieldChange)="store.update(ws.id, $event)"
+        (fieldChange)="updateWorksheet(ws.id, $event)"
         (damageAdd)="store.addDamage(ws.id, $event)"
         (damageRemove)="store.removeDamage(ws.id, $event)"
-      />
-
-      @for (section of store.template()?.sections ?? []; track section.id) {
-        <section class="section">
-          <h2 class="text-heading">{{ section.titleKey | translate }}</h2>
-          @for (line of section.lines; track line.id) {
-            <app-task-line
-              [line]="line"
-              [state]="lineState(ws, line.id)"
-              (stateChange)="store.updateLine(ws.id, line.id, $event)"
-            />
+        (vehicleRenamed)="store.rename('vehicle', $event.from, $event.to, ws.client)"
+      >
+        <!-- Above the fields (the damage diagram is on the right of both): secondary action on the
+             left, primary action on the right. Open: delete, create the invoice. Invoiced: reopen,
+             open the invoice -->
+        <div class="worksheet-actions" actions>
+          @if (ws.status === 'invoiced') {
+            <!-- Only while its invoice is still open (not sent yet) -->
+            @let reopenable = canReopen(ws);
+            <button
+              type="button"
+              class="button"
+              [disabled]="!reopenable"
+              [attr.title]="reopenable ? ('worksheet.reopenHint' | translate) : ('worksheet.reopenSent' | translate)"
+              (click)="reopen(ws)"
+            >
+              <app-icon name="edit" size="small" />
+              {{ 'worksheet.reopen' | translate }}
+            </button>
+            <button type="button" class="button button--primary" (click)="openInvoice(ws)">
+              <app-icon name="receipt" size="small" />
+              {{ 'worksheet.openInvoice' | translate }}
+            </button>
+          } @else {
+            <button type="button" class="button" aria-haspopup="dialog" (click)="deleting.set(ws)">
+              <app-icon name="delete" size="small" />
+              {{ 'worksheet.delete' | translate }}
+            </button>
+            <!-- An invoice needs a client and at least one done line -->
+            @let blockedKey = !ws.client.trim() ? 'worksheet.invoiceNeedsClient' : !hasDoneLine(ws) ? 'worksheet.invoiceNeedsDone' : null;
+            <button
+              type="button"
+              class="button button--primary"
+              [disabled]="!!blockedKey"
+              [attr.title]="blockedKey ? (blockedKey | translate) : null"
+              (click)="createInvoice(ws)"
+            >
+              <app-icon name="invoice" size="small" />
+              {{ 'worksheet.createInvoice' | translate }}
+            </button>
           }
+        </div>
+      </app-worksheet-details>
+
+      @for (section of settings.templateFor(ws.kind)?.sections ?? []; track section.id) {
+        @let collapsed = isCollapsed(section.id);
+        <section class="section" [class.section--collapsed]="collapsed">
+          <!-- Only the title and its arrow toggle the section, not the whole row -->
+          <div class="section__header">
+            <h2 class="section__heading">
+              <button
+                type="button"
+                class="section__toggle"
+                [attr.aria-expanded]="!collapsed"
+                [attr.aria-controls]="'section-' + section.id"
+                (click)="toggleSection(section.id)"
+              >
+                <span class="text-heading">{{ section.titleKey | translate }}</span>
+                <app-icon name="chevron-down" class="section__chevron" />
+              </button>
+            </h2>
+            @if (collapsed) {
+              @let progress = sectionProgress(ws, section);
+              <span class="section__summary text-secondary">
+                {{ 'section.summary' | translate: progress }}
+              </span>
+            }
+          </div>
+          <!-- Hidden rather than removed, so the lines keep their state (open notes…) -->
+          <div class="section__lines" [id]="'section-' + section.id" [hidden]="collapsed">
+            @for (line of section.lines; track line.id) {
+              <!-- A repeatable line ("Other") can appear several times -->
+              @for (key of store.lineInstanceIds(ws, line); track key; let last = $last) {
+                <!-- The trailing empty instance is the "new line" field: nothing to delete -->
+                <app-task-line
+                  [attr.data-area]="'line:' + key"
+                  [line]="line"
+                  [state]="lineState(ws, key)"
+                  [removable]="!!line.repeatable && !last"
+                  [quantity]="section.invoiceUnit === 'litre'"
+                  [locked]="ws.status === 'invoiced'"
+                  (stateChange)="updateLine(ws.id, key, $event)"
+                  (remove)="store.removeLine(ws.id, key)"
+                />
+              }
+            }
+          </div>
         </section>
       }
     </div>
+
+    <!-- Delete the worksheet: confirmation (can be undone) -->
+    @if (deleting(); as ws) {
+      <app-confirm-dialog
+        titleKey="worksheet.deleteTitle"
+        messageKey="worksheet.deleteMessage"
+        [params]="{ name: worksheetName(ws) }"
+        confirmKey="worksheet.delete"
+        [danger]="true"
+        (confirmed)="remove(ws)"
+        (cancelled)="deleting.set(null)"
+      />
+    }
+
+    <!-- Before the invoice: choose the planned-but-not-done items to carry over -->
+    @if (carryOverGroups(); as groups) {
+      <app-carry-over-dialog
+        [groups]="groups"
+        (confirmed)="confirmCarryOver(ws, $event)"
+        (cancelled)="carryOverGroups.set(null)"
+      />
+    }
+
+    <!-- Lines carried over by previous interventions on this vehicle: import, keep or delete -->
+    @if (carriedOver(); as groups) {
+      <app-carried-over-dialog
+        [groups]="groups"
+        (confirmed)="answerCarriedOver(ws, $event)"
+        (cancelled)="answerCarriedOver(ws, { imported: [], deleted: [] })"
+      />
+    }
   } @empty {
     @if (store.loaded()) {
       <p class="work-area__empty text-secondary">{{ 'worksheets.empty' | translate }}</p>
     }
   }
-</div>
-
-<app-transcript-panel
-  class="transcript"
-  [messages]="transcript.messages()"
-  [open]="transcriptOpen()"
-  (openChange)="transcriptOpen.set($event)"
-/>
-
-<!-- Tablet: clicking outside an open overlay panel closes it -->
-@if (sidebarOpen() || transcriptOpen()) {
-  <div class="backdrop" (click)="closeOverlays()"></div>
-}
+</app-panels-layout>

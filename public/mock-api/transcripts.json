@@ -2,14 +2,249 @@
   {
     "id": "msg-1",
     "userId": "user-1",
-    "text": "Work began at 13:15 on Fabrice's car",
+    "text": {
+      "en": "On Mr Morard’s invoice, the brake fluid was 0.1 litre, not 1 litre.",
+      "fr": "Sur la facture de M. Morard, le liquide de frein c’était 0,1 litre, pas 1 litre."
+    },
+    "timestamp": "2026-11-05T16:42:00"
+  },
+  {
+    "id": "msg-2",
+    "text": {
+      "en": "I corrected the brake fluid quantity on Mr Morard’s invoice.",
+      "fr": "J’ai corrigé la quantité de liquide de frein sur la facture de M. Morard."
+    },
+    "timestamp": "2026-11-05T16:42:03",
+    "changes": [
+      {
+        "target": {
+          "type": "invoice",
+          "id": "inv-2261105"
+        },
+        "area": "item:brakeFluid",
+        "labelKey": "template.fluids.brakeFluid",
+        "before": "1 l × 28.50",
+        "after": "0.1 l × 28.50",
+        "patch": {
+          "before": {
+            "quantity": 1
+          },
+          "after": {
+            "quantity": 0.1
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "msg-3",
+    "userId": "user-1",
+    "text": {
+      "en": "Work began at 13:15 on Fabrice's car",
+      "fr": "J’ai commencé à 13h15 sur la voiture de Fabrice"
+    },
     "timestamp": "2026-11-06T13:37:00",
     "worksheetId": "ws-1006"
   },
   {
-    "id": "msg-2",
-    "text": "“13:15” added to the notes on Kia's last worksheet - Fabrice",
+    "id": "msg-4",
+    "text": {
+      "en": "I added the start time to the hours of Fabrice's Kia worksheet.",
+      "fr": "J’ai ajouté l’heure de début aux heures de la fiche de la Kia de Fabrice."
+    },
     "timestamp": "2026-11-06T13:37:02",
+    "worksheetId": "ws-1006",
+    "changes": [
+      {
+        "target": {
+          "type": "worksheet",
+          "id": "ws-1006"
+        },
+        "area": "hours",
+        "labelKey": "worksheet.hours",
+        "before": "• 20h → 21h\n• 11h → 12h",
+        "after": "• 20h → 21h\n• 11h → 12h\n• 13h15 →",
+        "patch": {
+          "before": {
+            "hours": "• 20h → 21h\n• 11h → 12h"
+          },
+          "after": {
+            "hours": "• 20h → 21h\n• 11h → 12h\n• 13h15 →"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "msg-5",
+    "userId": "user-1",
+    "text": {
+      "en": "Oil change done with three and a half litres of 5W30, the oil filter is a 1566.",
+      "fr": "Vidange faite avec trois litres et demi de 5W30, le filtre à huile c’est un 1566."
+    },
+    "timestamp": "2026-11-06T14:05:00",
     "worksheetId": "ws-1006"
+  },
+  {
+    "id": "msg-6",
+    "text": {
+      "en": "I marked the engine oil and the oil filter as done on Fabrice's Kia worksheet.",
+      "fr": "J’ai coché « Fait » pour l’huile moteur et le filtre à huile sur la fiche de la Kia de Fabrice."
+    },
+    "timestamp": "2026-11-06T14:05:03",
+    "worksheetId": "ws-1006",
+    "changes": [
+      {
+        "target": {
+          "type": "worksheet",
+          "id": "ws-1006"
+        },
+        "area": "line:engineOil",
+        "labelKey": "template.fluids.engineOil",
+        "before": "",
+        "after": "5W30 · 3.50",
+        "statusBefore": "planned",
+        "statusAfter": "done",
+        "patch": {
+          "before": {
+            "done": false,
+            "values": {},
+            "quantity": ""
+          },
+          "after": {
+            "done": true,
+            "values": {
+              "grade": "5W30"
+            },
+            "quantity": "3.50"
+          }
+        }
+      },
+      {
+        "target": {
+          "type": "worksheet",
+          "id": "ws-1006"
+        },
+        "area": "line:oilFilter",
+        "labelKey": "template.parts.oilFilter",
+        "before": "",
+        "after": "1566",
+        "statusBefore": "planned",
+        "statusAfter": "done",
+        "patch": {
+          "before": {
+            "done": false,
+            "note": ""
+          },
+          "after": {
+            "done": true,
+            "note": "1566"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "msg-7",
+    "userId": "user-1",
+    "text": {
+      "en": "The brake fluid of the Kia must be changed too, it is DOT 4.",
+      "fr": "Il faut aussi changer le liquide de frein de la Kia, c’est du DOT 4."
+    },
+    "timestamp": "2026-11-06T14:20:00",
+    "worksheetId": "ws-1006"
+  },
+  {
+    "id": "msg-8",
+    "text": {
+      "en": "I planned the brake fluid change on Fabrice's Kia worksheet.",
+      "fr": "J’ai prévu le changement du liquide de frein sur la fiche de la Kia de Fabrice."
+    },
+    "timestamp": "2026-11-06T14:20:03",
+    "worksheetId": "ws-1006",
+    "changes": [
+      {
+        "target": {
+          "type": "worksheet",
+          "id": "ws-1006"
+        },
+        "area": "line:brakeFluid",
+        "labelKey": "template.fluids.brakeFluid",
+        "before": "",
+        "after": "DOT 4",
+        "statusAfter": "planned",
+        "patch": {
+          "before": {
+            "planned": false,
+            "values": {}
+          },
+          "after": {
+            "planned": true,
+            "values": {
+              "grade": "DOT 4"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "msg-9",
+    "userId": "user-1",
+    "text": {
+      "en": "Wheel change done, the winter tyres are on.",
+      "fr": "Changement de roues fait, les pneus d’hiver sont montés."
+    },
+    "timestamp": "2026-11-16T08:12:00"
+  },
+  {
+    "id": "msg-10",
+    "text": {
+      "en": "Wheel change not marked as done: Fabrice's Kia and Matthieu's Bus both have one planned, so the vehicle was not clear.",
+      "fr": "Changement de roues pas coché : la Kia de Fabrice et le Bus de Matthieu en ont tous les deux un de prévu, le véhicule n’était donc pas clair."
+    },
+    "timestamp": "2026-11-16T08:12:03",
+    "problem": true
+  },
+  {
+    "id": "msg-11",
+    "userId": "user-1",
+    "text": {
+      "en": "I have to buy an air filter for Fabrice's car.",
+      "fr": "Je dois acheter un filtre à air pour la voiture de Fabrice."
+    },
+    "timestamp": "2026-11-16T08:30:00"
+  },
+  {
+    "id": "msg-12",
+    "text": {
+      "en": "I added an air filter for Fabrice's Kia to the shopping list.",
+      "fr": "J’ai ajouté un filtre à air pour la Kia de Fabrice à la liste d’achats."
+    },
+    "timestamp": "2026-11-16T08:30:03",
+    "changes": [
+      {
+        "target": {
+          "type": "shopping-list",
+          "id": "sl-12"
+        },
+        "area": "item:sl-12",
+        "labelKey": "shoppingList.item",
+        "before": "",
+        "after": "1 × Air filter · Kia Ceed 1.5 T-GDi – Fabrice Favre",
+        "patch": {
+          "before": null,
+          "after": {
+            "id": "sl-12",
+            "label": "Air filter",
+            "quantity": 1,
+            "addedAt": "2026-11-16T08:30:03",
+            "clientId": "client-1",
+            "vehicleId": "vehicle-1",
+            "ordered": false
+          }
+        }
+      }
+    ]
   }
 ]

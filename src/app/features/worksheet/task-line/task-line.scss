@@ -3,10 +3,19 @@
   flex-direction: column;
   gap: var(--space-100);
   padding: var(--space-200) var(--space-400);
+  // The title starts where the text of an "Other" line does (its field: line padding + field
+  // border + field padding), so the texts of both kinds of lines are aligned
+  padding-left: calc(var(--space-200) + var(--stroke-border) + var(--space-400));
   background: var(--color-background-default);
   border: var(--stroke-border) solid var(--color-border-default);
   border-radius: var(--radius-200);
   transition: background-color var(--transition-fast);
+}
+
+// "Other" lines start with their text field: on the left, the same space as above and below it,
+// so its border does not double the line's border (its text then lines up with the titles)
+:host(.line--repeatable) {
+  padding-left: var(--space-200);
 }
 
 :host(.line--planned) {
@@ -53,8 +62,33 @@
   min-width: calc(var(--control-width-small) + var(--space-800));
 }
 
-.line__free-text {
-  flex: 1;
+// Text field: starts at its minimum width, gets wider with its content up to the row, then
+// wraps on several rows (height: AutoGrow). "full": takes the rest of the row ("Other" lines)
+.line__text {
+  --text-min-width: calc(var(--control-width-small) + var(--icon-size-large));
+  display: flex;
+  max-width: 100%;
+
+  > .textarea {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: var(--text-min-width);
+    max-width: 100%;
+    field-sizing: content;
+  }
+
+  &--medium {
+    --text-min-width: calc(var(--control-width-medium) + var(--icon-size-large));
+  }
+
+  &--full {
+    flex: 1 1 0;
+    min-width: min(100%, var(--text-min-width));
+
+    > .textarea {
+      width: 100%;
+    }
+  }
 }
 
 .line__status {
@@ -66,20 +100,19 @@
   min-height: var(--control-height);
 }
 
-// Small dot on the pencil when a note exists but is hidden
-.line__note-toggle {
-  position: relative;
+.line__quantity {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-100);
 
-  &--has-note::after {
-    content: '';
-    position: absolute;
-    top: var(--space-200);
-    right: var(--space-200);
-    width: var(--space-200);
-    height: var(--space-200);
-    border-radius: var(--radius-full);
-    background: var(--color-background-brand);
+  > .input {
+    width: var(--control-width-quantity);
+    text-align: right;
   }
+}
+
+.line__note-toggle--hidden {
+  visibility: hidden;
 }
 
 .line__details {
@@ -91,4 +124,9 @@
 
 .line__note {
   width: 100%;
+}
+
+// Wraps the whole line without changing its layout; [disabled] disables every control in it
+.line__lock {
+  display: contents;
 }

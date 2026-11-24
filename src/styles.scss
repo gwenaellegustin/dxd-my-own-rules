@@ -10,10 +10,22 @@
   box-sizing: border-box;
 }
 
+// The page always has exactly the size of the screen: only the app's own areas scroll (work
+// area, side panels), never the page itself
 html,
 body {
   height: 100%;
   margin: 0;
+  overflow: hidden;
+}
+
+// Printing (invoice as PDF): the document flows over several pages
+@media print {
+  html,
+  body {
+    height: auto;
+    overflow: visible;
+  }
 }
 
 body {
@@ -127,13 +139,43 @@ button {
   &:focus-visible {
     outline: none;
     border-color: var(--color-border-strong);
-    box-shadow: 0 0 0 1px var(--color-border-strong);
+    // Inset: drawn inside the border, so a scrolling container (dialog, panel) never clips it
+    box-shadow: inset 0 0 0 1px var(--color-border-strong);
+  }
+
+  // Read-only (e.g. invoiced worksheet): greyed, the text stays readable
+  &:disabled {
+    background: var(--color-background-disabled);
+    color: var(--color-text-default);
+    cursor: default;
+  }
+}
+
+// Disabled checkbox / radio: no hand cursor, dimmed box
+.choice:has(input:disabled) {
+  cursor: default;
+
+  input {
+    cursor: default;
+    opacity: var(--opacity-disabled);
   }
 }
 
 .input {
   height: var(--control-height);
   line-height: var(--line-height-single);
+
+  // Number fields: no spin arrows (Firefox shows them permanently)
+  &[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+  }
 
   &--small {
     width: var(--control-width-small);
@@ -142,7 +184,6 @@ button {
   &--medium {
     width: var(--control-width-medium);
   }
-
 }
 
 // Date picker: <span class="date-field"><input type="date"> <app-icon name="calendar"></span>
@@ -176,6 +217,18 @@ button {
     transform: translateY(-50%);
     pointer-events: none;
   }
+
+  // Firefox always draws its own calendar button (it cannot be hidden and is what
+  // opens the picker): keep it and hide ours to avoid a double icon
+  @supports (-moz-appearance: none) {
+    .input {
+      padding-right: var(--space-400);
+    }
+
+    > app-icon {
+      display: none;
+    }
+  }
 }
 
 // Height follows the content (see AutoGrow directive): no scrollbar, no resize handle
@@ -200,6 +253,17 @@ button {
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
+
+  // Long labels (e.g. in dialogs) wrap, the box stays on the first line
+  &--wrap {
+    align-items: flex-start;
+    gap: var(--space-200);
+    white-space: normal;
+
+    input {
+      margin-top: calc((1em * var(--line-height-body) - var(--checkbox-size)) / 2);
+    }
+  }
 
   input {
     appearance: none;
@@ -231,11 +295,6 @@ button {
         color: var(--color-icon-on-brand);
       }
     }
-  }
-
-  // Round checkbox (multi-select options inside a line, e.g. Small / Medium / Big)
-  &--round input[type='checkbox'] {
-    border-radius: var(--radius-full);
   }
 
   input[type='radio'] {
@@ -271,6 +330,16 @@ button {
     background: var(--color-background-hover);
   }
 
+  // Nothing to do (e.g. no edit to undo): faded, no hover effect
+  &:disabled {
+    opacity: var(--opacity-disabled);
+    cursor: default;
+
+    &:hover {
+      background: none;
+    }
+  }
+
   &--primary {
     width: calc(var(--control-height) + var(--space-100));
     height: calc(var(--control-height) + var(--space-100));
@@ -280,6 +349,57 @@ button {
 
     &:hover {
       background: var(--color-background-brand-hover);
+    }
+
+    &:disabled:hover {
+      background: var(--color-background-brand);
+    }
+  }
+}
+
+// Text buttons (dialogs, forms)
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-200);
+  min-height: var(--control-height);
+  padding: var(--space-300) var(--space-400);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  background: var(--color-background-default);
+  color: var(--color-text-default);
+  line-height: var(--line-height-single);
+  transition: background-color var(--transition-fast);
+
+  // No hover effect on a disabled button
+  &:hover:not(:disabled) {
+    background: var(--color-background-hover);
+  }
+
+  &--primary {
+    border-color: var(--color-border-brand);
+    background: var(--color-background-brand);
+    color: var(--color-text-on-brand);
+
+    &:hover:not(:disabled) {
+      background: var(--color-background-brand-hover);
+    }
+  }
+
+  &:disabled {
+    opacity: var(--opacity-disabled);
+    cursor: default;
+  }
+
+  // Destructive action (delete)
+  &--danger {
+    border-color: var(--color-background-danger-strong);
+    background: var(--color-background-danger-strong);
+    color: var(--color-text-on-brand);
+
+    &:hover:not(:disabled) {
+      background: var(--color-text-danger);
     }
   }
 }
@@ -306,18 +426,285 @@ button {
   padding-right: calc(var(--space-200) + var(--icon-size-large) + var(--space-200));
 }
 
+// Leave room for the hide + delete buttons of <app-hideable-field> (invoice)
+.hideable-field > .textarea {
+  padding-right: calc(
+    var(--space-200) + 2 * var(--icon-size-large) + var(--space-100) + var(--space-200)
+  );
+}
+
+// Hidden text: dimmed and struck through but still editable (its buttons stay clear); not printed
+.hideable-field--hidden > .textarea {
+  opacity: var(--opacity-disabled);
+  text-decoration: line-through;
+}
+
 // Fixed-width inputs get wider so the button doesn't eat the typing area
 .clearable > .input--small {
   width: calc(var(--control-width-small) + var(--icon-size-large));
+}
+
+// Element shown from a transcript change (HighlightService): a strong border around it
+.is-highlighted {
+  outline: var(--stroke-highlight) solid var(--color-highlight);
+  outline-offset: var(--space-100);
+  border-radius: var(--radius-200);
+  transition: outline-color var(--transition-fast);
+}
+
+// Red notification badge: something needs an answer (transcript)
+.problem-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--badge-size);
+  height: var(--badge-size);
+  padding: 0 var(--space-100);
+  border-radius: var(--radius-full);
+  background: var(--color-background-danger-strong);
+  color: var(--color-text-on-brand);
+  font-size: var(--badge-font-size);
+  font-weight: var(--font-weight-strong);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+// Count with an icon (client cards of the side panel): grey, blue (open invoices), red (sent)
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-050);
+  padding: var(--space-050) var(--space-200) var(--space-050) var(--space-100);
+  border: var(--stroke-border) solid transparent;
+  border-radius: var(--radius-full);
+  background: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-strong);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+
+  // Same colours as the status chips (Open / Sent) of the invoices
+  &--open {
+    background: var(--color-background-invoice-open);
+    border-color: var(--color-border-info);
+    color: var(--color-text-info);
+  }
+
+  &--alert {
+    background: var(--color-background-danger);
+    border-color: var(--color-border-danger);
+    color: var(--color-text-danger);
+  }
+}
+
+// Dropdown menus (see the Dropdown directive): account, mobile navigation, sort
+.dropdown {
+  position: relative;
+  flex: none;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + var(--space-200));
+  right: 0;
+  z-index: var(--z-overlay);
+  min-width: var(--dropdown-min-width);
+  padding: var(--space-200);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  box-shadow: var(--shadow-overlay);
+
+  &--start {
+    left: 0;
+    right: auto;
+  }
+}
+
+.dropdown-menu__title {
+  padding: var(--space-100) var(--space-200);
+}
+
+.dropdown-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-200);
+  border-radius: var(--radius-200);
+  color: var(--color-text-default);
+  line-height: var(--line-height-single);
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+
+  // Current choice / page
+  &--active {
+    background: var(--color-background-hover);
+    font-weight: var(--font-weight-strong);
+  }
+}
+
+// Scrollbars of the whole app: wide rounded thumb (pill like the search field and the buttons),
+// transparent track, large arrow buttons at both ends so it is easy to use with the mouse.
+// Chrome / Edge / Safari: WebKit pseudo-elements (the only way to style the arrow buttons). The
+// standard properties are kept for Firefox only: in Chrome they would disable the WebKit styles.
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-color: var(--color-scrollbar-thumb) transparent;
+  }
+}
+
+// Arrow of a scrollbar button (triangle pointing up, rotated). The colour is URL-encoded (%23 = #)
+// because CSS variables cannot be used inside a data URI.
+@function scrollbar-arrow($rotation, $color) {
+  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 4.5l4.5 6.5h-9z' fill='#{$color}' transform='rotate(#{$rotation} 8 8)'/%3E%3C/svg%3E");
+}
+
+$scrollbar-arrow-color: '%23757575'; // --color-border-strong
+$scrollbar-arrow-color-hover: '%232c2c2c'; // --color-border-brand
+
+::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  // The transparent border leaves a margin around the thumb
+  background: var(--color-scrollbar-thumb) padding-box;
+  border: 3px solid transparent;
+  border-radius: var(--radius-full);
+
+  &:hover,
+  &:active {
+    background-color: var(--color-scrollbar-thumb-hover);
+  }
+}
+
+// Arrow buttons: one at each end (the double buttons some platforms add are left out)
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+::-webkit-scrollbar-button:single-button {
+  display: block;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+
+  &:hover {
+    background-color: var(--color-background-hover);
+  }
+
+  &:vertical {
+    height: var(--scrollbar-button-size);
+  }
+
+  &:horizontal {
+    width: var(--scrollbar-button-size);
+  }
+
+  // Up, right, down, left
+  @each $axis, $step,
+    $rotation
+      in (
+        vertical decrement 0,
+        horizontal increment 90,
+        vertical increment 180,
+        horizontal decrement 270
+      )
+  {
+    &:#{$axis}:#{$step} {
+      background-image: scrollbar-arrow($rotation, $scrollbar-arrow-color);
+
+      &:hover,
+      &:active {
+        background-image: scrollbar-arrow($rotation, $scrollbar-arrow-color-hover);
+      }
+    }
+  }
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+// Hand over a scrollbar, closed hand on the whole page while one is held. Classes set by
+// ScrollbarCursorService: Chrome ignores `cursor` on the scrollbar pseudo-elements and uses the
+// cursor of the scrolling element instead.
+.scrollbar-hover {
+  cursor: pointer !important;
+}
+
+.scrollbar-pressed,
+.scrollbar-pressed * {
+  cursor: grabbing !important;
+}
+
+// Select: the text box of a select is not shrunk by the vertical padding like an input's.
+// The browser's arrow is replaced by the app's chevron icon, centred where the ✕ of the text
+// fields is (see Clearable), so both line up in a form.
+select.input {
+  appearance: none;
+  padding-block: 0;
+  padding-right: calc(var(--space-200) + var(--icon-size-large) + var(--space-100));
+  background-image: var(--icon-select-arrow);
+  // Same size as an <app-icon> glyph (drawn 1.2 × its size, see Icon), centred like the ✕
+  background-position: right
+    calc(var(--space-200) + (var(--icon-size-large) - var(--icon-size-medium) * 1.2) / 2) center;
+  background-size: calc(var(--icon-size-medium) * 1.2);
+  background-repeat: no-repeat;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
 }
 
 .clearable > .input--medium {
   width: calc(var(--control-width-medium) + var(--icon-size-large));
 }
 
-// Search input (pill shaped, with search icon; the clear button sits left of it)
+// Search input (pill shaped): search icon on the left, clear button on the right
+// Active filter shown under a search (e.g. a day): click to remove it
+.filter-chip {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-100);
+  padding: var(--space-050) var(--space-200);
+  border-radius: var(--radius-full);
+  background: var(--color-background-secondary);
+  font-size: var(--font-size-small);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+}
+
+// Search field + a button next to it (sort, date…)
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+}
+
 .search {
   position: relative;
+  flex: 1;
+  min-width: 0;
   width: 100%;
 
   .clearable {
@@ -327,11 +714,7 @@ button {
   .input {
     width: 100%;
     border-radius: var(--radius-full);
-    padding-right: calc(var(--space-400) * 2 + var(--icon-size-small) + var(--icon-size-large));
-  }
-
-  .clearable__button {
-    right: calc(var(--space-400) + var(--icon-size-small) + var(--space-100));
+    padding-left: calc(var(--space-400) + var(--icon-size-small) + var(--space-200));
   }
 
   // Native clear button replaced by <app-clearable>
@@ -341,9 +724,172 @@ button {
 
   > app-icon {
     position: absolute;
-    right: var(--space-400);
+    left: var(--space-400);
     top: 50%;
+    // Vertically centred on the field (the icon's negative margin would pull it up)
+    margin-block: 0;
     transform: translateY(-50%);
     pointer-events: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Dialog (native <dialog> opened with showModal())
+// ---------------------------------------------------------------------------
+
+.dialog {
+  width: min(var(--dialog-width), calc(100vw - var(--space-800)));
+  max-height: calc(100dvh - var(--space-800));
+  padding: 0;
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+  background: var(--color-background-default);
+  color: var(--color-text-default);
+  box-shadow: var(--shadow-overlay);
+
+  &::backdrop {
+    background: var(--overlay-backdrop);
+  }
+}
+
+.dialog__box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+  max-height: inherit;
+  padding: var(--space-600);
+}
+
+.dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+  min-height: 0;
+  overflow-y: auto;
+  // Room for the focus ring (outline offset + stroke) of the checkboxes on the edges, which the
+  // scrolling would clip; the negative margin keeps the content aligned with the title
+  padding: var(--space-100);
+  margin: calc(-1 * var(--space-100));
+}
+
+.dialog__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.dialog__legend {
+  padding: 0;
+  margin-bottom: var(--space-200);
+  font-weight: var(--font-weight-strong);
+}
+
+.dialog__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-200);
+}
+
+.dialog__count {
+  flex: 1;
+  font-size: var(--font-size-small);
+}
+
+// Dialog showing a document (registration): wider
+.dialog--wide {
+  width: min(var(--dialog-width-wide), calc(100vw - var(--space-800)));
+}
+
+// ---------------------------------------------------------------------------
+// Print ("Save as PDF" on an invoice): only the work area content is printed
+// ---------------------------------------------------------------------------
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  app-header,
+  app-vehicle-sidebar,
+  app-transcript-panel,
+  .backdrop,
+  .no-print {
+    display: none !important;
+  }
+
+  // The app fills the screen and scrolls inside: let the content flow over the pages instead
+  html,
+  body,
+  app-root,
+  .app-main,
+  app-panels-layout,
+  .work-area {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: var(--color-background-default) !important;
+  }
+
+  // No containment on paper: a fixed element (invoice footer) is then placed on the page, at the
+  // bottom of every page (the container queries keep their wide layout)
+  .work-area {
+    container: none !important;
+  }
+}
+
+// Read-only copies of form values, shown only on paper (the form controls are .no-print)
+.print-only {
+  display: none !important;
+}
+
+@media print {
+  .print-only {
+    display: revert !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Invoice status chip: <span class="status-chip status-chip--open|sent|paid">
+// ---------------------------------------------------------------------------
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-050) var(--space-200);
+  border: var(--stroke-border) solid transparent;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-strong);
+  line-height: var(--line-height-single);
+  white-space: nowrap;
+
+  // Same look as the count badges: light background, border and text of the status colour
+  &--open {
+    background: var(--color-background-invoice-open);
+    border-color: var(--color-border-info);
+    color: var(--color-text-info);
+  }
+
+  &--sent {
+    background: var(--color-background-invoice-sent);
+    border-color: var(--color-border-danger);
+    color: var(--color-text-danger);
+  }
+
+  &--paid {
+    background: var(--color-background-invoice-paid);
+    border-color: var(--color-border-success);
+    color: var(--color-text-success);
+  }
+
+  // Next to a title (e.g. the invoice number)
+  &--large {
+    padding: var(--space-100) var(--space-300);
+    font-size: var(--font-size-medium);
   }
 }

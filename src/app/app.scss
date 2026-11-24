@@ -1,7 +1,15 @@
+// Pinned to the screen: <html> / <body> have nothing that overflows, so the page itself can never
+// scroll (only the work area and the side panels do), whatever is focused or shown
 :host {
+  position: fixed;
+  inset: 0;
   display: flex;
   flex-direction: column;
-  height: 100dvh;
+
+  // Printing (invoice as PDF): back in the flow, over several pages
+  @media print {
+    position: static;
+  }
 }
 
 .app-main {

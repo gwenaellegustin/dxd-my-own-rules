@@ -1,50 +1,6 @@
-@use 'breakpoints' as bp;
-
+// The page is only a wrapper: the shared layout is the element that fills the screen
 :host {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  display: flex;
-
-  // Mobile: the two collapsed rails form a toolbar above the work area
-  @include bp.mobile {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      'sidebar transcript'
-      'main main';
-  }
-}
-
-.sidebar {
-  order: 1;
-
-  @include bp.mobile {
-    grid-area: sidebar;
-  }
-}
-
-.work-area {
-  order: 2;
-  flex: 1;
-  min-width: 0;
-  overflow-y: auto;
-  background: var(--color-background-secondary);
-  // Children adapt to the space left by the side panels, not to the viewport
-  container: work-area / inline-size;
-
-  @include bp.mobile {
-    grid-area: main;
-  }
-}
-
-.transcript {
-  order: 3;
-
-  @include bp.mobile {
-    grid-area: transcript;
-  }
+  display: contents;
 }
 
 .work-area__content {
@@ -52,6 +8,7 @@
   flex-direction: column;
   gap: var(--space-400);
   padding: var(--space-400);
+  padding-bottom: var(--page-bottom-space);
 }
 
 .work-area__empty {
@@ -64,14 +21,55 @@
   gap: var(--space-200);
 }
 
-.backdrop {
-  display: none;
+.section__heading {
+  margin: 0;
+}
 
-  @include bp.tablet-down {
-    display: block;
-    position: absolute;
-    inset: 0;
-    z-index: calc(var(--z-overlay) - 1);
-    background: var(--overlay-backdrop);
+.section__header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-200);
+}
+
+.section__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-100) 0;
+  border-radius: var(--radius-100);
+  text-align: left;
+}
+
+.section__chevron {
+  transition: transform var(--transition-fast);
+
+  .section--collapsed & {
+    transform: rotate(-90deg);
   }
+}
+
+.section__summary {
+  font-size: var(--font-size-medium);
+  font-weight: var(--font-weight-regular);
+}
+
+.section__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+// Above the worksheet fields (projected into WorksheetDetails): secondary button (delete /
+// reopen) on the left edge of the fields, primary button (create / open the invoice) on their right edge
+.worksheet-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-200);
 }

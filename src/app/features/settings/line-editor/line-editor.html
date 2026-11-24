@@ -1,0 +1,95 @@
+@let l = line();
+
+<div class="body">
+  <!-- Title (FR / EN) and, top right, delete the line -->
+  <div class="head">
+    <app-text-key-input [key]="l.titleKey" [label]="'settings.lineTitle' | translate" (keyChange)="setTitle($event)" />
+    <button
+      type="button"
+      class="icon-button"
+      [attr.aria-label]="'settings.removeLine' | translate"
+      [attr.title]="'settings.removeLine' | translate"
+      (click)="removeLine()"
+    >
+      <app-icon name="delete" />
+    </button>
+  </div>
+
+  @for (slot of slots; track slot) {
+    <div class="slot">
+      <p class="text-small text-secondary">{{ 'settings.slots.' + slot | translate }}</p>
+
+      @for (field of l[slot] ?? []; track field.id; let i = $index) {
+        <div class="field-editor">
+          <div class="field-editor__head">
+            <span class="type">{{ 'settings.types.' + field.type | translate }}</span>
+            <button
+              type="button"
+              class="icon-button"
+              [attr.aria-label]="'settings.removeField' | translate"
+              [attr.title]="'settings.removeField' | translate"
+              (click)="removeField(slot, i)"
+            >
+              <app-icon name="delete" size="small" />
+            </button>
+          </div>
+
+          @switch (field.type) {
+            @case ('label') {
+              <app-text-key-input [key]="field.labelKey" [label]="'settings.types.label' | translate" (keyChange)="patchField(slot, i, { labelKey: $event })" />
+            }
+            @case ('radio') {
+              <ng-container *ngTemplateOutlet="options; context: { $implicit: field, slot, i }" />
+            }
+            @case ('checkbox') {
+              <ng-container *ngTemplateOutlet="options; context: { $implicit: field, slot, i }" />
+            }
+            @case ('text') {
+              <app-text-key-input
+                [key]="field.placeholderKey"
+                [label]="'settings.placeholder' | translate"
+                [placeholder]="'settings.placeholder' | translate"
+                (keyChange)="patchField(slot, i, { placeholderKey: $event })"
+              />
+            }
+          }
+        </div>
+      }
+
+      <select class="input add-field" [attr.aria-label]="'settings.addField' | translate" (change)="addField(slot, $any($event.target))">
+        <option value="">+ {{ 'settings.addField' | translate }}</option>
+        @for (type of types; track type) {
+          <option [value]="type">{{ 'settings.types.' + type | translate }}</option>
+        }
+      </select>
+    </div>
+  }
+</div>
+
+<!-- Options of a radio / checkbox field: text (FR / EN), delete -->
+<ng-template #options let-field let-slot="slot" let-i="i">
+  @for (option of field.options; track option.value) {
+    <div class="option">
+      <!-- What the option looks like in the worksheet (not a value to fill here) -->
+      <input [type]="field.type" disabled aria-hidden="true" tabindex="-1" />
+      <app-text-key-input
+        [key]="option.labelKey"
+        [label]="'settings.option' | translate"
+        (keyChange)="setOptionText(slot, i, field, option.value, $event)"
+      />
+      <button
+        type="button"
+        class="icon-button"
+        [attr.aria-label]="'settings.removeOption' | translate"
+        [attr.title]="'settings.removeOption' | translate"
+        (click)="removeOption(slot, i, field, option.value)"
+      >
+        <app-icon name="close" size="small" />
+      </button>
+    </div>
+  }
+  <button type="button" class="button-subtle add-option" (click)="addOption(slot, i, field)">
+    <app-icon name="plus-circle" size="small" />
+    {{ 'settings.addOption' | translate }}
+  </button>
+</ng-template>

@@ -1,0 +1,82 @@
+@use 'breakpoints' as bp;
+
+:host {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+
+  // Mobile: the two collapsed rails form a toolbar above the work area
+  @include bp.mobile {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'sidebar transcript'
+      'main main';
+  }
+}
+
+// Without transcript, the side panel rail takes the whole toolbar on mobile
+:host(.no-transcript) {
+  @include bp.mobile {
+    grid-template-areas:
+      'sidebar sidebar'
+      'main main';
+  }
+}
+
+// Without side panel, the transcript rail takes the whole toolbar on mobile
+:host(.no-sidebar) {
+  @include bp.mobile {
+    grid-template-areas:
+      'transcript transcript'
+      'main main';
+  }
+}
+
+// Slot of the projected side panel: a one-cell grid, so the panel fills it at every size
+.sidebar {
+  order: 1;
+  display: grid;
+
+  @include bp.mobile {
+    grid-area: sidebar;
+  }
+}
+
+.work-area {
+  order: 2;
+  flex: 1;
+  min-width: 0;
+  // Scrollbar always shown: the content keeps its width whether it scrolls or not, so it does
+  // not move when another worksheet / invoice is selected
+  overflow-y: scroll;
+  background: var(--color-background-secondary);
+  // Children adapt to the space left by the side panels, not to the viewport
+  container: work-area / inline-size;
+
+  @include bp.mobile {
+    grid-area: main;
+  }
+}
+
+.transcript {
+  order: 3;
+
+  @include bp.mobile {
+    grid-area: transcript;
+  }
+}
+
+.backdrop {
+  display: none;
+
+  @include bp.tablet-down {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: calc(var(--z-overlay) - 1);
+    background: var(--overlay-backdrop);
+  }
+}

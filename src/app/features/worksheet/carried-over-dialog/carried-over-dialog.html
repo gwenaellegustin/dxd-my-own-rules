@@ -1,0 +1,66 @@
+<dialog class="dialog" aria-labelledby="carried-over-title" appModalDialog (dismiss)="cancelled.emit()">
+  <form class="dialog__box" (submit)="$event.preventDefault(); confirm()">
+    <h2 id="carried-over-title" class="text-subheading">
+      {{ 'carriedOver.title' | translate }}
+      @if (singleDate()?.date; as date) {
+        <span class="text-secondary">· {{ date | date: 'dd.MM.yyyy' }}</span>
+      }
+    </h2>
+    <p class="text-secondary">{{ 'carriedOver.hint' | translate }}</p>
+
+    <div class="dialog__body">
+      @for (group of groups(); track $index) {
+        <fieldset class="dialog__group">
+          <legend class="dialog__legend">
+            {{ group.sectionTitleKey | translate }}
+            @if (!singleDate() && group.date) {
+              <span class="text-secondary">· {{ group.date | date: 'dd.MM.yyyy' }}</span>
+            }
+          </legend>
+          @for (item of group.items; track item.key) {
+            @let isDeleted = deleted().has(item.key);
+            <div class="carried-item" [class.carried-item--deleted]="isDeleted">
+              <label class="choice choice--wrap carried-item__label">
+                <input
+                  type="checkbox"
+                  [checked]="selected().has(item.key)"
+                  [disabled]="isDeleted"
+                  (change)="toggle(item.key)"
+                />
+                <span class="carried-item__text">
+                  @if (item.titleKey) {
+                    {{ item.titleKey | translate }}
+                  } @else {
+                    {{ item.text }}
+                  }
+                </span>
+              </label>
+              @let actionKey = isDeleted ? 'carriedOver.restore' : 'carriedOver.delete';
+              <button
+                type="button"
+                class="icon-button"
+                [attr.aria-pressed]="isDeleted"
+                [attr.aria-label]="actionKey | translate"
+                [attr.title]="actionKey | translate"
+                (click)="toggleDeleted(item.key)"
+              >
+                <app-icon [name]="isDeleted ? 'undo' : 'delete'" />
+              </button>
+            </div>
+          }
+        </fieldset>
+      }
+    </div>
+
+    <div class="dialog__actions">
+      <span class="dialog__count text-secondary">
+        {{ 'carriedOver.count' | translate: { count: importedCount() } }}
+        @if (deletedCount()) {
+          · {{ 'carriedOver.deletedCount' | translate: { count: deletedCount() } }}
+        }
+      </span>
+      <button type="button" class="button" (click)="cancelled.emit()">{{ 'carriedOver.later' | translate }}</button>
+      <button type="submit" class="button button--primary">{{ 'carriedOver.confirm' | translate }}</button>
+    </div>
+  </form>
+</dialog>

@@ -1,10 +1,170 @@
 [
-  { "id": "client-1", "name": "Fabrice Favre", "vehicles": ["Kia"] },
-  { "id": "client-2", "name": "Corentin Despont", "vehicles": ["Ducati"] },
-  { "id": "client-3", "name": "Mr Morard", "vehicles": ["Peugeot"] },
-  { "id": "client-4", "name": "Patrice Petit", "vehicles": ["VW"] },
-  { "id": "client-5", "name": "Gwen Gustin", "vehicles": ["Honda"] },
-  { "id": "client-6", "name": "Matthieu Berclaz", "vehicles": ["Bus"] },
-  { "id": "client-7", "name": "Mrs Jacquet", "vehicles": ["Toyota"] },
-  { "id": "client-8", "name": "Mr Jacquet", "vehicles": ["Audi"] }
+  {
+    "id": "client-1",
+    "name": "Fabrice Favre",
+    "address": {
+      "street": "Chemin des Vignes 12",
+      "postcode": "1110",
+      "city": "Morges"
+    },
+    "rateId": "loyalty",
+    "vehicles": [
+      {
+        "id": "vehicle-1",
+        "name": "Kia Ceed 1.5 T-GDi",
+        "plate": "VD 232 067",
+        "kind": "car",
+        "registrationImage": "images/registration/sample.jpg",
+        "registrationNote": ""
+      }
+    ]
+  },
+  {
+    "id": "client-2",
+    "name": "Corentin Despont",
+    "address": {
+      "street": "Rue du Bourg 5",
+      "postcode": "1145",
+      "city": "Bière"
+    },
+    "rateId": "standard",
+    "vehicles": [
+      {
+        "id": "vehicle-2",
+        "name": "Ducati Monster 937",
+        "plate": "VD 6213",
+        "kind": "motorcycle",
+        "registrationImage": null,
+        "registrationNote": ""
+      }
+    ]
+  },
+  {
+    "id": "client-3",
+    "name": "Mr Morard",
+    "address": {
+      "street": "Route de Cossonay 48",
+      "postcode": "1143",
+      "city": "Apples"
+    },
+    "rateId": "standard",
+    "vehicles": [
+      {
+        "id": "vehicle-3",
+        "name": "Peugeot 308 SW",
+        "plate": "VD 302 118",
+        "kind": "car",
+        "registrationImage": null,
+        "registrationNote": ""
+      }
+    ]
+  },
+  {
+    "id": "client-4",
+    "name": "Patrice Petit",
+    "address": {
+      "street": "Avenue de la Gare 21",
+      "postcode": "1170",
+      "city": "Aubonne"
+    },
+    "rateId": "standard",
+    "vehicles": [
+      {
+        "id": "vehicle-4",
+        "name": "VW Golf 8 Variant",
+        "plate": "VD 77 410",
+        "kind": "car",
+        "registrationImage": null,
+        "registrationNote": ""
+      }
+    ]
+  },
+  {
+    "id": "client-5",
+    "name": "Gwen Gustin",
+    "address": {
+      "street": "Rue Centrale 8",
+      "postcode": "1304",
+      "city": "Cossonay"
+    },
+    "rateId": "standard",
+    "vehicles": [
+      {
+        "id": "vehicle-5",
+        "name": "Honda CB 500 X",
+        "plate": "VD 8124",
+        "kind": "motorcycle",
+        "registrationImage": null,
+        "registrationNote": ""
+      }
+    ]
+  },
+  {
+    "id": "client-6",
+    "name": "Matthieu Berclaz",
+    "address": {
+      "street": "Chemin du Moulin 3",
+      "postcode": "1142",
+      "city": "Pampigny"
+    },
+    "rateId": "loyalty",
+    "vehicles": [
+      {
+        "id": "vehicle-6",
+        "name": "Bus",
+        "plate": "VD 418 233",
+        "kind": "car",
+        "registrationImage": null,
+        "registrationNote": ""
+      },
+      {
+        "id": "vehicle-7",
+        "name": "Triumph Street Triple RS",
+        "plate": "VD 5841",
+        "kind": "motorcycle",
+        "registrationImage": null,
+        "registrationNote": ""
+      }
+    ]
+  },
+  {
+    "id": "client-7",
+    "name": "Mrs Jacquet",
+    "address": {
+      "street": "Place du Marché 2",
+      "postcode": "1260",
+      "city": "Nyon"
+    },
+    "rateId": "standard",
+    "vehicles": [
+      {
+        "id": "vehicle-8",
+        "name": "Toyota Yaris Hybrid",
+        "plate": "VD 127 554",
+        "kind": "car",
+        "registrationImage": null,
+        "registrationNote": ""
+      }
+    ]
+  },
+  {
+    "id": "client-8",
+    "name": "Mr Jacquet",
+    "address": {
+      "street": "Place du Marché 2",
+      "postcode": "1260",
+      "city": "Nyon"
+    },
+    "rateId": "standard",
+    "vehicles": [
+      {
+        "id": "vehicle-9",
+        "name": "Audi A4 Avant",
+        "plate": "VD 127 555",
+        "kind": "car",
+        "registrationImage": null,
+        "registrationNote": ""
+      }
+    ]
+  }
 ]

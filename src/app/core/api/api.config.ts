@@ -13,8 +13,11 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL', {
 export const API_ENDPOINTS = {
   currentUser: 'current-user.json',
   clients: 'clients.json',
-  worksheetTemplate: 'worksheet-template.json',
+  vehicleBrands: 'vehicle-brands.json',
+  worksheetSettings: 'worksheet-settings.json',
   worksheets: 'worksheets.json',
   transcripts: 'transcripts.json',
   shoppingList: 'shopping-list.json',
+  invoices: 'invoices.json',
+  company: 'company.json',
 } as const;

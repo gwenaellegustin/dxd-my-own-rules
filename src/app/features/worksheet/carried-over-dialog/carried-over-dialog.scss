@@ -1,0 +1,27 @@
+// One item: "import" checkbox + label on the left, delete / restore on the right
+.carried-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-400);
+}
+
+.carried-item__label {
+  flex: 1;
+  min-width: 0;
+}
+
+// Deleted items are no longer carried over: struck through and dimmed
+.carried-item--deleted .carried-item__label {
+  color: var(--color-text-secondary);
+  cursor: default;
+
+  input {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+.carried-item--deleted .carried-item__text {
+  text-decoration: line-through;
+}

@@ -1,45 +1,57 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal } from '@angular/core';
-import { UpperCasePipe } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Location, UpperCasePipe } from '@angular/common';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon } from '../../shared/icon/icon';
 import { LanguageService } from '../../core/services/language.service';
-import { ShoppingListService } from '../../core/services/shopping-list.service';
+import { MainNav } from '../main-nav/main-nav';
+import { Dropdown } from '../../shared/dropdown/dropdown';
 import { UserService } from '../../core/services/user.service';
+import { UndoService } from '../../core/services/undo.service';
 
-interface NavItem {
-  path: string;
-  labelKey: string;
-  badge?: () => number;
+/** Navigation API (Chromium): tells whether there is a page to go back / forward to */
+interface NavigationHistory {
+  canGoBack: boolean;
+  canGoForward: boolean;
 }
 
+const navigationHistory = (): NavigationHistory | undefined =>
+  (globalThis as { navigation?: NavigationHistory }).navigation;
+
+/**
+ * Header: the pages and back / forward (browser history) on the left; undo / redo (edits of the
+ * whole app, also Ctrl+Z / Ctrl+Y) and the user menu (company logo: settings, language) on the right.
+ */
 @Component({
   selector: 'app-header',
-  imports: [UpperCasePipe, RouterLink, RouterLinkActive, TranslatePipe, Icon],
+  imports: [UpperCasePipe, RouterLink, TranslatePipe, Icon, MainNav, Dropdown],
   templateUrl: './app-header.html',
   styleUrl: './app-header.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '(document:click)': 'closeMenuOnOutsideClick($event)',
-    '(document:keydown.escape)': 'menuOpen.set(false)',
-  },
 })
 export class AppHeader {
-  private readonly host = inject(ElementRef<HTMLElement>);
-  private readonly shoppingList = inject(ShoppingListService);
   protected readonly user = inject(UserService);
   protected readonly language = inject(LanguageService);
+  protected readonly history = inject(UndoService);
+  protected readonly location = inject(Location);
 
-  protected readonly menuOpen = signal(false);
+  /** Without the Navigation API (Firefox, Safari) the buttons stay enabled */
+  protected readonly canGoBack = signal(true);
+  protected readonly canGoForward = signal(true);
 
-  protected readonly navItems: NavItem[] = [
-    { path: '/worksheets', labelKey: 'nav.worksheet' },
-    { path: '/invoices', labelKey: 'nav.invoice' },
-    { path: '/clients', labelKey: 'nav.clients' },
-    { path: '/shopping-list', labelKey: 'nav.shoppingList', badge: () => this.shoppingList.count() },
-  ];
-
-  protected closeMenuOnOutsideClick(event: MouseEvent): void {
-    if (!this.host.nativeElement.contains(event.target as Node)) this.menuOpen.set(false);
+  constructor() {
+    inject(Router)
+      .events.pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => {
+        const history = navigationHistory();
+        if (!history) return;
+        this.canGoBack.set(history.canGoBack);
+        this.canGoForward.set(history.canGoForward);
+      });
   }
 }

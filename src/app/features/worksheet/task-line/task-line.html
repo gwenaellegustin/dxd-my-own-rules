@@ -1,3 +1,5 @@
+<!-- Invoiced worksheet: every control of the line is disabled at once -->
+<fieldset class="line__lock" [disabled]="locked()">
 <div class="line__first">
   <div class="line__description">
     @if (line().titleKey; as titleKey) {
@@ -9,16 +11,44 @@
   </div>
 
   <div class="line__status">
-    <button
-      type="button"
-      class="icon-button line__note-toggle"
-      [class.line__note-toggle--has-note]="hasHiddenNote()"
-      [attr.aria-label]="'line.addNote' | translate"
-      [attr.aria-expanded]="noteOpen()"
-      (click)="openNote()"
-    >
-      <app-icon name="edit" />
-    </button>
+    @if (quantity()) {
+      <!-- Litres used (fluids): the invoice takes this quantity -->
+      <label class="line__quantity">
+        <input
+          class="input"
+          type="text"
+          inputmode="decimal"
+          [value]="state().quantity ?? ''"
+          [attr.aria-label]="'line.quantity' | translate"
+          [attr.title]="'line.quantity' | translate"
+          (input)="updateQuantity($any($event.target).value)"
+        />
+        <span class="text-secondary" aria-hidden="true">{{ 'line.litres' | translate }}</span>
+      </label>
+    }
+    @if (canHaveNote()) {
+      <!-- Hidden (space kept for alignment) while the note is shown -->
+      <button
+        type="button"
+        class="icon-button line__note-toggle"
+        [class.line__note-toggle--hidden]="noteOpen() || locked()"
+        [attr.aria-label]="'line.addNote' | translate"
+        (click)="openNote()"
+      >
+        <app-icon name="note" />
+      </button>
+    } @else {
+      <!-- "Other" lines: delete instead of note (hidden on the trailing empty line) -->
+      <button
+        type="button"
+        class="icon-button line__note-toggle"
+        [class.line__note-toggle--hidden]="!removable() || locked()"
+        [attr.aria-label]="'line.remove' | translate"
+        (click)="remove.emit()"
+      >
+        <app-icon name="delete" />
+      </button>
+    }
     <label class="choice">
       <input type="checkbox" [checked]="state().planned" (change)="togglePlanned()" />
       {{ 'line.planned' | translate }}
@@ -48,6 +78,7 @@
       [value]="state().note"
       [attr.aria-label]="'line.note' | translate"
       (input)="updateNote($any($event.target).value)"
+      (blur)="closeNoteIfEmpty()"
     ></textarea>
   </app-clearable>
 }
@@ -57,19 +88,6 @@
     @case ('label') {
       <span class="line__title">{{ field.labelKey | translate }}</span>
     }
-    @case ('textarea') {
-      <app-clearable class="line__free-text">
-        <textarea
-          #clearTarget
-          class="textarea textarea--single-line"
-          appAutoGrow
-          [value]="value(field) ?? ''"
-          [placeholder]="(field.placeholderKey ?? '') | translate"
-          [attr.aria-label]="(field.placeholderKey ?? '') | translate"
-          (input)="setValue(field, $any($event.target).value)"
-        ></textarea>
-      </app-clearable>
-    }
     @case ('radio') {
       <span class="line__options" role="radiogroup">
         @for (option of field.options; track option.value) {
@@ -78,7 +96,7 @@
               type="radio"
               [name]="groupName(field)"
               [checked]="isChecked(field, option.value)"
-              (change)="setValue(field, option.value)"
+              (click)="toggleRadio(field, option.value)"
             />
             {{ option.labelKey | translate }}
           </label>
@@ -88,7 +106,7 @@
     @case ('checkbox') {
       <span class="line__options">
         @for (option of field.options; track option.value) {
-          <label class="choice" [class.choice--round]="field.round">
+          <label class="choice">
             <input
               type="checkbox"
               [checked]="isChecked(field, option.value)"
@@ -112,19 +130,21 @@
       </span>
     }
     @default {
-      <app-clearable>
-        <input
+      <!-- Text: grows with its content (wider up to the row, then on several rows) -->
+      @let size = line().repeatable ? 'full' : (field.size ?? 'small');
+      <app-clearable class="line__text" [class.line__text--medium]="size === 'medium'" [class.line__text--full]="size === 'full'">
+        <textarea
           #clearTarget
-          class="input"
-          [class.input--small]="(field.size ?? 'small') === 'small'"
-          [class.input--medium]="field.size === 'medium'"
-          [type]="field.type"
+          class="textarea textarea--single-line"
+          appAutoGrow
           [value]="value(field) ?? ''"
           [placeholder]="(field.placeholderKey ?? '') | translate"
           [attr.aria-label]="((field.placeholderKey ?? line().titleKey) ?? '') | translate"
           (input)="setValue(field, $any($event.target).value)"
-        />
+          (blur)="removeIfEmpty()"
+        ></textarea>
       </app-clearable>
     }
   }
 </ng-template>
+</fieldset>

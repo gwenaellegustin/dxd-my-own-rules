@@ -1,51 +1,95 @@
-<a class="logo" routerLink="/worksheets" [attr.aria-label]="'app.name' | translate">
-  <app-icon name="lift" size="xlarge" />
-</a>
+<!-- Left: the pages, then back / forward (browser history) -->
 
-<nav class="nav" [attr.aria-label]="'nav.label' | translate">
-  @for (item of navItems; track item.path) {
-    <a class="nav__pill" [routerLink]="item.path" routerLinkActive="nav__pill--active" ariaCurrentWhenActive="page">
-      {{ item.labelKey | translate }}
-      @if (item.badge?.(); as count) {
-        <span class="nav__badge" [attr.aria-label]="'nav.badgeCount' | translate: { count }">{{ count }}</span>
-      }
-    </a>
-  }
-</nav>
+<app-main-nav />
 
-<div class="language" role="group" [attr.aria-label]="'account.language' | translate">
-  @for (lang of language.languages; track lang) {
-    <button
-      type="button"
-      class="language__option"
-      [class.language__option--active]="language.current() === lang"
-      [attr.aria-pressed]="language.current() === lang"
-      [attr.aria-label]="'languages.' + lang | translate"
-      (click)="language.use(lang)"
-    >
-      {{ lang | uppercase }}
-    </button>
-  }
+<div class="tools tools--history" role="group" [attr.aria-label]="'header.history' | translate">
+  <button
+    type="button"
+    class="icon-button"
+    [disabled]="!canGoBack()"
+    [attr.aria-label]="'header.back' | translate"
+    [attr.title]="'header.back' | translate"
+    (click)="location.back()"
+  >
+    <app-icon name="back" />
+  </button>
+  <button
+    type="button"
+    class="icon-button"
+    [disabled]="!canGoForward()"
+    [attr.aria-label]="'header.forward' | translate"
+    [attr.title]="'header.forward' | translate"
+    (click)="location.forward()"
+  >
+    <app-icon name="forward" />
+  </button>
 </div>
 
-<div class="account">
+<!-- Right: undo / redo (edits of the whole app), then the user menu (settings, language) -->
+<div class="tools" role="group" [attr.aria-label]="'header.edits' | translate">
+  <button
+    type="button"
+    class="icon-button"
+    [disabled]="!history.canUndo()"
+    [attr.aria-label]="'header.undo' | translate"
+    [attr.title]="'header.undo' | translate"
+    (click)="history.undo()"
+  >
+    <app-icon name="undo" />
+  </button>
+  <button
+    type="button"
+    class="icon-button"
+    [disabled]="!history.canRedo()"
+    [attr.aria-label]="'header.redo' | translate"
+    [attr.title]="'header.redo' | translate"
+    (click)="history.redo()"
+  >
+    <app-icon name="redo" />
+  </button>
+</div>
+
+<div class="account" appDropdown #account="appDropdown">
   <button
     type="button"
     class="account__trigger"
-    [attr.aria-expanded]="menuOpen()"
+    [attr.aria-expanded]="account.open()"
     aria-haspopup="menu"
     [attr.aria-label]="'account.menu' | translate"
-    (click)="menuOpen.set(!menuOpen())"
+    (click)="account.toggle()"
   >
-    <span class="account__avatar">{{ user.initials() }}</span>
+    <img class="account__logo" src="images/logo.png" alt="" />
     <app-icon name="chevron-down" size="small" />
   </button>
 
-  @if (menuOpen()) {
-    <div class="account__menu" role="menu">
+  @if (account.open()) {
+    <div class="dropdown-menu" role="menu">
       @if (user.currentUser(); as currentUser) {
         <p class="account__name">{{ currentUser.firstName }} {{ currentUser.lastName }}</p>
       }
+      <a class="dropdown-menu__item" role="menuitem" routerLink="/settings/worksheet" (click)="account.close()">
+        <app-icon name="settings" />
+        {{ 'settings.title' | translate }}
+      </a>
+
+      <div class="dropdown-menu__item account__language">
+        <app-icon name="language" />
+        <span id="account-language">{{ 'account.language' | translate }}</span>
+        <div class="language" role="group" aria-labelledby="account-language">
+          @for (lang of language.languages; track lang) {
+            <button
+              type="button"
+              class="language__option"
+              [class.language__option--active]="language.current() === lang"
+              [attr.aria-pressed]="language.current() === lang"
+              [attr.aria-label]="'languages.' + lang | translate"
+              (click)="language.use(lang)"
+            >
+              {{ lang | uppercase }}
+            </button>
+          }
+        </div>
+      </div>
     </div>
   }
 </div>

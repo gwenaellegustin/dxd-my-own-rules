@@ -1,0 +1,20 @@
+@if (withSidebar()) {
+  <div class="sidebar"><ng-content select="[sidebar]" /></div>
+}
+
+<div class="work-area"><ng-content /></div>
+
+@if (withTranscript()) {
+  <app-transcript-panel
+    class="transcript"
+    [messages]="transcript.messages()"
+    [problemCount]="transcript.problemCount()"
+    [open]="transcriptOpen()"
+    (openChange)="transcriptOpen.set($event)"
+  />
+}
+
+<!-- Tablet: clicking outside an open overlay panel closes it -->
+@if (sidebarOpen() || transcriptOpen()) {
+  <div class="backdrop" (click)="closeOverlays()"></div>
+}

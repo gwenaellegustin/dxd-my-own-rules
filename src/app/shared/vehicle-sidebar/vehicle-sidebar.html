@@ -1,0 +1,133 @@
+@if (open()) {
+  <aside class="panel" [attr.aria-label]="titleKey() | translate">
+    <div class="panel__head">
+      <button type="button" class="panel__title" [attr.aria-expanded]="true" (click)="openChange.emit(false)">
+        <h2 class="text-heading">{{ titleKey() | translate }}</h2>
+        <span class="icon-button icon-button--primary"><app-icon name="left-panel-close" /></span>
+        <span class="visually-hidden">{{ 'common.collapse' | translate }}</span>
+      </button>
+
+      <div class="search-row">
+      <div class="search">
+        <app-clearable>
+          <input
+            #clearTarget
+            type="search"
+            class="input"
+            [placeholder]="'common.search' | translate"
+            [attr.aria-label]="'common.search' | translate"
+            [value]="query()"
+            (input)="query.set($any($event.target).value)"
+          />
+        </app-clearable>
+        <app-icon name="search" size="small" />
+      </div>
+
+      <!-- Order of the cards (e.g. last date / name) -->
+      @if (sortOptions().length) {
+        <div appDropdown #sortMenu="appDropdown">
+          <button
+            type="button"
+            class="icon-button"
+            aria-haspopup="menu"
+            [attr.aria-expanded]="sortMenu.open()"
+            [attr.aria-label]="'common.sortBy' | translate"
+            [attr.title]="'common.sortBy' | translate"
+            (click)="sortMenu.toggle()"
+          >
+            <app-icon name="sort" />
+          </button>
+          @if (sortMenu.open()) {
+            <div class="dropdown-menu" role="menu">
+              <p class="dropdown-menu__title text-small text-secondary">{{ 'common.sortBy' | translate }}</p>
+              @for (option of sortOptions(); track option.id) {
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  class="dropdown-menu__item"
+                  [attr.aria-checked]="sort() === option.id"
+                  (click)="sort.set(option.id); sortMenu.close()"
+                >
+                  <app-icon name="check" size="small" [class.sort__check--hidden]="sort() !== option.id" />
+                  {{ option.labelKey | translate }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+      </div>
+
+      @if (newLabelKey(); as newLabel) {
+        <button type="button" class="button-subtle" (click)="create.emit()">
+          <app-icon name="plus-circle" size="small" />
+          {{ newLabel | translate }}
+        </button>
+      }
+    </div>
+
+    <div class="panel__scroll">
+      @for (group of visibleGroups(); track group.id) {
+        <section class="group">
+          @if (group.titleKey) {
+            <h3 class="text-subheading">{{ group.titleKey | translate }}</h3>
+          }
+          @for (card of group.cards; track card.id) {
+            <button
+              type="button"
+              class="card"
+              [class.card--selected]="card.id === selectedId()"
+              [attr.aria-current]="card.id === selectedId() ? 'true' : null"
+              (click)="selectCard.emit(card.id)"
+            >
+              <!-- A card without vehicle (e.g. a client) shows its own icon -->
+              @if (card.icon; as icon) {
+                <app-icon [name]="icon" size="xlarge" />
+              } @else {
+                <app-vehicle-logo [vehicle]="card.vehicle" [lifted]="!!card.lifted" />
+              }
+              <span class="card__body">
+                <span class="card__title">
+                  @if (card.title) {
+                    {{ card.title }}
+                  } @else if (card.vehicle || card.client) {
+                    {{ card.vehicle }}@if (card.vehicle && card.client) { - }{{ card.client }}
+                  } @else {
+                    {{ untitledKey() | translate }}
+                  }
+                </span>
+                @if (card.subtitle) {
+                  <span class="card__subtitle">{{ card.subtitle }}</span>
+                }
+                @if (card.date) {
+                  <span class="card__date">{{ card.date | date: 'dd.MM.yyyy' }}</span>
+                }
+                @if (card.badges?.length) {
+                  <span class="card__badges">
+                    @for (badge of card.badges; track badge.icon) {
+                      <span
+                        class="count-badge count-badge--{{ badge.tone }}"
+                        [attr.title]="badge.labelKey | translate: { count: badge.count }"
+                        [attr.aria-label]="badge.labelKey | translate: { count: badge.count }"
+                      >
+                        <app-icon [name]="badge.icon" size="small" />
+                        {{ badge.count }}
+                      </span>
+                    }
+                  </span>
+                }
+              </span>
+            </button>
+          }
+        </section>
+      } @empty {
+        <p class="text-secondary">{{ emptyKey() | translate }}</p>
+      }
+    </div>
+  </aside>
+} @else {
+  <button type="button" class="rail" [attr.aria-expanded]="false" (click)="openChange.emit(true)">
+    <span class="icon-button icon-button--primary"><app-icon [name]="icon()" /></span>
+    <span class="rail__label text-heading">{{ titleKey() | translate }}</span>
+  </button>
+}

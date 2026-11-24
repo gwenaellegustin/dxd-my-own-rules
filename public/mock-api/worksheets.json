@@ -2,23 +2,22 @@
   {
     "id": "ws-1006",
     "status": "open",
+    "kind": "car",
     "client": "Fabrice Favre",
-    "vehicle": "Kia",
+    "vehicle": "Kia Ceed 1.5 T-GDi",
     "date": "2026-11-06",
     "kilometers": "119",
-    "hours": "20h → 21h / 11h → 12h / 13h15 →",
-    "comments": "Niv. d'huile au mini avant la vidange !\n225/45 R17 été → saison\nFrein AR → expertise",
+    "hours": "• 20h → 21h\n• 11h → 12h\n• 13h15 →",
+    "comments": "• Niv. d'huile au mini avant la vidange !\n• 225/45 R17 été → saison\n• Frein AR → expertise",
     "damages": [],
     "lines": {
       "service": {
         "planned": true,
         "done": false,
-        "note": "+ (sans les bougies)",
+        "note": "sans les bougies",
         "values": {
           "km": "120000",
-          "size": [
-            "big"
-          ]
+          "size": "big"
         }
       },
       "wheelChange": {
@@ -45,7 +44,7 @@
       },
       "oilFilter": {
         "planned": true,
-        "done": false,
+        "done": true,
         "note": "1566",
         "values": {}
       },
@@ -63,16 +62,48 @@
       },
       "engineOil": {
         "planned": true,
-        "done": false,
-        "note": "3.50",
+        "done": true,
+        "note": "",
         "values": {
           "grade": "5W30"
-        }
+        },
+        "quantity": "3.50"
       },
       "washerFluid": {
         "planned": true,
         "done": false,
-        "note": "1.5",
+        "note": "",
+        "values": {
+          "season": "winter"
+        },
+        "quantity": "1.5"
+      },
+      "brakeFluid": {
+        "planned": true,
+        "done": false,
+        "note": "",
+        "values": {
+          "grade": "DOT 4"
+        }
+      }
+    }
+  },
+  {
+    "id": "ws-1008",
+    "status": "open",
+    "kind": "car",
+    "client": "Matthieu Berclaz",
+    "vehicle": "Bus",
+    "date": "2026-11-04",
+    "kilometers": "",
+    "hours": "",
+    "comments": "",
+    "damages": [],
+    "lines": {
+      "wheelChange": {
+        "planned": true,
+        "done": false,
+        "note": "",
         "values": {
           "season": "winter"
         }
@@ -82,8 +113,9 @@
   {
     "id": "ws-1007",
     "status": "open",
+    "kind": "motorcycle",
     "client": "Corentin Despont",
-    "vehicle": "Ducati",
+    "vehicle": "Ducati Monster 937",
     "date": null,
     "kilometers": "",
     "hours": "",
@@ -93,9 +125,10 @@
   },
   {
     "id": "ws-1005",
-    "status": "toBeBilled",
+    "status": "invoiced",
+    "kind": "car",
     "client": "Mr Morard",
-    "vehicle": "Peugeot",
+    "vehicle": "Peugeot 308 SW",
     "date": "2026-11-05",
     "kilometers": "120 450",
     "hours": "",
@@ -105,7 +138,7 @@
       "brakes": {
         "planned": true,
         "done": true,
-        "note": "",
+        "note": "Disques au minimum, à contrôler à la prochaine expertise",
         "values": {
           "axle": [
             "front"
@@ -124,11 +157,12 @@
   },
   {
     "id": "ws-1004",
-    "status": "toBeBilled",
+    "status": "invoiced",
+    "kind": "car",
     "client": "Patrice Petit",
-    "vehicle": "VW",
+    "vehicle": "VW Golf 8 Variant",
     "date": "2026-11-05",
-    "kilometers": "",
+    "kilometers": "54'900",
     "hours": "",
     "comments": "",
     "damages": [],
@@ -136,61 +170,99 @@
   },
   {
     "id": "ws-1003",
-    "status": "toBeBilled",
+    "status": "invoiced",
+    "kind": "motorcycle",
     "client": "Gwen Gustin",
-    "vehicle": "Honda",
+    "vehicle": "Honda CB 500 X",
     "date": "2026-11-01",
-    "kilometers": "",
+    "kilometers": "12'030",
     "hours": "",
-    "comments": "",
+    "comments": "• Kit chaîne usé : à changer à la prochaine intervention",
     "damages": [],
-    "lines": {}
+    "lines": {
+      "labourOther": {
+        "planned": true,
+        "done": true,
+        "note": "",
+        "values": {
+          "text": "Changement des pneus"
+        }
+      },
+      "labourOther~2": {
+        "planned": true,
+        "done": false,
+        "note": "",
+        "values": {
+          "text": "Changement du kit chaîne"
+        }
+      }
+    },
+    "carryOver": [
+      "labourOther~2"
+    ]
   },
   {
     "id": "ws-1002",
-    "status": "toBeBilled",
+    "status": "invoiced",
+    "kind": "car",
     "client": "Fabrice Favre",
-    "vehicle": "Kia",
+    "vehicle": "Kia Ceed 1.5 T-GDi",
     "date": "2026-10-25",
-    "kilometers": "",
+    "kilometers": "103'886",
     "hours": "",
-    "comments": "",
+    "comments": "• Niveau d'huile à contrôler tous les 5'000 km !\n• Service tous les 15'000 km ou 1 année.",
     "damages": [],
     "lines": {}
   },
   {
     "id": "ws-1001",
     "status": "invoiced",
+    "kind": "car",
     "client": "Matthieu Berclaz",
     "vehicle": "Bus",
     "date": "2026-10-24",
-    "kilometers": "",
+    "kilometers": "61'240",
     "hours": "",
-    "comments": "",
+    "comments": "• Pneus avant à remplacer avant le printemps",
     "damages": [],
     "lines": {}
   },
   {
     "id": "ws-1000",
     "status": "invoiced",
+    "kind": "car",
     "client": "Mrs Jacquet",
-    "vehicle": "Toyota",
+    "vehicle": "Toyota Yaris Hybrid",
     "date": "2026-10-20",
-    "kilometers": "",
+    "kilometers": "45'310",
     "hours": "",
-    "comments": "",
+    "comments": "• Prochain service à 60'000 km",
     "damages": [],
     "lines": {}
   },
   {
     "id": "ws-0999",
     "status": "invoiced",
+    "kind": "car",
     "client": "Mr Jacquet",
-    "vehicle": "Audi",
+    "vehicle": "Audi A4 Avant",
     "date": "2026-10-20",
-    "kilometers": "",
+    "kilometers": "128'760",
     "hours": "",
-    "comments": "",
+    "comments": "• Disques arrière à surveiller",
+    "damages": [],
+    "lines": {}
+  },
+  {
+    "id": "ws-0998",
+    "status": "invoiced",
+    "kind": "motorcycle",
+    "client": "Matthieu Berclaz",
+    "vehicle": "Triumph Street Triple RS",
+    "date": "2026-10-15",
+    "kilometers": "18'450",
+    "hours": "",
+    "comments": "• Niveau d'huile à contrôler tous les 5'000 km",
     "damages": [],
     "lines": {}
   }

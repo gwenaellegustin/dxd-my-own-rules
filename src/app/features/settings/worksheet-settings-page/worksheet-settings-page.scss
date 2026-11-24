@@ -1,0 +1,207 @@
+// The page scrolls inside the main area (the window itself never scrolls); like the work area of
+// the other pages, it is the `work-area` container the task lines adapt to
+:host {
+  flex: 1;
+  min-height: 0;
+  overflow-y: scroll; // always shown, like the work area of the other pages
+  background: var(--color-background-secondary);
+  container: work-area / inline-size;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-600);
+  max-width: var(--settings-max-width);
+  margin-inline: auto;
+  padding: var(--space-400);
+  padding-bottom: var(--page-bottom-space);
+}
+
+.page__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+}
+
+// Title with the car / motorcycle switch next to it (wraps when narrow)
+.page__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-400);
+}
+
+// Car / motorcycle switch (same look as the EN / FR switch of the header)
+.segmented {
+  display: inline-flex;
+  gap: var(--space-100);
+  padding: var(--space-100);
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+}
+
+.segmented__option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-200) var(--space-300);
+  border-radius: var(--radius-100);
+  color: var(--color-text-secondary);
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+
+  &--active,
+  &--active:hover {
+    background: var(--color-background-brand);
+    color: var(--color-text-on-brand);
+    font-weight: var(--font-weight-strong);
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: var(--space-400);
+  border-bottom: var(--stroke-border) solid var(--color-border-default);
+}
+
+.tabs__tab {
+  padding: var(--space-200) 0;
+  margin-bottom: calc(-1 * var(--stroke-border));
+  border-bottom: var(--stroke-focus) solid transparent;
+  color: var(--color-text-secondary);
+
+  &:hover {
+    color: var(--color-text-default);
+  }
+
+  &--active {
+    border-bottom-color: var(--color-border-strong);
+    color: var(--color-text-default);
+    font-weight: var(--font-weight-strong);
+  }
+}
+
+// The preview has the spacing of the worksheet page
+.panel,
+.worksheet-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-600);
+}
+
+.section,
+.section__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+// Lines tab: editor of the selected line | the worksheet preview; stacked when the page is narrow
+.lines-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-600);
+  align-items: start;
+
+  @container work-area (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// Stays in view while the preview scrolls; scrolls itself when taller than the window
+.editor {
+  position: sticky;
+  top: var(--space-400);
+  max-height: calc(100dvh - var(--header-height) - 2 * var(--space-400));
+  overflow-y: auto;
+
+  @container work-area (max-width: 900px) {
+    position: static;
+    max-height: none;
+  }
+}
+
+// Its own container: the lines adapt to its width, as in the work area of the worksheet page
+.worksheet-preview {
+  container: work-area / inline-size;
+}
+
+.line-slot {
+  position: relative;
+}
+
+// A line of the preview: the worksheet line as it will look (not editable), selectable and draggable
+.preview-line {
+  position: relative;
+  border-radius: var(--radius-200);
+
+  &[role='button'] {
+    cursor: grab;
+  }
+
+  &[role='button']:hover,
+  &:focus-visible {
+    outline: var(--stroke-focus) solid var(--color-border-strong);
+  }
+
+  &--selected,
+  &--selected:hover {
+    outline: var(--stroke-focus) solid var(--color-background-brand);
+  }
+
+  // Dragging: the dragged line is dimmed, a bar shows where it goes (in the gap)
+  &.dragging {
+    opacity: var(--opacity-disabled);
+  }
+
+  &.drop-before::before,
+  &.drop-after::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--stroke-focus);
+    background: var(--color-border-strong);
+  }
+
+  // In the middle of the gap above / under the line
+  &.drop-before::before {
+    top: calc(var(--space-100) / -1 - 1px);
+  }
+
+  &.drop-after::after {
+    bottom: calc(var(--space-100) / -1 - 1px);
+  }
+}
+
+// "+" centred in the gap above a line (or under the last one), shown on hover / keyboard focus
+.insert {
+  position: absolute;
+  top: calc(-1 * var(--space-200) / 2);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-content: center;
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-full);
+  color: var(--color-text-default);
+  opacity: 0;
+
+  &--after {
+    top: calc(100% + var(--space-200) / 2);
+  }
+
+  .line-slot:hover > &,
+  &:focus-visible {
+    opacity: 1;
+  }
+}
+
+.add-line {
+  align-self: flex-start;
+}

@@ -2,8 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Injector,
   OnInit,
+  afterNextRender,
   computed,
+  inject,
   input,
   output,
   signal,
@@ -15,16 +18,17 @@ import { Icon } from '../../../shared/icon/icon';
 import { AutoGrow } from '../../../shared/auto-grow/auto-grow';
 import { Clearable } from '../../../shared/clearable/clearable';
 import { LineField, TemplateLine } from '../../../core/models/worksheet-template.model';
-import { LineFieldValue, LineState } from '../../../core/models/worksheet.model';
+import { LineFieldValue, LineState, hasLineValues } from '../../../core/models/worksheet.model';
 
 /**
  * "Line" component of the Figma file (component set "Line", node 3007:6666).
  *
  * Behaviour reproduced from the Figma prototype interactions:
- * - The edit (pencil) button opens the note field. It does not close it.
- * - "Planned" and "Done" toggle independently.
- * - Checking "Done" while the note is open closes the note.
- *   Every other toggle keeps the note open / closed as it was.
+ * - The note button opens the note field and is hidden while the field is shown.
+ *   Free-text lines ("Other", no title) have no note: their text is the note, and a delete
+ *   button removes the line instead.
+ * - An empty note field closes when it loses focus (click outside).
+ * - "Planned" and "Done" toggle independently and never hide the note.
  * - Background: default → Planned (planned only) → Done (done, with or without planned).
  */
 @Component({
@@ -36,15 +40,26 @@ import { LineFieldValue, LineState } from '../../../core/models/worksheet.model'
   host: {
     '[class.line--planned]': 'state().planned && !state().done',
     '[class.line--done]': 'state().done',
+    '[class.line--repeatable]': '!!line().repeatable',
   },
 })
 export class TaskLine implements OnInit {
   readonly line = input.required<TemplateLine>();
   readonly state = input.required<LineState>();
   readonly stateChange = output<Partial<LineState>>();
+  /** "Other" lines: show the delete button */
+  readonly removable = input(false);
+  /** Invoiced worksheet: the line is read-only */
+  readonly locked = input(false);
+  /** Section counted in litres (fluids): quantity field, taken by the invoice */
+  readonly quantity = input(false);
+  readonly remove = output<void>();
+
+  private readonly injector = inject(Injector);
 
   protected readonly noteOpen = signal(false);
-  protected readonly hasHiddenNote = computed(() => !this.noteOpen() && this.state().note.trim() !== '');
+  /** "Other" lines (no title, free text only) cannot have a note */
+  protected readonly canHaveNote = computed(() => !!this.line().titleKey);
 
   private readonly noteField = viewChild<ElementRef<HTMLTextAreaElement>>('noteField');
 
@@ -55,7 +70,21 @@ export class TaskLine implements OnInit {
 
   protected openNote(): void {
     this.noteOpen.set(true);
-    queueMicrotask(() => this.noteField()?.nativeElement.focus());
+    // The field exists only after the next render
+    afterNextRender(() => this.noteField()?.nativeElement.focus(), { injector: this.injector });
+  }
+
+  protected closeNoteIfEmpty(): void {
+    if (this.state().note.trim() === '') this.noteOpen.set(false);
+  }
+
+  /**
+   * "Other" lines: clearing the text keeps the line (and the focus), like the note field;
+   * the line is removed once the field loses focus while still empty.
+   */
+  protected removeIfEmpty(): void {
+    if (this.canHaveNote() || !this.removable()) return;
+    if (!hasLineValues(this.state())) this.remove.emit();
   }
 
   protected togglePlanned(): void {
@@ -63,13 +92,15 @@ export class TaskLine implements OnInit {
   }
 
   protected toggleDone(): void {
-    const done = !this.state().done;
-    if (done) this.noteOpen.set(false);
-    this.stateChange.emit({ done });
+    this.stateChange.emit({ done: !this.state().done });
   }
 
   protected updateNote(note: string): void {
-    this.stateChange.emit({ note });
+    this.stateChange.emit(this.planIfFirstText({ note }, this.state().note, note));
+  }
+
+  protected updateQuantity(quantity: string): void {
+    this.stateChange.emit(this.planIfFirstText({ quantity }, this.state().quantity ?? null, quantity));
   }
 
   protected value(field: LineField): LineFieldValue {
@@ -82,7 +113,25 @@ export class TaskLine implements OnInit {
   }
 
   protected setValue(field: LineField, value: LineFieldValue): void {
-    this.stateChange.emit({ values: { ...this.state().values, [field.id]: value } });
+    const changes: Partial<LineState> = { values: { ...this.state().values, [field.id]: value } };
+    // Filling a field (text, number, date, radio, checkbox) marks the line as planned
+    this.stateChange.emit(this.planIfFirstText(changes, this.value(field), value));
+  }
+
+  /**
+   * Filling an empty note, field or quantity (first character, first option chosen) marks the
+   * line as planned; it can be unchecked afterwards and is not checked again while the field stays
+   * filled.
+   */
+  private planIfFirstText(changes: Partial<LineState>, before: LineFieldValue, after: LineFieldValue): Partial<LineState> {
+    const filled = (value: LineFieldValue) =>
+      Array.isArray(value) ? value.length > 0 : typeof value === 'string' && value.trim() !== '';
+    return !this.state().planned && !filled(before) && filled(after) ? { ...changes, planned: true } : changes;
+  }
+
+  /** Radio group: 0 or 1 value. Clicking the selected option clears the group. */
+  protected toggleRadio(field: LineField, option: string): void {
+    this.setValue(field, this.value(field) === option ? null : option);
   }
 
   protected toggleOption(field: LineField, option: string): void {

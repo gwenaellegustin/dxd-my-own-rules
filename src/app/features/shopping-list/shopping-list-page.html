@@ -1,0 +1,112 @@
+<app-panels-layout [withSidebar]="false">
+  <div class="content">
+    <h1 class="visually-hidden">{{ 'nav.shoppingList' | translate }}</h1>
+
+    @for (day of days(); track day.date) {
+      <section class="day" [attr.aria-label]="day.date | date: 'dd.MM.yyyy'">
+        <h2 class="day__date text-small text-secondary">{{ day.date | date: 'dd.MM.yyyy' }}</h2>
+        @for (item of day.items; track item.id) {
+          <!-- Clicking anywhere on the item checks / unchecks it, except on its links and buttons -->
+          <div
+            class="item"
+            [class.item--ordered]="item.ordered"
+            [attr.data-area]="'item:' + item.id"
+            (click)="toggleFromRow($event, item)"
+          >
+            <label class="choice item__check">
+              <input type="checkbox" [checked]="item.ordered" (change)="list.setOrdered(item.id, $any($event.target).checked)" />
+              <span class="visually-hidden">{{ 'shoppingList.ordered' | translate }}</span>
+            </label>
+            <span class="item__main">
+              <span class="item__label">
+                <span class="item__quantity">{{ item.quantity }} ×</span>
+                {{ item.label }}
+              </span>
+              <!-- Optional links: the client and / or its vehicle -->
+              @if (clientOf(item); as client) {
+                <span class="item__links">
+                  <a class="link-chip" [routerLink]="['/clients', client.id]">
+                    <app-icon name="person" size="small" />
+                    {{ client.name }}
+                  </a>
+                  @if (vehicleOf(item); as vehicle) {
+                    <button
+                      type="button"
+                      class="link-chip"
+                      aria-haspopup="dialog"
+                      [attr.title]="'registration.open' | translate"
+                      (click)="openVehicle.set({ clientId: client.id, vehicleId: vehicle.id })"
+                    >
+                      <app-vehicle-logo class="link-chip__logo" [vehicle]="vehicle.name" [kind]="vehicle.kind" />
+                      {{ vehicle.name }}
+                    </button>
+                  }
+                </span>
+              }
+            </span>
+            @if (item.ordered) {
+              <span class="status-chip status-chip--paid">{{ 'shoppingList.ordered' | translate }}</span>
+            }
+            <button
+              type="button"
+              class="icon-button"
+              [attr.aria-label]="'shoppingList.remove' | translate"
+              [attr.title]="'shoppingList.remove' | translate"
+              (click)="list.remove(item.id)"
+            >
+              <app-icon name="delete" size="small" />
+            </button>
+          </div>
+        }
+      </section>
+    } @empty {
+      <p class="text-secondary">{{ 'shoppingList.empty' | translate }}</p>
+    }
+
+    <!-- New item, added at the bottom of the list -->
+    <!-- Not saved until added: the browser undoes the typing (see UndoService) -->
+    <form class="add" data-native-undo (submit)="add($event)">
+      <label class="field add__label">
+        <span class="field__label">{{ 'shoppingList.item' | translate }}</span>
+        <input class="input" type="text" [value]="newLabel()" (input)="newLabel.set($any($event.target).value)" />
+      </label>
+      <label class="field add__quantity">
+        <span class="field__label">{{ 'shoppingList.quantity' | translate }}</span>
+        <input class="input" type="number" min="1" [value]="newQuantity()" (input)="newQuantity.set(+$any($event.target).value)" />
+      </label>
+      <label class="field">
+        <span class="field__label">{{ 'shoppingList.client' | translate }}</span>
+        <select class="input" (change)="chooseClient($any($event.target).value)">
+          <option value="" [selected]="!newClientId()">{{ 'shoppingList.none' | translate }}</option>
+          @for (client of sortedClients(); track client.id) {
+            <option [value]="client.id" [selected]="client.id === newClientId()">{{ client.name }}</option>
+          }
+        </select>
+      </label>
+      <label class="field">
+        <span class="field__label">{{ 'shoppingList.vehicle' | translate }}</span>
+        <select class="input" [disabled]="!newClientId()" (change)="newVehicleId.set($any($event.target).value)">
+          <option value="" [selected]="!newVehicleId()">{{ 'shoppingList.none' | translate }}</option>
+          @for (vehicle of newClientVehicles(); track vehicle.id) {
+            <option [value]="vehicle.id" [selected]="vehicle.id === newVehicleId()">{{ vehicle.name }}</option>
+          }
+        </select>
+      </label>
+      <button type="submit" class="button button--primary add__submit" [disabled]="!newLabel().trim()">
+        <app-icon name="plus-circle" size="small" />
+        {{ 'shoppingList.add' | translate }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Vehicle info, opened from the vehicle of an item -->
+  @if (dialogVehicle(); as open) {
+    <app-vehicle-dialog
+      [vehicle]="open.vehicle"
+      [owner]="open.client.name"
+      (vehicleChange)="clients.updateVehicle(open.client.id, open.vehicle.id, $event)"
+      (renamed)="worksheets.rename('vehicle', $event.from, $event.to, open.client.name)"
+      (closed)="openVehicle.set(null)"
+    />
+  }
+</app-panels-layout>

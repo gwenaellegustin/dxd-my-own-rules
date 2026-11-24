@@ -1,0 +1,122 @@
+@if (open()) {
+  <aside
+    class="panel"
+    [attr.aria-label]="'transcript.title' | translate"
+    [style.--transcript-width.px]="transcript.width()"
+  >
+    <!-- Drag (or arrow keys) to change the width of the panel; double click: default width -->
+    <div
+      class="resize"
+      role="separator"
+      tabindex="0"
+      aria-orientation="vertical"
+      [attr.aria-label]="'transcript.resize' | translate"
+      [attr.title]="'transcript.resize' | translate"
+      (pointerdown)="startResize($event)"
+      (dblclick)="resetWidth()"
+      (keydown.arrowleft)="resizeBy(16)"
+      (keydown.arrowright)="resizeBy(-16)"
+    ></div>
+    <div class="panel__head">
+      <button type="button" class="panel__title" [attr.aria-expanded]="true" (click)="openChange.emit(false)">
+        <span class="icon-button icon-button--primary"><app-icon name="right-panel-close" /></span>
+        <h2 class="text-heading">{{ 'transcript.title' | translate }}</h2>
+        @if (problemCount(); as count) {
+          <span class="problem-badge" [attr.aria-label]="'transcript.problems' | translate: { count }">{{ count }}</span>
+        }
+        <span class="visually-hidden">{{ 'common.collapse' | translate }}</span>
+      </button>
+
+      <div class="search-row">
+        <div class="search">
+          <app-clearable>
+            <input
+              #clearTarget
+              type="search"
+              class="input"
+              [placeholder]="'common.search' | translate"
+              [attr.aria-label]="'common.search' | translate"
+              [value]="query()"
+              (input)="query.set($any($event.target).value)"
+            />
+          </app-clearable>
+          <app-icon name="search" size="small" />
+        </div>
+
+        <!-- Only the messages of one day (date picker) -->
+        <app-date-filter labelKey="transcript.filterDate" [max]="today" [(value)]="dateFilter" />
+      </div>
+
+      @if (dateFilter(); as date) {
+        <button type="button" class="filter-chip" [attr.aria-label]="'transcript.clearDate' | translate" (click)="dateFilter.set(null)">
+          <app-icon name="calendar" size="small" />
+          {{ date | date: 'dd.MM.yyyy' }}
+          <app-icon name="close" size="small" />
+        </button>
+      }
+    </div>
+
+    <div #scroller class="panel__scroll" aria-live="polite" (scroll)="transcript.scrollTop = scroller.scrollTop">
+      @for (day of days(); track day.date) {
+        <section class="day" [class.day--today]="day.date === today">
+          <h3 class="day__date">
+            @if (day.date === today) {
+              {{ 'transcript.today' | translate }} ·
+            }
+            {{ day.date | date: 'dd.MM.yyyy' }}
+          </h3>
+          @if (day.messages.length === 0) {
+            <p class="empty-day text-secondary text-small">
+              {{ (day.date === today ? 'transcript.nothingToday' : 'transcript.nothingThatDay') | translate }}
+            </p>
+          }
+          @for (message of day.messages; track message.id) {
+            @if (message.userId) {
+              <div class="message message--user">
+                <time class="message__time text-small" [attr.datetime]="message.timestamp">
+                  {{ message.timestamp | date: 'HH:mm' }}
+                </time>
+                <p class="message__bubble">{{ transcript.text(message) }}</p>
+              </div>
+            } @else {
+              @let problem = transcript.isProblem(message);
+              <div class="message message--assistant" [class.message--problem]="problem">
+                <div class="message__body">
+                  @if (message.problem) {
+                    <p class="message__no-action text-small text-strong">
+                      <app-icon name="close" size="small" />
+                      {{ 'transcript.noAction' | translate }}
+                    </p>
+                  }
+                  <p>{{ transcript.text(message) }}</p>
+                  @if (problem) {
+                    <button type="button" class="button message__validate" (click)="transcript.validate(message.id)">
+                      <app-icon name="mark-read" size="small" />
+                      {{ 'transcript.validate' | translate }}
+                    </button>
+                  }
+                  <!-- What was changed: click to open the worksheet / invoice on that element -->
+                  @for (change of message.changes ?? []; track $index) {
+                    <app-transcript-change [change]="change" (show)="show(change)" />
+                  }
+                </div>
+              </div>
+            }
+          }
+        </section>
+      } @empty {
+        <p class="empty text-secondary">{{ 'transcript.empty' | translate }}</p>
+      }
+    </div>
+  </aside>
+} @else {
+  <button type="button" class="rail" [attr.aria-expanded]="false" (click)="openChange.emit(true)">
+    <span class="icon-button icon-button--primary"><app-icon name="transcript" /></span>
+    <span class="rail__label text-heading">{{ 'transcript.rail' | translate }}</span>
+    <!-- Under the vertical title -->
+    @if (problemCount(); as count) {
+      <span class="problem-badge" [attr.aria-label]="'transcript.problems' | translate: { count }">{{ count }}</span>
+    }
+  </button>
+}
+

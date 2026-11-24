@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  afterEveryRender,
   contentChild,
   signal,
 } from '@angular/core';
@@ -69,13 +70,21 @@ export class Clearable implements AfterContentInit {
 
   protected readonly hasValue = signal(false);
 
+  constructor() {
+    // The value can also change without an input event (undo, another worksheet selected):
+    // re-read it after each render (writing the same boolean again changes nothing)
+    afterEveryRender({ read: () => this.refresh() });
+  }
+
   ngAfterContentInit(): void {
     // [value] bindings are applied after content init: read once they are set
     queueMicrotask(() => this.refresh());
   }
 
   protected refresh(): void {
-    this.hasValue.set(this.field().nativeElement.value !== '');
+    // No ✕ on a field that cannot be edited
+    const field = this.field().nativeElement;
+    this.hasValue.set(field.value !== '' && !field.disabled && !field.readOnly);
   }
 
   protected clear(): void {

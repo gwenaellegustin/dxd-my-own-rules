@@ -1,0 +1,119 @@
+// The dialog fits its content (no blank space on narrow screens) and never exceeds the window:
+// the document is limited by the width, or by the height left once the title, the note and the
+// button are placed (--registration-chrome-height), so there is no scroll.
+// The box fits the photo (centred), so the delete button sits on its corner.
+.registration__document {
+  position: relative;
+  align-self: center;
+  max-width: 100%;
+}
+
+// On the photo: a light background keeps it readable on any image
+.registration__remove {
+  position: absolute;
+  top: var(--space-200);
+  right: var(--space-200);
+  background: var(--color-background-default);
+  box-shadow: var(--shadow-overlay);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+}
+
+.registration__viewer {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-100);
+  cursor: zoom-in;
+
+  &--zoomed {
+    cursor: zoom-out;
+
+    .registration__image {
+      transform: scale(var(--registration-zoom));
+    }
+  }
+}
+
+.registration__image {
+  display: block;
+  max-width: 100%;
+  max-height: max(
+    var(--registration-image-min-height),
+    calc(100dvh - var(--registration-chrome-height))
+  );
+  object-fit: contain;
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-100);
+  transition: transform var(--transition-fast);
+  user-select: none;
+}
+
+// Upload area shown when the vehicle has no registration document yet
+.registration__upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-200);
+  min-height: var(--registration-upload-height);
+  padding: var(--space-600);
+  border: var(--stroke-border-dashed) dashed var(--color-border-strong);
+  border-radius: var(--radius-200);
+  color: var(--color-text-default);
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+
+  &:hover,
+  &--over {
+    background: var(--color-background-hover);
+  }
+
+  // The file input is visually hidden: show the focus on the area
+  &:has(input:focus-visible) {
+    outline: var(--stroke-focus) solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  app-icon {
+    color: var(--color-icon-default);
+  }
+}
+
+// The note stays small so the document keeps the space (it scrolls inside after a few lines)
+.registration__note {
+  max-height: var(--registration-note-max-height);
+  overflow-y: auto;
+}
+
+.dialog__actions--end {
+  justify-content: flex-end;
+}
+
+// Identity of the vehicle: two columns, one on narrow screens
+.vehicle-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--vehicle-field-min-width), 1fr));
+  gap: var(--space-400);
+}
+
+.vehicle-fields__kind {
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  legend {
+    padding: 0;
+    margin-bottom: var(--space-200);
+  }
+}
+
+.vehicle-fields__choices {
+  display: flex;
+  align-items: center;
+  gap: var(--space-600);
+  min-height: var(--control-height);
+}

@@ -1,0 +1,176 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-600);
+}
+
+// List of rules | selected rule; stacked when the page is narrow
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--space-600);
+  align-items: start;
+
+  @container work-area (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// The list is short: it stays in view while the selected rule scrolls
+.list {
+  position: sticky;
+  top: var(--space-400);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+
+  @container work-area (max-width: 900px) {
+    position: static;
+  }
+}
+
+.card {
+  background: var(--color-background-default);
+  border: var(--stroke-border) solid var(--color-border-default);
+  border-radius: var(--radius-200);
+}
+
+.rule-card {
+  @extend .card;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+  padding: var(--space-300) var(--space-400);
+  text-align: left;
+
+  &:hover {
+    outline: var(--stroke-focus) solid var(--color-border-strong);
+  }
+
+  &--selected,
+  &--selected:hover {
+    outline: var(--stroke-focus) solid var(--color-background-brand);
+  }
+}
+
+.add-rule {
+  align-self: flex-start;
+}
+
+.rule {
+  @extend .card;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-600);
+  padding: var(--space-400);
+}
+
+.rule__head {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-200);
+}
+
+.rule__trigger {
+  flex: 1;
+}
+
+// "When this line is" followed by the Planned / Done radios on the same row
+.rule__when {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-200) var(--space-300);
+}
+
+// Trigger menu: as wide as its button, scrolls when long (stays in the page)
+.trigger {
+  position: relative;
+}
+
+.trigger__button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-200);
+  padding-block: 0;
+  min-height: var(--control-height);
+  text-align: left;
+  cursor: pointer;
+}
+
+.trigger__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trigger-menu {
+  right: 0;
+  max-height: min(60dvh, 420px);
+  overflow-y: auto;
+  gap: 0;
+
+  .dropdown-menu__title:not(:first-child) {
+    margin-top: var(--space-200);
+  }
+
+  .dropdown-menu__item {
+    width: 100%;
+    line-height: var(--line-height-body);
+    white-space: normal;
+  }
+}
+
+// "Also mark as…": one card per line like the worksheet, checkbox on the left; planned colour when checked
+.plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  legend {
+    padding: 0;
+    margin-bottom: var(--space-200);
+  }
+
+  h3 {
+    margin: var(--space-200) 0 0;
+  }
+}
+
+.plan__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+.plan-line {
+  @extend .card;
+  display: flex;
+  align-items: center;
+  gap: var(--space-300);
+  min-height: var(--control-height);
+  padding: var(--space-200) var(--space-400);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+
+  // Colour of the state the rule gives, as in the worksheet: planned (blue) or done (green)
+  &--checked {
+    background: var(--color-background-status-planned);
+  }
+
+  &--checked.plan-line--done {
+    background: var(--color-background-status-done);
+  }
+
+  > input {
+    flex: none;
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
+    margin: 0;
+    accent-color: var(--color-background-brand);
+  }
+}

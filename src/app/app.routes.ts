@@ -12,11 +12,24 @@ export const routes: Routes = [
   },
   {
     path: 'invoices',
-    loadComponent: () => import('./features/invoice/invoice-page').then((m) => m.InvoicePage),
+    loadComponent: () => import('./features/invoice/invoice-page/invoice-page').then((m) => m.InvoicePage),
+  },
+  {
+    path: 'invoices/:id',
+    loadComponent: () => import('./features/invoice/invoice-page/invoice-page').then((m) => m.InvoicePage),
   },
   {
     path: 'clients',
-    loadComponent: () => import('./features/clients/clients-page').then((m) => m.ClientsPage),
+    loadComponent: () => import('./features/clients/clients-page/clients-page').then((m) => m.ClientsPage),
+  },
+  {
+    path: 'clients/:id',
+    loadComponent: () => import('./features/clients/clients-page/clients-page').then((m) => m.ClientsPage),
+  },
+  {
+    path: 'settings/worksheet',
+    loadComponent: () =>
+      import('./features/settings/worksheet-settings-page/worksheet-settings-page').then((m) => m.WorksheetSettingsPage),
   },
   {
     path: 'shopping-list',

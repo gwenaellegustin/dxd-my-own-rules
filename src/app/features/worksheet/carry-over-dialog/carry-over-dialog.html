@@ -1,0 +1,51 @@
+<dialog class="dialog" aria-labelledby="carry-over-title" appModalDialog (dismiss)="cancelled.emit()">
+  <form class="dialog__box" (submit)="$event.preventDefault(); confirm()">
+    <h2 id="carry-over-title" class="text-subheading">{{ 'carryOver.title' | translate }}</h2>
+
+    <div class="dialog__body">
+      @for (group of groups(); track group.sectionTitleKey) {
+        <fieldset class="dialog__group">
+          <legend class="dialog__legend carry-group__head">
+            {{ group.sectionTitleKey | translate }}
+            <button type="button" class="carry-group__toggle" (click)="toggleGroup(group)">
+              {{ (anyChecked(group) ? 'carryOver.uncheckAll' : 'carryOver.checkAll') | translate }}
+            </button>
+          </legend>
+          @for (item of group.items; track item.key) {
+            @let isDone = done().has(item.key);
+            <div class="carry-item" [class.carry-item--done]="isDone">
+              <label class="choice choice--wrap carry-item__label">
+                <input
+                  type="checkbox"
+                  [checked]="selected().has(item.key)"
+                  [disabled]="isDone"
+                  (change)="toggle(item.key)"
+                />
+                @if (item.titleKey) {
+                  {{ item.titleKey | translate }}
+                } @else {
+                  {{ item.text }}
+                }
+              </label>
+              <label class="choice">
+                <input type="checkbox" [checked]="isDone" (change)="toggleDone(item.key)" />
+                {{ 'line.done' | translate }}
+              </label>
+            </div>
+          }
+        </fieldset>
+      }
+    </div>
+
+    <div class="dialog__actions">
+      <span class="dialog__count text-secondary">
+        {{ 'carryOver.count' | translate: { count: selectedCount() } }}
+        @if (doneCount()) {
+          · {{ 'carryOver.doneCount' | translate: { count: doneCount() } }}
+        }
+      </span>
+      <button type="button" class="button" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
+      <button type="submit" class="button button--primary">{{ 'worksheet.createInvoice' | translate }}</button>
+    </div>
+  </form>
+</dialog>

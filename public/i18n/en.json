@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Garage"
+    "name": "Greasy Notes"
   },
   "nav": {
     "label": "Main navigation",
@@ -8,7 +8,8 @@
     "invoice": "Invoice",
     "clients": "Clients",
     "shoppingList": "Shopping list",
-    "badgeCount": "{{count}} items"
+    "badgeCount": "{{count}} items",
+    "menu": "Pages"
   },
   "account": {
     "menu": "Account menu",
@@ -24,9 +25,12 @@
     "other": "Other",
     "ellipsis": "...",
     "km": "km",
-    "notDesignedYet": "This page has not been designed yet.",
     "clear": "Clear",
-    "showOptions": "Show options"
+    "showOptions": "Show options",
+    "cancel": "Cancel",
+    "close": "Close",
+    "sortBy": "Sort by",
+    "save": "Save"
   },
   "worksheets": {
     "title": "Worksheets",
@@ -34,36 +38,89 @@
     "untitled": "New worksheet",
     "empty": "No worksheet",
     "groups": {
-      "toBeBilled": "To be billed",
       "invoiced": "Invoiced"
     }
   },
   "worksheet": {
     "client": "Client",
-    "vehicle": "Car",
+    "vehicle": "Vehicle",
     "date": "Date",
     "kilometers": "Kilometers",
     "hours": "Hours",
     "comments": "Comments and tips",
-    "createInvoice": "Create the invoice"
+    "createInvoice": "Create the invoice",
+    "openInvoice": "Go to the invoice",
+    "delete": "Delete the worksheet",
+    "deleteLocked": "An invoiced worksheet cannot be deleted",
+    "deleteTitle": "Delete the worksheet?",
+    "deleteMessage": "The worksheet \"{{name}}\" will be deleted. You can still undo it (Ctrl+Z).",
+    "reopen": "Reopen the worksheet",
+    "reopenHint": "Edit the worksheet again: its invoice is hidden (kept) until it is invoiced again",
+    "reopenSent": "The invoice has been sent: the worksheet can no longer be reopened",
+    "invoiceNeedsClient": "Choose the client first: an invoice needs one",
+    "invoiceNeedsDone": "Mark at least one item “Done”"
+  },
+  "registration": {
+    "open": "Vehicle info",
+    "title": "Vehicle info",
+    "imageAlt": "Photo of the vehicle registration document",
+    "note": "Note",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "removeImage": "Delete the photo",
+    "upload": "Drop a photo of the registration document here, or click to choose one",
+    "uploadHint": "Prototype: the photo is kept until the page is reloaded",
+    "none": "No registration document for this vehicle.",
+    "name": "Brand / model",
+    "plate": "Plate",
+    "kind": "Type",
+    "kinds": {
+      "car": "Car",
+      "motorcycle": "Motorcycle"
+    },
+    "owner": "Owner"
   },
   "damage": {
     "bump": "Bump",
     "scratch": "Scratch",
     "impact": "Impact",
     "remove": "Remove",
-    "diagramAlt": "Car diagram: select a damage type in the legend, then click on the car to mark it"
+    "diagramAlt": "Car diagram: select a damage type in the legend, then click on the car to mark it",
+    "tools": "Damage type to mark on the car"
   },
   "line": {
     "planned": "Planned",
     "done": "Done",
     "addNote": "Add a note",
-    "note": "Note"
+    "note": "Note",
+    "quantity": "Quantity (litres)",
+    "litres": "L",
+    "remove": "Remove the line"
   },
   "transcript": {
-    "title": "Transcripts",
+    "title": "Transcript",
     "rail": "Transcript",
-    "empty": "No message"
+    "empty": "No message",
+    "worksheet": "Worksheet · {{vehicle}} – {{client}}",
+    "invoice": "Invoice No {{number}}",
+    "show": "Show",
+    "before": "Previous value",
+    "after": "New value",
+    "emptyValue": "empty",
+    "today": "Today",
+    "nothingToday": "Nothing said yet today.",
+    "problems": "{{count}} answer(s) to check",
+    "noAction": "No action done",
+    "validate": "Mark as read",
+    "shoppingList": "Shopping list",
+    "resize": "Drag to resize the panel (double click: default width)",
+    "filterDate": "Show one day",
+    "clearDate": "Show every day",
+    "nothingThatDay": "Nothing was said that day.",
+    "rollback": "Undo this change",
+    "reapply": "Redo this change",
+    "rollbackChanged": "Edited since: this change can no longer be undone",
+    "rollbackLocked": "Worksheet invoiced or invoice sent: this change can no longer be undone"
   },
   "template": {
     "labour": {
@@ -123,5 +180,179 @@
       "winterTyres": "Winter",
       "summerTyres": "Summer"
     }
+  },
+  "section": {
+    "summary": "{{planned}} planned · {{done}} done"
+  },
+  "carryOver": {
+    "title": "Which items should be carried over to the next intervention?",
+    "count": "{{count}} item(s) carried over",
+    "doneCount": "{{count}} done",
+    "uncheckAll": "Uncheck all",
+    "checkAll": "Check all"
+  },
+  "carriedOver": {
+    "title": "Postponed items",
+    "hint": "Checked: added to the worksheet. Unchecked: proposed again next time. Deleted: never proposed again.",
+    "delete": "Delete: stop proposing this item",
+    "restore": "Restore",
+    "count": "{{count}} item(s) imported",
+    "deletedCount": "{{count}} deleted",
+    "later": "Later",
+    "confirm": "Confirm"
+  },
+  "invoices": {
+    "title": "Invoices",
+    "empty": "No invoice yet.",
+    "groups": {
+      "sent": "Sent",
+      "paid": "Paid"
+    }
+  },
+  "invoice": {
+    "number": "Invoice No {{number}}",
+    "status": {
+      "open": "Open",
+      "sent": "Sent",
+      "paid": "Paid"
+    },
+    "vehicle": "Vehicle",
+    "plate": "Plate",
+    "kilometers": "Kilometers",
+    "hourlyRate": "Hourly rate",
+    "date": "Date",
+    "columns": {
+      "quantity": "Quantity",
+      "price": "Price",
+      "discount": "% Discount",
+      "amount": "Amount"
+    },
+    "units": {
+      "hour": "h",
+      "flatRate": "Flat rate"
+    },
+    "rates": {
+      "standard": "Standard",
+      "loyalty": "Loyalty"
+    },
+    "totalNet": "Total net {{currency}}",
+    "vat": "VAT {{rate}}%",
+    "total": "Total",
+    "paymentTerm": "Net payment within {{days}} days from {{date}}",
+    "paymentTermOpen": "Net payment within {{days}} days from the sending date",
+    "observation": "Observations and tips",
+    "fieldHide": "Hide: kept (dimmed) but removed from the print and the PDF",
+    "fieldShow": "Show: put back on the print and the PDF",
+    "fieldDelete": "Delete",
+    "contact": "Contact",
+    "workshop": "Workshop",
+    "office": "Office",
+    "send": "Mark as sent",
+    "savePdf": "Save as PDF",
+    "markPaid": "Mark as paid"
+  },
+  "clients": {
+    "title": "Clients",
+    "empty": "No client.",
+    "vehicles": "Vehicles",
+    "vehiclesHint": "Select a vehicle to show or hide its worksheets and invoices.",
+    "openWorksheets": "Open worksheets",
+    "invoices": "Invoices",
+    "noWorksheet": "No open worksheet.",
+    "noInvoice": "No invoice.",
+    "new": "New client",
+    "untitled": "New client",
+    "name": "Name",
+    "street": "Street",
+    "postcode": "Postcode",
+    "city": "City",
+    "rate": "Hourly rate",
+    "addVehicle": "Add a vehicle",
+    "unnamedVehicle": "New vehicle",
+    "sort": {
+      "name": "Name",
+      "date": "Last date"
+    },
+    "badges": {
+      "openWorksheets": "{{count}} open worksheet(s)",
+      "openInvoices": "{{count}} open invoice(s)",
+      "sentInvoices": "{{count}} sent invoice(s), not paid"
+    },
+    "delete": "Delete the client",
+    "deleteTitle": "Delete the client?",
+    "deleteMessage": "The client \"{{name}}\" and its vehicles will be deleted.",
+    "newWorksheet": "New worksheet for this vehicle",
+    "archive": "Archive the client",
+    "archiveHint": "The client has worksheets: it is archived (kept with its documents) instead of deleted",
+    "restore": "Restore the client",
+    "archivedNotice": "Archived: kept with its worksheets and invoices, not suggested on new worksheets.",
+    "archivedGroup": "Archived"
+  },
+  "settings": {
+    "title": "Worksheet settings",
+    "tabs": {
+      "lines": "Lines",
+      "rules": "Rules"
+    },
+    "linesHint": "The worksheet as it will look: click a line to edit its title (French and English) and its fields, drag it to move it inside its section (or Alt + arrow up / down), and use + between two lines to add one.",
+    "rulesHint": "When a line is planned or done (with the chosen option, if it has some), the selected lines are marked as planned or done too.",
+    "when": "When this line is",
+    "status": {
+      "planned": "Planned",
+      "done": "Done"
+    },
+    "also": {
+      "planned": "Also mark as planned",
+      "done": "Also mark as done"
+    },
+    "addRule": "Add a rule",
+    "removeRule": "Delete the rule",
+    "rule": "Rule {{number}}",
+    "noRule": "No rule.",
+    "noRuleLine": "This worksheet only has \"Other\" lines: there is no line to use in a rule.",
+    "planNone": "No line to plan yet",
+    "anyOption": "Any option",
+    "drag": "Click to edit the line, drag to move it",
+    "noLine": "Add a line to edit it here.",
+    "lineTitle": "Title",
+    "slots": {
+      "fields": "Fields on the title row",
+      "details": "Fields under the title"
+    },
+    "types": {
+      "text": "Text field",
+      "date": "Date",
+      "label": "Fixed text",
+      "radio": "Radio buttons (one choice)",
+      "checkbox": "Checkboxes (several choices)"
+    },
+    "removeLine": "Delete the line",
+    "removeField": "Delete the field",
+    "placeholder": "Placeholder",
+    "option": "Option",
+    "removeOption": "Delete the option",
+    "addOption": "Add an option",
+    "addField": "Add a field",
+    "preview": "Preview",
+    "addLine": "Add a line here"
+  },
+  "shoppingList": {
+    "ordered": "Ordered",
+    "remove": "Remove from the list",
+    "empty": "Nothing to buy.",
+    "item": "Item",
+    "quantity": "Quantity",
+    "client": "Client",
+    "vehicle": "Vehicle",
+    "none": "—",
+    "add": "Add"
+  },
+  "header": {
+    "history": "History",
+    "back": "Back",
+    "forward": "Forward",
+    "edits": "Edits",
+    "undo": "Undo (Ctrl+Z)",
+    "redo": "Redo (Ctrl+Y)"
   }
 }
