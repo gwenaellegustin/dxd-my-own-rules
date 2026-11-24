@@ -100,7 +100,7 @@ export class TaskLine implements OnInit {
   }
 
   protected updateQuantity(quantity: string): void {
-    this.stateChange.emit({ quantity });
+    this.stateChange.emit(this.planIfFirstText({ quantity }, this.state().quantity ?? null, quantity));
   }
 
   protected value(field: LineField): LineFieldValue {
@@ -119,8 +119,9 @@ export class TaskLine implements OnInit {
   }
 
   /**
-   * Filling an empty note or field (first character, first option chosen) marks the line as
-   * planned; it can be unchecked afterwards and is not checked again while the field stays filled.
+   * Filling an empty note, field or quantity (first character, first option chosen) marks the
+   * line as planned; it can be unchecked afterwards and is not checked again while the field stays
+   * filled.
    */
   private planIfFirstText(changes: Partial<LineState>, before: LineFieldValue, after: LineFieldValue): Partial<LineState> {
     const filled = (value: LineFieldValue) =>
