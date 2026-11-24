@@ -6,8 +6,8 @@
   // The title starts where the text of an "Other" line does (its field: line padding + field
   // border + field padding), so the texts of both kinds of lines are aligned
   padding-left: calc(var(--space-200) + var(--stroke-border) + var(--space-400));
-  background: var(--color-background-default);
-  border: var(--stroke-border) solid var(--color-border-default);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
   transition: background-color var(--transition-fast);
 }
@@ -19,11 +19,11 @@
 }
 
 :host(.line--planned) {
-  background: var(--color-background-status-planned);
+  background: var(--color-info-bg);
 }
 
 :host(.line--done) {
-  background: var(--color-background-status-done);
+  background: var(--color-success-bg);
 }
 
 .line__first {

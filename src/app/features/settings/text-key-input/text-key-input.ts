@@ -45,15 +45,15 @@ import { Language, SUPPORTED_LANGUAGES } from '../../../core/services/language.s
     .text__lang {
       position: absolute;
       top: 50%;
-      left: var(--space-300);
+      left: var(--space-200);
       transform: translateY(-50%);
       font-size: var(--font-size-small);
-      color: var(--color-text-tertiary);
+      color: var(--color-on-background-faint);
       pointer-events: none;
     }
 
     .input {
-      padding-left: calc(var(--space-300) + var(--space-600));
+      padding-left: calc(var(--space-200) + var(--space-800));
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

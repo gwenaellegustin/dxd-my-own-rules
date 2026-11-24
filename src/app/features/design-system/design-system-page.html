@@ -1,0 +1,688 @@
+<div class="content">
+  <div class="page">
+    <header class="page__head">
+      <div class="page__intro">
+        <h1 class="text-heading">{{ 'designSystem.title' | translate }}</h1>
+        <p class="text-secondary">{{ 'designSystem.intro' | translate }}</p>
+      </div>
+      <button
+        type="button"
+        class="button"
+        [attr.aria-expanded]="panelOpen()"
+        aria-controls="token-panel"
+        (click)="panelOpen.set(!panelOpen())"
+      >
+        <app-icon name="edit" size="small" />
+        {{ 'designSystem.panel.toggle' | translate }}
+        @if (ds.changedCount()) {
+          <span class="problem-badge">{{ ds.changedCount() }}</span>
+        }
+      </button>
+    </header>
+
+    <!-- Bento grid: one tile per theme, side by side -->
+    <div class="bento">
+      <!-- Colors: each colour on the background it goes on: the inks on the background (left) and
+           on a surface placed on it (middle), the status families (right) -->
+      <section class="tile tile--12" aria-labelledby="ds-colors">
+        <h2 class="tile__title" id="ds-colors">{{ 'designSystem.groups.colors' | translate }}</h2>
+        <div class="colors">
+          <div class="scheme scheme--background">
+            <div class="scheme__side">
+              <ng-container
+                *ngTemplateOutlet="schemeTitle; context: { $implicit: '--color-background' }"
+              />
+              <ng-container *ngTemplateOutlet="inkList; context: { $implicit: true }" />
+            </div>
+
+            <div class="scheme scheme--surface">
+              <ng-container
+                *ngTemplateOutlet="schemeTitle; context: { $implicit: '--color-surface' }"
+              />
+              <ng-container *ngTemplateOutlet="inkList; context: { $implicit: false }" />
+              <!-- Line: a divider inside the surface -->
+              <div class="scheme__line">
+                <ng-container
+                  *ngTemplateOutlet="schemeTitle; context: { $implicit: '--color-line' }"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Name, value and use of a background colour -->
+          <ng-template #schemeTitle let-name>
+            <p class="scheme__title">
+              <code class="var-name">{{ name }}</code>
+              <span class="text-small text-secondary">{{ valueOf(name) }}</span>
+              <span class="usage">{{ usageKey(name) | translate }}</span>
+            </p>
+          </ng-template>
+
+          <!-- The inks, written in their own colour (with their use the first time) -->
+          <ng-template #inkList let-withUsage>
+            <ul class="inks">
+              @for (token of inks; track token.name) {
+                <li class="ink" [style.color]="'var(' + token.name + ')'">
+                  <span class="ink__sample">Aa</span>
+                  <span class="ink__text">
+                    <code class="var-name">{{ token.name }}</code>
+                    <span class="text-small">{{ ds.value(token) }}</span>
+                    @if (withUsage) {
+                      <span class="usage">{{ usageKey(token.name) | translate }}</span>
+                    }
+                  </span>
+                </li>
+              }
+            </ul>
+          </ng-template>
+
+          <div class="statuses">
+            @for (family of statusFamilies; track family.id) {
+              <!-- Sample on the left; name, values (main colour, then its background and border,
+                   mixed from it) and use on the right -->
+              <div class="status">
+                <span
+                  class="status__sample"
+                  [style.background]="'var(--color-' + family.id + '-bg)'"
+                  [style.border-color]="'var(--color-' + family.id + '-line)'"
+                  [style.color]="'var(--color-' + family.id + ')'"
+                  >Aa</span
+                >
+                <span class="status__text">
+                  <span class="status__values">
+                    <!-- Variable, then its value: the colour, or how it is mixed from it
+                         ("--color-info-bg = 8% --color-info + 92% --color-surface") -->
+                    @for (token of family.tokens; track token.name) {
+                      <span class="status__value text-small">
+                        <span
+                          class="status__chip"
+                          [style.background]="'var(' + token.name + ')'"
+                        ></span>
+                        <code class="var-name">{{ token.name }}</code>
+                        <span class="text-secondary">
+                          {{ token.derived ? '= ' + mixFormula(token) : ds.value(token) }}
+                        </span>
+                      </span>
+                    }
+                  </span>
+                  <span class="usage">{{ usageKey('--color-' + family.id) | translate }}</span>
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- Typography: families, then each text style with its size / line height -->
+      <section class="tile tile--6" aria-labelledby="ds-typography">
+        <h2 class="tile__title" id="ds-typography">
+          {{ 'designSystem.groups.typography' | translate }}
+        </h2>
+        @for (token of fonts; track token.name) {
+          <div class="spec">
+            <span class="spec__name">
+              <code class="var-name">{{ token.name }}</code>
+              <span class="usage">{{ usageKey(token.name) | translate }}</span>
+            </span>
+            <!-- The font name, written in that font -->
+            <span class="text-secondary" [style.font-family]="'var(' + token.name + ')'">{{
+              ds.value(token).split(',')[0].replaceAll('"', '').replaceAll("'", '')
+            }}</span>
+          </div>
+        }
+        <hr class="tile__rule" />
+        @for (style of textStyles; track style.key) {
+          <div class="spec">
+            <span class="spec__name">
+              <span [class]="style.cls">{{ 'designSystem.samples.' + style.key | translate }}</span>
+              <span class="usage">{{ usageKey(style.size) | translate }}</span>
+            </span>
+            <span class="text-small text-secondary">
+              {{ valueOf(style.size) }} · {{ valueOf(style.lineHeight) }}
+            </span>
+          </div>
+        }
+      </section>
+
+      <!-- Spacing -->
+      <section class="tile tile--6" aria-labelledby="ds-spacing">
+        <h2 class="tile__title" id="ds-spacing">{{ 'designSystem.groups.spacing' | translate }}</h2>
+        @for (token of spaces; track token.name) {
+          <div class="spec">
+            <span class="spec__name">
+              <code class="var-name">{{ token.name }}</code>
+              <span class="usage">{{ usageKey(token.name) | translate }}</span>
+            </span>
+            <span class="text-small text-secondary">{{ ds.value(token) }}</span>
+            <span class="spec__sample">
+              <span
+                class="space-sample"
+                [style.width]="'var(' + token.name + ')'"
+                [style.height]="'var(' + token.name + ')'"
+              ></span>
+            </span>
+          </div>
+        }
+      </section>
+
+      <!-- Radius -->
+      <section class="tile tile--4" aria-labelledby="ds-radius">
+        <h2 class="tile__title" id="ds-radius">{{ 'designSystem.groups.radius' | translate }}</h2>
+        @for (token of radii; track token.name) {
+          <div class="spec">
+            <span class="spec__name">
+              <code class="var-name">{{ token.name }}</code>
+              <span class="usage">{{ usageKey(token.name) | translate }}</span>
+            </span>
+            <span class="text-small text-secondary">{{ ds.value(token) }}</span>
+            <span class="spec__sample">
+              <span class="box-sample" [style.border-radius]="'var(' + token.name + ')'"></span>
+            </span>
+          </div>
+        }
+      </section>
+
+      <!-- Strokes & effects -->
+      <section class="tile tile--8" aria-labelledby="ds-effects">
+        <h2 class="tile__title" id="ds-effects">{{ 'designSystem.groups.effects' | translate }}</h2>
+        @for (effect of effects; track effect.token.name) {
+          <div class="spec">
+            <span class="spec__name">
+              <code class="var-name">{{ effect.token.name }}</code>
+              <span class="usage">{{ usageKey(effect.token.name) | translate }}</span>
+            </span>
+            <span class="text-small text-secondary">{{ ds.value(effect.token) }}</span>
+            <span class="spec__sample">
+              @switch (effect.kind) {
+                @case ('stroke') {
+                  <span
+                    class="line-sample"
+                    [style.height]="'var(' + effect.token.name + ')'"
+                  ></span>
+                }
+                @case ('opacity') {
+                  <span
+                    class="box-sample box-sample--filled"
+                    [style.opacity]="'var(' + effect.token.name + ')'"
+                  ></span>
+                }
+                @case ('shadow') {
+                  <span
+                    class="box-sample"
+                    [style.box-shadow]="'var(' + effect.token.name + ')'"
+                  ></span>
+                }
+                @case ('overlay') {
+                  <span
+                    class="box-sample"
+                    [style.background]="'var(' + effect.token.name + ')'"
+                  ></span>
+                }
+              }
+            </span>
+          </div>
+        }
+      </section>
+
+      <!-- Buttons: every kind in each state -->
+      <section class="tile tile--6" aria-labelledby="ds-buttons">
+        <h2 class="tile__title" id="ds-buttons">
+          {{ 'designSystem.components.buttons' | translate }}
+        </h2>
+        <div
+          class="states"
+          role="table"
+          [attr.aria-label]="'designSystem.components.buttons' | translate"
+        >
+          <div class="states__row" role="row">
+            <span role="columnheader"></span>
+            @for (state of buttonStates; track state) {
+              <span class="states__head text-small text-secondary" role="columnheader">
+                {{ 'designSystem.states.' + state | translate }}
+              </span>
+            }
+          </div>
+          @for (variant of buttonVariants; track variant.key) {
+            <div class="states__row" role="row">
+              <span class="text-strong" role="rowheader">
+                {{ 'designSystem.samples.' + variant.key | translate }}
+              </span>
+              @for (state of buttonStates; track state) {
+                <span role="cell">
+                  <button
+                    type="button"
+                    [class]="variant.cls"
+                    [class.is-hover]="state === 'hover'"
+                    [disabled]="state === 'disabled'"
+                    [attr.aria-label]="
+                      variant.icon ? ('designSystem.samples.' + variant.key | translate) : null
+                    "
+                  >
+                    @if (variant.icon) {
+                      <app-icon [name]="variant.icon" size="large" />
+                    } @else {
+                      {{ 'designSystem.samples.' + variant.key | translate }}
+                    }
+                  </button>
+                </span>
+              }
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Fields & chips -->
+      <section class="tile tile--6" aria-labelledby="ds-fields">
+        <h2 class="tile__title" id="ds-fields">
+          {{ 'designSystem.components.fieldsAndChips' | translate }}
+        </h2>
+        <div class="fields">
+          <label class="field">
+            <span class="field__label">{{ 'designSystem.samples.label' | translate }}</span>
+            <input
+              class="input"
+              type="text"
+              [placeholder]="'designSystem.samples.placeholder' | translate"
+            />
+          </label>
+          <label class="field">
+            <span class="field__label">{{ 'designSystem.samples.select' | translate }}</span>
+            <select class="input">
+              <option>{{ 'designSystem.samples.option' | translate: { number: 1 } }}</option>
+              <option>{{ 'designSystem.samples.option' | translate: { number: 2 } }}</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field__label">{{ 'designSystem.samples.date' | translate }}</span>
+            <span class="date-field date-field--full">
+              <input class="input" type="date" />
+              <app-icon name="calendar" size="small" />
+            </span>
+          </label>
+          <label class="field">
+            <span class="field__label">{{ 'designSystem.samples.disabled' | translate }}</span>
+            <input
+              class="input"
+              type="text"
+              disabled
+              [value]="'designSystem.samples.readOnly' | translate"
+            />
+          </label>
+          <label class="field">
+            <span class="field__label">{{ 'designSystem.samples.textarea' | translate }}</span>
+            <textarea
+              class="textarea textarea--single-line"
+              [placeholder]="'designSystem.samples.placeholder' | translate"
+            ></textarea>
+          </label>
+          <label class="field">
+            <span class="field__label">{{ 'designSystem.samples.search' | translate }}</span>
+            <span class="search">
+              <app-icon name="search" size="small" />
+              <input
+                class="input"
+                type="search"
+                [placeholder]="'designSystem.samples.search' | translate"
+              />
+            </span>
+          </label>
+        </div>
+        <div class="row">
+          <label class="choice"
+            ><input type="checkbox" checked />
+            {{ 'designSystem.samples.checkbox' | translate }}</label
+          >
+          <label class="choice"
+            ><input type="checkbox" /> {{ 'designSystem.samples.checkbox' | translate }}</label
+          >
+          <label class="choice">
+            <input type="radio" name="ds-radio" checked />
+            {{ 'designSystem.samples.radio' | translate }}
+          </label>
+          <label class="choice"
+            ><input type="radio" name="ds-radio" />
+            {{ 'designSystem.samples.radio' | translate }}</label
+          >
+        </div>
+        <!-- Chips: named by colour family (the same chip serves several statuses) -->
+        <hr class="tile__rule" />
+        <div class="spec">
+          <span class="spec__name">
+            <span class="text-strong">{{ 'designSystem.samples.statusChips' | translate }}</span>
+            <span class="usage">{{ 'designSystem.samples.statusChipsUsage' | translate }}</span>
+          </span>
+          <span class="row">
+            <span class="status-chip status-chip--open">info</span>
+            <span class="status-chip status-chip--paid">success</span>
+            <span class="status-chip status-chip--sent">error</span>
+            <span class="status-chip status-chip--large status-chip--open">large</span>
+          </span>
+        </div>
+        <div class="spec">
+          <span class="spec__name">
+            <span class="text-strong">{{ 'designSystem.samples.countBadges' | translate }}</span>
+            <span class="usage">{{ 'designSystem.samples.countBadgesUsage' | translate }}</span>
+          </span>
+          <span class="row">
+            <span class="count-badge"><app-icon name="tool" size="small" /> 3</span>
+            <span class="count-badge count-badge--open"
+              ><app-icon name="invoice" size="small" /> 2</span
+            >
+            <span class="count-badge count-badge--alert"
+              ><app-icon name="invoice" size="small" /> 1</span
+            >
+          </span>
+        </div>
+        <div class="spec">
+          <span class="spec__name">
+            <span class="text-strong">{{ 'designSystem.samples.otherChips' | translate }}</span>
+            <span class="usage">{{ 'designSystem.samples.otherChipsUsage' | translate }}</span>
+          </span>
+          <span class="row">
+            <span class="problem-badge">4</span>
+            <button type="button" class="filter-chip">
+              {{ 'designSystem.samples.filter' | translate }}
+              <app-icon name="close" size="small" />
+            </button>
+          </span>
+        </div>
+      </section>
+
+      <!-- Lines of a list: worksheet lines, shopping list items -->
+      <section class="tile tile--4" aria-labelledby="ds-lines">
+        <h2 class="tile__title" id="ds-lines">{{ 'designSystem.components.lines' | translate }}</h2>
+        <p class="usage">{{ 'designSystem.samples.linesUsage' | translate }}</p>
+        <div class="line">{{ 'designSystem.samples.lineTodo' | translate }}</div>
+        <div class="line line--planned">{{ 'designSystem.samples.linePlanned' | translate }}</div>
+        <div class="line line--done">{{ 'designSystem.samples.lineDone' | translate }}</div>
+      </section>
+
+      <!-- Main menu: one page in each state -->
+      <section class="tile tile--3" aria-labelledby="ds-menu">
+        <h2 class="tile__title" id="ds-menu">{{ 'designSystem.components.menu' | translate }}</h2>
+        @for (state of menuStates; track state) {
+          <div class="spec">
+            <span class="text-small text-secondary">{{
+              'designSystem.states.' + state | translate
+            }}</span>
+            <span
+              class="pill"
+              [class.is-hover]="state === 'hover'"
+              [class.pill--active]="state === 'selected'"
+            >
+              <app-icon name="tool" size="small" />
+              {{ 'nav.worksheet' | translate }}
+            </span>
+          </div>
+        }
+        <div class="spec">
+          <span class="text-small text-secondary">{{
+            'designSystem.states.count' | translate
+          }}</span>
+          <span class="pill">
+            <app-icon name="cart" size="small" />
+            {{ 'nav.shoppingList' | translate }}
+            <span class="problem-badge">3</span>
+          </span>
+        </div>
+      </section>
+
+      <!-- Dialog (shown in place instead of floating) -->
+      <section class="tile tile--5" aria-labelledby="ds-dialog">
+        <h2 class="tile__title" id="ds-dialog">
+          {{ 'designSystem.components.dialog' | translate }}
+        </h2>
+        <div class="dialog in-place">
+          <div class="dialog__box">
+            <h3 class="text-subheading">{{ 'designSystem.samples.dialogTitle' | translate }}</h3>
+            <div class="dialog__body">
+              <p>{{ 'designSystem.samples.dialogText' | translate }}</p>
+            </div>
+            <div class="dialog__actions">
+              <span class="dialog__count text-secondary">{{
+                'designSystem.samples.dialogCount' | translate
+              }}</span>
+              <button type="button" class="button">
+                {{ 'designSystem.samples.cancel' | translate }}
+              </button>
+              <button type="button" class="button button--primary">
+                {{ 'designSystem.samples.confirm' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Vehicle cards (client page): shown, hidden, hover, add -->
+      <section class="tile tile--7" aria-labelledby="ds-vehicles">
+        <h2 class="tile__title" id="ds-vehicles">
+          {{ 'designSystem.components.vehicleTiles' | translate }}
+        </h2>
+        <p class="usage">{{ 'designSystem.samples.vehicleTilesUsage' | translate }}</p>
+        <div class="vehicle-tiles">
+          @for (state of vehicleStates; track state) {
+            <div class="state-sample">
+              <span class="text-small text-secondary">{{
+                'designSystem.states.' + state | translate
+              }}</span>
+              <div
+                class="vehicle-tile"
+                [class.vehicle-tile--checked]="state !== 'hidden'"
+                [class.is-hover]="state === 'hover'"
+              >
+                <span class="vehicle-tile__toggle">
+                  <span class="vehicle-tile__check" aria-hidden="true">
+                    @if (state !== 'hidden') {
+                      <app-icon name="check" size="small" />
+                    }
+                  </span>
+                  <app-vehicle-logo vehicle="Triumph Street Triple RS" kind="motorcycle" />
+                  <span class="vehicle-tile__body">
+                    <span class="text-strong">Triumph Street Triple RS</span>
+                    <span class="text-secondary text-small">VD 5841</span>
+                  </span>
+                </span>
+                <span class="vehicle-tile__buttons">
+                  <button
+                    type="button"
+                    class="icon-button"
+                    [attr.aria-label]="'designSystem.iconNames.registration' | translate"
+                  >
+                    <app-icon name="registration" />
+                  </button>
+                  <button
+                    type="button"
+                    class="icon-button"
+                    [attr.aria-label]="'designSystem.iconNames.tool' | translate"
+                  >
+                    <app-icon name="tool" />
+                  </button>
+                </span>
+              </div>
+            </div>
+          }
+          <div class="state-sample">
+            <span class="text-small text-secondary">{{
+              'designSystem.states.add' | translate
+            }}</span>
+            <button type="button" class="vehicle-tile vehicle-tile--add">
+              <app-icon name="plus-circle" />
+              {{ 'clients.addVehicle' | translate }}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Link rows (client page): a worksheet, an invoice, the hover look -->
+      <section class="tile tile--5" aria-labelledby="ds-rows">
+        <h2 class="tile__title" id="ds-rows">
+          {{ 'designSystem.components.listRows' | translate }}
+        </h2>
+        <p class="usage">{{ 'designSystem.samples.listRowsUsage' | translate }}</p>
+        @for (state of rowStates; track state) {
+          <div class="state-sample">
+            <span class="text-small text-secondary">{{
+              'designSystem.states.' + state | translate
+            }}</span>
+            <div class="list-row" [class.is-hover]="state === 'hover'">
+              <app-vehicle-logo vehicle="Bus" kind="car" [lifted]="true" />
+              <span class="list-row__main">
+                <span class="text-strong">Bus</span>
+                <span class="text-secondary">24.11.2026</span>
+              </span>
+              <app-icon name="chevron-right" />
+            </div>
+          </div>
+        }
+        <div class="state-sample">
+          <span class="text-small text-secondary">{{
+            'designSystem.states.withStatus' | translate
+          }}</span>
+          <div class="list-row">
+            <app-vehicle-logo vehicle="Bus" kind="car" />
+            <span class="list-row__main">
+              <span class="text-strong">{{ 'invoice.number' | translate: { number: 42 } }}</span>
+              <span class="text-secondary">Bus · 24.11.2026</span>
+            </span>
+            <span class="list-row__amount">CHF 1'250.00</span>
+            <span class="status-chip status-chip--open">info</span>
+            <app-icon name="chevron-right" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Icons -->
+      <section class="tile tile--12" aria-labelledby="ds-icons">
+        <h2 class="tile__title" id="ds-icons">{{ 'designSystem.groups.icons' | translate }}</h2>
+        <!-- By role; each icon is named by what it does in the app (code name in the tooltip) -->
+        @for (group of iconGroups; track group.id) {
+          <h3 class="icons__group text-small text-strong">
+            {{ 'designSystem.iconGroups.' + group.id | translate }}
+          </h3>
+          <ul class="icons">
+            @for (icon of group.icons; track icon) {
+              <li class="icons__item" [title]="icon">
+                <app-icon [name]="icon" size="large" />
+                <span class="icons__name">{{ 'designSystem.iconNames.' + icon | translate }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- Token editor -->
+@if (panelOpen()) {
+  <aside class="panel" id="token-panel" [attr.aria-label]="'designSystem.panel.title' | translate">
+    <div class="panel__head">
+      <div class="panel__title">
+        <h2 class="text-subheading">{{ 'designSystem.panel.title' | translate }}</h2>
+        <button
+          type="button"
+          class="icon-button"
+          [attr.aria-label]="'designSystem.panel.close' | translate"
+          (click)="panelOpen.set(false)"
+        >
+          <app-icon name="close" size="large" />
+        </button>
+      </div>
+      <div class="search">
+        <app-icon name="search" size="small" />
+        <input
+          class="input"
+          type="search"
+          [placeholder]="'designSystem.panel.filter' | translate"
+          [attr.aria-label]="'designSystem.panel.filter' | translate"
+          [value]="filter()"
+          (input)="filter.set($any($event.target).value)"
+        />
+      </div>
+    </div>
+
+    <div class="panel__scroll">
+      @for (group of panelGroups(); track group.id) {
+        <details
+          class="group"
+          [open]="(group.id !== 'sizes' && group.id !== 'layers') || !!filter()"
+        >
+          <summary class="group__title">
+            <app-icon name="chevron-right" size="small" class="group__chevron" />
+            {{ 'designSystem.groups.' + group.id | translate }}
+            <span class="text-small text-secondary">{{ group.tokens.length }}</span>
+          </summary>
+          @for (token of group.tokens; track token.name) {
+            <!-- A derived token (made from others) is shown but not edited -->
+            <div class="token" [class.token--changed]="ds.isChanged(token)">
+              <label class="token__name text-small" [for]="'token' + token.name">{{
+                token.name
+              }}</label>
+              @let usage = usageKey(token.name) | translate;
+              @if (usage !== usageKey(token.name)) {
+                <span class="usage">{{ usage }}</span>
+              }
+              <div class="token__control">
+                @if (isColor(token)) {
+                  <input
+                    class="token__picker"
+                    type="color"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    [value]="colorPickerValue(token)"
+                    (input)="ds.set(token, $any($event.target).value)"
+                  />
+                }
+                <input
+                  class="input"
+                  type="text"
+                  spellcheck="false"
+                  [id]="'token' + token.name"
+                  [value]="ds.value(token)"
+                  [disabled]="token.derived"
+                  [attr.title]="token.derived ? ('designSystem.panel.derived' | translate) : null"
+                  (change)="ds.set(token, $any($event.target).value)"
+                />
+                @if (!token.derived) {
+                  <button
+                    type="button"
+                    class="icon-button"
+                    [disabled]="!ds.isChanged(token)"
+                    [attr.aria-label]="
+                      'designSystem.panel.reset' | translate: { value: token.defaultValue }
+                    "
+                    [attr.title]="
+                      'designSystem.panel.reset' | translate: { value: token.defaultValue }
+                    "
+                    (click)="ds.reset(token)"
+                  >
+                    <app-icon name="undo" size="medium" />
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </details>
+      } @empty {
+        <p class="text-secondary">{{ 'designSystem.panel.noMatch' | translate }}</p>
+      }
+    </div>
+
+    <div class="panel__foot">
+      <span class="text-small text-secondary panel__count">
+        {{ 'designSystem.panel.changed' | translate: { count: ds.changedCount() } }}
+      </span>
+      <button type="button" class="button" [disabled]="!ds.changedCount()" (click)="ds.resetAll()">
+        {{ 'designSystem.panel.resetAll' | translate }}
+      </button>
+      <button
+        type="button"
+        class="button button--primary"
+        [disabled]="!ds.changedCount()"
+        (click)="copyChanges()"
+      >
+        {{ (copied() ? 'designSystem.panel.copied' : 'designSystem.panel.copy') | translate }}
+      </button>
+    </div>
+  </aside>
+}

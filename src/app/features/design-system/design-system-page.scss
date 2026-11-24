@@ -1,0 +1,551 @@
+@use 'breakpoints' as bp;
+
+// Sizes of this page only (the samples), not part of the app's visual language
+$panel-width: 360px;
+$sample-size: 32px; // radius / effect boxes, color dots
+$status-sample-size: 48px;
+$chip-size: 12px;
+$code-font: ui-monospace, 'Cascadia Mono', Consolas, monospace; // variable names only
+$icon-item-width: 96px; // icon with its name under it
+$medium-width: 640px; // tiles side by side (2 per row)
+$wide-width: 1000px; // bento layout (12 columns)
+
+// The page fills the main area: content on the left, token panel on the right
+:host {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: scroll; // always shown, like the work area of the other pages
+  background: var(--color-background);
+  // The tiles adapt to the space left by the panel, not to the window
+  container: ds / inline-size;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+  max-width: var(--settings-max-width);
+  margin-inline: auto;
+  padding: var(--space-400);
+  padding-bottom: var(--page-bottom-space);
+}
+
+.page__head {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--space-400);
+}
+
+.page__intro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+// ---- Bento grid -----------------------------------------------------------------
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--space-400);
+}
+
+.tile {
+  grid-column: span 12;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  min-width: 0;
+  padding: var(--space-400);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-200);
+}
+
+@container ds (min-width: #{$medium-width}) {
+  .tile {
+    grid-column: span 6;
+  }
+
+  .tile--7,
+  .tile--8,
+  .tile--12 {
+    grid-column: span 12;
+  }
+}
+
+@container ds (min-width: #{$wide-width}) {
+  @each $span in 3, 4, 5, 6, 7, 8, 12 {
+    .tile--#{$span} {
+      grid-column: span $span;
+    }
+  }
+}
+
+.tile__title {
+  margin-bottom: var(--space-100);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-medium);
+  font-weight: var(--font-weight-regular);
+}
+
+.tile__rule {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-top: var(--stroke-border) solid var(--color-line);
+}
+
+// One spec per row: name, value, sample on the right
+.spec {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-200);
+  min-height: var(--control-height);
+}
+
+// Name of a CSS variable: code font, so it is never taken for a label
+.var-name {
+  font-family: $code-font;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-strong);
+}
+
+.spec__name {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-050);
+  overflow-wrap: anywhere;
+}
+
+// When the token is used (under its name)
+.usage {
+  font-family: var(--font-body);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  color: var(--color-on-background-soft);
+}
+
+.spec__sample {
+  display: flex;
+  justify-content: flex-end;
+  width: $sample-size;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-200);
+}
+
+// ---- Colors ---------------------------------------------------------------------
+
+// Background (with the surface on it) on three fifths, statuses on the last two fifths
+.colors {
+  display: grid;
+  gap: var(--space-400);
+
+  @container ds (min-width: #{$wide-width}) {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+}
+
+// A background colour with the inks written on it; the surface is a card on the background
+.scheme {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  padding: var(--space-400);
+  background: var(--color-background);
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-200);
+
+  // Inks on the left, the surface card next to them
+  &--background {
+    display: grid;
+    gap: var(--space-400);
+    align-items: start;
+
+    @container ds (min-width: #{$medium-width}) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &--surface {
+    background: var(--color-surface);
+  }
+}
+
+.scheme__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+.scheme__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-200);
+
+  .usage {
+    flex-basis: 100%;
+  }
+}
+
+.scheme__line {
+  padding-top: var(--space-200);
+  border-top: var(--stroke-strong) solid var(--color-line);
+}
+
+.inks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+}
+
+.ink__sample {
+  flex: none;
+  width: $status-sample-size;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-subheading);
+  text-align: center;
+}
+
+.ink__text {
+  display: flex;
+  flex-direction: column;
+}
+
+// One status per row: sample, then name, values and use
+.statuses {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+}
+
+.status {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-200);
+}
+
+.status__text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-050);
+}
+
+// Name, then one line per value: the colour squares are aligned under each other
+.status__values {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-050);
+}
+
+.status__sample {
+  display: grid;
+  place-content: center;
+  width: $status-sample-size;
+  flex: none;
+  height: $status-sample-size;
+  border: var(--stroke-border) solid;
+  border-radius: var(--radius-200);
+  font-family: var(--font-heading);
+}
+
+.status__value {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-100);
+
+  // The variable name stays whole (never cut at a hyphen); the formula wraps after it
+  .var-name {
+    white-space: nowrap;
+  }
+}
+
+.status__chip {
+  flex: none;
+  width: $chip-size;
+  height: $chip-size;
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-100);
+}
+
+// ---- Samples (spacing, radius, effects) -----------------------------------------
+
+.space-sample {
+  background: var(--color-on-background);
+}
+
+.box-sample {
+  width: $sample-size;
+  height: $sample-size;
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
+
+  &--filled {
+    background: var(--color-on-background);
+  }
+}
+
+.line-sample {
+  width: $sample-size;
+  background: var(--color-on-background);
+}
+
+// ---- Components ------------------------------------------------------------------
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--vehicle-field-min-width), 1fr));
+  gap: var(--space-400);
+}
+
+// Title of a group of icons
+.icons__group {
+  margin-top: var(--space-200);
+  color: var(--color-on-background-soft);
+}
+
+.icons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($icon-item-width, 1fr));
+  gap: var(--space-200);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.icons__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-100);
+  padding: var(--space-200) var(--space-100);
+  text-align: center;
+}
+
+.icons__name {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-heading);
+  color: var(--color-on-background-soft);
+}
+
+// Buttons in each state: one row per kind, one column per state
+.states {
+  display: grid;
+  grid-template-columns: auto repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: var(--space-200) var(--space-400);
+}
+
+.states__row {
+  display: contents;
+}
+
+// A sample with its state written above it
+.state-sample {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+  min-width: 0;
+}
+
+// Lines of a worksheet: to do, planned, done
+.line {
+  padding: var(--space-200) var(--space-400);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-200);
+
+  &--planned {
+    background: var(--color-info-bg);
+  }
+
+  &--done {
+    background: var(--color-success-bg);
+  }
+}
+
+// Dialog shown in the tile instead of floating over the page
+.in-place {
+  position: static;
+  // Block, as the open <dialog>: its content takes the whole width (buttons on the right)
+  display: block;
+  width: auto;
+  max-width: 100%;
+}
+
+// ---- Token panel -----------------------------------------------------------
+
+.panel {
+  flex: none;
+  width: $panel-width;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--color-surface);
+  border-left: var(--stroke-border) solid var(--color-on-background);
+
+  // Tablets: over the page, like the other side panels
+  @include bp.tablet-down {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: var(--z-overlay);
+    box-shadow: var(--shadow-overlay);
+  }
+
+  @include bp.mobile {
+    left: 0;
+    width: auto;
+    border-left: 0;
+  }
+}
+
+.panel__head {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  padding: var(--space-400);
+  border-bottom: var(--stroke-border) solid var(--color-line);
+}
+
+.panel__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+
+  h2 {
+    flex: 1;
+  }
+}
+
+.panel__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-200) var(--space-400);
+}
+
+.panel__foot {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-400);
+  border-top: var(--stroke-border) solid var(--color-line);
+}
+
+.panel__count {
+  flex: 1;
+}
+
+.group {
+  border-bottom: var(--stroke-border) solid var(--color-line);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.group__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-200) 0;
+  font-family: var(--font-heading);
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.group__chevron {
+  .group[open] & {
+    transform: rotate(90deg);
+  }
+}
+
+.token {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+  padding-bottom: var(--space-200);
+}
+
+.token__name {
+  color: var(--color-on-background-soft);
+  overflow-wrap: anywhere;
+
+  // Changed value: the name stands out
+  .token--changed & {
+    color: var(--color-on-background);
+    font-weight: var(--font-weight-strong);
+  }
+}
+
+.token__control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+
+  .input {
+    flex: 1;
+  }
+}
+
+// Colour picker: a square swatch the size of the field
+.token__picker {
+  flex: none;
+  width: var(--control-height);
+  height: var(--control-height);
+  padding: 0;
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-200);
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  &::-webkit-color-swatch {
+    border: 0;
+  }
+
+  &::-moz-color-swatch {
+    border: 0;
+  }
+}

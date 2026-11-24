@@ -3,7 +3,7 @@
 @include side-panel.side-panel(left);
 
 .panel {
-  background: var(--color-background-secondary);
+  background: var(--color-background);
 }
 
 .panel__scroll {
@@ -31,30 +31,29 @@
   margin-top: var(--space-100);
 }
 
-
 .card {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-300);
+  gap: var(--space-200);
   width: 100%;
   padding: var(--space-400);
   text-align: left;
-  background: var(--color-background-default);
-  border: var(--stroke-border) solid var(--color-border-default);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
-  color: var(--color-icon-default);
+  color: var(--color-on-background);
   transition: background-color var(--transition-fast);
 
   &:hover {
-    background: var(--color-background-hover);
+    background: var(--color-line);
   }
 
   // "Variant3" of the Left sidebar: the worksheet currently displayed
   &--selected,
   &--selected:hover {
-    background: var(--color-background-tertiary);
-    border: var(--stroke-focus) solid var(--color-border-strong);
-    padding: calc(var(--space-400) - var(--stroke-focus) + var(--stroke-border));
+    background: var(--color-line);
+    border: var(--stroke-strong) solid var(--color-on-background);
+    padding: calc(var(--space-400) - var(--stroke-strong) + var(--stroke-border));
   }
 }
 
@@ -67,10 +66,10 @@
 
 .card__title {
   font-weight: var(--font-weight-strong);
-  color: var(--color-text-default);
+  color: var(--color-on-background);
 }
 
 .card__subtitle,
 .card__date {
-  color: var(--color-text-secondary);
+  color: var(--color-on-background-soft);
 }

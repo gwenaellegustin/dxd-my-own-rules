@@ -4,14 +4,14 @@
   flex: 1;
   min-height: 0;
   overflow-y: scroll; // always shown, like the work area of the other pages
-  background: var(--color-background-secondary);
+  background: var(--color-background);
   container: work-area / inline-size;
 }
 
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-600);
+  gap: var(--space-800);
   max-width: var(--settings-max-width);
   margin-inline: auto;
   padding: var(--space-400);
@@ -37,8 +37,8 @@
   display: inline-flex;
   gap: var(--space-100);
   padding: var(--space-100);
-  background: var(--color-background-default);
-  border: var(--stroke-border) solid var(--color-border-default);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
 }
 
@@ -46,19 +46,19 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-200);
-  padding: var(--space-200) var(--space-300);
+  padding: var(--space-200) var(--space-200);
   border-radius: var(--radius-100);
-  color: var(--color-text-secondary);
+  color: var(--color-on-background-soft);
   transition: background-color var(--transition-fast);
 
   &:hover {
-    background: var(--color-background-hover);
+    background: var(--color-line);
   }
 
   &--active,
   &--active:hover {
-    background: var(--color-background-brand);
-    color: var(--color-text-on-brand);
+    background: var(--color-on-background);
+    color: var(--color-surface);
     font-weight: var(--font-weight-strong);
   }
 }
@@ -66,22 +66,22 @@
 .tabs {
   display: flex;
   gap: var(--space-400);
-  border-bottom: var(--stroke-border) solid var(--color-border-default);
+  border-bottom: var(--stroke-border) solid var(--color-on-background);
 }
 
 .tabs__tab {
   padding: var(--space-200) 0;
   margin-bottom: calc(-1 * var(--stroke-border));
-  border-bottom: var(--stroke-focus) solid transparent;
-  color: var(--color-text-secondary);
+  border-bottom: var(--stroke-strong) solid transparent;
+  color: var(--color-on-background-soft);
 
   &:hover {
-    color: var(--color-text-default);
+    color: var(--color-on-background);
   }
 
   &--active {
-    border-bottom-color: var(--color-border-strong);
-    color: var(--color-text-default);
+    border-bottom-color: var(--color-on-background);
+    color: var(--color-on-background);
     font-weight: var(--font-weight-strong);
   }
 }
@@ -91,7 +91,7 @@
 .worksheet-preview {
   display: flex;
   flex-direction: column;
-  gap: var(--space-600);
+  gap: var(--space-400);
 }
 
 .section,
@@ -105,7 +105,7 @@
 .lines-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--space-600);
+  gap: var(--space-800);
   align-items: start;
 
   @container work-area (max-width: 900px) {
@@ -146,12 +146,12 @@
 
   &[role='button']:hover,
   &:focus-visible {
-    outline: var(--stroke-focus) solid var(--color-border-strong);
+    outline: var(--stroke-strong) solid var(--color-on-background);
   }
 
   &--selected,
   &--selected:hover {
-    outline: var(--stroke-focus) solid var(--color-background-brand);
+    outline: var(--stroke-strong) solid var(--color-on-background);
   }
 
   // Dragging: the dragged line is dimmed, a bar shows where it goes (in the gap)
@@ -165,17 +165,17 @@
     position: absolute;
     left: 0;
     right: 0;
-    height: var(--stroke-focus);
-    background: var(--color-border-strong);
+    height: var(--stroke-strong);
+    background: var(--color-on-background);
   }
 
   // In the middle of the gap above / under the line
   &.drop-before::before {
-    top: calc(var(--space-100) / -1 - 1px);
+    top: calc(var(--space-100) / -1 - var(--stroke-border));
   }
 
   &.drop-after::after {
-    bottom: calc(var(--space-100) / -1 - 1px);
+    bottom: calc(var(--space-100) / -1 - var(--stroke-border));
   }
 }
 
@@ -187,9 +187,9 @@
   transform: translate(-50%, -50%);
   display: grid;
   place-content: center;
-  background: var(--color-background-secondary);
-  border-radius: var(--radius-full);
-  color: var(--color-text-default);
+  background: var(--color-background);
+  border-radius: var(--radius-200);
+  color: var(--color-on-background);
   opacity: 0;
 
   &--after {

@@ -2,13 +2,13 @@
 .invoice {
   display: flex;
   flex-direction: column;
-  gap: var(--space-600);
+  gap: var(--space-800);
   width: 100%;
   max-width: var(--invoice-max-width);
   margin-inline: auto;
   padding: var(--space-800);
-  background: var(--color-background-default);
-  border: var(--stroke-border) solid var(--color-border-default);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
 
   @container work-area (max-width: 560px) {
@@ -62,7 +62,7 @@
   .pages__content {
     display: flex;
     flex-direction: column;
-    gap: var(--space-600);
+    gap: var(--space-800);
   }
 
   .pages__footer-space {
@@ -94,7 +94,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-300);
+  gap: var(--space-200);
 }
 
 .invoice__head {
@@ -121,7 +121,7 @@
 .invoice__facts {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
-  gap: var(--space-200) var(--space-600);
+  gap: var(--space-200) var(--space-400);
   margin: 0;
 
   > div {
@@ -129,7 +129,7 @@
   }
 
   dt {
-    color: var(--color-text-secondary);
+    color: var(--color-on-background-soft);
   }
 
   dd {
@@ -160,13 +160,13 @@
 
   th,
   td {
-    padding: var(--space-150) var(--space-200);
+    padding: var(--space-100) var(--space-200);
     vertical-align: baseline;
   }
 
   th {
     font-weight: var(--font-weight-regular);
-    border-bottom: var(--stroke-border) solid var(--color-text-default);
+    border-bottom: var(--stroke-border) solid var(--color-on-background);
   }
 
   th.items__description {
@@ -183,7 +183,7 @@
     tr {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      border-bottom: var(--stroke-border) solid var(--color-border-default);
+      border-bottom: var(--stroke-border) solid var(--color-line);
     }
 
     td.items__description,
@@ -199,7 +199,7 @@
       &::before {
         content: attr(data-label);
         font-size: var(--font-size-small);
-        color: var(--color-text-secondary);
+        color: var(--color-on-background-soft);
       }
     }
   }
@@ -216,7 +216,7 @@
 
 .items__note-text {
   display: block;
-  color: var(--color-text-secondary);
+  color: var(--color-on-background-soft);
   font-size: var(--font-size-small);
   white-space: pre-line;
 
@@ -240,7 +240,7 @@
 
   // Price still 0: grey background, to be noticed and filled in
   &--to-fill {
-    background: var(--color-background-tertiary);
+    background: var(--color-line);
   }
 }
 
@@ -285,7 +285,7 @@
   }
 
   dt {
-    padding-right: var(--space-600);
+    padding-right: var(--space-400);
   }
 
   dd {
@@ -297,7 +297,7 @@
   dt,
   dd {
     padding-top: var(--space-200);
-    border-top: var(--stroke-border) solid var(--color-text-default);
+    border-top: var(--stroke-border) solid var(--color-on-background);
     font-weight: var(--font-weight-strong);
   }
 }

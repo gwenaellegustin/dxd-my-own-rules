@@ -13,12 +13,12 @@
 
 // Done items are not carried over: their label is dimmed
 .carry-item--done .carry-item__label {
-  color: var(--color-text-secondary);
+  color: var(--color-on-background-soft);
   cursor: default;
 
   input {
     cursor: default;
-    opacity: 0.5;
+    opacity: var(--opacity-disabled);
   }
 }
 
@@ -26,16 +26,16 @@
 .carry-group__head {
   display: flex;
   align-items: baseline;
-  gap: var(--space-300);
+  gap: var(--space-200);
 }
 
 .carry-group__toggle {
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-regular);
-  color: var(--color-text-secondary);
+  color: var(--color-on-background-soft);
   text-decoration: underline;
 
   &:hover {
-    color: var(--color-text-default);
+    color: var(--color-on-background);
   }
 }

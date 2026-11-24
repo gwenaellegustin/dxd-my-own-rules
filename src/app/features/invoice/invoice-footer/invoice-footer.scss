@@ -4,7 +4,7 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: end;
-  gap: var(--space-100) var(--space-600);
+  gap: var(--space-100) var(--space-400);
 
   a {
     color: inherit;
@@ -26,8 +26,8 @@
   align-items: flex-end;
   gap: var(--space-400);
   padding-bottom: var(--space-100);
-  border-bottom: var(--stroke-border) solid var(--color-text-default);
-  color: var(--color-icon-default);
+  border-bottom: var(--stroke-border) solid var(--color-on-background);
+  color: var(--color-on-background);
 }
 
 // Car and motorbike drawings of the paper invoice (decorative)

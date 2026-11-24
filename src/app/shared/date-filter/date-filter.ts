@@ -46,8 +46,8 @@ import { Icon } from '../icon/icon';
 
     .active,
     .active:hover {
-      background: var(--color-background-brand);
-      color: var(--color-icon-on-brand);
+      background: var(--color-on-background);
+      color: var(--color-surface);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

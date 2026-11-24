@@ -121,7 +121,7 @@
       </label>
     </div>
 
-    <div class="dialog__actions dialog__actions--end">
+    <div class="dialog__actions">
       @if (locked()) {
         <button type="button" class="button button--primary" (click)="closed.emit()">
           {{ 'common.close' | translate }}

@@ -23,25 +23,25 @@
 .item {
   display: flex;
   align-items: center;
-  gap: var(--space-300);
-  padding: var(--space-300) var(--space-400);
-  background: var(--color-background-default);
-  border: var(--stroke-border) solid var(--color-border-default);
+  gap: var(--space-200);
+  padding: var(--space-200) var(--space-400);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
   cursor: pointer;
   user-select: none;
   transition: border-color var(--transition-fast);
 
   &:hover {
-    border-color: var(--color-border-strong);
+    border-color: var(--color-on-background);
   }
 
   // Ordered: same green as a done line, label struck through
   &--ordered {
-    background: var(--color-background-status-done);
+    background: var(--color-success-bg);
 
     .item__label {
-      color: var(--color-text-secondary);
+      color: var(--color-on-background-soft);
       text-decoration: line-through;
     }
   }
@@ -74,15 +74,15 @@
   cursor: pointer;
   gap: var(--space-100);
   padding: var(--space-050) var(--space-200);
-  border-radius: var(--radius-full);
-  background: var(--color-background-secondary);
-  color: var(--color-text-secondary);
+  border-radius: var(--radius-200);
+  background: var(--color-background);
+  color: var(--color-on-background-soft);
   font-size: var(--font-size-small);
   text-decoration: none;
 
   &:hover {
-    background: var(--color-background-hover);
-    color: var(--color-text-default);
+    background: var(--color-line);
+    color: var(--color-on-background);
   }
 }
 
@@ -97,8 +97,8 @@
   align-items: end;
   gap: var(--space-200);
   padding: var(--space-400);
-  background: var(--color-background-default);
-  border: var(--stroke-border) dashed var(--color-border-strong);
+  background: var(--color-surface);
+  border: var(--stroke-border) dashed var(--color-on-background);
   border-radius: var(--radius-200);
 
   @container work-area (max-width: 720px) {

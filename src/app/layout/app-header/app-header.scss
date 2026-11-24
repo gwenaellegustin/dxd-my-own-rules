@@ -9,12 +9,12 @@
   gap: var(--space-400);
   height: var(--header-height);
   padding: var(--space-400);
-  background: var(--color-background-default);
-  border-bottom: var(--stroke-border) solid var(--color-border-default);
+  background: var(--color-surface);
+  border-bottom: var(--stroke-border) solid var(--color-on-background);
 
   @include bp.mobile {
     gap: var(--space-200);
-    padding: var(--space-400) var(--space-300);
+    padding: var(--space-400) var(--space-200);
   }
 }
 
@@ -53,7 +53,7 @@
   flex: none;
   display: flex;
   padding: var(--space-050);
-  border: var(--stroke-border) solid var(--color-border-default);
+  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
 }
 
@@ -63,17 +63,17 @@
   border-radius: var(--radius-100);
   font-size: var(--font-size-small);
   line-height: var(--line-height-single);
-  color: var(--color-text-secondary);
+  color: var(--color-on-background-soft);
   transition: background-color var(--transition-fast);
 
   &:hover {
-    background: var(--color-background-hover);
+    background: var(--color-line);
   }
 
   &--active,
   &--active:hover {
-    background: var(--color-background-brand);
-    color: var(--color-text-on-brand);
+    background: var(--color-on-background);
+    color: var(--color-surface);
     font-weight: var(--font-weight-strong);
   }
 }
@@ -84,7 +84,7 @@
   gap: var(--space-200);
   height: var(--avatar-size);
   border-radius: var(--radius-200);
-  color: var(--color-icon-default);
+  color: var(--color-on-background);
 }
 
 // Company logo (round image): opens the user menu
@@ -92,13 +92,12 @@
   display: block;
   width: var(--logo-size);
   height: var(--logo-size);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-circle);
 }
 
 .account__name {
-  padding: var(--space-200) var(--space-200) var(--space-300);
+  padding: var(--space-200) var(--space-200) var(--space-200);
   margin-bottom: var(--space-100);
-  border-bottom: var(--stroke-border) solid var(--color-border-default);
+  border-bottom: var(--stroke-border) solid var(--color-line);
   font-weight: var(--font-weight-strong);
 }
-

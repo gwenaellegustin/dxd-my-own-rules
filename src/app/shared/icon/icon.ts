@@ -26,7 +26,6 @@ const MATERIAL_SYMBOLS = {
   person: 'person',
   registration: 'two_pager',
   invoice: 'receipt_long',
-  receipt: 'receipt',
   redo: 'redo',
   forward: 'arrow_forward',
   hide: 'visibility_off',
@@ -50,6 +49,9 @@ const MATERIAL_SYMBOLS = {
 } as const;
 
 export type IconName = keyof typeof MATERIAL_SYMBOLS;
+
+/** Every icon of the app (design system page) */
+export const ICON_NAMES = Object.keys(MATERIAL_SYMBOLS) as IconName[];
 export type IconSize = 'small' | 'medium' | 'large' | 'xlarge';
 
 /** Google Material Symbols icon; takes the current text color and the size tokens. */

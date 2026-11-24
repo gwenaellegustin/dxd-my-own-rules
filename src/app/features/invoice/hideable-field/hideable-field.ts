@@ -70,12 +70,12 @@ import { Icon } from '../../../shared/icon/icon';
       place-content: center;
       width: var(--icon-size-large);
       height: var(--icon-size-large);
-      border-radius: var(--radius-full);
-      color: var(--color-text-secondary);
+      border-radius: var(--radius-200);
+      color: var(--color-on-background-soft);
 
       &:hover {
-        background: var(--color-background-hover);
-        color: var(--color-text-default);
+        background: var(--color-line);
+        color: var(--color-on-background);
       }
     }
   `,

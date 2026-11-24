@@ -1,73 +1,43 @@
 // ---------------------------------------------------------------------------
 // Design tokens — single source of truth for the visual language.
 //
-// The current values are a greyscale WIREFRAME taken from the Figma
-// "Simple Design System" file. To apply the final brand, only change the
-// values below: every component reads these variables, none hard-codes them.
+// Retro / brutalist look: grey page, white elements outlined in black, slightly
+// rounded corners, Bungee titles and DM Sans text. Every component reads these
+// variables, none hard-codes them.
 // ---------------------------------------------------------------------------
 
 :root {
-  // ---- Colors: backgrounds ------------------------------------------------
-  --color-background-default: #ffffff;
-  --color-background-secondary: #f5f5f5;
-  --color-background-tertiary: #d9d9d9;
-  --color-background-hover: #f5f5f5;
-  --color-background-disabled: #f5f5f5;
-  --color-background-brand: #2c2c2c;
-  --color-background-brand-hover: #1e1e1e;
-  --color-background-brand-subtle: #f5f5f5;
+  // ---- Colors: neutrals ---------------------------------------------------
+  --color-background: #ebebeb; // every background area (page, panels, groups), chips, read-only fields
+  --color-on-background: #000000; // text, icons, outlines, dark buttons, focus ring
+  --color-on-background-soft: #3a3a3a; // secondary text, hover of dark buttons
+  --color-on-background-faint: #9e9e9e; // placeholders
+  --color-surface: #ffffff; // elements (cards, panels, header, dialogs), text on dark buttons
+  --color-line: #cfcfcf; // hover, dividers inside an element, scrollbar thumb
 
-  // Line status backgrounds (Labour / Parts / Fluids / Various lines)
-  --color-background-status-planned: #f1f6fd;
-  --color-background-status-done: #ebffee;
-  // Problems (transcript answer the assistant could not apply)
-  --color-background-danger: #fdecec;
-  --color-border-danger: #f3b9b9;
-  --color-background-danger-strong: #d92d20;
-  --color-text-danger: #b42318;
-  --color-text-info: #1d5bbf; // open invoice count
-  --color-border-info: #b5ccf2;
-  --color-text-success: #1a7f3c; // paid
-  --color-border-success: #a8dcb8;
-  --color-icon-status-planned: #2f6fd6; // check of a planned line (transcript changes)
-  --color-icon-status-done: #1e9e4a; // check of a done line
-  // Invoice status chips (open / sent / paid)
-  --color-background-invoice-open: var(--color-background-status-planned);
-  --color-background-invoice-sent: var(--color-background-danger); // sent: waiting for payment
-  --color-background-invoice-paid: var(--color-background-status-done);
+  // ---- Colors: status -----------------------------------------------------
+  // Info = planned line, open invoice; success = done line, paid invoice; error = problems,
+  // sent invoice, damage marks. Only the main colour is set: its light background and its
+  // border are mixed from it with the surface, so they follow when it changes.
+  --color-info: #1d5bbf;
+  --color-success: #1a7f3c;
+  --color-error: #c4271b;
+  --color-info-bg: color-mix(in srgb, var(--color-info) 8%, var(--color-surface));
+  --color-info-line: color-mix(in srgb, var(--color-info) 32%, var(--color-surface));
+  --color-success-bg: color-mix(in srgb, var(--color-success) 8%, var(--color-surface));
+  --color-success-line: color-mix(in srgb, var(--color-success) 32%, var(--color-surface));
+  --color-error-bg: color-mix(in srgb, var(--color-error) 8%, var(--color-surface));
+  --color-error-line: color-mix(in srgb, var(--color-error) 32%, var(--color-surface));
 
-  // ---- Colors: borders ----------------------------------------------------
-  --color-border-default: #d9d9d9;
-  --color-border-strong: #757575;
-  // Scrollbars: wide enough to be grabbed with the mouse, rounded thumb on a transparent track,
+  // Scrollbars: wide enough to be grabbed with the mouse, thumb on a transparent track,
   // arrow buttons at both ends
   --scrollbar-size: 16px;
   --scrollbar-button-size: 20px; // length of an arrow button along the scrollbar
-  --color-scrollbar-thumb: #c4c4c4;
-  --color-scrollbar-thumb-hover: var(--color-border-strong);
-  --color-border-brand: #2c2c2c;
-  --color-focus-ring: #2c2c2c;
-  --color-highlight: #2c2c2c; // border of an element shown from a transcript change
-
-  // ---- Colors: text & icons -----------------------------------------------
-  --color-text-default: #1e1e1e;
-  --color-text-secondary: #757575;
-  --color-text-tertiary: #b3b3b3;
-  --color-text-neutral: #303030;
-  --color-text-on-brand: #f5f5f5;
-  --color-icon-default: #1e1e1e;
-  // Arrow of the select fields: Material "keyboard_arrow_down", in --color-icon-default (an image
-  // cannot read CSS variables: update its fill (%23 = #) together with that colour)
-  --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cpath fill='%231e1e1e' d='M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
-  --color-icon-on-brand: #f5f5f5;
-
-  // Damage: legend symbols, and marks drawn on the car diagram (red so they stand out)
-  --color-damage-marker: #757575;
-  --color-damage-mark: #e02424;
 
   // ---- Typography ---------------------------------------------------------
-  --font-family-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-family-heading: var(--font-family-body);
+  --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  // Titles and main menu. Bungee only exists in capitals and in one weight (regular)
+  --font-heading: 'Bungee', 'DM Sans', system-ui, sans-serif;
 
   --font-size-small: 14px;
   --font-size-medium: 16px;
@@ -80,30 +50,25 @@
   --line-height-single: 1;
   --line-height-body: 1.4;
   --line-height-heading: 1.2;
-  --letter-spacing-heading: -0.02em;
 
   // ---- Spacing scale ------------------------------------------------------
-  --space-0: 0;
-  --space-050: 2px;
-  --space-100: 4px;
-  --space-150: 6px;
-  --space-200: 8px;
-  --space-300: 12px;
-  --space-400: 16px;
-  --space-600: 24px;
-  --space-800: 32px;
+  // Five steps, chosen by how close the things are
+  --space-050: 2px; // inside chips and badges
+  --space-100: 4px; // cannot be split: an icon and its text
+  --space-200: 8px; // grouped elements: label and field, items of a list, inside controls
+  --space-400: 16px; // same area: padding of cards, panels, dialogs; blocks of an area
+  --space-800: 32px; // separate areas: sections of a page, columns of a layout
 
   // ---- Radius -------------------------------------------------------------
-  --radius-100: 4px;
-  --radius-200: 8px;
-  --radius-300: 16px; // chat bubbles
-  --radius-pill: 32px;
-  --radius-full: 9999px;
+  // Slightly rounded corners everywhere, like the Bungee titles; only real circles (radio
+  // buttons, logo) are round
+  --radius-100: 2px; // small parts inside a control (checkbox, switch option, list option)
+  --radius-200: 4px; // default: cards, fields, buttons, chips, menus, dialogs, images, chat bubbles
+  --radius-circle: 50%;
 
   // ---- Strokes ------------------------------------------------------------
   --stroke-border: 1px;
-  --stroke-focus: 2px;
-  --stroke-border-dashed: 2px; // drop areas (upload)
+  --stroke-strong: 2px; // focus ring, selection, active tab, highlight, drop area (dashed)
   --opacity-disabled: 0.5;
 
   // ---- Sizes --------------------------------------------------------------
@@ -145,7 +110,6 @@
   --vehicle-tile-min-width: 220px;
   --vehicle-field-min-width: 200px;
   --text-key-min-width: 160px;
-  --stroke-highlight: 3px; // element shown from a transcript change
   --settings-max-width: 1400px;
   --dropdown-min-width: 200px;
   --invoice-logo-size: 72px;
@@ -159,9 +123,9 @@
   --registration-zoom: 2.5;
 
   // ---- Elevation & motion -------------------------------------------------
-  --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.12);
-  --overlay-backdrop: rgb(0 0 0 / 0.24);
-  --transition-fast: 120ms ease;
+  --shadow-overlay: 4px 4px 0 rgb(0 0 0 / 0.35); // hard offset shadow, retro
+  --overlay-backdrop: rgb(0 0 0 / 0.32);
+  --transition-fast: 120ms ease; // hover, open / close (not in the design system page)
 
   // ---- Stacking -----------------------------------------------------------
   --z-sticky: 10;

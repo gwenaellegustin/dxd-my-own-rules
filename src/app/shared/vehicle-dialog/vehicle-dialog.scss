@@ -13,11 +13,11 @@
   position: absolute;
   top: var(--space-200);
   right: var(--space-200);
-  background: var(--color-background-default);
+  background: var(--color-surface);
   box-shadow: var(--shadow-overlay);
 
   &:hover {
-    background: var(--color-background-hover);
+    background: var(--color-line);
   }
 }
 
@@ -25,7 +25,7 @@
   display: flex;
   justify-content: center;
   overflow: hidden;
-  border-radius: var(--radius-100);
+  border-radius: var(--radius-200);
   cursor: zoom-in;
 
   &--zoomed {
@@ -45,10 +45,10 @@
     calc(100dvh - var(--registration-chrome-height))
   );
   object-fit: contain;
-  border: var(--stroke-border) solid var(--color-border-default);
-  border-radius: var(--radius-100);
-  transition: transform var(--transition-fast);
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-200);
   user-select: none;
+  transition: transform var(--transition-fast);
 }
 
 // Upload area shown when the vehicle has no registration document yet
@@ -59,27 +59,27 @@
   justify-content: center;
   gap: var(--space-200);
   min-height: var(--registration-upload-height);
-  padding: var(--space-600);
-  border: var(--stroke-border-dashed) dashed var(--color-border-strong);
+  padding: var(--space-400);
+  border: var(--stroke-strong) dashed var(--color-on-background);
   border-radius: var(--radius-200);
-  color: var(--color-text-default);
+  color: var(--color-on-background);
   text-align: center;
   cursor: pointer;
   transition: background-color var(--transition-fast);
 
   &:hover,
   &--over {
-    background: var(--color-background-hover);
+    background: var(--color-line);
   }
 
   // The file input is visually hidden: show the focus on the area
   &:has(input:focus-visible) {
-    outline: var(--stroke-focus) solid var(--color-focus-ring);
-    outline-offset: 2px;
+    outline: var(--stroke-strong) solid var(--color-on-background);
+    outline-offset: var(--space-050);
   }
 
   app-icon {
-    color: var(--color-icon-default);
+    color: var(--color-on-background);
   }
 }
 
@@ -87,10 +87,6 @@
 .registration__note {
   max-height: var(--registration-note-max-height);
   overflow-y: auto;
-}
-
-.dialog__actions--end {
-  justify-content: flex-end;
 }
 
 // Identity of the vehicle: two columns, one on narrow screens
@@ -114,6 +110,6 @@
 .vehicle-fields__choices {
   display: flex;
   align-items: center;
-  gap: var(--space-600);
+  gap: var(--space-400);
   min-height: var(--control-height);
 }

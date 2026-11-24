@@ -35,5 +35,10 @@ export const routes: Routes = [
     path: 'shopping-list',
     loadComponent: () => import('./features/shopping-list/shopping-list-page').then((m) => m.ShoppingListPage),
   },
+  // Not in the menu: only reachable by its URL
+  {
+    path: 'design-system',
+    loadComponent: () => import('./features/design-system/design-system-page').then((m) => m.DesignSystemPage),
+  },
   { path: '**', redirectTo: 'worksheets' },
 ];

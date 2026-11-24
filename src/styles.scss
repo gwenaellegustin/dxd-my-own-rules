@@ -29,12 +29,12 @@ body {
 }
 
 body {
-  font-family: var(--font-family-body);
+  font-family: var(--font-body);
   font-size: var(--font-size-medium);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-body);
-  color: var(--color-text-default);
-  background: var(--color-background-secondary);
+  color: var(--color-on-background);
+  background: var(--color-background);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -61,8 +61,8 @@ button {
 }
 
 :focus-visible {
-  outline: var(--stroke-focus) solid var(--color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--stroke-strong) solid var(--color-on-background);
+  outline-offset: var(--space-050);
 }
 
 .visually-hidden {
@@ -79,17 +79,16 @@ button {
 // ---------------------------------------------------------------------------
 
 .text-heading {
-  font-family: var(--font-family-heading);
+  font-family: var(--font-heading);
   font-size: var(--font-size-heading);
-  font-weight: var(--font-weight-strong);
+  font-weight: var(--font-weight-regular);
   line-height: var(--line-height-heading);
-  letter-spacing: var(--letter-spacing-heading);
 }
 
 .text-subheading {
-  font-family: var(--font-family-heading);
+  font-family: var(--font-heading);
   font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-strong);
+  font-weight: var(--font-weight-regular);
   line-height: var(--line-height-heading);
 }
 
@@ -98,7 +97,7 @@ button {
 }
 
 .text-secondary {
-  color: var(--color-text-secondary);
+  color: var(--color-on-background-soft);
 }
 
 .text-small {
@@ -124,29 +123,29 @@ button {
 .textarea {
   width: 100%;
   min-width: 0;
-  padding: var(--space-300) var(--space-400);
-  background: var(--color-background-default);
-  border: var(--stroke-border) solid var(--color-border-default);
+  padding: var(--space-200) var(--space-400);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
-  color: var(--color-text-default);
+  color: var(--color-on-background);
   font-size: var(--font-size-medium);
 
   &::placeholder {
-    color: var(--color-text-tertiary);
+    color: var(--color-on-background-faint);
     opacity: 1;
   }
 
   &:focus-visible {
     outline: none;
-    border-color: var(--color-border-strong);
+    border-color: var(--color-on-background);
     // Inset: drawn inside the border, so a scrolling container (dialog, panel) never clips it
-    box-shadow: inset 0 0 0 1px var(--color-border-strong);
+    box-shadow: inset 0 0 0 var(--stroke-border) var(--color-on-background);
   }
 
   // Read-only (e.g. invoiced worksheet): greyed, the text stays readable
   &:disabled {
-    background: var(--color-background-disabled);
-    color: var(--color-text-default);
+    background: var(--color-background);
+    color: var(--color-on-background);
     cursor: default;
   }
 }
@@ -273,8 +272,8 @@ button {
     margin: 0;
     display: grid;
     place-content: center;
-    background: var(--color-background-default);
-    border: var(--stroke-border) solid var(--color-border-strong);
+    background: var(--color-surface);
+    border: var(--stroke-border) solid var(--color-on-background);
     cursor: pointer;
   }
 
@@ -282,8 +281,8 @@ button {
     border-radius: var(--radius-100);
 
     &:checked {
-      background-color: var(--color-background-brand);
-      border-color: var(--color-background-brand);
+      background-color: var(--color-on-background);
+      border-color: var(--color-on-background);
 
       // Material Symbols "check" ligature
       &::after {
@@ -292,20 +291,20 @@ button {
         font-size: var(--checkbox-size);
         font-feature-settings: 'liga';
         line-height: 1;
-        color: var(--color-icon-on-brand);
+        color: var(--color-surface);
       }
     }
   }
 
   input[type='radio'] {
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-circle);
 
     &:checked::after {
       content: '';
       width: calc(var(--checkbox-size) / 2);
       height: calc(var(--checkbox-size) / 2);
-      border-radius: var(--radius-full);
-      background: var(--color-background-brand);
+      border-radius: var(--radius-circle);
+      background: var(--color-on-background);
     }
   }
 }
@@ -313,6 +312,7 @@ button {
 // ---------------------------------------------------------------------------
 // Buttons
 // ---------------------------------------------------------------------------
+// `.is-hover` gives the hover look without the pointer (states shown in the design system page)
 
 .icon-button {
   flex: none;
@@ -320,14 +320,15 @@ button {
   place-content: center;
   width: var(--control-height);
   height: var(--control-height);
-  border-radius: var(--radius-pill);
-  color: var(--color-icon-default);
+  border-radius: var(--radius-200);
+  color: var(--color-on-background);
   // Icons are font glyphs: an <a class="icon-button"> must not underline them
   text-decoration: none;
   transition: background-color var(--transition-fast);
 
-  &:hover {
-    background: var(--color-background-hover);
+  &:hover,
+  &.is-hover {
+    background: var(--color-line);
   }
 
   // Nothing to do (e.g. no edit to undo): faded, no hover effect
@@ -343,16 +344,17 @@ button {
   &--primary {
     width: calc(var(--control-height) + var(--space-100));
     height: calc(var(--control-height) + var(--space-100));
-    background: var(--color-background-brand);
-    border: var(--stroke-border) solid var(--color-border-brand);
-    color: var(--color-icon-on-brand);
+    background: var(--color-on-background);
+    border: var(--stroke-border) solid var(--color-on-background);
+    color: var(--color-surface);
 
-    &:hover {
-      background: var(--color-background-brand-hover);
+    &:hover,
+    &.is-hover {
+      background: var(--color-on-background-soft);
     }
 
     &:disabled:hover {
-      background: var(--color-background-brand);
+      background: var(--color-on-background);
     }
   }
 }
@@ -364,26 +366,28 @@ button {
   justify-content: center;
   gap: var(--space-200);
   min-height: var(--control-height);
-  padding: var(--space-300) var(--space-400);
-  border: var(--stroke-border) solid var(--color-border-default);
+  padding: var(--space-200) var(--space-400);
+  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
-  background: var(--color-background-default);
-  color: var(--color-text-default);
+  background: var(--color-surface);
+  color: var(--color-on-background);
   line-height: var(--line-height-single);
   transition: background-color var(--transition-fast);
 
   // No hover effect on a disabled button
-  &:hover:not(:disabled) {
-    background: var(--color-background-hover);
+  &:hover:not(:disabled),
+  &.is-hover {
+    background: var(--color-line);
   }
 
   &--primary {
-    border-color: var(--color-border-brand);
-    background: var(--color-background-brand);
-    color: var(--color-text-on-brand);
+    border-color: var(--color-on-background);
+    background: var(--color-on-background);
+    color: var(--color-surface);
 
-    &:hover:not(:disabled) {
-      background: var(--color-background-brand-hover);
+    &:hover:not(:disabled),
+    &.is-hover {
+      background: var(--color-on-background-soft);
     }
   }
 
@@ -394,12 +398,14 @@ button {
 
   // Destructive action (delete)
   &--danger {
-    border-color: var(--color-background-danger-strong);
-    background: var(--color-background-danger-strong);
-    color: var(--color-text-on-brand);
+    border-color: var(--color-error);
+    background: var(--color-error);
+    color: var(--color-surface);
 
-    &:hover:not(:disabled) {
-      background: var(--color-text-danger);
+    // Darker red, mixed from the error colour
+    &:hover:not(:disabled),
+    &.is-hover {
+      background: color-mix(in srgb, var(--color-error) 80%, var(--color-on-background));
     }
   }
 }
@@ -409,15 +415,198 @@ button {
   align-items: center;
   justify-content: center;
   gap: var(--space-200);
-  padding: var(--space-300);
+  padding: var(--space-200);
   border-radius: var(--radius-200);
-  color: var(--color-text-neutral);
+  color: var(--color-on-background);
   line-height: var(--line-height-single);
   transition: background-color var(--transition-fast);
 
-  &:hover {
-    background: var(--color-background-hover);
+  // No hover effect on a disabled button
+  &:hover:not(:disabled),
+  &.is-hover {
+    background: var(--color-line);
   }
+
+  // Faded, like the other buttons
+  &:disabled {
+    opacity: var(--opacity-disabled);
+    cursor: default;
+  }
+}
+
+// Main menu entry (one per page, see MainNav): title font (Bungee has a single weight, so the
+// current page is not bold)
+.pill {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-200);
+  border-radius: var(--radius-200);
+  color: var(--color-on-background);
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-single);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--transition-fast);
+
+  &:hover,
+  &.is-hover {
+    background: var(--color-line);
+  }
+
+  // Current page: dark pill, like the selected language (EN / FR)
+  &--active,
+  &--active:hover {
+    background: var(--color-on-background);
+    color: var(--color-surface);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Vehicle tiles and list rows (client page; shown in the design system page)
+// ---------------------------------------------------------------------------
+
+// Vehicle tiles: a hidden checkbox each (checked = its worksheets and invoices are shown) and a
+// button opening the vehicle file
+.vehicle-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--vehicle-tile-min-width), 1fr));
+  gap: var(--space-200);
+}
+
+.vehicle-tile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-200) var(--space-200) var(--space-200) var(--space-400);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-200);
+  color: var(--color-on-background);
+  user-select: none;
+  transition: background-color var(--transition-fast);
+
+  &:hover,
+  &.is-hover {
+    background: var(--color-line);
+  }
+
+  &:has(input:focus-visible) {
+    outline: var(--stroke-strong) solid var(--color-on-background);
+    outline-offset: var(--space-050);
+  }
+
+  // Not shown: dimmed
+  &:not(.vehicle-tile--checked, .vehicle-tile--add) {
+    color: var(--color-on-background-faint);
+
+    .vehicle-tile__body * {
+      color: var(--color-on-background-faint);
+    }
+  }
+
+  // Shown: strong border (like the selected card of the side panel)
+  &--checked {
+    border: var(--stroke-strong) solid var(--color-on-background);
+    padding: calc(var(--space-200) - var(--stroke-strong) + var(--stroke-border))
+      calc(var(--space-200) - var(--stroke-strong) + var(--stroke-border))
+      calc(var(--space-200) - var(--stroke-strong) + var(--stroke-border))
+      calc(var(--space-400) - var(--stroke-strong) + var(--stroke-border));
+  }
+
+  // "Add a vehicle": a dashed tile
+  &--add {
+    justify-content: center;
+    min-height: var(--control-height);
+    border-style: dashed;
+    color: var(--color-on-background);
+    font: inherit;
+    cursor: pointer;
+  }
+}
+
+// Vehicle info, new worksheet: one above the other on the right of the tile. The tile itself
+// turns grey on hover: the buttons take a darker grey so they stand out from it
+.vehicle-tile__buttons {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+
+  .icon-button:not(:disabled):hover {
+    background: var(--color-line);
+  }
+}
+
+.vehicle-tile__toggle {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+  cursor: pointer;
+}
+
+.vehicle-tile__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// Checkbox look of the tile (the real checkbox is visually hidden)
+.vehicle-tile__check {
+  flex: none;
+  display: grid;
+  place-content: center;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-100);
+
+  .vehicle-tile--checked & {
+    background: var(--color-on-background);
+    border-color: var(--color-on-background);
+    color: var(--color-surface);
+  }
+}
+
+// One worksheet or invoice: a link to it
+.list-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-200) var(--space-400);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-200);
+  color: var(--color-on-background);
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+
+  &:hover,
+  &.is-hover {
+    background: var(--color-line);
+  }
+
+  @container work-area (max-width: 480px) {
+    flex-wrap: wrap;
+  }
+}
+
+.list-row__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-on-background);
+}
+
+.list-row__amount {
+  color: var(--color-on-background);
+  white-space: nowrap;
 }
 
 // Leave room for the clear (cross) button of <app-clearable>
@@ -446,7 +635,7 @@ button {
 
 // Element shown from a transcript change (HighlightService): a strong border around it
 .is-highlighted {
-  outline: var(--stroke-highlight) solid var(--color-highlight);
+  outline: var(--stroke-strong) solid var(--color-on-background);
   outline-offset: var(--space-100);
   border-radius: var(--radius-200);
   transition: outline-color var(--transition-fast);
@@ -460,9 +649,9 @@ button {
   min-width: var(--badge-size);
   height: var(--badge-size);
   padding: 0 var(--space-100);
-  border-radius: var(--radius-full);
-  background: var(--color-background-danger-strong);
-  color: var(--color-text-on-brand);
+  border-radius: var(--radius-200);
+  background: var(--color-error);
+  color: var(--color-surface);
   font-size: var(--badge-font-size);
   font-weight: var(--font-weight-strong);
   font-variant-numeric: tabular-nums;
@@ -476,9 +665,9 @@ button {
   gap: var(--space-050);
   padding: var(--space-050) var(--space-200) var(--space-050) var(--space-100);
   border: var(--stroke-border) solid transparent;
-  border-radius: var(--radius-full);
-  background: var(--color-background-secondary);
-  color: var(--color-text-secondary);
+  border-radius: var(--radius-200);
+  background: var(--color-background);
+  color: var(--color-on-background-soft);
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-strong);
   font-variant-numeric: tabular-nums;
@@ -486,15 +675,15 @@ button {
 
   // Same colours as the status chips (Open / Sent) of the invoices
   &--open {
-    background: var(--color-background-invoice-open);
-    border-color: var(--color-border-info);
-    color: var(--color-text-info);
+    background: var(--color-info-bg);
+    border-color: var(--color-info-line);
+    color: var(--color-info);
   }
 
   &--alert {
-    background: var(--color-background-danger);
-    border-color: var(--color-border-danger);
-    color: var(--color-text-danger);
+    background: var(--color-error-bg);
+    border-color: var(--color-error-line);
+    color: var(--color-error);
   }
 }
 
@@ -514,8 +703,8 @@ button {
   display: flex;
   flex-direction: column;
   gap: var(--space-100);
-  background: var(--color-background-default);
-  border: var(--stroke-border) solid var(--color-border-default);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
   box-shadow: var(--shadow-overlay);
 
@@ -535,19 +724,19 @@ button {
   gap: var(--space-200);
   padding: var(--space-200);
   border-radius: var(--radius-200);
-  color: var(--color-text-default);
+  color: var(--color-on-background);
   line-height: var(--line-height-single);
   text-align: left;
   text-decoration: none;
   white-space: nowrap;
 
   &:hover {
-    background: var(--color-background-hover);
+    background: var(--color-line);
   }
 
   // Current choice / page
   &--active {
-    background: var(--color-background-hover);
+    background: var(--color-line);
     font-weight: var(--font-weight-strong);
   }
 }
@@ -558,7 +747,7 @@ button {
 // standard properties are kept for Firefox only: in Chrome they would disable the WebKit styles.
 @supports not selector(::-webkit-scrollbar) {
   * {
-    scrollbar-color: var(--color-scrollbar-thumb) transparent;
+    scrollbar-color: var(--color-line) transparent;
   }
 }
 
@@ -568,8 +757,8 @@ button {
   @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 4.5l4.5 6.5h-9z' fill='#{$color}' transform='rotate(#{$rotation} 8 8)'/%3E%3C/svg%3E");
 }
 
-$scrollbar-arrow-color: '%23757575'; // --color-border-strong
-$scrollbar-arrow-color-hover: '%232c2c2c'; // --color-border-brand
+$scrollbar-arrow-color: '%23000000'; // --color-on-background
+$scrollbar-arrow-color-hover: '%233a3a3a'; // --color-on-background-soft
 
 ::-webkit-scrollbar {
   width: var(--scrollbar-size);
@@ -582,13 +771,13 @@ $scrollbar-arrow-color-hover: '%232c2c2c'; // --color-border-brand
 
 ::-webkit-scrollbar-thumb {
   // The transparent border leaves a margin around the thumb
-  background: var(--color-scrollbar-thumb) padding-box;
-  border: 3px solid transparent;
-  border-radius: var(--radius-full);
+  background: var(--color-line) padding-box;
+  border: var(--space-050) solid transparent;
+  border-radius: var(--radius-200);
 
   &:hover,
   &:active {
-    background-color: var(--color-scrollbar-thumb-hover);
+    background-color: var(--color-on-background-soft);
   }
 }
 
@@ -602,10 +791,10 @@ $scrollbar-arrow-color-hover: '%232c2c2c'; // --color-border-brand
   background-color: transparent;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 16px;
+  background-size: var(--icon-size-small);
 
   &:hover {
-    background-color: var(--color-background-hover);
+    background-color: var(--color-line);
   }
 
   &:vertical {
@@ -656,11 +845,15 @@ $scrollbar-arrow-color-hover: '%232c2c2c'; // --color-border-brand
 // Select: the text box of a select is not shrunk by the vertical padding like an input's.
 // The browser's arrow is replaced by the app's chevron icon, centred where the ✕ of the text
 // fields is (see Clearable), so both line up in a form.
+// Material "keyboard_arrow_down" in --color-on-background: an image cannot read CSS variables, update its
+// fill (%23 = #) together with that colour.
+$select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cpath fill='%23000000' d='M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
+
 select.input {
   appearance: none;
   padding-block: 0;
   padding-right: calc(var(--space-200) + var(--icon-size-large) + var(--space-100));
-  background-image: var(--icon-select-arrow);
+  background-image: $select-arrow;
   // Same size as an <app-icon> glyph (drawn 1.2 × its size, see Icon), centred like the ✕
   background-position: right
     calc(var(--space-200) + (var(--icon-size-large) - var(--icon-size-medium) * 1.2) / 2) center;
@@ -685,12 +878,12 @@ select.input {
   align-items: center;
   gap: var(--space-100);
   padding: var(--space-050) var(--space-200);
-  border-radius: var(--radius-full);
-  background: var(--color-background-secondary);
+  border-radius: var(--radius-200);
+  background: var(--color-background);
   font-size: var(--font-size-small);
 
   &:hover {
-    background: var(--color-background-hover);
+    background: var(--color-line);
   }
 }
 
@@ -699,11 +892,19 @@ select.input {
   display: flex;
   align-items: center;
   gap: var(--space-200);
+
+  // The search takes the free width of the row (only in a row: in a column, e.g. a form field,
+  // growing would make it taller than its field and put the centred icon too low)
+  > .search {
+    flex: 1;
+  }
 }
 
 .search {
   position: relative;
-  flex: 1;
+  // Flex, even on a <span> (e.g. inside a <label>): the field is never laid out as inline text,
+  // whose line box would make the wrapper taller than the field and put the centred icon too low
+  display: flex;
   min-width: 0;
   width: 100%;
 
@@ -713,7 +914,7 @@ select.input {
 
   .input {
     width: 100%;
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-200);
     padding-left: calc(var(--space-400) + var(--icon-size-small) + var(--space-200));
   }
 
@@ -741,10 +942,10 @@ select.input {
   width: min(var(--dialog-width), calc(100vw - var(--space-800)));
   max-height: calc(100dvh - var(--space-800));
   padding: 0;
-  border: var(--stroke-border) solid var(--color-border-default);
+  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
-  background: var(--color-background-default);
-  color: var(--color-text-default);
+  background: var(--color-surface);
+  color: var(--color-on-background);
   box-shadow: var(--shadow-overlay);
 
   &::backdrop {
@@ -757,7 +958,7 @@ select.input {
   flex-direction: column;
   gap: var(--space-400);
   max-height: inherit;
-  padding: var(--space-600);
+  padding: var(--space-400);
 }
 
 .dialog__body {
@@ -787,9 +988,11 @@ select.input {
   font-weight: var(--font-weight-strong);
 }
 
+// Buttons on the right (the optional count on the left takes the free space)
 .dialog__actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: var(--space-200);
 }
@@ -832,7 +1035,7 @@ select.input {
     display: block !important;
     height: auto !important;
     overflow: visible !important;
-    background: var(--color-background-default) !important;
+    background: var(--color-surface) !important;
   }
 
   // No containment on paper: a fixed element (invoice footer) is then placed on the page, at the
@@ -862,7 +1065,7 @@ select.input {
   align-items: center;
   padding: var(--space-050) var(--space-200);
   border: var(--stroke-border) solid transparent;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-200);
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-strong);
   line-height: var(--line-height-single);
@@ -870,26 +1073,26 @@ select.input {
 
   // Same look as the count badges: light background, border and text of the status colour
   &--open {
-    background: var(--color-background-invoice-open);
-    border-color: var(--color-border-info);
-    color: var(--color-text-info);
+    background: var(--color-info-bg);
+    border-color: var(--color-info-line);
+    color: var(--color-info);
   }
 
   &--sent {
-    background: var(--color-background-invoice-sent);
-    border-color: var(--color-border-danger);
-    color: var(--color-text-danger);
+    background: var(--color-error-bg);
+    border-color: var(--color-error-line);
+    color: var(--color-error);
   }
 
   &--paid {
-    background: var(--color-background-invoice-paid);
-    border-color: var(--color-border-success);
-    color: var(--color-text-success);
+    background: var(--color-success-bg);
+    border-color: var(--color-success-line);
+    color: var(--color-success);
   }
 
   // Next to a title (e.g. the invoice number)
   &--large {
-    padding: var(--space-100) var(--space-300);
+    padding: var(--space-100) var(--space-200);
     font-size: var(--font-size-medium);
   }
 }

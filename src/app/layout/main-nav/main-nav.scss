@@ -27,31 +27,11 @@
   }
 }
 
-.pill {
-  position: relative;
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-200);
-  padding: var(--space-200);
-  border-radius: var(--radius-200);
-  color: var(--color-text-default);
-  line-height: var(--line-height-single);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background-color var(--transition-fast);
-
-  &:hover {
-    background: var(--color-background-hover);
-  }
-
-  // Current page: dark pill, like the selected language (EN / FR)
-  &--active,
-  &--active:hover {
-    background: var(--color-background-brand);
-    color: var(--color-text-on-brand);
-    font-weight: var(--font-weight-strong);
-  }
+// The pill of a page is global (styles.scss: .pill). Phones: the pages of the dropdown menu use
+// the title font too (Bungee has a single weight, so the current page is not bold)
+.dropdown-menu__item {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-regular);
 }
 
 // Number of items (e.g. shopping list): the red badge of the transcript (.problem-badge), inside

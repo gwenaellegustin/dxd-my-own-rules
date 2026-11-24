@@ -2,8 +2,8 @@
 :host {
   display: flex;
   padding: var(--space-400);
-  background: var(--color-background-default);
-  border: var(--stroke-border) solid var(--color-border-default);
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
 }
 
@@ -12,7 +12,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-300);
+  gap: var(--space-200);
 }
 
 .head {
@@ -31,8 +31,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-200);
-  padding: var(--space-300);
-  background: var(--color-background-secondary);
+  padding: var(--space-200);
+  background: var(--color-background);
   border-radius: var(--radius-200);
 }
 
@@ -57,7 +57,7 @@
     width: var(--checkbox-size);
     height: var(--checkbox-size);
     margin: 0;
-    accent-color: var(--color-background-brand);
+    accent-color: var(--color-on-background);
   }
 }
 
@@ -68,5 +68,5 @@
 .add-field {
   align-self: flex-start;
   width: auto;
-  color: var(--color-text-secondary);
+  color: var(--color-on-background-soft);
 }

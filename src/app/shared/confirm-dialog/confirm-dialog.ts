@@ -14,7 +14,7 @@ import { ModalDialog } from '../modal-dialog/modal-dialog';
       <form class="dialog__box" (submit)="$event.preventDefault(); confirmed.emit()">
         <h2 id="confirm-title" class="text-subheading">{{ titleKey() | translate }}</h2>
         <p id="confirm-message" class="dialog__body">{{ messageKey() | translate: params() }}</p>
-        <div class="dialog__actions dialog__actions--end">
+        <div class="dialog__actions">
           <button type="button" class="button" (click)="cancelled.emit()">{{ 'common.cancel' | translate }}</button>
           <button type="submit" class="button" [class.button--danger]="danger()" [class.button--primary]="!danger()">
             {{ confirmKey() | translate }}
@@ -22,11 +22,6 @@ import { ModalDialog } from '../modal-dialog/modal-dialog';
         </div>
       </form>
     </dialog>
-  `,
-  styles: `
-    .dialog__actions--end {
-      justify-content: flex-end;
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

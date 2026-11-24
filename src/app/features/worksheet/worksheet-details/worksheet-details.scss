@@ -1,7 +1,7 @@
 :host {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-600);
+  gap: var(--space-400);
 
   @container work-area (max-width: 760px) {
     flex-direction: column;
@@ -42,9 +42,10 @@
   }
 
   .icon-button {
-    margin-top: calc(var(--font-size-medium) * var(--line-height-body) + var(--space-200) - var(--space-100) / 2);
+    margin-top: calc(
+      var(--font-size-medium) * var(--line-height-body) + var(--space-200) - var(--space-100) / 2
+    );
   }
-
 }
 
 .damage {
@@ -64,10 +65,13 @@
 
 .damage__diagram {
   position: relative;
-  background: var(--color-background-default);
+  background: var(--color-surface);
+  border-radius: var(--radius-200);
 
+  // Rounded like the cards (on the image itself: the marks near the edges are not clipped)
   img {
     display: block;
+    border-radius: var(--radius-200);
     width: 100%;
     aspect-ratio: 348 / 246;
     object-fit: cover;
@@ -86,7 +90,7 @@
   width: var(--icon-size-small);
   height: var(--icon-size-small);
   transform: translate(-50%, -50%);
-  color: var(--color-damage-mark);
+  color: var(--color-error);
 }
 
 // Damage tool selector: 0 or 1 tool active; the active one marks the diagram on click
@@ -102,25 +106,25 @@
   align-items: center;
   gap: var(--space-100);
   padding: var(--space-050) var(--space-200);
-  border-radius: var(--radius-full);
-  color: var(--color-text-default);
+  border-radius: var(--radius-200);
+  color: var(--color-on-background);
 
   // Only the marker uses the damage color, the label keeps the text color
   app-icon {
-    color: var(--color-damage-marker);
+    color: var(--color-on-background-faint);
   }
 
   &:hover {
-    background: var(--color-background-hover);
+    background: var(--color-line);
   }
 
   &--active,
   &--active:hover {
-    background: var(--color-background-brand);
-    color: var(--color-text-on-brand);
+    background: var(--color-on-background);
+    color: var(--color-surface);
 
     app-icon {
-      color: var(--color-icon-on-brand);
+      color: var(--color-surface);
     }
   }
 }
