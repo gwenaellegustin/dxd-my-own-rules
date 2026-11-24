@@ -67,6 +67,7 @@
     "note": "Note",
     "zoomIn": "Agrandir",
     "zoomOut": "Réduire",
+    "removeImage": "Supprimer la photo",
     "upload": "Déposez une photo de la carte grise ici, ou cliquez pour en choisir une",
     "uploadHint": "Prototype : la photo est gardée jusqu’au rechargement de la page",
     "none": "Pas de carte grise pour ce véhicule.",

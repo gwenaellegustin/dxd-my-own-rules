@@ -14,6 +14,7 @@ import { Vehicle, VehicleChanges, VehicleKind } from '../../core/models/client.m
  * - Click on the image zooms in at that point; moving the mouse pans; click again zooms out.
  * - Without a document, an area lets you drop or choose a photo. There is no backend yet: the
  *   photo is read in the browser (data URL) and kept in the vehicle file until the page is reloaded.
+ * - The bin on the corner of the photo removes it (on save, like the fields), e.g. to put another one.
  * - The fields are edited in a draft: "Save" reports the changes (`vehicleChange`, and `renamed`
  *   for a new brand / model, so that the worksheets of the vehicle follow) and closes; "Cancel" or
  *   Escape close without saving. Until something is changed, there is only "Close" (a new vehicle
@@ -90,6 +91,12 @@ export class VehicleDialog {
     event.preventDefault();
     this.dragOver.set(false);
     this.readImage(event.dataTransfer?.files[0]);
+  }
+
+  /** The upload area is shown instead; removed from the vehicle file on save */
+  protected removeImage(): void {
+    this.zoomed.set(false);
+    this.set({ registrationImage: null });
   }
 
   /** Fake upload: the image is read in the browser and put in the draft (kept on save) */

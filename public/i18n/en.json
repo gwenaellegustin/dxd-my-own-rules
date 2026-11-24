@@ -67,6 +67,7 @@
     "note": "Note",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
+    "removeImage": "Delete the photo",
     "upload": "Drop a photo of the registration document here, or click to choose one",
     "uploadHint": "Prototype: the photo is kept until the page is reloaded",
     "none": "No registration document for this vehicle.",

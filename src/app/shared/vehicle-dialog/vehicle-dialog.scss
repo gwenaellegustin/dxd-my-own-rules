@@ -1,6 +1,26 @@
 // The dialog fits its content (no blank space on narrow screens) and never exceeds the window:
 // the document is limited by the width, or by the height left once the title, the note and the
 // button are placed (--registration-chrome-height), so there is no scroll.
+// The box fits the photo (centred), so the delete button sits on its corner.
+.registration__document {
+  position: relative;
+  align-self: center;
+  max-width: 100%;
+}
+
+// On the photo: a light background keeps it readable on any image
+.registration__remove {
+  position: absolute;
+  top: var(--space-200);
+  right: var(--space-200);
+  background: var(--color-background-default);
+  box-shadow: var(--shadow-overlay);
+
+  &:hover {
+    background: var(--color-background-hover);
+  }
+}
+
 .registration__viewer {
   display: flex;
   justify-content: center;

@@ -49,26 +49,40 @@
       </div>
 
       @if (v.registrationImage; as src) {
-        <!-- Click zooms in where you click, the zoomed image follows the mouse; click again to zoom out -->
-        <button
-          type="button"
-          class="registration__viewer"
-          [class.registration__viewer--zoomed]="zoomed()"
-          [attr.aria-pressed]="zoomed()"
-          [attr.aria-label]="(zoomed() ? 'registration.zoomOut' : 'registration.zoomIn') | translate"
-          [attr.title]="(zoomed() ? 'registration.zoomOut' : 'registration.zoomIn') | translate"
-          (click)="toggleZoom($event)"
-          (mousemove)="pan($event)"
-        >
-          <img
-            #image
-            class="registration__image"
-            [src]="src"
-            [alt]="'registration.imageAlt' | translate"
-            [style.transform-origin]="origin()"
-            draggable="false"
-          />
-        </button>
+        <div class="registration__document">
+          <!-- Click zooms in where you click, the zoomed image follows the mouse; click again to zoom out -->
+          <button
+            type="button"
+            class="registration__viewer"
+            [class.registration__viewer--zoomed]="zoomed()"
+            [attr.aria-pressed]="zoomed()"
+            [attr.aria-label]="(zoomed() ? 'registration.zoomOut' : 'registration.zoomIn') | translate"
+            [attr.title]="(zoomed() ? 'registration.zoomOut' : 'registration.zoomIn') | translate"
+            (click)="toggleZoom($event)"
+            (mousemove)="pan($event)"
+          >
+            <img
+              #image
+              class="registration__image"
+              [src]="src"
+              [alt]="'registration.imageAlt' | translate"
+              [style.transform-origin]="origin()"
+              draggable="false"
+            />
+          </button>
+          @if (!locked()) {
+            <!-- Removed from the draft: done on Save, Cancel keeps the photo -->
+            <button
+              type="button"
+              class="icon-button registration__remove"
+              [attr.aria-label]="'registration.removeImage' | translate"
+              [attr.title]="'registration.removeImage' | translate"
+              (click)="removeImage()"
+            >
+              <app-icon name="delete" />
+            </button>
+          }
+        </div>
       } @else if (locked()) {
         <p class="text-secondary">{{ 'registration.none' | translate }}</p>
       } @else {
