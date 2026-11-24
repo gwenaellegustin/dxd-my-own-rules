@@ -23,14 +23,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # No `cache: npm`: to find the cache, setup-node runs the runner's npm inside the project,
+      # which refuses to run there because of devEngines (it is older than required)
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
 
       # Same npm as on the developers' machines (see devEngines in package.json): older npm
-      # versions write a package-lock.json that newer ones refuse in `npm ci`, and the reverse
+      # versions write a package-lock.json that newer ones refuse in `npm ci`, and the reverse.
+      # Installed from outside the project, for the same devEngines reason as above
       - run: npm install -g npm@12.2.2
+        working-directory: ${{ runner.temp }}
 
       - run: npm ci
 
