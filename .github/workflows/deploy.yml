@@ -28,6 +28,10 @@ jobs:
           node-version: 24
           cache: npm
 
+      # Same npm as on the developers' machines (see devEngines in package.json): older npm
+      # versions write a package-lock.json that newer ones refuse in `npm ci`, and the reverse
+      - run: npm install -g npm@12.2.2
+
       - run: npm ci
 
       # The site is served from https://<user>.github.io/<repository>/

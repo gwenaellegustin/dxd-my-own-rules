@@ -11,6 +11,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
 import { LanguageService } from './core/services/language.service';
+import { ScrollbarCursorService } from './core/services/scrollbar-cursor.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,5 +23,6 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en',
     }),
     provideAppInitializer(() => inject(LanguageService).init()),
+    provideAppInitializer(() => inject(ScrollbarCursorService).init()),
   ],
 };
