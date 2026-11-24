@@ -27,7 +27,7 @@ jobs:
       # which refuses to run there because of devEngines (it is older than required)
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 26
 
       # Same npm as on the developers' machines (see devEngines in package.json): older npm
       # versions write a package-lock.json that newer ones refuse in `npm ci`, and the reverse.
