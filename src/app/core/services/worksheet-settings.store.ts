@@ -10,15 +10,17 @@ import {
 } from '../models/worksheet-template.model';
 import { VehicleKind } from '../models/vehicle-brand.model';
 import { LineState, emptyLineState } from '../models/worksheet.model';
+import { UndoService } from './undo.service';
 
 /**
  * Worksheet settings (`worksheet-settings.json`): the lines of the worksheets of each kind of
- * vehicle and the planning rules. Edited on the settings
- * page, kept in memory (not part of the worksheet undo history).
+ * vehicle and the planning rules. Edited on the settings page, kept in memory; edits are recorded
+ * for undo / redo (see UndoService).
  */
 @Injectable({ providedIn: 'root' })
 export class WorksheetSettingsStore {
   private readonly api = inject(ApiService);
+  private readonly history = inject(UndoService);
 
   private readonly _settings = signal<WorksheetSettings | null>(null);
   private loading = false;
@@ -44,7 +46,10 @@ export class WorksheetSettingsStore {
   load(): void {
     if (this.loading) return;
     this.loading = true;
-    this.api.get<WorksheetSettings>(API_ENDPOINTS.worksheetSettings).subscribe((settings) => this._settings.set(settings));
+    this.api.get<WorksheetSettings>(API_ENDPOINTS.worksheetSettings).subscribe((settings) => {
+      this._settings.set(settings);
+      this.history.track(this._settings);
+    });
   }
 
   /** Template (lines) of a kind of vehicle */
@@ -158,7 +163,10 @@ export class WorksheetSettingsStore {
     }));
   }
 
+  /** Applies an edit (one undo step) */
   private patch(fn: (settings: WorksheetSettings) => WorksheetSettings): void {
+    if (!this._settings()) return;
+    this.history.record();
     this._settings.update((settings) => (settings ? fn(settings) : settings));
   }
 }

@@ -3,18 +3,20 @@ import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
 import { Address, Client, ClientChanges, Vehicle, VehicleChanges, VehicleKind } from '../models/client.model';
 import { VehicleBrandService } from './vehicle-brand.service';
+import { UndoService } from './undo.service';
 import { sameName } from '../utils/names';
-
 
 /**
  * Clients and their vehicle files, kept in memory for the prototype (replace the edit methods
  * with API calls once a backend exists). Worksheets refer to clients and vehicles by name: a
  * rename must also be applied to them (WorksheetStore.rename).
+ * Edits are recorded for undo / redo (see UndoService).
  */
 @Injectable({ providedIn: 'root' })
 export class ClientService {
   private readonly api = inject(ApiService);
   private readonly brands = inject(VehicleBrandService);
+  private readonly history = inject(UndoService);
 
   private readonly _clients = signal<Client[]>([]);
   /** Clients created and not edited yet: dropped when left (see `discardIfUntouched`) */
@@ -30,7 +32,10 @@ export class ClientService {
   );
 
   constructor() {
-    this.api.get<Client[]>(API_ENDPOINTS.clients).subscribe((clients) => this._clients.set(clients));
+    this.api.get<Client[]>(API_ENDPOINTS.clients).subscribe((clients) => {
+      this._clients.set(clients);
+      this.history.track(this._clients);
+    });
   }
 
   getById(id: string | undefined): Client | undefined {
@@ -74,14 +79,15 @@ export class ClientService {
       rateId: '',
       vehicles: [],
     };
+    this.history.record();
     this._clients.update((list) => [...list, client]);
     this.untouched.add(client.id);
     return client;
   }
 
-  /** A new client left without any edit is removed silently */
+  /** A new client left without any edit is removed silently (not an undo step) */
   discardIfUntouched(id: string): void {
-    if (this.untouched.delete(id)) this.remove(id);
+    if (this.untouched.delete(id)) this._clients.update((list) => list.filter((client) => client.id !== id));
   }
 
   update(id: string, changes: ClientChanges): void {
@@ -99,6 +105,7 @@ export class ClientService {
 
   /** Deletes a client and its vehicle files (only clients without worksheet, see ClientsPage) */
   remove(id: string): void {
+    this.history.record();
     this._clients.update((list) => list.filter((client) => client.id !== id));
   }
 
@@ -122,8 +129,13 @@ export class ClientService {
     }));
   }
 
+  /** A vehicle just added and left empty is removed silently (not an undo step, see ClientsPage) */
   removeVehicle(clientId: string, vehicleId: string): void {
-    this.patch(clientId, (client) => ({ ...client, vehicles: client.vehicles.filter((v) => v.id !== vehicleId) }));
+    this.patch(
+      clientId,
+      (client) => ({ ...client, vehicles: client.vehicles.filter((v) => v.id !== vehicleId) }),
+      { record: false },
+    );
   }
 
   /**
@@ -151,8 +163,10 @@ export class ClientService {
     return this.brands.brandOf(name)?.kind === 'motorcycle' ? 'motorcycle' : 'car';
   }
 
-  private patch(id: string, fn: (client: Client) => Client): void {
+  /** Applies an edit (one undo step unless `record` is false) */
+  private patch(id: string, fn: (client: Client) => Client, { record = true } = {}): void {
     this.untouched.delete(id);
+    if (record) this.history.record();
     this._clients.update((list) => list.map((client) => (client.id === id ? fn(client) : client)));
   }
 }

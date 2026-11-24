@@ -6,39 +6,25 @@ import { VehicleKind } from '../models/vehicle-brand.model';
 import { CarryOverRef, Damage, LineState, Worksheet, WorksheetStatus, emptyLineState } from '../models/worksheet.model';
 import { sameName } from '../utils/names';
 import { WorksheetSettingsStore } from './worksheet-settings.store';
-
-/** `typing`: the edit comes from typing in a text field (grouped into one undo step) */
-export interface EditOptions {
-  typing?: boolean;
-}
-
-/** Edits kept in the undo history */
-const HISTORY_LIMIT = 100;
-/** Keystrokes in the same field closer than this make one undo step */
-const TYPING_GROUP_MS = 1000;
+import { UndoService } from './undo.service';
 
 /**
  * Holds the worksheets in memory. Edits are kept client-side for the prototype; replace the
  * `update*` methods with API calls once a backend exists. Their lines and default values come
  * from the settings (WorksheetSettingsStore).
  *
- * Every edit is recorded for undo / redo (Ctrl+Z / Ctrl+Y, see WorksheetPage).
- * Typing in one field is grouped into one step, like in a text editor.
+ * Every edit is recorded for undo / redo (see UndoService).
  */
 @Injectable({ providedIn: 'root' })
 export class WorksheetStore {
   private readonly api = inject(ApiService);
   private readonly settings = inject(WorksheetSettingsStore);
+  private readonly history = inject(UndoService);
 
   private readonly _worksheets = signal<Worksheet[]>([]);
   private readonly _loaded = signal(false);
   private loading = false;
 
-  /** Previous states of the worksheet list (immutable snapshots), most recent last */
-  private readonly undoStack = signal<Worksheet[][]>([]);
-  private readonly redoStack = signal<Worksheet[][]>([]);
-  /** Last recorded edit, to group typing: field key + time */
-  private lastEdit: { key: string; time: number } | null = null;
   /** Worksheets created and not edited yet: dropped when left (see `discardIfUntouched`) */
   private readonly untouched = new Set<string>();
   /** Worksheets whose carried-over proposal was answered or closed: not proposed again */
@@ -46,8 +32,6 @@ export class WorksheetStore {
 
   readonly worksheets = this._worksheets.asReadonly();
   readonly loaded = this._loaded.asReadonly();
-  readonly canUndo = computed(() => this.undoStack().length > 0);
-  readonly canRedo = computed(() => this.redoStack().length > 0);
 
   readonly byStatus = computed(() => {
     const groups: Record<WorksheetStatus, Worksheet[]> = { open: [], invoiced: [] };
@@ -62,6 +46,7 @@ export class WorksheetStore {
     this.loading = true;
     this.api.get<Worksheet[]>(API_ENDPOINTS.worksheets).subscribe((worksheets) => {
       this._worksheets.set(worksheets);
+      this.history.track(this._worksheets);
       this._loaded.set(true);
     });
   }
@@ -88,7 +73,7 @@ export class WorksheetStore {
       damages: [],
       lines: {},
     };
-    this.record();
+    this.history.record();
     this._worksheets.update((list) => [worksheet, ...list]);
     this.untouched.add(worksheet.id);
     return worksheet;
@@ -104,15 +89,14 @@ export class WorksheetStore {
   remove(id: string): void {
     const target = this.getById(id);
     if (!target || isLocked(target)) return;
-    this.record();
+    this.history.record();
     this._worksheets.update((list) => list.filter((worksheet) => worksheet.id !== id));
   }
 
-  update(id: string, changes: Partial<Omit<Worksheet, 'id' | 'lines'>>, options: EditOptions = {}): void {
-    const typingKey = options.typing ? `${id}:${Object.keys(changes).sort()}` : undefined;
-    this.patch(id, (worksheet) => ({ ...worksheet, ...changes }), typingKey);
+  update(id: string, changes: Partial<Omit<Worksheet, 'id' | 'lines'>>): void {
+    this.patch(id, (worksheet) => ({ ...worksheet, ...changes }));
     // Once invoiced, the worksheet is locked: undo must not bring it back to open
-    if (changes.status === 'invoiced') this.clearHistory();
+    if (changes.status === 'invoiced') this.history.clear();
   }
 
   /**
@@ -120,8 +104,8 @@ export class WorksheetStore {
    * InvoiceStore.hideOpenInvoiceOf). Like invoicing, it clears the undo history.
    */
   reopen(id: string): void {
-    this.patch(id, (worksheet) => ({ ...worksheet, status: 'open' }), undefined, { evenInvoiced: true });
-    this.clearHistory();
+    this.patch(id, (worksheet) => ({ ...worksheet, status: 'open' }), { evenInvoiced: true });
+    this.history.clear();
   }
 
   /**
@@ -129,20 +113,15 @@ export class WorksheetStore {
    * still editable, from the invoice while it is open
    */
   updateComments(id: string, comments: string): void {
-    this.patch(id, (worksheet) => ({ ...worksheet, comments }), undefined, { evenInvoiced: true });
+    this.patch(id, (worksheet) => ({ ...worksheet, comments }), { evenInvoiced: true });
   }
 
   /** Edits a line; the planning rules of that line then plan their lines (same undo step) */
-  updateLine(id: string, lineId: string, changes: Partial<LineState>, options: EditOptions = {}): void {
-    const typingKey = options.typing ? `${id}:${lineId}:${Object.keys(changes).sort()}` : undefined;
-    this.patch(
-      id,
-      (worksheet) => {
-        const lines = { ...worksheet.lines, [lineId]: { ...this.lineState(worksheet, lineId), ...changes } };
-        return { ...worksheet, lines: this.settings.applyRules(worksheet.kind, lineId, lines) };
-      },
-      typingKey,
-    );
+  updateLine(id: string, lineId: string, changes: Partial<LineState>): void {
+    this.patch(id, (worksheet) => {
+      const lines = { ...worksheet.lines, [lineId]: { ...this.lineState(worksheet, lineId), ...changes } };
+      return { ...worksheet, lines: this.settings.applyRules(worksheet.kind, lineId, lines) };
+    });
   }
 
   /**
@@ -197,7 +176,7 @@ export class WorksheetStore {
     const isHandled = (worksheet: Worksheet, key: string) =>
       handled.some((ref) => ref.sourceId === worksheet.id && ref.key === key);
     this.untouched.delete(id);
-    this.record();
+    this.history.record();
     this._worksheets.update((list) =>
       list.map((worksheet) => {
         if (worksheet.id === id) return { ...worksheet, lines };
@@ -244,72 +223,25 @@ export class WorksheetStore {
 
   /**
    * A client or vehicle file was renamed: worksheets refer to them by name, so they follow
-   * (invoiced ones too, it is not an edit of the worksheet; not recorded for undo).
+   * (invoiced ones too, it is not an edit of the worksheet). Not an undo step of its own: it
+   * follows the rename, so undoing the rename puts the worksheets back too.
    * `client`: only the vehicles of this client are renamed.
    */
   rename(field: 'client' | 'vehicle', from: string, to: string, client?: string): void {
     if (!from.trim() || sameName(from, to)) return;
     const matches = (worksheet: Worksheet) =>
       sameName(worksheet[field], from) && (client === undefined || sameName(worksheet.client, client));
-    const rename = (list: Worksheet[]) =>
-      list.map((worksheet) => (matches(worksheet) ? { ...worksheet, [field]: to } : worksheet));
-    this._worksheets.update(rename);
-    this.undoStack.update((stack) => stack.map(rename));
-    this.redoStack.update((stack) => stack.map(rename));
+    this._worksheets.update((list) =>
+      list.map((worksheet) => (matches(worksheet) ? { ...worksheet, [field]: to } : worksheet)),
+    );
   }
 
-  /** Restores the state before the last edit */
-  undo(): void {
-    const previous = this.undoStack().at(-1);
-    if (!previous) return;
-    this.undoStack.update((stack) => stack.slice(0, -1));
-    this.redoStack.update((stack) => [...stack, this._worksheets()]);
-    this._worksheets.set(previous);
-    this.lastEdit = null;
-  }
-
-  /** Re-applies the last undone edit */
-  redo(): void {
-    const next = this.redoStack().at(-1);
-    if (!next) return;
-    this.redoStack.update((stack) => stack.slice(0, -1));
-    this.undoStack.update((stack) => [...stack, this._worksheets()]);
-    this._worksheets.set(next);
-    this.lastEdit = null;
-  }
-
-  /**
-   * Saves the current state before an edit.
-   * Typing (`typingKey` = the edited field) extends the current step while it goes on in the same
-   * field, instead of adding one step per character; any other edit is always one step.
-   */
-  private record(typingKey?: string): void {
-    const now = Date.now();
-    const sameTyping =
-      typingKey !== undefined && this.lastEdit?.key === typingKey && now - this.lastEdit.time < TYPING_GROUP_MS;
-    this.lastEdit = typingKey !== undefined ? { key: typingKey, time: now } : null;
-    this.redoStack.set([]);
-    if (sameTyping) return;
-    this.undoStack.update((stack) => [...stack, this._worksheets()].slice(-HISTORY_LIMIT));
-  }
-
-  private clearHistory(): void {
-    this.undoStack.set([]);
-    this.redoStack.set([]);
-    this.lastEdit = null;
-  }
-
-  /** Applies an edit; an invoiced worksheet is locked (only `updateComments` may change it) */
-  private patch(
-    id: string,
-    fn: (worksheet: Worksheet) => Worksheet,
-    typingKey?: string,
-    { evenInvoiced = false } = {},
-  ): void {
+  /** Applies an edit (one undo step); an invoiced worksheet is locked (only `updateComments` may change it) */
+  private patch(id: string, fn: (worksheet: Worksheet) => Worksheet, { evenInvoiced = false } = {}): void {
     const target = this.getById(id);
     if (!target || (isLocked(target) && !evenInvoiced)) return;
     this.untouched.delete(id);
-    this.record(typingKey);
+    this.history.record();
     this._worksheets.update((list) => list.map((worksheet) => (worksheet.id === id ? fn(worksheet) : worksheet)));
   }
 }

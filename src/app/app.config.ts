@@ -12,6 +12,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
 import { LanguageService } from './core/services/language.service';
 import { ScrollbarCursorService } from './core/services/scrollbar-cursor.service';
+import { UndoService } from './core/services/undo.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,5 +25,6 @@ export const appConfig: ApplicationConfig = {
     }),
     provideAppInitializer(() => inject(LanguageService).init()),
     provideAppInitializer(() => inject(ScrollbarCursorService).init()),
+    provideAppInitializer(() => inject(UndoService).init()),
   ],
 };

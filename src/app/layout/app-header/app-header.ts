@@ -9,7 +9,7 @@ import { LanguageService } from '../../core/services/language.service';
 import { MainNav } from '../main-nav/main-nav';
 import { Dropdown } from '../../shared/dropdown/dropdown';
 import { UserService } from '../../core/services/user.service';
-import { WorksheetStore } from '../../core/services/worksheet.store';
+import { UndoService } from '../../core/services/undo.service';
 
 /** Navigation API (Chromium): tells whether there is a page to go back / forward to */
 interface NavigationHistory {
@@ -21,8 +21,8 @@ const navigationHistory = (): NavigationHistory | undefined =>
   (globalThis as { navigation?: NavigationHistory }).navigation;
 
 /**
- * Header: the pages and back / forward (browser history) on the left; undo / redo (worksheet
- * edits, also Ctrl+Z / Ctrl+Y) and the user menu (company logo: settings, language) on the right.
+ * Header: the pages and back / forward (browser history) on the left; undo / redo (edits of the
+ * whole app, also Ctrl+Z / Ctrl+Y) and the user menu (company logo: settings, language) on the right.
  */
 @Component({
   selector: 'app-header',
@@ -34,7 +34,7 @@ const navigationHistory = (): NavigationHistory | undefined =>
 export class AppHeader {
   protected readonly user = inject(UserService);
   protected readonly language = inject(LanguageService);
-  protected readonly worksheets = inject(WorksheetStore);
+  protected readonly history = inject(UndoService);
   protected readonly location = inject(Location);
 
   /** Without the Navigation API (Firefox, Safari) the buttons stay enabled */

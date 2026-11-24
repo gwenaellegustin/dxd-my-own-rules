@@ -25,25 +25,25 @@
   </button>
 </div>
 
-<!-- Right: undo / redo (worksheet edits), then the user menu (settings, language) -->
+<!-- Right: undo / redo (edits of the whole app), then the user menu (settings, language) -->
 <div class="tools" role="group" [attr.aria-label]="'header.edits' | translate">
   <button
     type="button"
     class="icon-button"
-    [disabled]="!worksheets.canUndo()"
+    [disabled]="!history.canUndo()"
     [attr.aria-label]="'header.undo' | translate"
     [attr.title]="'header.undo' | translate"
-    (click)="worksheets.undo()"
+    (click)="history.undo()"
   >
     <app-icon name="undo" />
   </button>
   <button
     type="button"
     class="icon-button"
-    [disabled]="!worksheets.canRedo()"
+    [disabled]="!history.canRedo()"
     [attr.aria-label]="'header.redo' | translate"
     [attr.title]="'header.redo' | translate"
-    (click)="worksheets.redo()"
+    (click)="history.redo()"
   >
     <app-icon name="redo" />
   </button>

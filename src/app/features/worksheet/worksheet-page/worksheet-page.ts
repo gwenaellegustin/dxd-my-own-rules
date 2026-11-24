@@ -32,9 +32,6 @@ import { CarriedOverDialog, CarriedOverGroup, CarriedOverResult } from '../carri
   templateUrl: './worksheet-page.html',
   styleUrl: './worksheet-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '(document:keydown)': 'onKeydown($event)',
-  },
 })
 export class WorksheetPage {
   private readonly router = inject(Router);
@@ -260,28 +257,11 @@ export class WorksheetPage {
       }
       changes = { ...changes, kind: this.clients.kindOf(client, vehicle) };
     }
-    this.store.update(id, changes, { typing: isTextEditing() });
+    this.store.update(id, changes);
   }
 
   protected updateLine(id: string, key: string, changes: Partial<LineState>): void {
-    this.store.updateLine(id, key, changes, { typing: isTextEditing() });
-  }
-
-  /**
-   * Ctrl+Z undoes the last edit (text, checkbox, radio, damage mark, added / removed line),
-   * Ctrl+Y or Ctrl+Shift+Z redoes it (Cmd on macOS). The browser's own undo of text fields is
-   * replaced, so the fields and the worksheet data always stay in sync.
-   */
-  protected onKeydown(event: KeyboardEvent): void {
-    if (!(event.ctrlKey || event.metaKey) || event.altKey) return;
-    const key = event.key.toLowerCase();
-    if (key === 'z' && !event.shiftKey) {
-      event.preventDefault();
-      this.store.undo();
-    } else if (key === 'y' || (key === 'z' && event.shiftKey)) {
-      event.preventDefault();
-      this.store.redo();
-    }
+    this.store.updateLine(id, key, changes);
   }
 }
 
@@ -289,11 +269,4 @@ export class WorksheetPage {
 function carryOverRef(itemKey: string): CarryOverRef {
   const slash = itemKey.lastIndexOf('/');
   return { sourceId: itemKey.slice(0, slash), key: itemKey.slice(slash + 1) };
-}
-
-/** True while the user types in a text field (not a checkbox, radio or button) */
-function isTextEditing(): boolean {
-  const element = document.activeElement;
-  if (element instanceof HTMLTextAreaElement) return true;
-  return element instanceof HTMLInputElement && !['checkbox', 'radio', 'button', 'submit'].includes(element.type);
 }

@@ -2,11 +2,16 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
 import { ShoppingListItem } from '../models/shopping-list.model';
+import { UndoService } from './undo.service';
 
-/** Shopping list, kept in memory for the prototype (replace the edits with API calls later) */
+/**
+ * Shopping list, kept in memory for the prototype (replace the edits with API calls later).
+ * Edits are recorded for undo / redo (see UndoService).
+ */
 @Injectable({ providedIn: 'root' })
 export class ShoppingListService {
   private readonly api = inject(ApiService);
+  private readonly history = inject(UndoService);
 
   private readonly _items = signal<ShoppingListItem[]>([]);
 
@@ -17,7 +22,10 @@ export class ShoppingListService {
   readonly count = computed(() => this._items().filter((item) => !item.ordered).length);
 
   constructor() {
-    this.api.get<ShoppingListItem[]>(API_ENDPOINTS.shoppingList).subscribe((items) => this._items.set(items));
+    this.api.get<ShoppingListItem[]>(API_ENDPOINTS.shoppingList).subscribe((items) => {
+      this._items.set(items);
+      this.history.track(this._items);
+    });
   }
 
   add(item: Omit<ShoppingListItem, 'id' | 'addedAt' | 'ordered'>): ShoppingListItem {
@@ -28,20 +36,24 @@ export class ShoppingListService {
       addedAt: new Date(Date.now() - new Date().getTimezoneOffset() * 60_000).toISOString().slice(0, 19),
       ordered: false,
     };
+    this.history.record();
     this._items.update((items) => [...items, added]);
     return added;
   }
 
   setOrdered(id: string, ordered: boolean): void {
+    this.history.record();
     this._items.update((items) => items.map((item) => (item.id === id ? { ...item, ordered } : item)));
   }
 
   remove(id: string): void {
+    this.history.record();
     this._items.update((items) => items.filter((item) => item.id !== id));
   }
 
   /** Puts a removed item back as it was (same id and date); nothing if it is already there */
   restore(item: ShoppingListItem): void {
+    this.history.record();
     this._items.update((items) => (items.some((existing) => existing.id === item.id) ? items : [...items, item]));
   }
 }

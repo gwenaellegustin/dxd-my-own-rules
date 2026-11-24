@@ -64,7 +64,8 @@
     }
 
     <!-- New item, added at the bottom of the list -->
-    <form class="add" (submit)="add($event)">
+    <!-- Not saved until added: the browser undoes the typing (see UndoService) -->
+    <form class="add" data-native-undo (submit)="add($event)">
       <label class="field add__label">
         <span class="field__label">{{ 'shoppingList.item' | translate }}</span>
         <input class="input" type="text" [value]="newLabel()" (input)="newLabel.set($any($event.target).value)" />
