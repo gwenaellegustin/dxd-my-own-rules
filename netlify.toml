@@ -1,0 +1,19 @@
+# Netlify (branch dev): build settings. GitHub Pages (branch main) ignores this file.
+
+[build]
+  command = "npx ng build"
+  publish = "dist/greasy-notes/browser"
+
+[build.environment]
+  # Same Node as the developers' machines. Node 24 comes with npm 11.19.1, older than the
+  # devEngines of package.json (>= 11.21.0): npm then refuses to install the dependencies
+  NODE_VERSION = "26"
+  # The npm of "packageManager" in package.json
+  NPM_VERSION = "12.2.2"
+
+# Single-page app: every URL serves index.html, so deep links (/worksheets/ws-1006,
+# /design-system) work on refresh
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
