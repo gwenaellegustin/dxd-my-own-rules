@@ -1,0 +1,136 @@
+// ---------------------------------------------------------------------------
+// Shapes and scopes of the racing look, shared by the components.
+// Use with: @use 'shapes';
+// ---------------------------------------------------------------------------
+@use 'sass:math';
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:string';
+
+// ---- Title font -------------------------------------------------------------
+// Wide, heavy capitals (like the boards of a race schedule)
+@mixin heading-font {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading);
+  font-stretch: var(--font-width-heading);
+  text-transform: uppercase;
+}
+
+// ---- Dark scope -------------------------------------------------------------
+// Header and menus: dark areas with light text. The neutral colours are swapped inside, so the
+// shared controls (icon buttons, menu items, EN / FR switch, focus ring) follow without their own
+// rules. The --color-inverse* tokens are set on :root, so they keep the light-theme values here.
+@mixin inverse {
+  --color-surface: var(--color-inverse);
+  --color-background: var(--color-inverse);
+  --color-on-background: var(--color-on-inverse);
+  --color-on-background-soft: var(--color-on-inverse-soft);
+  --color-on-background-faint: var(--color-on-inverse-soft);
+  --color-neutral: var(--color-inverse-hover);
+}
+
+// ---- Broken corners ---------------------------------------------------------
+// The menus: two opposite corners cut on the diagonal (top left and bottom right: the shape leans
+// forward, like italics), their folds slightly rounded; the other two corners rounded. Lengths in
+// % follow the size of the element, so a shape can stretch (current page of the menu).
+// clip-path: shape() — browsers without it keep plain rounded corners. The clip also hides an
+// outline: put the shape on a pseudo-element behind the content when the element can be focused.
+
+// Corner point, direction of the edge that reaches it and of the edge that leaves it (clockwise)
+$_corners: (
+  tl: (x: 0%, y: 0%, in: (0, -1), out: (1, 0)),
+  tr: (x: 100%, y: 0%, in: (1, 0), out: (0, 1)),
+  br: (x: 100%, y: 100%, in: (0, 1), out: (-1, 0)),
+  bl: (x: 0%, y: 100%, in: (-1, 0), out: (0, -1)),
+);
+
+// Share of the cut used to round each fold of the diagonal
+$_fold: 0.35;
+
+@function _round($n) {
+  @return math.div(math.round($n * 1000), 1000);
+}
+
+// One coordinate: the corner's, moved by $factor × $length
+@function _coord($base, $factor, $length) {
+  @if $factor == 0 {
+    @return $base;
+  }
+  @if $base == 0% {
+    @return string.unquote('calc(#{_round($factor)} * #{$length})');
+  }
+  @return string.unquote('calc(#{$base} + #{_round($factor)} * #{$length})');
+}
+
+// Point near a corner: $a × $length along the edge reaching it, $b × $length along the edge leaving it
+@function _point($corner, $a, $b, $length) {
+  $c: map.get($_corners, $corner);
+  $in: map.get($c, in);
+  $out: map.get($c, out);
+  $dx: $a * list.nth($in, 1) + $b * list.nth($out, 1);
+  $dy: $a * list.nth($in, 2) + $b * list.nth($out, 2);
+  @return '#{_coord(map.get($c, x), $dx, $length)} #{_coord(map.get($c, y), $dy, $length)}';
+}
+
+// Point where the outline leaves a corner (start of the next edge)
+@function _exit($corner, $cut, $radius, $is-cut) {
+  @if $is-cut {
+    @return _point($corner, 0, 1 + $_fold, $cut);
+  }
+  @return _point($corner, 0, 1, $radius);
+}
+
+// Commands drawing one corner, from the edge that reaches it to the edge that leaves it
+@function _corner($corner, $cut, $radius, $is-cut) {
+  @if not $is-cut {
+    @return 'line to #{_point($corner, -1, 0, $radius)}, curve to #{_point($corner, 0, 1, $radius)} with #{_point($corner, 0, 0, $radius)}';
+  }
+  $d: $_fold * math.div(1, math.sqrt(2));
+  @return 'line to #{_point($corner, -1 - $_fold, 0, $cut)}, ' +
+    'curve to #{_point($corner, -1 + $d, $d, $cut)} with #{_point($corner, -1, 0, $cut)}, ' +
+    'line to #{_point($corner, -$d, 1 - $d, $cut)}, ' +
+    'curve to #{_point($corner, 0, 1 + $_fold, $cut)} with #{_point($corner, 0, 1, $cut)}';
+}
+
+@function broken-shape($cut-corners: tl br, $cut: var(--corner-cut), $radius: var(--radius-200)) {
+  $first: tl;
+  $path: 'from #{_exit($first, $cut, $radius, list.index($cut-corners, $first) != null)}';
+  @each $corner in (tr, br, bl, tl) {
+    $path: $path + ', ' + _corner($corner, $cut, $radius, list.index($cut-corners, $corner) != null);
+  }
+  @return string.unquote('shape(#{$path}, close)');
+}
+
+@mixin broken-corners($cut-corners: tl br, $radius: var(--radius-200)) {
+  border-radius: $radius;
+
+  @supports (clip-path: shape(from 0 0, line to 100% 0)) {
+    border-radius: 0;
+    clip-path: broken-shape($cut-corners, var(--corner-cut), $radius);
+  }
+}
+
+// ---- Liquid joins -----------------------------------------------------------
+// A tab standing on a rule of the same colour, its feet joined to the rule by concave curves, like
+// a drop flowing into it. On the tab (position: relative); its two pseudo-elements draw the feet.
+@mixin liquid-feet($color, $radius: var(--radius-300)) {
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: $radius;
+    height: $radius;
+    pointer-events: none;
+  }
+
+  &::before {
+    right: 100%;
+    background: radial-gradient(circle at 0 0, transparent calc(#{$radius} - 0.5px), #{$color} #{$radius});
+  }
+
+  &::after {
+    left: 100%;
+    background: radial-gradient(circle at 100% 0, transparent calc(#{$radius} - 0.5px), #{$color} #{$radius});
+  }
+}

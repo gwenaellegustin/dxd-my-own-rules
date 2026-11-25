@@ -29,7 +29,8 @@ public/
   images/          logo.png (header), car damage diagram exported from Figma,
                    registration/ (vehicle registration documents)
 src/
-  styles/          _tokens.scss (CSS variables), _breakpoints.scss, _side-panel.scss
+  styles/          _tokens.scss (CSS variables), _breakpoints.scss, _side-panel.scss,
+                   _shapes.scss (title font, dark scope, broken corners, liquid joins)
   styles.scss      base styles and shared form controls
   app/
     core/          models, API access, services, utils (names, saved preferences)

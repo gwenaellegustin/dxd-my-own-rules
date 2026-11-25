@@ -1,9 +1,11 @@
 // ---------------------------------------------------------------------------
 // Design tokens — single source of truth for the visual language.
 //
-// Retro / brutalist look: grey page, white elements outlined in black, slightly
-// rounded corners, Bungee titles and DM Sans text. Every component reads these
-// variables, none hard-codes them.
+// Racing look (F1, MotoGP): a dark header like a timing bar, grey page ruled like a
+// timing sheet, white elements outlined in black with soft corners, the race flags as
+// status colours, wide heavy Archivo capitals for the titles. Menus have broken
+// corners (cut on the diagonal), some shapes flow like a liquid (see _shapes.scss).
+// Every component reads these variables, none hard-codes them.
 // ---------------------------------------------------------------------------
 
 :root {
@@ -14,21 +16,36 @@
   --color-on-background-faint: #9e9e9e; // placeholders
   --color-surface: #ffffff; // elements (cards, panels, header, dialogs), text on dark buttons
   --color-neutral: #cfcfcf; // grey background: hover, selected item, notices, scrollbar thumb; dividers inside an element
+  // Lines of the grid ruled on the work area, like a timing sheet
+  --color-grid: color-mix(in srgb, var(--color-on-background) 6%, var(--color-background));
 
-  // ---- Colors: status -----------------------------------------------------
-  // Info = planned line, open invoice; success = done line, paid invoice; error = problems,
-  // sent invoice, damage marks. Only the main colour is set: its background and its border
-  // are mixed from it with the surface, so they follow when it changes. At 12% the background
-  // is as light as --color-background (same OKLCH lightness, about 0.94).
-  --color-info: #1d5bbf;
-  --color-success: #1a7f3c;
-  --color-error: #c4271b;
-  --color-info-bg: color-mix(in srgb, var(--color-info) 12%, var(--color-surface));
-  --color-info-line: color-mix(in srgb, var(--color-info) 32%, var(--color-surface));
+  // ---- Colors: dark areas (header, menus) ---------------------------------
+  // Inside them the neutrals are swapped (see the inverse mixin of _shapes.scss)
+  --color-inverse: var(--color-on-background); // background of the header and of the menus
+  --color-on-inverse: var(--color-surface); // text and icons on it, current page of the menu
+  --color-on-inverse-soft: color-mix(in srgb, var(--color-surface) 62%, var(--color-on-background)); // secondary text on it
+  --color-inverse-hover: var(--color-on-background-soft); // hover on it
+
+  // ---- Colors: status (race flags) ----------------------------------------
+  // Info = yellow flag: planned line, open invoice; success = green flag: done line, paid
+  // invoice; error = red flag: problems, sent invoice, damage marks. Only the main colour is
+  // set; the others are mixed from it, so they follow when it changes:
+  // - background: with the surface, as light as --color-background (OKLCH lightness ≈ 0.94);
+  // - border: with the surface, as dark as the borders of the other elements (≈ 0.84);
+  // - text: with the ink, dark enough to read on the background (contrast ≥ 4.5:1). The yellow
+  //   is too light to be read as it is.
+  --color-info: #eeca38;
+  --color-success: #386d4f;
+  --color-error: #c44735;
+  --color-info-bg: color-mix(in srgb, var(--color-info) 36%, var(--color-surface));
+  --color-info-line: var(--color-info);
+  --color-info-text: color-mix(in srgb, var(--color-info) 40%, var(--color-on-background));
   --color-success-bg: color-mix(in srgb, var(--color-success) 12%, var(--color-surface));
-  --color-success-line: color-mix(in srgb, var(--color-success) 32%, var(--color-surface));
-  --color-error-bg: color-mix(in srgb, var(--color-error) 12%, var(--color-surface));
-  --color-error-line: color-mix(in srgb, var(--color-error) 32%, var(--color-surface));
+  --color-success-line: color-mix(in srgb, var(--color-success) 33%, var(--color-surface));
+  --color-success-text: var(--color-success);
+  --color-error-bg: color-mix(in srgb, var(--color-error) 13%, var(--color-surface));
+  --color-error-line: color-mix(in srgb, var(--color-error) 36%, var(--color-surface));
+  --color-error-text: color-mix(in srgb, var(--color-error) 85%, var(--color-on-background));
   --color-error-hover: color-mix(in srgb, var(--color-error) 80%, var(--color-on-background)); // hover of the red buttons
 
   // Scrollbars: wide enough to be grabbed with the mouse, thumb on a transparent track,
@@ -37,17 +54,20 @@
   --scrollbar-button-size: 20px; // length of an arrow button along the scrollbar
 
   // ---- Typography ---------------------------------------------------------
-  --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  // Titles and main menu. Bungee only exists in capitals and in one weight (regular)
-  --font-heading: 'Bungee', 'DM Sans', system-ui, sans-serif;
+  --font-body: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  // Titles and main menu: the same family, wider and heavier, in capitals
+  --font-heading: 'Archivo', system-ui, sans-serif;
+  --font-width-heading: 115%; // Archivo goes from 62% (condensed) to 125% (expanded)
 
   --font-size-small: 14px;
   --font-size-medium: 16px;
   --font-size-subheading: 20px;
-  --font-size-heading: 24px;
+  --font-size-heading: 22px;
 
   --font-weight-regular: 400;
   --font-weight-strong: 600;
+  --font-weight-heading: 800;
+  --font-tracking-label: 0.12em; // small spaced capitals: days of the transcript
 
   --line-height-single: 1;
   --line-height-body: 1.4;
@@ -62,11 +82,14 @@
   --space-800: 32px; // separate areas: sections of a page, columns of a layout
 
   // ---- Radius -------------------------------------------------------------
-  // Slightly rounded corners everywhere, like the Bungee titles; only real circles (radio
-  // buttons, logo) are round
-  --radius-100: 2px; // small parts inside a control (checkbox, switch option, list option)
-  --radius-200: 4px; // default: cards, fields, buttons, chips, menus, dialogs, images, chat bubbles
+  // Soft corners, larger on the larger elements; chips and badges are capsules, only real circles
+  // (radio buttons, logo) are round. The menus have broken corners: cut on the diagonal
+  --radius-100: 4px; // small parts inside a control (checkbox, switch option, list option)
+  --radius-200: 8px; // controls: fields, buttons, menu items, chat bubbles
+  --radius-300: 16px; // containers: cards, lines, menus, dialogs, images
+  --radius-pill: 999px; // capsules: chips, badges, search field, scrollbar thumb
   --radius-circle: 50%;
+  --corner-cut: 14px; // broken corners of the menus: length of the cut along each side
 
   // ---- Strokes ------------------------------------------------------------
   --stroke-border: 1px;
@@ -93,6 +116,7 @@
 
   // ---- Layout -------------------------------------------------------------
   --header-height: 64px;
+  --grid-size: 24px; // squares of the grid ruled on the work area
   // Empty space under the content of every page (not the side panels), the height of the header
   --page-bottom-space: var(--header-height);
   --panel-width: 300px; // side panels when open (left sidebar, transcript, tokens)
@@ -132,6 +156,10 @@
   --transition-fast: 120ms ease; // hover, open / close
   --transition-panel: 200ms ease-out; // a side panel or a dialog opened (and the backdrop behind it)
   --transition-reveal: 400ms ease-out; // new colour of a line, spreading from where it was pressed
+  // Current page of the menu moving to another page: its front edge goes first and the back edge
+  // follows a little later, so it stretches like a drop
+  --transition-liquid: 420ms cubic-bezier(0.7, 0, 0.25, 1);
+  --transition-liquid-lag: 110ms;
 
   // ---- Stacking -----------------------------------------------------------
   --z-raised: 1; // above the next elements (head of a side panel over its list)

@@ -14,7 +14,7 @@
   padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   color: var(--color-on-background);
   text-align: left;
   transition:
@@ -83,11 +83,11 @@
   gap: var(--space-050);
 
   app-icon {
-    color: var(--color-info);
+    color: var(--color-info-text);
   }
 
   &--done app-icon {
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
 }
 

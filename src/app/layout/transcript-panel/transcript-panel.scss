@@ -1,6 +1,7 @@
 @use 'side-panel';
 
 @use 'breakpoints' as bp;
+@use 'shapes';
 
 @include side-panel.side-panel(right);
 
@@ -20,9 +21,33 @@
   min-height: 100%;
 }
 
-// Title of a day: subheading (.text-subheading), centred over its messages
+// Title of a day, centred over its messages: a capsule on a line running across the panel, like
+// the days of a race schedule
 .day__date {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+  margin: var(--space-100) 0;
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-single);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: var(--stroke-border);
+    background: var(--color-on-background);
+  }
+}
+
+.day__label {
+  padding: var(--space-100) var(--space-400);
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-pill);
+  @include shapes.heading-font;
+  font-weight: var(--font-weight-strong);
+  letter-spacing: var(--font-tracking-label);
+  white-space: nowrap;
 }
 
 // The badge follows the title (the title does not take the whole row)

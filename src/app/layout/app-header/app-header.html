@@ -25,6 +25,26 @@
   </button>
 </div>
 
+<!-- The free space of the header: a checkerboard melting into drops (see liquidFlag), its right end
+     against undo / redo. Decoration only -->
+<svg class="flag" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- Blurred, then cut again at about half opacity: the corners round off, the whole squares
+         join at their corners and the small ones become drops -->
+    <filter id="flag-liquid" filterUnits="userSpaceOnUse" x="-680" y="-16" width="700" height="96">
+      <feGaussianBlur stdDeviation="2.4" />
+      <feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" />
+    </filter>
+  </defs>
+  <svg x="100%" overflow="visible">
+    <g fill="currentColor" filter="url(#flag-liquid)">
+      @for (square of flagSquares; track $index) {
+        <rect [attr.x]="square.x" [attr.y]="square.y" [attr.width]="square.size" [attr.height]="square.size" />
+      }
+    </g>
+  </svg>
+</svg>
+
 <!-- Right: undo / redo (edits of the whole app), then the user menu (settings, language) -->
 <div class="tools" role="group" [attr.aria-label]="'header.edits' | translate">
   <button

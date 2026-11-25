@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'shapes';
 
 // The pages, on the left (the free space of the header is after back / forward; on phones,
 // where back / forward are hidden, after the pages)
@@ -13,6 +14,8 @@
 }
 
 .pills {
+  // The light shape is placed in it (MainNav measures the pills from its edges)
+  position: relative;
   min-width: 0;
   display: flex;
   align-items: center;
@@ -27,12 +30,67 @@
   }
 }
 
+// The current page has the shape behind it: its own background (global .pill) stays off
+.pills--liquid .pill--active::before {
+  background: none;
+}
+
+// Light shape under the current page, with the broken corners of the pills. Its left and right
+// edges are set by MainNav; when it moves, the edge on the side it goes to leads and the other
+// one follows a little later, and it gets thinner while stretched, like a drop
+.liquid {
+  position: absolute;
+  top: var(--space-100);
+  bottom: var(--space-100);
+  background: var(--color-on-background);
+  @include shapes.broken-corners;
+
+  @media (prefers-reduced-motion: no-preference) {
+    &--animated {
+      transition:
+        right var(--transition-liquid),
+        left var(--transition-liquid) var(--transition-liquid-lag);
+    }
+
+    &--animated.liquid--to-left {
+      transition:
+        left var(--transition-liquid),
+        right var(--transition-liquid) var(--transition-liquid-lag);
+    }
+
+    // Two classes with the same animation: switching from one to the other restarts it
+    &--stretch-a {
+      animation: liquid-stretch-a var(--transition-liquid);
+    }
+
+    &--stretch-b {
+      animation: liquid-stretch-b var(--transition-liquid);
+    }
+  }
+}
+
+@keyframes liquid-stretch-a {
+  45% {
+    transform: scaleY(0.78);
+  }
+}
+
+@keyframes liquid-stretch-b {
+  45% {
+    transform: scaleY(0.78);
+  }
+}
+
+// The text of a pill changes colour as the shape comes under it or leaves it
+.pills .pill {
+  transition: color var(--transition-liquid);
+}
+
 // The pill of a page is global (styles.scss: .pill). Phones: the pages of the dropdown menu use
-// the title font too (Bungee has a single weight, so the current page is not bold)
+// the title font too
 .dropdown-menu__item {
-  font-family: var(--font-heading);
-  font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-regular);
+  @include shapes.heading-font;
+  font-size: var(--font-size-medium);
 }
 
 // Number of items (e.g. shopping list): the red badge of the transcript (.problem-badge), inside

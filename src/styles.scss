@@ -1,5 +1,6 @@
 @use 'tokens';
 @use 'breakpoints' as bp;
+@use 'shapes';
 
 // ---------------------------------------------------------------------------
 // Base
@@ -86,16 +87,14 @@ button {
 // ---------------------------------------------------------------------------
 
 .text-heading {
-  font-family: var(--font-heading);
+  @include shapes.heading-font;
   font-size: var(--font-size-heading);
-  font-weight: var(--font-weight-regular);
   line-height: var(--line-height-heading);
 }
 
 .text-subheading {
-  font-family: var(--font-heading);
+  @include shapes.heading-font;
   font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-regular);
   line-height: var(--line-height-heading);
 }
 
@@ -442,35 +441,45 @@ button {
   }
 }
 
-// Main menu entry (one per page, see MainNav): title font (Bungee has a single weight, so the
-// current page is not bold)
+// Main menu entry (one per page, see MainNav): title font. Its background has broken corners,
+// drawn behind it (a clip on the pill itself would cut its focus ring)
 .pill {
   position: relative;
+  isolation: isolate;
   flex: none;
   display: inline-flex;
   align-items: center;
   gap: var(--space-200);
-  padding: var(--space-200);
-  border-radius: var(--radius-200);
+  padding: var(--space-200) var(--space-400);
   color: var(--color-on-background);
-  font-family: var(--font-heading);
-  font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-regular);
+  @include shapes.heading-font;
+  font-size: var(--font-size-medium);
   line-height: var(--line-height-single);
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color var(--transition-fast);
 
-  &:hover,
-  &.is-hover {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transition: background-color var(--transition-fast);
+    @include shapes.broken-corners;
+  }
+
+  &:hover::before,
+  &.is-hover::before {
     background: var(--color-neutral);
   }
 
-  // Current page: dark pill, like the selected language (EN / FR)
-  &--active,
-  &--active:hover {
-    background: var(--color-on-background);
+  // Current page: dark pill, like the selected language (EN / FR); light in the dark header
+  &--active {
     color: var(--color-surface);
+
+    &::before,
+    &:hover::before {
+      background: var(--color-on-background);
+    }
   }
 }
 
@@ -535,7 +544,7 @@ button {
   padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   color: var(--color-on-background);
   user-select: none;
   transition: background-color var(--transition-fast);
@@ -629,7 +638,7 @@ button {
   padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   color: var(--color-on-background);
   text-decoration: none;
   transition: background-color var(--transition-fast);
@@ -674,7 +683,7 @@ button {
   text-align: left;
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   color: var(--color-on-background);
   transition: background-color var(--transition-fast);
 
@@ -763,9 +772,10 @@ button {
   min-width: var(--badge-size);
   height: var(--badge-size);
   padding: 0 var(--space-100);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-pill);
   background: var(--color-error);
-  color: var(--color-surface);
+  // White, also in the dark header (where the surface is dark)
+  color: var(--color-on-inverse);
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-strong);
   font-variant-numeric: tabular-nums;
@@ -779,7 +789,7 @@ button {
   gap: var(--space-050);
   padding: var(--space-050) var(--space-200) var(--space-050) var(--space-100);
   border: var(--stroke-border) solid transparent;
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-pill);
   background: var(--color-background);
   color: var(--color-on-background-soft);
   font-size: var(--font-size-small);
@@ -791,17 +801,20 @@ button {
   &--open {
     background: var(--color-info-bg);
     border-color: var(--color-info-line);
-    color: var(--color-info);
+    color: var(--color-info-text);
   }
 
   &--alert {
     background: var(--color-error-bg);
     border-color: var(--color-error-line);
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 }
 
-// Dropdown menus (see the Dropdown directive): account, mobile navigation, sort
+// Dropdown menus (see the Dropdown directive): account, mobile navigation, sort. Dark like the
+// header, with broken corners (the items keep their focus ring: it stays inside the padding).
+// `--field`: the choices of a field (it scrolls) stay light and outlined, like the list of a
+// combobox: a clip would cut its scrollbar.
 .dropdown {
   position: relative;
   flex: none;
@@ -818,8 +831,17 @@ button {
   flex-direction: column;
   gap: var(--space-100);
   background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  color: var(--color-on-background);
+
+  &:not(.dropdown-menu--field) {
+    @include shapes.inverse;
+    @include shapes.broken-corners(tl br, var(--radius-300));
+  }
+
+  &--field {
+    border: var(--stroke-border) solid var(--color-on-background);
+    border-radius: var(--radius-300);
+  }
 
   &--start {
     left: 0;
@@ -886,7 +908,7 @@ $scrollbar-arrow-color-hover: '%233a3a3a'; // --color-on-background-soft
   // The transparent border leaves a margin around the thumb
   background: var(--color-neutral) padding-box;
   border: var(--space-050) solid transparent;
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-pill);
 
   &:hover,
   &:active {
@@ -991,7 +1013,7 @@ select.input {
   align-items: center;
   gap: var(--space-100);
   padding: var(--space-050) var(--space-200);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-pill);
   background: var(--color-background);
   font-size: var(--font-size-small);
 
@@ -1027,7 +1049,7 @@ select.input {
 
   .input {
     width: 100%;
-    border-radius: var(--radius-200);
+    border-radius: var(--radius-pill);
     padding-left: calc(var(--space-400) + var(--icon-size-small) + var(--space-200));
   }
 
@@ -1056,7 +1078,7 @@ select.input {
   max-height: calc(100dvh - var(--space-800));
   padding: 0;
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   background: var(--color-surface);
   color: var(--color-on-background);
 
@@ -1177,7 +1199,7 @@ select.input {
   align-items: center;
   padding: var(--space-100) var(--space-200);
   border: var(--stroke-border) solid transparent;
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-pill);
   font-size: var(--font-size-medium);
   font-weight: var(--font-weight-strong);
   line-height: var(--line-height-single);
@@ -1187,7 +1209,7 @@ select.input {
   &--open {
     background: var(--color-info-bg);
     border-color: var(--color-info-line);
-    color: var(--color-info);
+    color: var(--color-info-text);
   }
 
   // Sent; overdue = sent and not paid after the payment term (same chip, other label)
@@ -1195,14 +1217,43 @@ select.input {
   &--overdue {
     background: var(--color-error-bg);
     border-color: var(--color-error-line);
-    color: var(--color-error);
+    color: var(--color-error-text);
   }
 
   &--paid {
     background: var(--color-success-bg);
     border-color: var(--color-success-line);
-    color: var(--color-success);
+    color: var(--color-success-text);
   }
+}
+
+// ---------------------------------------------------------------------------
+// Section title of a worksheet (worksheet page, its preview in the settings): a dark tab standing
+// on a rule across the section, its feet flowing into the rule like a drop (liquid joins).
+// <div class="section-rule"><h2 class="section-tab text-heading">…</h2> [summary]</div>
+// ---------------------------------------------------------------------------
+
+.section-rule {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-200) var(--space-400);
+  // Room for the left foot of the tab
+  padding-left: var(--radius-300);
+  border-bottom: var(--stroke-strong) solid var(--color-on-background);
+}
+
+.section-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-200);
+  margin: 0;
+  padding: var(--space-200) var(--space-400);
+  border-radius: var(--radius-300) var(--radius-300) 0 0;
+  background: var(--color-on-background);
+  color: var(--color-surface);
+  @include shapes.liquid-feet(var(--color-on-background));
 }
 
 // ---------------------------------------------------------------------------
@@ -1245,7 +1296,7 @@ select.input {
   cursor: pointer;
   gap: var(--space-100);
   padding: var(--space-050) var(--space-200);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-pill);
   background: var(--color-background);
   color: var(--color-on-background-soft);
   font-size: var(--font-size-small);
@@ -1274,7 +1325,7 @@ select.input {
   gap: var(--space-200);
   padding: var(--space-400);
   border: var(--stroke-strong) dashed var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   color: var(--color-on-background);
   text-align: center;
   cursor: pointer;
@@ -1303,7 +1354,7 @@ select.input {
 
 .message {
   display: flex;
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 }
 
 // "AI Chat -> User message": what was said, a chat bubble on the right with its time above.

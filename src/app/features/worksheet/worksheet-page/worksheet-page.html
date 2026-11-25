@@ -68,11 +68,11 @@
         @let collapsed = isCollapsed(section.id);
         <section class="section" [class.section--collapsed]="collapsed">
           <!-- Only the title and its arrow toggle the section, not the whole row -->
-          <div class="section__header">
+          <div class="section__header section-rule">
             <h2 class="section__heading">
               <button
                 type="button"
-                class="section__toggle"
+                class="section__toggle section-tab"
                 [attr.aria-expanded]="!collapsed"
                 [attr.aria-controls]="'section-' + section.id"
                 (click)="toggleSection(section.id)"

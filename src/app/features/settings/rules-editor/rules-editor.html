@@ -78,7 +78,7 @@
               </button>
               @if (menu.open()) {
                 @let current = triggerValue(rule);
-                <div class="dropdown-menu dropdown-menu--start trigger-menu" role="listbox" aria-labelledby="rule-trigger-label">
+                <div class="dropdown-menu dropdown-menu--start dropdown-menu--field trigger-menu" role="listbox" aria-labelledby="rule-trigger-label">
                   @for (group of triggerGroups(); track group.label) {
                     <div role="group" [attr.aria-label]="group.label | translate">
                       <p class="dropdown-menu__title text-small text-secondary">{{ group.label | translate }}</p>

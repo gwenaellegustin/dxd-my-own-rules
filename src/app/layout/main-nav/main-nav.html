@@ -1,5 +1,17 @@
-<!-- Tablet / desktop: one pill per page -->
-<nav class="pills" [attr.aria-label]="'nav.label' | translate">
+<!-- Tablet / desktop: one pill per page, the light shape under the current one (see MainNav) -->
+<nav #bar class="pills" [class.pills--liquid]="place()" [attr.aria-label]="'nav.label' | translate">
+  @if (place(); as shape) {
+    <span
+      class="liquid"
+      [class.liquid--animated]="animated()"
+      [class.liquid--to-left]="direction() === 'left'"
+      [class.liquid--stretch-a]="animated() && moves() > 0 && moves() % 2 === 1"
+      [class.liquid--stretch-b]="animated() && moves() > 0 && moves() % 2 === 0"
+      [style.left.px]="shape.left"
+      [style.right.px]="shape.right"
+      aria-hidden="true"
+    ></span>
+  }
   @for (item of items; track item.path) {
     <ng-container *ngTemplateOutlet="link; context: { $implicit: item, cls: 'pill' }" />
   }

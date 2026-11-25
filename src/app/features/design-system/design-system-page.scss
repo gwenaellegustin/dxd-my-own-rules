@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'shapes';
 
 // Sizes of this page only (the samples), not part of the app's visual language
 $sample-size: 32px; // radius / effect boxes, color dots
@@ -70,7 +71,7 @@ $icon-item-width: 96px; // icon with its name under it
   padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 }
 
 @include bp.area-from(bp.$width-sm, ds) {
@@ -95,9 +96,8 @@ $icon-item-width: 96px; // icon with its name under it
 
 .tile__title {
   margin-bottom: var(--space-100);
-  font-family: var(--font-heading);
+  @include shapes.heading-font;
   font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-regular);
   line-height: var(--line-height-heading);
 }
 
@@ -173,7 +173,7 @@ $icon-item-width: 96px; // icon with its name under it
   padding: var(--space-400);
   background: var(--color-background);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 
   // Inks on the left, the surface card next to them
   &--background {
@@ -233,7 +233,7 @@ $icon-item-width: 96px; // icon with its name under it
 .ink__sample {
   flex: none;
   width: $status-sample-size;
-  font-family: var(--font-heading);
+  @include shapes.heading-font;
   font-size: var(--font-size-subheading);
   text-align: center;
 }
@@ -279,7 +279,7 @@ $icon-item-width: 96px; // icon with its name under it
   height: $status-sample-size;
   border: var(--stroke-border) solid;
   border-radius: var(--radius-200);
-  font-family: var(--font-heading);
+  @include shapes.heading-font;
 }
 
 .status__value {
@@ -418,7 +418,7 @@ $icon-item-width: 96px; // icon with its name under it
   gap: var(--space-200);
   padding: var(--space-200);
   background: var(--color-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 }
 
 // Icon sizes: an example of each use above its name, value and use
@@ -445,7 +445,7 @@ $icon-item-width: 96px; // icon with its name under it
   padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 
   &--planned {
     background: var(--color-info-bg);
@@ -464,7 +464,7 @@ $icon-item-width: 96px; // icon with its name under it
   justify-content: center;
   padding: var(--space-400);
   background: var(--overlay-backdrop);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 }
 
 // Dialog shown in the tile instead of floating over the page

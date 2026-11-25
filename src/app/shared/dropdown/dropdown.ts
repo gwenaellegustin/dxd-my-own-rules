@@ -3,8 +3,8 @@ import { Directive, ElementRef, inject, signal } from '@angular/core';
 /**
  * A button that opens a small menu (account, mobile navigation, sort…). Put it on the element
  * that wraps the button and the menu; the menu closes on a click outside that element or on
- * Escape. Style the menu with the global `.dropdown-menu` class (right-aligned by default,
- * `.dropdown-menu--start` to align it on the left).
+ * Escape. Style the menu with the global `.dropdown-menu` class (dark, right-aligned by default,
+ * `.dropdown-menu--start` to align it on the left; `.dropdown-menu--field`: light list of choices of a field).
  *
  * <div appDropdown #menu="appDropdown">
  *   <button (click)="menu.toggle()" [attr.aria-expanded]="menu.open()">…</button>

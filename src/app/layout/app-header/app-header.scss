@@ -1,6 +1,10 @@
 @use 'breakpoints' as bp;
+@use 'shapes';
 
+// Dark, like a timing bar: the neutral colours are swapped inside (inverse), so the pills, the
+// icon buttons and the user menu read light on it
 :host {
+  @include shapes.inverse;
   position: relative;
   z-index: var(--z-menu);
   flex: none;
@@ -10,7 +14,7 @@
   height: var(--header-height);
   padding: var(--space-400);
   background: var(--color-surface);
-  border-bottom: var(--stroke-border) solid var(--color-on-background);
+  color: var(--color-on-background);
 
   @include bp.mobile {
     gap: var(--space-200);
@@ -24,14 +28,29 @@
   display: flex;
   align-items: center;
 
-  // Back / forward: the free space of the header comes after them (undo / redo on the right).
   // Phones: the browser has its own back / forward, keep the room for the rest
   &--history {
-    flex: 1;
-
     @include bp.mobile {
       display: none;
     }
+  }
+}
+
+// Checkerboard melting into drops, in the free space of the header (undo / redo on the right):
+// from the top to the bottom of the header. Phones: the free space is too small
+.flag {
+  flex: 1;
+  align-self: stretch;
+  min-width: 0;
+  height: auto;
+  margin-block: calc(-1 * var(--space-400));
+  color: var(--color-inverse-hover);
+  // A short fade before undo / redo
+  mask-image: linear-gradient(to left, transparent, #000 var(--space-800));
+  pointer-events: none;
+
+  @include bp.mobile {
+    visibility: hidden;
   }
 }
 
@@ -59,7 +78,7 @@
   align-items: center;
   gap: var(--space-200);
   height: var(--avatar-size);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-pill);
   color: var(--color-on-background);
 }
 

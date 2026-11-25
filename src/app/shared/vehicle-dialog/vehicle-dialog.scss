@@ -19,7 +19,7 @@
   display: flex;
   justify-content: center;
   overflow: hidden;
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   cursor: zoom-in;
 
   &--zoomed {
@@ -40,7 +40,7 @@
   );
   object-fit: contain;
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   user-select: none;
   transition: transform var(--transition-fast);
 }

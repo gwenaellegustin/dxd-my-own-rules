@@ -52,7 +52,13 @@
   // Scrollbar always shown: the content keeps its width whether it scrolls or not, so it does
   // not move when another worksheet / invoice is selected
   overflow-y: scroll;
-  background: var(--color-background);
+  // Ruled like a timing sheet: thin lines on the background, scrolling with the content
+  background-color: var(--color-background);
+  background-image:
+    linear-gradient(var(--color-grid) var(--stroke-border), transparent var(--stroke-border)),
+    linear-gradient(90deg, var(--color-grid) var(--stroke-border), transparent var(--stroke-border));
+  background-size: var(--grid-size) var(--grid-size);
+  background-attachment: local;
   // Children adapt to the space left by the side panels, not to the viewport
   container: work-area / inline-size;
 

@@ -141,7 +141,7 @@
   .panel__title {
     display: flex;
     align-items: center;
-    gap: var(--space-400);
+    gap: var(--space-200);
     width: 100%;
     text-align: left;
 
@@ -169,7 +169,7 @@
       flex-direction: row;
       justify-content: center;
       gap: var(--space-200);
-      padding: var(--space-200) var(--space-400);
+      padding: var(--space-200);
 
       .icon-button--primary {
         width: var(--control-height);
@@ -182,9 +182,11 @@
     writing-mode: vertical-rl;
     white-space: nowrap;
 
+    // Phones: the two labels share the width of the screen, in small capitals of normal width
     @include bp.mobile {
       writing-mode: horizontal-tb;
-      font-size: var(--font-size-medium);
+      font-size: var(--font-size-small);
+      font-stretch: normal;
     }
   }
 }

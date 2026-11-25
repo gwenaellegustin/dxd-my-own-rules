@@ -11,7 +11,7 @@
   padding: var(--space-800);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 
   @include bp.area-below(bp.$width-sm) {
     padding: var(--space-400);
