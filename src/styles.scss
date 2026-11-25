@@ -591,6 +591,12 @@ button {
     background: var(--color-line);
   }
 
+  // Finished (paid invoice): light grey, like the finished cards of the side panel; same hover
+  // as the other rows (the :hover rule above wins over it)
+  &--done {
+    background: var(--color-background);
+  }
+
   @container work-area (max-width: 480px) {
     flex-wrap: wrap;
   }
@@ -1057,7 +1063,7 @@ select.input {
 }
 
 // ---------------------------------------------------------------------------
-// Invoice status chip: <span class="status-chip status-chip--open|sent|paid">
+// Invoice status chip: <span class="status-chip status-chip--open|sent|paid|overdue">
 // ---------------------------------------------------------------------------
 
 .status-chip {
@@ -1078,7 +1084,9 @@ select.input {
     color: var(--color-info);
   }
 
-  &--sent {
+  // Sent; overdue = sent and not paid after the payment term (same chip, other label)
+  &--sent,
+  &--overdue {
     background: var(--color-error-bg);
     border-color: var(--color-error-line);
     color: var(--color-error);

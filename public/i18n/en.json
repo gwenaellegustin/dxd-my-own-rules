@@ -214,7 +214,8 @@
     "status": {
       "open": "Open",
       "sent": "Sent",
-      "paid": "Paid"
+      "paid": "Paid",
+      "overdue": "Overdue"
     },
     "vehicle": "Vehicle",
     "plate": "Plate",
@@ -411,12 +412,12 @@
       "secondary": "Secondary",
       "icon": "Icon",
       "iconPrimary": "Main icon",
-      "statusChipsUsage": "Info: open invoice. Success: paid invoice, ordered item. Error: sent invoice.",
+      "statusChipsUsage": "Info: open invoice. Success: paid invoice, ordered item. Error: sent invoice; “Overdue” once the payment term has passed.",
       "countBadgesUsage": "Client cards of the side panel: worksheets, open invoices, sent invoices.",
       "otherChipsUsage": "Number of problems or items (menu, transcript); active filter to remove.",
       "linesUsage": "Lines of a worksheet and items of the shopping list. Planned exists on worksheets only.",
       "vehicleTilesUsage": "Client page: one card per vehicle. Checked: its worksheets and invoices are shown; the buttons open the registration document or a new worksheet.",
-      "listRowsUsage": "Client page: open worksheets and invoices of the client; a click opens it."
+      "listRowsUsage": "Client page: open worksheets and invoices of the client; a click opens it. Grey: paid invoice (same for the cards of the side panel: invoiced worksheet, paid invoice)."
     },
     "panel": {
       "toggle": "Edit the tokens",
@@ -432,7 +433,7 @@
       "derived": "Made from other tokens: change them instead"
     },
     "usage": {
-      "color-background": "Behind the elements: page, side panels, transcript days; also groups inside a card, chips and read-only fields.",
+      "color-background": "Behind the elements: page, side panels, transcript days; also groups inside a card, chips, read-only fields and done items (invoiced worksheet, paid invoice).",
       "color-on-background": "Text, icons and outlines everywhere; dark buttons, current page of the menu, focus ring.",
       "color-on-background-soft": "Secondary text (hints, dates, counts) and hover of dark buttons.",
       "color-on-background-faint": "Placeholders, language code inside a field, empty values, clients not shown, damage legend marks.",
@@ -440,7 +441,7 @@
       "color-line": "Hover and selected item, dividers inside an element, notices (archived client, price to fill), scrollbar thumb.",
       "color-info": "Planned lines, open invoices.",
       "color-success": "Done lines, paid invoices, ordered items.",
-      "color-error": "Transcript problems and notification badges, sent invoices waiting for payment, damage marks, delete buttons.",
+      "color-error": "Transcript problems and notification badges, sent and overdue invoices, damage marks, delete buttons.",
       "color-info-bg": "Background of planned lines and of the open status (12% of info).",
       "color-info-line": "Border of the open status and counts (32% of info).",
       "color-success-bg": "Background of done lines, ordered items and the paid status (12% of success).",
@@ -481,7 +482,8 @@
       "shown": "Shown",
       "hidden": "Hidden",
       "add": "Add",
-      "withStatus": "With amount and status"
+      "withStatus": "With amount and status",
+      "done": "Done: paid invoice"
     },
     "iconNames": {
       "back": "Go back",

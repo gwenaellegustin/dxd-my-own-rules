@@ -164,7 +164,7 @@
       <section class="block" aria-labelledby="client-invoices">
         <h3 class="text-subheading" id="client-invoices">{{ 'clients.invoices' | translate }}</h3>
         @for (row of clientInvoices(); track row.invoice.id) {
-          <a class="list-row" [routerLink]="['/invoices', row.invoice.id]">
+          <a class="list-row" [class.list-row--done]="row.status === 'paid'" [routerLink]="['/invoices', row.invoice.id]">
             <app-vehicle-logo [vehicle]="row.vehicle" />
             <span class="list-row__main">
               <span class="text-strong">{{
@@ -177,8 +177,8 @@
             <span class="list-row__amount"
               >{{ invoices.company()?.currency }} {{ row.total | money }}</span
             >
-            <span class="status-chip status-chip--{{ row.invoice.status }}">
-              {{ 'invoice.status.' + row.invoice.status | translate }}
+            <span class="status-chip status-chip--{{ row.status }}">
+              {{ 'invoice.status.' + row.status | translate }}
             </span>
             <app-icon name="chevron-right" />
           </a>

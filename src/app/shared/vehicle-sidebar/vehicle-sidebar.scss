@@ -48,6 +48,11 @@
     background: var(--color-line);
   }
 
+  // Finished (invoiced worksheet, paid invoice): light grey
+  &--done {
+    background: var(--color-background);
+  }
+
   // "Variant3" of the Left sidebar: the worksheet currently displayed
   &--selected,
   &--selected:hover {

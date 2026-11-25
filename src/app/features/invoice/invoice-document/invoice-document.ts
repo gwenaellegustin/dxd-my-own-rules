@@ -9,7 +9,7 @@ import { DecimalInput } from '../../../shared/decimal-input/decimal-input';
 import { HideableField } from '../hideable-field/hideable-field';
 import { Company } from '../../../core/models/company.model';
 import { Address } from '../../../core/models/client.model';
-import { Invoice, InvoiceItem, invoiceTotals, itemAmount } from '../../../core/models/invoice.model';
+import { Invoice, InvoiceItem, invoiceTotals, itemAmount, shownStatus } from '../../../core/models/invoice.model';
 import { TemplateSection } from '../../../core/models/worksheet-template.model';
 import { Worksheet } from '../../../core/models/worksheet.model';
 import { EditableItemFields } from '../../../core/services/invoice.store';
@@ -56,6 +56,8 @@ export class InvoiceDocument {
   readonly observationHiddenChange = output<boolean>();
 
   protected readonly editable = computed(() => this.invoice().status === 'open');
+  /** Status chip next to the number: 'overdue' when sent and past the payment term */
+  protected readonly status = computed(() => shownStatus(this.invoice(), this.company().paymentTermDays));
   protected readonly totals = computed(() => invoiceTotals(this.invoice(), this.company().vatRate));
   protected readonly rate = computed(() => this.company().hourlyRates.find((rate) => rate.id === this.invoice().rateId));
   protected readonly quantityStep = QUANTITY_STEP;

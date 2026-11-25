@@ -3,7 +3,14 @@ import { forkJoin } from 'rxjs';
 import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
 import { Company } from '../models/company.model';
-import { Invoice, InvoiceItem, InvoiceSection, InvoiceStatus } from '../models/invoice.model';
+import {
+  Invoice,
+  InvoiceItem,
+  InvoiceSection,
+  InvoiceShownStatus,
+  InvoiceStatus,
+  shownStatus,
+} from '../models/invoice.model';
 import { TemplateSection } from '../models/worksheet-template.model';
 import { Worksheet, parseQuantity } from '../models/worksheet.model';
 import { UndoService } from './undo.service';
@@ -56,6 +63,12 @@ export class InvoiceStore {
       this._company.set(company);
       this._loaded.set(true);
     });
+  }
+
+  /** Status to show: 'overdue' for a sent invoice past the payment term of the garage */
+  shownStatus(invoice: Invoice): InvoiceShownStatus {
+    const company = this._company();
+    return company ? shownStatus(invoice, company.paymentTermDays) : invoice.status;
   }
 
   getById(id: string | null): Invoice | undefined {

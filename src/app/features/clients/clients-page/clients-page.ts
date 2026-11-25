@@ -133,6 +133,8 @@ export class ClientsPage {
       .sort((a, b) => b.date.localeCompare(a.date) || b.number.localeCompare(a.number))
       .map((invoice) => ({
         invoice,
+        // 'overdue': sent and past the payment term
+        status: this.invoices.shownStatus(invoice),
         vehicle: worksheets.get(invoice.worksheetId)?.vehicle ?? '',
         total: invoiceTotals(invoice, vatRate).total,
       }));

@@ -214,7 +214,8 @@
     "status": {
       "open": "Ouverte",
       "sent": "Envoyée",
-      "paid": "Payée"
+      "paid": "Payée",
+      "overdue": "En retard"
     },
     "vehicle": "Véhicule",
     "plate": "Plaque",
@@ -411,12 +412,12 @@
       "secondary": "Secondaire",
       "icon": "Icône",
       "iconPrimary": "Icône principale",
-      "statusChipsUsage": "Info : facture ouverte. Success : facture payée, article commandé. Error : facture envoyée.",
+      "statusChipsUsage": "Info : facture ouverte. Success : facture payée, article commandé. Error : facture envoyée ; « En retard » une fois le délai de paiement passé.",
       "countBadgesUsage": "Cartes client du panneau latéral : fiches, factures ouvertes, factures envoyées.",
       "otherChipsUsage": "Nombre de problèmes ou d’articles (menu, transcript) ; filtre actif à retirer.",
       "linesUsage": "Lignes d’une fiche de travail et articles de la liste d’achats. Planifiée n’existe que sur les fiches.",
       "vehicleTilesUsage": "Page client : une carte par véhicule. Cochée : ses fiches et factures sont affichées ; les boutons ouvrent la carte grise ou une nouvelle fiche.",
-      "listRowsUsage": "Page client : fiches ouvertes et factures du client ; un clic l’ouvre."
+      "listRowsUsage": "Page client : fiches ouvertes et factures du client ; un clic l’ouvre. Gris : facture payée (de même pour les cartes du panneau latéral : fiche facturée, facture payée)."
     },
     "panel": {
       "toggle": "Modifier les tokens",
@@ -432,7 +433,7 @@
       "derived": "Calculé à partir d’autres tokens : modifiez-les plutôt"
     },
     "usage": {
-      "color-background": "Derrière les éléments : page, panneaux latéraux, jours du transcript ; aussi les groupes dans une carte, les puces et les champs en lecture seule.",
+      "color-background": "Derrière les éléments : page, panneaux latéraux, jours du transcript ; aussi les groupes dans une carte, les puces, les champs en lecture seule et les éléments terminés (fiche facturée, facture payée).",
       "color-on-background": "Textes, icônes et contours partout ; boutons foncés, page courante du menu, anneau de focus.",
       "color-on-background-soft": "Texte secondaire (aides, dates, compteurs) et survol des boutons foncés.",
       "color-on-background-faint": "Textes d’exemple, code de langue dans un champ, valeurs vides, clients masqués, marques de la légende des dégâts.",
@@ -440,7 +441,7 @@
       "color-line": "Survol et élément sélectionné, séparateurs dans un élément, notices (client archivé, prix à remplir), curseur des barres de défilement.",
       "color-info": "Lignes planifiées, factures ouvertes.",
       "color-success": "Lignes faites, factures payées, articles commandés.",
-      "color-error": "Problèmes du transcript et badges de notification, factures envoyées en attente de paiement, marques de dégâts, boutons de suppression.",
+      "color-error": "Problèmes du transcript et badges de notification, factures envoyées et en retard, marques de dégâts, boutons de suppression.",
       "color-info-bg": "Fond des lignes planifiées et du statut ouverte (12 % de info).",
       "color-info-line": "Bordure du statut ouverte et des compteurs (32 % de info).",
       "color-success-bg": "Fond des lignes faites, des articles commandés et du statut payée (12 % de success).",
@@ -481,7 +482,8 @@
       "shown": "Affichée",
       "hidden": "Masquée",
       "add": "Ajouter",
-      "withStatus": "Avec montant et statut"
+      "withStatus": "Avec montant et statut",
+      "done": "Terminée : facture payée"
     },
     "iconNames": {
       "back": "Retour",

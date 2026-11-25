@@ -368,7 +368,7 @@
               ><app-icon name="invoice" size="small" /> 2</span
             >
             <span class="count-badge count-badge--alert"
-              ><app-icon name="invoice" size="small" /> 1</span
+              ><app-icon name="send" size="small" /> 1</span
             >
           </span>
         </div>
@@ -545,6 +545,20 @@
             </span>
             <span class="list-row__amount">CHF 1'250.00</span>
             <span class="status-chip status-chip--open">info</span>
+            <app-icon name="chevron-right" />
+          </div>
+        </div>
+        <!-- Finished: grey row (and grey card in the side panel) -->
+        <div class="state-sample">
+          <span class="text-small text-secondary">{{ 'designSystem.states.done' | translate }}</span>
+          <div class="list-row list-row--done">
+            <app-vehicle-logo vehicle="Bus" kind="car" />
+            <span class="list-row__main">
+              <span class="text-strong">{{ 'invoice.number' | translate: { number: 41 } }}</span>
+              <span class="text-secondary">Bus · 03.11.2026</span>
+            </span>
+            <span class="list-row__amount">CHF 860.00</span>
+            <span class="status-chip status-chip--paid">success</span>
             <app-icon name="chevron-right" />
           </div>
         </div>

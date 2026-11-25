@@ -76,6 +76,7 @@
             <button
               type="button"
               class="card"
+              [class.card--done]="card.done"
               [class.card--selected]="card.id === selectedId()"
               [attr.aria-current]="card.id === selectedId() ? 'true' : null"
               (click)="selectCard.emit(card.id)"
@@ -102,9 +103,14 @@
                 @if (card.date) {
                   <span class="card__date">{{ card.date | date: 'dd.MM.yyyy' }}</span>
                 }
+                @if (card.chip; as chip) {
+                  <span class="card__badges">
+                    <span class="status-chip status-chip--{{ chip.status }}">{{ chip.labelKey | translate }}</span>
+                  </span>
+                }
                 @if (card.badges?.length) {
                   <span class="card__badges">
-                    @for (badge of card.badges; track badge.icon) {
+                    @for (badge of card.badges; track badge.labelKey) {
                       <span
                         class="count-badge count-badge--{{ badge.tone }}"
                         [attr.title]="badge.labelKey | translate: { count: badge.count }"

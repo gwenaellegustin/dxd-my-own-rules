@@ -56,11 +56,18 @@ export class WorksheetPage {
     return worksheet ? [worksheet] : [];
   });
 
-  /** Worksheets as cards of the left panel: open (on the lift), then invoiced */
+  /** Worksheets as cards of the left panel: open (on the lift), then invoiced (grey) */
   protected readonly cardGroups = computed<VehicleCardGroup[]>(() => {
     const byStatus = this.store.byStatus();
     const cards = (worksheets: Worksheet[]) =>
-      worksheets.map(({ id, vehicle, client, date, status }) => ({ id, vehicle, client, date, lifted: status === 'open' }));
+      worksheets.map(({ id, vehicle, client, date, status }) => ({
+        id,
+        vehicle,
+        client,
+        date,
+        lifted: status === 'open',
+        done: status === 'invoiced',
+      }));
     return [
       { id: 'open', titleKey: null, cards: cards(byStatus.open) },
       { id: 'invoiced', titleKey: 'worksheets.groups.invoiced', cards: cards(byStatus.invoiced) },

@@ -57,6 +57,12 @@ export class InvoicePage {
           date: invoice.date,
           title: String(this.numberLabel() ?? '').replace(NUMBER_SLOT, invoice.number),
           subtitle: [vehicle, client].filter((part) => part.trim()).join(' - '),
+          // Paid: grey card; sent and past the payment term: "Overdue" chip
+          done: invoice.status === 'paid',
+          chip:
+            this.store.shownStatus(invoice) === 'overdue'
+              ? { status: 'overdue', labelKey: 'invoice.status.overdue' }
+              : undefined,
         };
       });
     return [

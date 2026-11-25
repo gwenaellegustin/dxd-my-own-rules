@@ -21,6 +21,10 @@ export interface VehicleCard {
   icon?: IconName;
   /** Counts shown on the right of the card (e.g. open worksheets, open / sent invoices) */
   badges?: CardBadge[];
+  /** Finished (invoiced worksheet, paid invoice): grey card */
+  done?: boolean;
+  /** Status chip under the text, e.g. an invoice past its payment term: `status-chip--{status}` */
+  chip?: { status: string; labelKey: string };
 }
 
 export interface CardBadge {

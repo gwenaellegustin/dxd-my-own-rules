@@ -56,6 +56,27 @@ export interface Invoice {
   hidden?: boolean;
 }
 
+/** Status shown in the app: a sent invoice still unpaid after its due date is overdue */
+export type InvoiceShownStatus = InvoiceStatus | 'overdue';
+
+/** Last day to pay (ISO yyyy-MM-dd): date sent + payment term; null while open */
+export const dueDate = (invoice: Invoice, paymentTermDays: number): string | null => {
+  if (!invoice.sentOn) return null;
+  const date = new Date(`${invoice.sentOn}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + paymentTermDays);
+  return date.toISOString().slice(0, 10);
+};
+
+/** Sent and still not paid the day after its due date (`today`: ISO date, as in InvoiceStore) */
+export const shownStatus = (
+  invoice: Invoice,
+  paymentTermDays: number,
+  today = new Date().toISOString().slice(0, 10),
+): InvoiceShownStatus => {
+  const due = invoice.status === 'sent' ? dueDate(invoice, paymentTermDays) : null;
+  return due && today > due ? 'overdue' : invoice.status;
+};
+
 /** Amount of an item: quantity × price − discount, rounded to the cent */
 export const itemAmount = (item: InvoiceItem): number =>
   Math.round(item.quantity * item.price * (100 - item.discount)) / 100;
