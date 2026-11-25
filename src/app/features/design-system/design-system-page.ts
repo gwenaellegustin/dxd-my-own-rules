@@ -186,8 +186,8 @@ export class DesignSystemPage {
   }
 
   /**
-   * A mixed colour, readable: `color-mix(in srgb, var(--color-info) 8%, var(--color-surface))`
-   * gives "8% --color-info + 92% --color-surface" (any other value is returned as is)
+   * A mixed colour, readable: `color-mix(in srgb, var(--color-info) 12%, var(--color-surface))`
+   * gives "12% --color-info + 88% --color-surface" (any other value is returned as is)
    */
   protected mixFormula(token: DesignToken): string {
     const value = this.ds.value(token);

@@ -17,16 +17,17 @@
 
   // ---- Colors: status -----------------------------------------------------
   // Info = planned line, open invoice; success = done line, paid invoice; error = problems,
-  // sent invoice, damage marks. Only the main colour is set: its light background and its
-  // border are mixed from it with the surface, so they follow when it changes.
+  // sent invoice, damage marks. Only the main colour is set: its background and its border
+  // are mixed from it with the surface, so they follow when it changes. At 12% the background
+  // is as light as --color-background (same OKLCH lightness, about 0.94).
   --color-info: #1d5bbf;
   --color-success: #1a7f3c;
   --color-error: #c4271b;
-  --color-info-bg: color-mix(in srgb, var(--color-info) 8%, var(--color-surface));
+  --color-info-bg: color-mix(in srgb, var(--color-info) 12%, var(--color-surface));
   --color-info-line: color-mix(in srgb, var(--color-info) 32%, var(--color-surface));
-  --color-success-bg: color-mix(in srgb, var(--color-success) 8%, var(--color-surface));
+  --color-success-bg: color-mix(in srgb, var(--color-success) 12%, var(--color-surface));
   --color-success-line: color-mix(in srgb, var(--color-success) 32%, var(--color-surface));
-  --color-error-bg: color-mix(in srgb, var(--color-error) 8%, var(--color-surface));
+  --color-error-bg: color-mix(in srgb, var(--color-error) 12%, var(--color-surface));
   --color-error-line: color-mix(in srgb, var(--color-error) 32%, var(--color-surface));
 
   // Scrollbars: wide enough to be grabbed with the mouse, thumb on a transparent track,

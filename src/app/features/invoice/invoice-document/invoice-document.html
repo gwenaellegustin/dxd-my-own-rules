@@ -27,7 +27,7 @@
 
             <div class="invoice__title">
               <h2 class="text-heading">{{ 'invoice.number' | translate: { number: inv.number } }}</h2>
-              <span class="status-chip status-chip--large status-chip--{{ inv.status }} invoice__status">
+              <span class="status-chip status-chip--{{ inv.status }} invoice__status">
                 {{ 'invoice.status.' + inv.status | translate }}
               </span>
             </div>
