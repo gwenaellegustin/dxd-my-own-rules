@@ -130,3 +130,9 @@
 .line__lock {
   display: contents;
 }
+
+// A click on the line toggles Planned, a double click Done (fields and buttons keep their own
+// cursor)
+:host(.line--clickable) {
+  cursor: pointer;
+}

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   Injector,
   OnInit,
@@ -20,6 +21,12 @@ import { Clearable } from '../../../shared/clearable/clearable';
 import { LineField, TemplateLine } from '../../../core/models/worksheet-template.model';
 import { LineFieldValue, LineState, hasLineValues } from '../../../core/models/worksheet.model';
 
+/** Wait after a click on the line: a second click within it makes a double click (Done only) */
+const DOUBLE_CLICK_DELAY = 250;
+
+/** What a click on the line must leave alone: its fields, options, buttons and links */
+const CONTROLS = 'input, textarea, select, button, label, a';
+
 /**
  * "Line" component of the Figma file (component set "Line", node 3007:6666).
  *
@@ -29,6 +36,8 @@ import { LineFieldValue, LineState, hasLineValues } from '../../../core/models/w
  *   button removes the line instead.
  * - An empty note field closes when it loses focus (click outside).
  * - "Planned" and "Done" toggle independently and never hide the note.
+ * - A click on the line itself (not on a field, an option or a button) toggles "Planned", a
+ *   double click toggles "Done".
  * - Background: default → Planned (planned only) → Done (done, with or without planned).
  */
 @Component({
@@ -41,6 +50,10 @@ import { LineFieldValue, LineState, hasLineValues } from '../../../core/models/w
     '[class.line--planned]': 'state().planned && !state().done',
     '[class.line--done]': 'state().done',
     '[class.line--repeatable]': '!!line().repeatable',
+    '[class.line--clickable]': '!locked()',
+    '(click)': 'onLineClick($event)',
+    '(dblclick)': 'onLineDoubleClick($event)',
+    '(mousedown)': 'keepWordsUnselected($event)',
   },
 })
 export class TaskLine implements OnInit {
@@ -93,6 +106,50 @@ export class TaskLine implements OnInit {
 
   protected toggleDone(): void {
     this.stateChange.emit({ done: !this.state().done });
+  }
+
+  /** "Planned" toggled by the first click of the line, unless a second click follows */
+  private pendingPlanned: ReturnType<typeof setTimeout> | undefined;
+  /** "Planned" before the first click, to restore it if that click turns out to start a double click */
+  private plannedBeforeClick: boolean | null = null;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.pendingPlanned));
+  }
+
+  /** One click on the line itself: "Planned" (after a short wait, in case it is a double click) */
+  protected onLineClick(event: MouseEvent): void {
+    if (this.locked() || this.onControl(event) || event.detail !== 1) return;
+    this.plannedBeforeClick = this.state().planned;
+    clearTimeout(this.pendingPlanned);
+    this.pendingPlanned = setTimeout(() => {
+      this.pendingPlanned = undefined;
+      this.togglePlanned();
+    }, DOUBLE_CLICK_DELAY);
+  }
+
+  /** Double click on the line itself: "Done" only (the first click does not toggle "Planned") */
+  protected onLineDoubleClick(event: MouseEvent): void {
+    if (this.locked() || this.onControl(event)) return;
+    const changes: Partial<LineState> = { done: !this.state().done };
+    if (this.pendingPlanned !== undefined) {
+      clearTimeout(this.pendingPlanned);
+      this.pendingPlanned = undefined;
+    } else if (this.plannedBeforeClick !== null && this.state().planned !== this.plannedBeforeClick) {
+      // A slow double click: its first click already toggled "Planned", put it back
+      changes.planned = this.plannedBeforeClick;
+    }
+    this.plannedBeforeClick = null;
+    this.stateChange.emit(changes);
+  }
+
+  /** A double click on the line does not select its words */
+  protected keepWordsUnselected(event: MouseEvent): void {
+    if (!this.locked() && event.detail > 1 && !this.onControl(event)) event.preventDefault();
+  }
+
+  private onControl(event: Event): boolean {
+    return !!(event.target as Element | null)?.closest(CONTROLS);
   }
 
   protected updateNote(note: string): void {
