@@ -666,6 +666,66 @@ button {
   white-space: nowrap;
 }
 
+// One item of a side panel (worksheet, invoice, client): logo or icon, title, second line, date,
+// counts or a status chip. `.is-hover` gives the hover look (design system page)
+.side-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-200);
+  width: 100%;
+  padding: var(--space-400);
+  text-align: left;
+  background: var(--color-surface);
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-200);
+  color: var(--color-on-background);
+  transition: background-color var(--transition-fast);
+
+  // Finished (invoiced worksheet, paid invoice): light grey
+  &--done {
+    background: var(--color-background);
+  }
+
+  // The item currently displayed: white with a strong border, like a checked vehicle tile
+  // (even when it is done)
+  &--selected {
+    background: var(--color-surface);
+    border: var(--stroke-strong) solid var(--color-on-background);
+    padding: calc(var(--space-400) - var(--stroke-strong) + var(--stroke-border));
+  }
+
+  // Same hover for every card (after the states above, so it wins over them)
+  &:hover,
+  &.is-hover {
+    background: var(--color-line);
+  }
+}
+
+.side-card__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-card__title {
+  font-weight: var(--font-weight-strong);
+  color: var(--color-on-background);
+}
+
+.side-card__subtitle,
+.side-card__date {
+  color: var(--color-on-background-soft);
+}
+
+// Counts or status chip under the text: icon + number; grey, blue (open invoices), red (sent)
+.side-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-100);
+  margin-top: var(--space-100);
+}
+
 // Leave room for the clear (cross) button of <app-clearable>
 .clearable > .input,
 .clearable > .textarea {

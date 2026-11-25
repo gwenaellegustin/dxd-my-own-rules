@@ -86,9 +86,9 @@
           @for (card of group.cards; track card.id) {
             <button
               type="button"
-              class="card"
-              [class.card--done]="card.done"
-              [class.card--selected]="card.id === selectedId()"
+              class="side-card"
+              [class.side-card--done]="card.done"
+              [class.side-card--selected]="card.id === selectedId()"
               [attr.aria-current]="card.id === selectedId() ? 'true' : null"
               (click)="selectCard.emit(card.id)"
             >
@@ -98,8 +98,8 @@
               } @else {
                 <app-vehicle-logo [vehicle]="card.vehicle" [lifted]="!!card.lifted" />
               }
-              <span class="card__body">
-                <span class="card__title">
+              <span class="side-card__body">
+                <span class="side-card__title">
                   @if (card.title) {
                     {{ card.title }}
                   } @else if (card.vehicle || card.client) {
@@ -109,18 +109,18 @@
                   }
                 </span>
                 @if (card.subtitle) {
-                  <span class="card__subtitle">{{ card.subtitle }}</span>
+                  <span class="side-card__subtitle">{{ card.subtitle }}</span>
                 }
                 @if (card.date) {
-                  <span class="card__date">{{ card.date | date: 'dd.MM.yyyy' }}</span>
+                  <span class="side-card__date">{{ card.date | date: 'dd.MM.yyyy' }}</span>
                 }
                 @if (card.chip; as chip) {
-                  <span class="card__badges">
+                  <span class="side-card__badges">
                     <span class="status-chip status-chip--{{ chip.status }}">{{ chip.labelKey | translate }}</span>
                   </span>
                 }
                 @if (card.badges?.length) {
-                  <span class="card__badges">
+                  <span class="side-card__badges">
                     @for (badge of card.badges; track badge.labelKey) {
                       <span
                         class="count-badge count-badge--{{ badge.tone }}"
