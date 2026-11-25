@@ -95,6 +95,9 @@
   --header-height: 64px;
   // Empty space under the content of every page (not the side panels), the height of the header
   --page-bottom-space: var(--header-height);
+  // Content of every page at most this wide (without its padding), centred in the work area; an
+  // invoice sheet is exactly this wide
+  --page-max-width: 880px;
   --panel-width: 300px; // side panels when open (left sidebar, transcript, tokens)
   --rail-width: 76px; // side panels when collapsed
   // Width of a side panel chosen by dragging its inner edge (desktop only)
@@ -109,11 +112,9 @@
   --registration-chrome-height: 500px;
   --registration-image-min-height: 160px;
   --registration-upload-height: 240px;
-  --invoice-max-width: 880px;
   --vehicle-tile-min-width: 220px;
   --vehicle-field-min-width: 200px;
   --text-key-min-width: 160px;
-  --settings-max-width: 1400px;
   --dropdown-min-width: 200px;
   --dropdown-max-height: 420px; // long lists of choices scroll (combobox, choices of a rule)
   --invoice-logo-size: 72px;

@@ -33,7 +33,7 @@ $icon-item-width: 96px; // icon with its name under it
   display: flex;
   flex-direction: column;
   gap: var(--space-400);
-  max-width: var(--settings-max-width);
+  max-width: calc(var(--page-max-width) + 2 * var(--space-400));
   margin-inline: auto;
   padding: var(--space-400);
   padding-bottom: var(--page-bottom-space);
