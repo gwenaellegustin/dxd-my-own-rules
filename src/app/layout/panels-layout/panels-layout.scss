@@ -79,4 +79,18 @@
     z-index: calc(var(--z-overlay) - 1);
     background: var(--overlay-backdrop);
   }
+
+}
+
+// Fades in when a panel is opened (not when a page shows it already open)
+@media (prefers-reduced-motion: no-preference) {
+  :host(.overlay-opening) .backdrop {
+    animation: backdrop-in var(--transition-panel);
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
 }

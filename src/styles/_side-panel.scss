@@ -11,8 +11,37 @@
 
 @mixin side-panel($side: left) {
   $border-side: right;
+  // Direction the panel comes from when it opens (-1: from the left)
+  $from: -1;
   @if $side == right {
     $border-side: left;
+    $from: 1;
+  }
+
+  // Opened by the user (class .is-opening on the host, not when a page shows it already open): it comes
+  // in from its side. Desktop: a short slide with a fade; tablet and phone, where it covers the
+  // page: from outside the window
+  @media (prefers-reduced-motion: no-preference) {
+    :host(.is-opening) .panel {
+      animation: panel-in-#{$side} var(--transition-panel);
+
+      @include bp.tablet-down {
+        animation-name: panel-slide-in-#{$side};
+      }
+    }
+  }
+
+  @keyframes panel-in-#{$side} {
+    from {
+      opacity: 0;
+      transform: translateX(calc(#{$from} * var(--space-400)));
+    }
+  }
+
+  @keyframes panel-slide-in-#{$side} {
+    from {
+      transform: translateX(#{$from * 100%});
+    }
   }
 
   :host {

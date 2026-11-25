@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
 import { TranscriptService } from '../../core/services/transcript.service';
 import { TranscriptPanel } from '../transcript-panel/transcript-panel';
 import { isDesktop } from '../../core/utils/breakpoints';
@@ -20,7 +20,12 @@ import { isDesktop } from '../../core/utils/breakpoints';
   templateUrl: './panels-layout.html',
   styleUrl: './panels-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.no-transcript]': '!withTranscript()', '[class.no-sidebar]': '!withSidebar()' },
+  host: {
+    '[class.no-transcript]': '!withTranscript()',
+    '[class.no-sidebar]': '!withSidebar()',
+    // Read here: the binding runs also while no panel is open (see overlayOpening)
+    '[class.overlay-opening]': 'overlayOpening()',
+  },
 })
 export class PanelsLayout {
   protected readonly transcript = inject(TranscriptService);
@@ -35,6 +40,12 @@ export class PanelsLayout {
   readonly sidebarOpen = signal(this.isDesktop());
   /** Shared by every page (see TranscriptService.open) */
   readonly transcriptOpen = this.transcript.open;
+
+  /** A panel was just opened over the work area (not shown open with the page): the backdrop fades in */
+  protected readonly overlayOpening = linkedSignal<boolean, boolean>({
+    source: computed(() => this.sidebarOpen() || this.transcriptOpen()),
+    computation: (open, previous) => open && !!previous && !previous.source,
+  });
 
   /** After choosing an item in the side panel: on small screens the panel covers the content */
   closeSidebarOnSmallScreens(): void {

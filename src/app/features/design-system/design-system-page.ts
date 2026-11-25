@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DesignToken, DesignTokensService } from '../../core/services/design-tokens.service';
@@ -115,6 +115,8 @@ const ICON_GROUPS: { id: string; icons: IconName[] }[] = [
   templateUrl: './design-system-page.html',
   styleUrl: './design-system-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // Read here: the binding runs also while the panel is closed (see backdropOpening)
+  host: { '[class.backdrop-opening]': 'backdropOpening()' },
 })
 export class DesignSystemPage {
   protected readonly ds = inject(DesignTokensService);
@@ -209,6 +211,11 @@ export class DesignSystemPage {
 
   /** Token panel: open on desktop, collapsed to its rail on smaller screens */
   protected readonly panelOpen = signal(isDesktop());
+  /** The panel was just opened (not open with the page): the backdrop fades in */
+  protected readonly backdropOpening = linkedSignal<boolean, boolean>({
+    source: this.panelOpen,
+    computation: (open, previous) => open && !!previous && !previous.source,
+  });
 
   /** Translation key of "when is this token used" (designSystem.usage, by name without "--") */
   protected usageKey(name: string): string {

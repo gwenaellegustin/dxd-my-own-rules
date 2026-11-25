@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DesignToken, DesignTokensService, TOKEN_GROUPS } from '../../../core/services/design-tokens.service';
 import { PanelWidthService } from '../../../core/services/panel-width.service';
@@ -19,10 +19,16 @@ const HEX_COLOR = /^#([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
   templateUrl: './token-panel.html',
   styleUrl: './token-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.is-open]': 'open()' },
+  // is-opening: read here, the binding runs also while the panel is closed (see opening)
+  host: { '[class.is-open]': 'open()', '[class.is-opening]': 'opening()' },
 })
 export class TokenPanel {
   readonly open = input(false);
+  /** Opened by the user (not when a page shows it already open): the panel slides in */
+  protected readonly opening = linkedSignal<boolean, boolean>({
+    source: this.open,
+    computation: (open, previous) => open && !!previous && !previous.source,
+  });
   readonly openChange = output<boolean>();
 
   protected readonly ds = inject(DesignTokensService);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, model, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, model, output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon, IconName } from '../icon/icon';
@@ -60,7 +60,8 @@ export interface VehicleCardGroup {
   templateUrl: './vehicle-sidebar.html',
   styleUrl: './vehicle-sidebar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.is-open]': 'open()' },
+  // is-opening: read here, the binding runs also while the panel is closed (see opening)
+  host: { '[class.is-open]': 'open()', '[class.is-opening]': 'opening()' },
 })
 export class VehicleSidebar {
   readonly titleKey = input.required<string>();
@@ -69,6 +70,11 @@ export class VehicleSidebar {
   readonly groups = input.required<VehicleCardGroup[]>();
   readonly selectedId = input<string | null>(null);
   readonly open = input(true);
+  /** Opened by the user (not when a page shows it already open): the panel slides in */
+  protected readonly opening = linkedSignal<boolean, boolean>({
+    source: this.open,
+    computation: (open, previous) => open && !!previous && !previous.source,
+  });
   /** Label of the "New…" button; no button when null */
   readonly newLabelKey = input<string | null>(null);
   readonly emptyKey = input.required<string>();

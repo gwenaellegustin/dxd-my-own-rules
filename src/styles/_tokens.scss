@@ -130,6 +130,7 @@
   --shadow-panel-head: 0 2px 6px rgb(0 0 0 / 0.2); // under the head of the side panels (the list scrolls under it)
   --overlay-backdrop: rgb(0 0 0 / 0.32);
   --transition-fast: 120ms ease; // hover, open / close
+  --transition-panel: 200ms ease-out; // a side panel or a dialog opened (and the backdrop behind it)
 
   // ---- Stacking -----------------------------------------------------------
   --z-raised: 1; // above the next elements (head of a side panel over its list)

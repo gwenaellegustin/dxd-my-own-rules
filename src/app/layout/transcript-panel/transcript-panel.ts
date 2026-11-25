@@ -6,6 +6,7 @@ import {
   computed,
   inject,
   input,
+  linkedSignal,
   output,
   signal,
   viewChild,
@@ -39,11 +40,17 @@ interface TranscriptDay {
   templateUrl: './transcript-panel.html',
   styleUrl: './transcript-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.is-open]': 'open()' },
+  // is-opening: read here, the binding runs also while the panel is closed (see opening)
+  host: { '[class.is-open]': 'open()', '[class.is-opening]': 'opening()' },
 })
 export class TranscriptPanel {
   readonly messages = input.required<TranscriptMessage[]>();
   readonly open = input(false);
+  /** Opened by the user (not when a page shows it already open): the panel slides in */
+  protected readonly opening = linkedSignal<boolean, boolean>({
+    source: this.open,
+    computation: (open, previous) => open && !!previous && !previous.source,
+  });
   readonly openChange = output<boolean>();
   /** Answers the assistant could not apply (red badge, shown even when the panel is closed) */
   readonly problemCount = input(0);

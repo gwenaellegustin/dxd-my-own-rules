@@ -489,6 +489,20 @@ $icon-item-width: 96px; // icon with its name under it
     z-index: calc(var(--z-overlay) - 1);
     background: var(--overlay-backdrop);
   }
+
+}
+
+// Fades in when a panel is opened (not when a page shows it already open)
+@media (prefers-reduced-motion: no-preference) {
+  :host(.backdrop-opening) .backdrop {
+    animation: backdrop-in var(--transition-panel);
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
 }
 
 // Phones: the rail is a toolbar above the page, as on the other pages
