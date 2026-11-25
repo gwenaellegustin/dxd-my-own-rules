@@ -290,7 +290,7 @@ button {
         font-family: 'Material Symbols Outlined';
         font-size: var(--checkbox-size);
         font-feature-settings: 'liga';
-        line-height: 1;
+        line-height: var(--line-height-single);
         color: var(--color-surface);
       }
     }
@@ -405,7 +405,7 @@ button {
     // Darker red, mixed from the error colour
     &:hover:not(:disabled),
     &.is-hover {
-      background: color-mix(in srgb, var(--color-error) 80%, var(--color-on-background));
+      background: var(--color-error-hover);
     }
   }
 }
@@ -532,7 +532,7 @@ button {
   display: flex;
   align-items: center;
   gap: var(--space-200);
-  padding: var(--space-200) var(--space-200) var(--space-200) var(--space-400);
+  padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
@@ -562,10 +562,7 @@ button {
   // Shown: strong border (like the selected card of the side panel)
   &--checked {
     border: var(--stroke-strong) solid var(--color-on-background);
-    padding: calc(var(--space-200) - var(--stroke-strong) + var(--stroke-border))
-      calc(var(--space-200) - var(--stroke-strong) + var(--stroke-border))
-      calc(var(--space-200) - var(--stroke-strong) + var(--stroke-border))
-      calc(var(--space-400) - var(--stroke-strong) + var(--stroke-border));
+    padding: calc(var(--space-400) - var(--stroke-strong) + var(--stroke-border));
   }
 
   // "Add a vehicle": a dashed tile
@@ -629,7 +626,7 @@ button {
   display: flex;
   align-items: center;
   gap: var(--space-200);
-  padding: var(--space-200) var(--space-400);
+  padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
@@ -772,7 +769,7 @@ button {
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-strong);
   font-variant-numeric: tabular-nums;
-  line-height: 1;
+  line-height: var(--line-height-single);
 }
 
 // Count with an icon (client cards of the side panel): grey, blue (open invoices), red (sent)
@@ -788,7 +785,7 @@ button {
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-strong);
   font-variant-numeric: tabular-nums;
-  line-height: 1;
+  line-height: var(--line-height-single);
 
   // Same colours as the status chips (Open / Sent) of the invoices
   &--open {

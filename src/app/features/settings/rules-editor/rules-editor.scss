@@ -107,7 +107,7 @@
 
 .trigger-menu {
   right: 0;
-  max-height: min(60dvh, 420px);
+  max-height: min(60dvh, var(--dropdown-max-height));
   overflow-y: auto;
   gap: 0;
 

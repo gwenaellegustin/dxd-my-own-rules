@@ -94,7 +94,7 @@
 
 // Answer the assistant could not apply: light red, to be checked (Ok button)
 .message--problem {
-  padding: var(--space-200);
+  padding: var(--space-400);
   background: var(--color-error-bg);
   border: var(--stroke-border) solid var(--color-error-line);
 }

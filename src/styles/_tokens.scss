@@ -29,6 +29,7 @@
   --color-success-line: color-mix(in srgb, var(--color-success) 32%, var(--color-surface));
   --color-error-bg: color-mix(in srgb, var(--color-error) 12%, var(--color-surface));
   --color-error-line: color-mix(in srgb, var(--color-error) 32%, var(--color-surface));
+  --color-error-hover: color-mix(in srgb, var(--color-error) 80%, var(--color-on-background)); // hover of the red buttons
 
   // Scrollbars: wide enough to be grabbed with the mouse, thumb on a transparent track,
   // arrow buttons at both ends
@@ -114,6 +115,7 @@
   --text-key-min-width: 160px;
   --settings-max-width: 1400px;
   --dropdown-min-width: 200px;
+  --dropdown-max-height: 420px; // long lists of choices scroll (combobox, choices of a rule)
   --invoice-logo-size: 72px;
   --invoice-totals-width: 320px;
   --invoice-number-input-width: 88px;

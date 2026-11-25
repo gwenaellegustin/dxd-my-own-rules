@@ -402,7 +402,7 @@ $wide-width: 1000px; // bento layout (12 columns)
 
 // Lines of a worksheet: to do, planned, done
 .line {
-  padding: var(--space-200) var(--space-400);
+  padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);

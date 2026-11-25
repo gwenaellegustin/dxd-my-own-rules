@@ -24,7 +24,7 @@
   left: 0;
   right: 0;
   z-index: var(--z-overlay);
-  max-height: 240px;
+  max-height: min(60dvh, var(--dropdown-max-height));
   overflow-y: auto;
   margin: 0;
   padding: var(--space-100);

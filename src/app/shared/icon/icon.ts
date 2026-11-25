@@ -77,7 +77,7 @@ export type IconSize = 'small' | 'medium' | 'large' | 'xlarge';
       height: var(--glyph-size);
       margin: calc((var(--icon-size) - var(--glyph-size)) / 2);
       font-size: var(--glyph-size);
-      line-height: 1;
+      line-height: var(--line-height-single);
       text-align: center;
       user-select: none;
     }
