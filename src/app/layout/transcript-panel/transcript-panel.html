@@ -13,7 +13,7 @@
     ></div>
     <div class="panel__head">
       <button type="button" class="panel__title" [attr.aria-expanded]="true" (click)="openChange.emit(false)">
-        <span class="icon-button icon-button--primary"><app-icon name="right-panel-close" /></span>
+        <span class="icon-button icon-button--primary"><app-icon name="right-panel-close" size="large" /></span>
         <h2 class="text-heading">{{ 'transcript.title' | translate }}</h2>
         @if (problemCount(); as count) {
           <span class="problem-badge" [attr.aria-label]="'transcript.problems' | translate: { count }">{{ count }}</span>
@@ -105,7 +105,7 @@
   </aside>
 } @else {
   <button type="button" class="rail" [attr.aria-expanded]="false" (click)="openChange.emit(true)">
-    <span class="icon-button icon-button--primary"><app-icon name="transcript" /></span>
+    <span class="icon-button icon-button--primary"><app-icon name="transcript" size="large" /></span>
     <span class="rail__label text-heading">{{ 'transcript.rail' | translate }}</span>
     <!-- Under the vertical title -->
     @if (problemCount(); as count) {

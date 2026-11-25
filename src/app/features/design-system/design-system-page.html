@@ -246,7 +246,7 @@
                     "
                   >
                     @if (variant.icon) {
-                      <app-icon [name]="variant.icon" size="large" />
+                      <app-icon [name]="variant.icon" [size]="variant.iconSize ?? 'medium'" />
                     } @else {
                       {{ 'designSystem.samples.' + variant.key | translate }}
                     }
@@ -492,7 +492,7 @@
               'designSystem.states.add' | translate
             }}</span>
             <button type="button" class="vehicle-tile vehicle-tile--add">
-              <app-icon name="plus-circle" />
+              <app-icon name="plus-circle" size="small" />
               {{ 'clients.addVehicle' | translate }}
             </button>
           </div>
@@ -554,6 +554,46 @@
       <!-- Icons -->
       <section class="tile tile--12" aria-labelledby="ds-icons">
         <h2 class="tile__title" id="ds-icons">{{ 'designSystem.groups.icons' | translate }}</h2>
+        <!-- One size per use: the rule, with an example of each -->
+        <p class="usage">{{ 'designSystem.samples.iconRule' | translate }}</p>
+        <div class="icon-sizes">
+          @for (size of iconSizes; track size) {
+            <div class="icon-size">
+              <span class="icon-size__sample">
+                @switch (size) {
+                  @case ('small') {
+                    <button type="button" class="button-subtle">
+                      <app-icon name="plus-circle" size="small" />
+                      {{ 'designSystem.samples.subtle' | translate }}
+                    </button>
+                  }
+                  @case ('medium') {
+                    <button type="button" class="icon-button" [attr.aria-label]="'designSystem.samples.icon' | translate">
+                      <app-icon name="settings" />
+                    </button>
+                  }
+                  @case ('large') {
+                    <button
+                      type="button"
+                      class="icon-button icon-button--primary"
+                      [attr.aria-label]="'designSystem.samples.iconPrimary' | translate"
+                    >
+                      <app-icon name="check" size="large" />
+                    </button>
+                  }
+                  @case ('xlarge') {
+                    <app-icon name="person" size="xlarge" />
+                  }
+                }
+              </span>
+              <span class="spec__name">
+                <code class="var-name">--icon-size-{{ size }}</code>
+                <span class="text-small text-secondary">{{ valueOf('--icon-size-' + size) }}</span>
+                <span class="usage">{{ usageKey('--icon-size-' + size) | translate }}</span>
+              </span>
+            </div>
+          }
+        </div>
         <!-- By role; each icon is named by what it does in the app (code name in the tooltip) -->
         @for (group of iconGroups; track group.id) {
           <h3 class="icons__group text-small text-strong">
@@ -562,7 +602,7 @@
           <ul class="icons">
             @for (icon of group.icons; track icon) {
               <li class="icons__item" [title]="icon">
-                <app-icon [name]="icon" size="large" />
+                <app-icon [name]="icon" />
                 <span class="icons__name">{{ 'designSystem.iconNames.' + icon | translate }}</span>
               </li>
             }

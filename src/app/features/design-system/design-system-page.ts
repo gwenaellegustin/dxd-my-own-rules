@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DesignToken, DesignTokensService } from '../../core/services/design-tokens.service';
-import { ICON_NAMES, Icon, IconName } from '../../shared/icon/icon';
+import { ICON_NAMES, Icon, IconName, IconSize } from '../../shared/icon/icon';
 import { VehicleLogo } from '../../shared/vehicle-logo/vehicle-logo';
 import { TokenPanel } from './token-panel/token-panel';
 
@@ -113,17 +113,18 @@ export class DesignSystemPage {
 
   /** Buttons shown in each state (`is-hover` gives the hover look without the pointer) */
   protected readonly buttonStates = ['normal', 'hover', 'disabled'] as const;
-  protected readonly buttonVariants: { key: string; cls: string; icon?: IconName }[] = [
+  protected readonly buttonVariants: { key: string; cls: string; icon?: IconName; iconSize?: IconSize }[] = [
     { key: 'primary', cls: 'button button--primary' },
     { key: 'secondary', cls: 'button' },
     { key: 'danger', cls: 'button button--danger' },
     { key: 'subtle', cls: 'button-subtle' },
-    { key: 'icon', cls: 'icon-button', icon: 'settings' },
-    { key: 'iconPrimary', cls: 'icon-button icon-button--primary', icon: 'check' },
+    { key: 'icon', cls: 'icon-button', icon: 'settings', iconSize: 'medium' },
+    { key: 'iconPrimary', cls: 'icon-button icon-button--primary', icon: 'check', iconSize: 'large' },
   ];
   protected readonly menuStates = ['normal', 'hover', 'selected'] as const;
   protected readonly vehicleStates = ['shown', 'hidden', 'hover'] as const;
   protected readonly rowStates = ['normal', 'hover'] as const;
+  protected readonly iconSizes = ['small', 'medium', 'large', 'xlarge'] as const;
 
   /** Colors: one family per status (text, background, border) */
   protected readonly statusFamilies = STATUS_FAMILIES.map((id) => ({

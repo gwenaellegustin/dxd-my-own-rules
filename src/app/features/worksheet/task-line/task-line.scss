@@ -65,7 +65,7 @@
 // Text field: starts at its minimum width, gets wider with its content up to the row, then
 // wraps on several rows (height: AutoGrow). "full": takes the rest of the row ("Other" lines)
 .line__text {
-  --text-min-width: calc(var(--control-width-small) + var(--icon-size-large));
+  --text-min-width: calc(var(--control-width-small) + var(--field-button-size));
   display: flex;
   max-width: 100%;
 
@@ -78,7 +78,7 @@
   }
 
   &--medium {
-    --text-min-width: calc(var(--control-width-medium) + var(--icon-size-large));
+    --text-min-width: calc(var(--control-width-medium) + var(--field-button-size));
   }
 
   &--full {

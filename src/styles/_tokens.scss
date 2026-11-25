@@ -73,10 +73,11 @@
   --opacity-disabled: 0.5;
 
   // ---- Sizes --------------------------------------------------------------
-  --icon-size-small: 16px;
-  --icon-size-medium: 20px;
-  --icon-size-large: 24px;
-  --icon-size-xlarge: 32px;
+  // One size per use (see the Icons section of the design system page)
+  --icon-size-small: 16px; // next to a text: text buttons, menus, fields, chips, badges, links
+  --icon-size-medium: 20px; // alone in an icon button (and an icon alone at the end of a row)
+  --icon-size-large: 24px; // alone in a main (black) icon button
+  --icon-size-xlarge: 32px; // stands for the item: vehicle logo, client card, photo to add
 
   --control-height: 40px;
   --control-width-small: 120px;
@@ -84,6 +85,7 @@
   --control-width-quantity: 72px;
   --textarea-height: 80px;
   --checkbox-size: 16px;
+  --field-button-size: 24px; // button inside a field (clear, hide, delete), list arrow
   --logo-size: 40px;
   --badge-size: 22px;
   --badge-font-size: 12px;

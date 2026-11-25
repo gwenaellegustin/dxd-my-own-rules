@@ -417,7 +417,8 @@
       "otherChipsUsage": "Nombre de problèmes ou d’articles (menu, transcript) ; filtre actif à retirer.",
       "linesUsage": "Lignes d’une fiche de travail et articles de la liste d’achats. Planifiée n’existe que sur les fiches.",
       "vehicleTilesUsage": "Page client : une carte par véhicule. Cochée : ses fiches et factures sont affichées ; les boutons ouvrent la carte grise ou une nouvelle fiche.",
-      "listRowsUsage": "Page client : fiches ouvertes et factures du client ; un clic l’ouvre. Gris : facture payée (de même pour les cartes du panneau latéral : fiche facturée, facture payée)."
+      "listRowsUsage": "Page client : fiches ouvertes et factures du client ; un clic l’ouvre. Gris : facture payée (de même pour les cartes du panneau latéral : fiche facturée, facture payée).",
+      "iconRule": "Une taille par usage. Petite : à côté d’un texte. Moyenne : seule dans un bouton icône. Grande : seule dans un bouton icône principal (noir). Très grande : l’image de l’élément."
     },
     "panel": {
       "title": "Tokens",
@@ -469,6 +470,11 @@
       "stroke-strong": "Anneau de focus, carte sélectionnée, onglet actif, élément montré depuis une modification du transcript, poignée de redimensionnement, zone de dépôt (pointillés).",
       "opacity-disabled": "Boutons et champs désactivés, cases des lignes faites, texte masqué de la facture.",
       "overlay-backdrop": "Derrière une boîte de dialogue, ou un panneau ouvert sur petit écran.",
+      "icon-size-small": "Icône à côté d’un texte : boutons texte, menus, champs, puces, badges, liens.",
+      "icon-size-medium": "Icône seule dans un bouton icône, ou seule au bout d’une ligne (flèche d’une ligne de lien).",
+      "icon-size-large": "Icône seule dans un bouton icône principal (noir).",
+      "icon-size-xlarge": "Image qui représente l’élément : logo du véhicule, carte client, photo à ajouter.",
+      "field-button-size": "Bouton dans un champ (effacer, masquer, supprimer) et flèche d’une liste.",
       "panel-width": "Largeur d’un panneau latéral ouvert (panneau de gauche, transcript, tokens).",
       "panel-min-width": "Largeur minimale quand on redimensionne un panneau latéral en tirant son bord.",
       "panel-max-width": "Largeur maximale quand on redimensionne un panneau latéral en tirant son bord.",

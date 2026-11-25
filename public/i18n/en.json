@@ -417,7 +417,8 @@
       "otherChipsUsage": "Number of problems or items (menu, transcript); active filter to remove.",
       "linesUsage": "Lines of a worksheet and items of the shopping list. Planned exists on worksheets only.",
       "vehicleTilesUsage": "Client page: one card per vehicle. Checked: its worksheets and invoices are shown; the buttons open the registration document or a new worksheet.",
-      "listRowsUsage": "Client page: open worksheets and invoices of the client; a click opens it. Grey: paid invoice (same for the cards of the side panel: invoiced worksheet, paid invoice)."
+      "listRowsUsage": "Client page: open worksheets and invoices of the client; a click opens it. Grey: paid invoice (same for the cards of the side panel: invoiced worksheet, paid invoice).",
+      "iconRule": "One size per use. Small: next to a text. Medium: alone in an icon button. Large: alone in a main (black) icon button. Extra large: the picture of the item."
     },
     "panel": {
       "title": "Tokens",
@@ -469,6 +470,11 @@
       "stroke-strong": "Focus ring, selected card, active tab, element shown from a transcript change, resize handle, drop area (dashed).",
       "opacity-disabled": "Disabled buttons and fields, checkboxes of done lines, hidden invoice text.",
       "overlay-backdrop": "Behind a dialog, or an open panel on small screens.",
+      "icon-size-small": "Icon next to a text: text buttons, menus, fields, chips, badges, links.",
+      "icon-size-medium": "Icon alone in an icon button, or alone at the end of a row (arrow of a link row).",
+      "icon-size-large": "Icon alone in a main (black) icon button.",
+      "icon-size-xlarge": "Picture standing for the item: vehicle logo, client card, photo to add.",
+      "field-button-size": "Button inside a field (clear, hide, delete) and arrow of a list.",
       "panel-width": "Width of an open side panel (left sidebar, transcript, tokens).",
       "panel-min-width": "Narrowest width when a side panel is resized by dragging its edge.",
       "panel-max-width": "Widest width when a side panel is resized by dragging its edge.",

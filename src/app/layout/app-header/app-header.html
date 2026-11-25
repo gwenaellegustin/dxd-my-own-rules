@@ -68,12 +68,12 @@
         <p class="account__name">{{ currentUser.firstName }} {{ currentUser.lastName }}</p>
       }
       <a class="dropdown-menu__item" role="menuitem" routerLink="/settings/worksheet" (click)="account.close()">
-        <app-icon name="settings" />
+        <app-icon name="settings" size="small" />
         {{ 'settings.title' | translate }}
       </a>
 
       <div class="dropdown-menu__item account__language">
-        <app-icon name="language" />
+        <app-icon name="language" size="small" />
         <span id="account-language">{{ 'account.language' | translate }}</span>
         <div class="language" role="group" aria-labelledby="account-language">
           @for (lang of language.languages; track lang) {

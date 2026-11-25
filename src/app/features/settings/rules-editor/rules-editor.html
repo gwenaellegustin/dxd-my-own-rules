@@ -37,7 +37,7 @@
         <p class="text-secondary">{{ 'settings.noRule' | translate }}</p>
       }
       <button type="button" class="button-subtle add-rule" (click)="addRule()">
-        <app-icon name="plus-circle" />
+        <app-icon name="plus-circle" size="small" />
         {{ 'settings.addRule' | translate }}
       </button>
     </div>
@@ -74,7 +74,7 @@
                     · {{ trigger.optionKey | translate }}
                   }
                 </span>
-                <app-icon name="chevron-down" />
+                <app-icon name="chevron-down" size="small" />
               </button>
               @if (menu.open()) {
                 @let current = triggerValue(rule);

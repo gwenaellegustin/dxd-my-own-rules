@@ -68,8 +68,8 @@ import { Icon } from '../../../shared/icon/icon';
     .hideable-field__button {
       display: grid;
       place-content: center;
-      width: var(--icon-size-large);
-      height: var(--icon-size-large);
+      width: var(--field-button-size);
+      height: var(--field-button-size);
       border-radius: var(--radius-200);
       color: var(--color-on-background-soft);
 

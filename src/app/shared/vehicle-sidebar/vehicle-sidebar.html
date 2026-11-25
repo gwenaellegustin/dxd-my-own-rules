@@ -14,7 +14,7 @@
     <div class="panel__head">
       <button type="button" class="panel__title" [attr.aria-expanded]="true" (click)="openChange.emit(false)">
         <h2 class="text-heading">{{ titleKey() | translate }}</h2>
-        <span class="icon-button icon-button--primary"><app-icon name="left-panel-close" /></span>
+        <span class="icon-button icon-button--primary"><app-icon name="left-panel-close" size="large" /></span>
         <span class="visually-hidden">{{ 'common.collapse' | translate }}</span>
       </button>
 
@@ -144,7 +144,7 @@
   </aside>
 } @else {
   <button type="button" class="rail" [attr.aria-expanded]="false" (click)="openChange.emit(true)">
-    <span class="icon-button icon-button--primary"><app-icon [name]="icon()" /></span>
+    <span class="icon-button icon-button--primary"><app-icon [name]="icon()" size="large" /></span>
     <span class="rail__label text-heading">{{ titleKey() | translate }}</span>
   </button>
 }

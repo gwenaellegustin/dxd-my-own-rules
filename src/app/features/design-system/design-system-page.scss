@@ -380,6 +380,25 @@ $wide-width: 1000px; // bento layout (12 columns)
   min-width: 0;
 }
 
+// Icon sizes: an example of each use above its name, value and use
+.icon-sizes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--vehicle-field-min-width), 1fr));
+  gap: var(--space-400);
+}
+
+.icon-size {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+.icon-size__sample {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--control-height) + var(--space-100));
+}
+
 // Lines of a worksheet: to do, planned, done
 .line {
   padding: var(--space-200) var(--space-400);
