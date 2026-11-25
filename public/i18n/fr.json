@@ -450,7 +450,7 @@
       "font-heading": "Titres et menu principal (Bungee : majuscules uniquement, une seule graisse).",
       "font-body": "Tous les autres textes.",
       "font-size-heading": "Titres des pages et des panneaux, titres des sections d’une fiche de travail.",
-      "font-size-subheading": "Titres des boîtes de dialogue et des groupes (véhicules, factures…).",
+      "font-size-subheading": "Titres des boîtes de dialogue et des groupes (véhicules, factures…), jours du transcript et de la liste d’achats, menu principal, tuiles de cette page.",
       "font-size-medium": "Texte courant, champs, boutons.",
       "font-size-small": "Aides, dates, puces et badges.",
       "font-weight-regular": "Texte courant et titres (Bungee n’a qu’une graisse).",

@@ -20,10 +20,8 @@
   min-height: 100%;
 }
 
+// Title of a day: subheading (.text-subheading), centred over its messages
 .day__date {
-  font-size: var(--font-size-medium);
-  font-weight: var(--font-weight-strong);
-  line-height: var(--line-height-body);
   text-align: center;
 }
 

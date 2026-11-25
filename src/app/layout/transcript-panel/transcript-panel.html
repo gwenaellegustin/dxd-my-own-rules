@@ -53,7 +53,7 @@
     <div #scroller class="panel__scroll" aria-live="polite" (scroll)="transcript.scrollTop = scroller.scrollTop">
       @for (day of days(); track day.date) {
         <section class="day" [class.day--today]="day.date === today">
-          <h3 class="day__date">
+          <h3 class="day__date text-subheading">
             @if (day.date === today) {
               {{ 'transcript.today' | translate }} ·
             }

@@ -4,7 +4,7 @@
 
     @for (day of days(); track day.date) {
       <section class="day" [attr.aria-label]="day.date | date: 'dd.MM.yyyy'">
-        <h2 class="day__date text-small text-secondary">{{ day.date | date: 'dd.MM.yyyy' }}</h2>
+        <h2 class="day__date text-subheading">{{ day.date | date: 'dd.MM.yyyy' }}</h2>
         @for (item of day.items; track item.id) {
           <!-- Clicking anywhere on the item checks / unchecks it, except on its links and buttons -->
           <div

@@ -450,7 +450,7 @@
       "font-heading": "Titles and main menu (Bungee: capitals only, one weight).",
       "font-body": "All other text.",
       "font-size-heading": "Page and panel titles, section titles of a worksheet.",
-      "font-size-subheading": "Titles of dialogs and of groups (vehicles, invoices…).",
+      "font-size-subheading": "Titles of dialogs and of groups (vehicles, invoices…), days of the transcript and of the shopping list, main menu, tiles of this page.",
       "font-size-medium": "Body text, fields, buttons.",
       "font-size-small": "Hints, dates, chips and badges.",
       "font-weight-regular": "Body text and titles (Bungee has a single weight).",

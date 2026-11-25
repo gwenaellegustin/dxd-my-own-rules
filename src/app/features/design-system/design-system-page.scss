@@ -98,8 +98,9 @@ $wide-width: 1000px; // bento layout (12 columns)
 .tile__title {
   margin-bottom: var(--space-100);
   font-family: var(--font-heading);
-  font-size: var(--font-size-medium);
+  font-size: var(--font-size-subheading);
   font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-heading);
 }
 
 .tile__rule {

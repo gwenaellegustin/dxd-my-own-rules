@@ -31,6 +31,7 @@
 // the title font too (Bungee has a single weight, so the current page is not bold)
 .dropdown-menu__item {
   font-family: var(--font-heading);
+  font-size: var(--font-size-subheading);
   font-weight: var(--font-weight-regular);
 }
 

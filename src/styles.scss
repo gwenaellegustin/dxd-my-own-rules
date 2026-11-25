@@ -446,6 +446,7 @@ button {
   border-radius: var(--radius-200);
   color: var(--color-on-background);
   font-family: var(--font-heading);
+  font-size: var(--font-size-subheading);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-single);
   text-decoration: none;
@@ -658,7 +659,7 @@ button {
   border-radius: var(--radius-200);
   background: var(--color-error);
   color: var(--color-surface);
-  font-size: var(--badge-font-size);
+  font-size: var(--font-size-small);
   font-weight: var(--font-weight-strong);
   font-variant-numeric: tabular-nums;
   line-height: 1;
