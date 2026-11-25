@@ -476,7 +476,7 @@ button {
 // ---------------------------------------------------------------------------
 // Segmented control: one choice among a few (damage type, car / motorcycle, EN / FR).
 // <div class="segmented" role="radiogroup"><button class="segmented__option" role="radio">
-// The icon stays grey (on a damage type it previews the mark), white on the chosen option.
+// The icon takes the colour of the text (white on the chosen option).
 // ---------------------------------------------------------------------------
 
 .segmented {
@@ -494,10 +494,6 @@ button {
   color: var(--color-on-background);
   transition: background-color var(--transition-fast);
 
-  app-icon {
-    color: var(--color-on-background-faint);
-  }
-
   &:hover,
   &.is-hover {
     background: var(--color-line);
@@ -507,10 +503,6 @@ button {
   &--active:hover {
     background: var(--color-on-background);
     color: var(--color-surface);
-
-    app-icon {
-      color: var(--color-surface);
-    }
   }
 
   &:disabled {
