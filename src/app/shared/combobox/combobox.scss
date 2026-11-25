@@ -22,7 +22,7 @@
   color: var(--color-on-background);
 
   &:hover {
-    background: var(--color-line);
+    background: var(--color-neutral);
   }
 }
 
@@ -53,6 +53,6 @@
 
   &:hover,
   &--active {
-    background: var(--color-line);
+    background: var(--color-neutral);
   }
 }

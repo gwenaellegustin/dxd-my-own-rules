@@ -185,7 +185,7 @@
     tr {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      border-bottom: var(--stroke-border) solid var(--color-line);
+      border-bottom: var(--stroke-border) solid var(--color-neutral);
     }
 
     td.items__description,
@@ -242,7 +242,7 @@
 
   // Price still 0: grey background, to be noticed and filled in
   &--to-fill {
-    background: var(--color-line);
+    background: var(--color-neutral);
   }
 }
 

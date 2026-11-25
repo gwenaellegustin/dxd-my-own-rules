@@ -463,7 +463,7 @@
       "color-on-background-soft": "Texte secondaire (aides, dates, compteurs) et survol des boutons foncés.",
       "color-on-background-faint": "Textes d’exemple, code de langue dans un champ, valeurs vides, clients masqués, marques de la légende des dégâts.",
       "color-surface": "Éléments : cartes, lignes, panneaux, en-tête, champs, menus, boîtes de dialogue. Texte sur les boutons foncés et rouges.",
-      "color-line": "Survol et élément sélectionné, séparateurs dans un élément, notices (client archivé, prix à remplir), curseur des barres de défilement.",
+      "color-neutral": "Fond gris : survol et élément sélectionné, notices (client archivé, prix à remplir), curseur des barres de défilement ; séparateurs dans un élément.",
       "color-info": "Lignes planifiées, factures ouvertes.",
       "color-success": "Lignes faites, factures payées, articles commandés.",
       "color-error": "Problèmes du transcript et badges de notification, factures envoyées et en retard, marques de dégâts, boutons de suppression.",

@@ -74,7 +74,7 @@ import { Icon } from '../../../shared/icon/icon';
       color: var(--color-on-background-soft);
 
       &:hover {
-        background: var(--color-line);
+        background: var(--color-neutral);
         color: var(--color-on-background);
       }
     }

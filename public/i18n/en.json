@@ -463,7 +463,7 @@
       "color-on-background-soft": "Secondary text (hints, dates, counts) and hover of dark buttons.",
       "color-on-background-faint": "Placeholders, language code inside a field, empty values, clients not shown, damage legend marks.",
       "color-surface": "Elements: cards, lines, panels, header, fields, menus, dialogs. Text on dark and red buttons.",
-      "color-line": "Hover and selected item, dividers inside an element, notices (archived client, price to fill), scrollbar thumb.",
+      "color-neutral": "Grey background: hover and selected item, notices (archived client, price to fill), scrollbar thumb; dividers inside an element.",
       "color-info": "Planned lines, open invoices.",
       "color-success": "Done lines, paid invoices, ordered items.",
       "color-error": "Transcript problems and notification badges, sent and overdue invoices, damage marks, delete buttons.",

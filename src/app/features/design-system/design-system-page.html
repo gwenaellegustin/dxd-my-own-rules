@@ -27,10 +27,10 @@
                 *ngTemplateOutlet="schemeTitle; context: { $implicit: '--color-surface' }"
               />
               <ng-container *ngTemplateOutlet="inkList; context: { $implicit: false }" />
-              <!-- Line: a divider inside the surface -->
-              <div class="scheme__line">
+              <!-- Neutral: a grey background on the surface (hover, selected item, notice) -->
+              <div class="scheme__neutral">
                 <ng-container
-                  *ngTemplateOutlet="schemeTitle; context: { $implicit: '--color-line' }"
+                  *ngTemplateOutlet="schemeTitle; context: { $implicit: '--color-neutral' }"
                 />
               </div>
             </div>

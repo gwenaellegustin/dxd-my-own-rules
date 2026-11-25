@@ -105,7 +105,7 @@ $icon-item-width: 96px; // icon with its name under it
   width: 100%;
   margin: 0;
   border: 0;
-  border-top: var(--stroke-border) solid var(--color-line);
+  border-top: var(--stroke-border) solid var(--color-neutral);
 }
 
 // One spec per row: name, value, sample on the right
@@ -208,9 +208,11 @@ $icon-item-width: 96px; // icon with its name under it
   }
 }
 
-.scheme__line {
-  padding-top: var(--space-200);
-  border-top: var(--stroke-strong) solid var(--color-line);
+// Neutral: a grey block on the surface, like a hovered or selected item
+.scheme__neutral {
+  padding: var(--space-200);
+  background: var(--color-neutral);
+  border-radius: var(--radius-200);
 }
 
 .inks {

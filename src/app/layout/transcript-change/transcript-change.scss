@@ -23,7 +23,7 @@
 
   &:hover {
     border-color: var(--color-on-background);
-    background: var(--color-line);
+    background: var(--color-neutral);
 
     .change__show {
       color: var(--color-on-background);
@@ -150,7 +150,7 @@
 
   &:hover {
     border-color: var(--color-on-background);
-    background: var(--color-line);
+    background: var(--color-neutral);
   }
 
   &:disabled {
