@@ -421,7 +421,7 @@
       "statusChipsUsage": "Info: open invoice. Success: paid invoice, ordered item. Error: sent invoice; “Overdue” once the payment term has passed.",
       "countBadgesUsage": "Client cards of the side panel: worksheets, open invoices, sent invoices.",
       "otherChipsUsage": "Number of problems or items (menu, transcript); active filter to remove.",
-      "linesUsage": "Lines of a worksheet and items of the shopping list. Planned exists on worksheets only.",
+      "linesUsage": "Lines of a worksheet and items of the shopping list. Planned exists on worksheets only: a click on the line plans it, a double click marks it done.",
       "vehicleTilesUsage": "Client page: one card per vehicle. Checked: its worksheets and invoices are shown; the buttons open the registration document or a new worksheet.",
       "listRowsUsage": "Client page: open worksheets and invoices of the client; a click opens it. Grey: paid invoice (same for the cards of the side panel: invoiced worksheet, paid invoice).",
       "sideCardsUsage": "One item of the left panel (worksheet, invoice, client). Selected: the item shown, white with a strong border (even when done). Done: light grey.",

@@ -421,7 +421,7 @@
       "statusChipsUsage": "Info : facture ouverte. Success : facture payée, article commandé. Error : facture envoyée ; « En retard » une fois le délai de paiement passé.",
       "countBadgesUsage": "Cartes client du panneau latéral : fiches, factures ouvertes, factures envoyées.",
       "otherChipsUsage": "Nombre de problèmes ou d’articles (menu, transcript) ; filtre actif à retirer.",
-      "linesUsage": "Lignes d’une fiche de travail et articles de la liste d’achats. Planifiée n’existe que sur les fiches.",
+      "linesUsage": "Lignes d’une fiche de travail et articles de la liste d’achats. Planifiée n’existe que sur les fiches : un clic sur la ligne la planifie, un double clic la marque faite.",
       "vehicleTilesUsage": "Page client : une carte par véhicule. Cochée : ses fiches et factures sont affichées ; les boutons ouvrent la carte grise ou une nouvelle fiche.",
       "listRowsUsage": "Page client : fiches ouvertes et factures du client ; un clic l’ouvre. Gris : facture payée (de même pour les cartes du panneau latéral : fiche facturée, facture payée).",
       "sideCardsUsage": "Un élément du panneau de gauche (fiche, facture, client). Sélectionnée : l’élément affiché, blanche avec une bordure forte (même terminée). Terminée : gris clair.",
