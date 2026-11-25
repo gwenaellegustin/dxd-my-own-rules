@@ -28,24 +28,25 @@
 
   // ---- Colors: status (race flags) ----------------------------------------
   // Info = yellow flag: planned line, open invoice; success = green flag: done line, paid
-  // invoice; error = red flag: problems, sent invoice, damage marks. Only the main colour is
-  // set; the others are mixed from it, so they follow when it changes:
-  // - background: with the surface, as light as --color-background (OKLCH lightness ≈ 0.94);
-  // - border: with the surface, as dark as the borders of the other elements (≈ 0.84);
-  // - text: with the ink, dark enough to read on the background (contrast ≥ 4.5:1). The yellow
-  //   is too light to be read as it is.
-  --color-info: #eeca38;
-  --color-success: #386d4f;
-  --color-error: #c44735;
-  --color-info-bg: color-mix(in srgb, var(--color-info) 36%, var(--color-surface));
+  // invoice; error = red flag: problems, sent invoice, damage marks. Bright, like the flags. Only
+  // the main colour is set; the others are mixed from it, so they follow when it changes:
+  // - background: with the surface, a clear tint of the flag without being loud (40% yellow, 28%
+  //   green, 24% red), black text easy to read on it (contrast ≥ 13:1);
+  // - border: the colour itself;
+  // - text: with the ink, dark enough to read on the background (contrast ≥ 4.5:1).
+  // White text on the red (badges, delete buttons): contrast 4.7:1.
+  --color-info: #f7cd16;
+  --color-success: #1f8f4b;
+  --color-error: #e2231a;
+  --color-info-bg: color-mix(in srgb, var(--color-info) 40%, var(--color-surface));
   --color-info-line: var(--color-info);
   --color-info-text: color-mix(in srgb, var(--color-info) 40%, var(--color-on-background));
-  --color-success-bg: color-mix(in srgb, var(--color-success) 12%, var(--color-surface));
-  --color-success-line: color-mix(in srgb, var(--color-success) 33%, var(--color-surface));
-  --color-success-text: var(--color-success);
-  --color-error-bg: color-mix(in srgb, var(--color-error) 13%, var(--color-surface));
-  --color-error-line: color-mix(in srgb, var(--color-error) 36%, var(--color-surface));
-  --color-error-text: color-mix(in srgb, var(--color-error) 85%, var(--color-on-background));
+  --color-success-bg: color-mix(in srgb, var(--color-success) 28%, var(--color-surface));
+  --color-success-line: var(--color-success);
+  --color-success-text: color-mix(in srgb, var(--color-success) 55%, var(--color-on-background));
+  --color-error-bg: color-mix(in srgb, var(--color-error) 24%, var(--color-surface));
+  --color-error-line: var(--color-error);
+  --color-error-text: color-mix(in srgb, var(--color-error) 65%, var(--color-on-background));
   --color-error-hover: color-mix(in srgb, var(--color-error) 80%, var(--color-on-background)); // hover of the red buttons
 
   // Scrollbars: wide enough to be grabbed with the mouse, thumb on a transparent track,
