@@ -73,6 +73,24 @@ button {
   outline-offset: var(--space-050);
 }
 
+// Corners of every element with a radius, like the current page of the menu and the section
+// titles: all four cut on the diagonal (across the radius of the corner, --corner-cut-shape:
+// straight with soft folds). The outline, the background and the focus ring follow the cut. Real
+// circles stay round (radio buttons, logo). Browsers without corner-shape keep rounded corners.
+*,
+*::before,
+*::after {
+  corner-shape: var(--corner-cut-shape);
+}
+
+// The menu (header and dropdown menus) keeps its own corners: top left and bottom right cut, the
+// two others rounded, like the current page
+app-header *,
+.dropdown-menu,
+.dropdown-menu * {
+  corner-shape: var(--corner-cut-shape) round var(--corner-cut-shape) round;
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px;
@@ -305,12 +323,14 @@ button {
 
   input[type='radio'] {
     border-radius: var(--radius-circle);
+    corner-shape: round;
 
     &:checked::after {
       content: '';
       width: calc(var(--checkbox-size) / 2);
       height: calc(var(--checkbox-size) / 2);
       border-radius: var(--radius-circle);
+      corner-shape: round;
       background: var(--color-on-background);
     }
   }

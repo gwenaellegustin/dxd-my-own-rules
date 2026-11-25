@@ -506,6 +506,7 @@
       "radius-pill": "Capsules : puces, badges, champs de recherche, jours du transcript, curseur des barres de défilement.",
       "radius-circle": "Vrais cercles : boutons radio, logo de l’entreprise.",
       "corner-cut": "Coins cassés des menus (pastilles des pages, menus déroulants) : longueur de la coupe en diagonale sur chaque côté.",
+      "corner-cut-shape": "Coins de tous les éléments arrondis (champs, boutons, cartes, lignes, puces, boîtes de dialogue) : les quatre coupés en diagonale sur leur rayon, avec cette forme (0 : droit, 1 : rond ; un peu au-dessus de 0 : droit aux plis adoucis, comme le menu).",
       "stroke-border": "Contour de tous les éléments et champs.",
       "stroke-strong": "Anneau de focus, carte sélectionnée, onglet actif, élément montré depuis une modification du transcript, poignée de redimensionnement, zone de dépôt (pointillés).",
       "opacity-disabled": "Boutons et champs désactivés, cases des lignes faites, texte masqué de la facture.",

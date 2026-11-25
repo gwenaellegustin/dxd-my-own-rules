@@ -91,6 +91,10 @@
   --radius-pill: 999px; // capsules: chips, badges, search field, scrollbar thumb
   --radius-circle: 50%;
   --corner-cut: 14px; // broken corners of the menus: length of the cut along each side
+  // Every other rounded element has the same corners (styles.scss): all four cut on the diagonal
+  // across the radius, with this shape (0: straight, 1: round; a little above 0: straight with soft
+  // folds, like the menu)
+  --corner-cut-shape: superellipse(0.25);
 
   // ---- Strokes ------------------------------------------------------------
   --stroke-border: 1px;

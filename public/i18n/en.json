@@ -506,6 +506,7 @@
       "radius-pill": "Capsules: chips, badges, search fields, days of the transcript, scrollbar thumb.",
       "radius-circle": "Real circles: radio buttons, company logo.",
       "corner-cut": "Broken corners of the menus (pills of the pages, dropdown menus): length of the diagonal cut along each side.",
+      "corner-cut-shape": "Corners of every rounded element (fields, buttons, cards, lines, chips, dialogs): all four cut on the diagonal across their radius, with this shape (0: straight, 1: round; a little above 0: straight with soft folds, like the menu).",
       "stroke-border": "Outline of every element and field.",
       "stroke-strong": "Focus ring, selected card, active tab, element shown from a transcript change, resize handle, drop area (dashed).",
       "opacity-disabled": "Disabled buttons and fields, checkboxes of done lines, hidden invoice text.",
