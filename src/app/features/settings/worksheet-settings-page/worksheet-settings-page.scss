@@ -46,11 +46,13 @@
   gap: var(--space-400);
 }
 
+// Like the worksheet: the lines of a section form one block under its title, no space
+// between them, one outline between two lines; rounded corners only around the block (top of the
+// first line, bottom of the last one)
 .section,
 .section__lines {
   display: flex;
   flex-direction: column;
-  gap: var(--space-200);
 }
 
 // Lines tab: editor of the selected line | the worksheet preview; stacked when the page is narrow
@@ -85,6 +87,28 @@
 
 .line-slot {
   position: relative;
+  margin-top: calc(-1 * var(--stroke-border));
+
+  .preview-line,
+  app-task-line {
+    border-radius: 0;
+  }
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:first-child .preview-line,
+  &:first-child app-task-line {
+    border-top-left-radius: var(--radius-300);
+    border-top-right-radius: var(--radius-300);
+  }
+
+  &:last-child .preview-line,
+  &:last-child app-task-line {
+    border-bottom-left-radius: var(--radius-300);
+    border-bottom-right-radius: var(--radius-300);
+  }
 }
 
 // A line of the preview: the worksheet line as it will look (not editable), selectable and draggable
@@ -96,17 +120,20 @@
     cursor: grab;
   }
 
+  // Above the next lines, which overlap its edges: the outline stays whole
   &[role='button']:hover,
   &:focus-visible {
+    z-index: var(--z-raised);
     outline: var(--stroke-strong) solid var(--color-on-background);
   }
 
   &--selected,
   &--selected:hover {
+    z-index: var(--z-raised);
     outline: var(--stroke-strong) solid var(--color-on-background);
   }
 
-  // Dragging: the dragged line is dimmed, a bar shows where it goes (in the gap)
+  // Dragging: the dragged line is dimmed, a bar shows where it goes (on the outline between two lines)
   &.dragging {
     opacity: var(--opacity-disabled);
   }
@@ -121,20 +148,21 @@
     background: var(--color-on-background);
   }
 
-  // In the middle of the gap above / under the line
+  // On the outline above / under the line
   &.drop-before::before {
-    top: calc(var(--space-100) / -1 - var(--stroke-border));
+    top: calc(-1 * var(--stroke-strong) / 2);
   }
 
   &.drop-after::after {
-    bottom: calc(var(--space-100) / -1 - var(--stroke-border));
+    bottom: calc(-1 * var(--stroke-strong) / 2);
   }
 }
 
-// "+" centred in the gap above a line (or under the last one), shown on hover / keyboard focus
+// "+" centred on the outline above a line (or under the last one), shown on hover / keyboard focus
 .insert {
   position: absolute;
-  top: calc(-1 * var(--space-200) / 2);
+  z-index: var(--z-raised);
+  top: 0;
   left: 50%;
   transform: translate(-50%, -50%);
   display: grid;
@@ -145,7 +173,7 @@
   opacity: 0;
 
   &--after {
-    top: calc(100% + var(--space-200) / 2);
+    top: 100%;
   }
 
   .line-slot:hover > &,

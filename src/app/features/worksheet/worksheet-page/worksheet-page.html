@@ -68,7 +68,7 @@
         @let collapsed = isCollapsed(section.id);
         <section class="section" [class.section--collapsed]="collapsed">
           <!-- Only the title and its arrow toggle the section, not the whole row -->
-          <div class="section__header section-rule">
+          <div class="section__header section-rule" [class.section-rule--alone]="collapsed">
             <h2 class="section__heading">
               <button
                 type="button"
