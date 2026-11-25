@@ -52,12 +52,23 @@
   // Scrollbar always shown: the content keeps its width whether it scrolls or not, so it does
   // not move when another worksheet / invoice is selected
   overflow-y: scroll;
-  // Ruled like a timing sheet: thin lines on the background, scrolling with the content
+  // Ruled like a timing sheet: large squares, faint lines and a small cross on each intersection,
+  // scrolling with the content. Each arm of a cross is a quarter of a conic gradient (a small
+  // rectangle at the corner of each square), moved back by an arm so it is centred on the line
+  $arm: var(--grid-cross);
+  $line: var(--stroke-border);
   background-color: var(--color-background);
   background-image:
-    linear-gradient(var(--color-grid) var(--stroke-border), transparent var(--stroke-border)),
-    linear-gradient(90deg, var(--color-grid) var(--stroke-border), transparent var(--stroke-border));
+    conic-gradient(from 270deg at calc(2 * #{$arm}) #{$line}, var(--color-grid-cross) 0 90deg, transparent 0),
+    conic-gradient(from 270deg at #{$line} calc(2 * #{$arm}), var(--color-grid-cross) 0 90deg, transparent 0),
+    linear-gradient(var(--color-grid) #{$line}, transparent #{$line}),
+    linear-gradient(90deg, var(--color-grid) #{$line}, transparent #{$line});
   background-size: var(--grid-size) var(--grid-size);
+  background-position:
+    calc(-1 * #{$arm}) 0,
+    0 calc(-1 * #{$arm}),
+    0 0,
+    0 0;
   background-attachment: local;
   // Children adapt to the space left by the side panels, not to the viewport
   container: work-area / inline-size;

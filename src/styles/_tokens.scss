@@ -17,7 +17,9 @@
   --color-surface: #ffffff; // elements (cards, panels, header, dialogs), text on dark buttons
   --color-neutral: #cfcfcf; // grey background: hover, selected item, notices, scrollbar thumb; dividers inside an element
   // Lines of the grid ruled on the work area, like a timing sheet
-  --color-grid: color-mix(in srgb, var(--color-on-background) 6%, var(--color-background));
+  --color-grid: color-mix(in srgb, var(--color-on-background) 4%, var(--color-background));
+  // Small cross on each intersection of the grid, darker than its lines
+  --color-grid-cross: color-mix(in srgb, var(--color-on-background) 22%, var(--color-background));
 
   // ---- Colors: dark areas (header, menus) ---------------------------------
   // Inside them the neutrals are swapped (see the inverse mixin of _shapes.scss)
@@ -121,7 +123,8 @@
 
   // ---- Layout -------------------------------------------------------------
   --header-height: 64px;
-  --grid-size: 24px; // squares of the grid ruled on the work area
+  --grid-size: 160px; // squares of the grid ruled on the work area
+  --grid-cross: 8px; // arms of the cross on each intersection of the grid (from its centre)
   // Empty space under the content of every page (not the side panels), the height of the header
   --page-bottom-space: var(--header-height);
   // Content of every page at most this wide (without its padding), centred in the work area; an
