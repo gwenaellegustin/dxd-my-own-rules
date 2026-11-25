@@ -98,9 +98,9 @@
     margin-top: 0;
   }
 
+  // Under the title tab on the left: only its top right corner is rounded
   &:first-child .preview-line,
   &:first-child app-task-line {
-    border-top-left-radius: var(--radius-300);
     border-top-right-radius: var(--radius-300);
   }
 

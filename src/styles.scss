@@ -1228,11 +1228,11 @@ select.input {
 }
 
 // ---------------------------------------------------------------------------
-// Section title of a worksheet (worksheet page, its preview in the settings): a dark tab standing
-// right on the first line of the section, its feet flowing into the top outline of the line like
-// a drop (liquid joins). It covers that outline where it stands (moved down by one outline, above
-// the line), and it is indented by two corners: its left foot stands past the rounded corner of
-// the line. `--alone`: nothing under it (collapsed section), the tab stands on a rule.
+// Section title of a worksheet (worksheet page, its preview in the settings): a dark tab with the
+// shape of the current page of the menu, standing right on the first line of the section, on its
+// left edge (the first line has no rounded corner under it), its step flowing into the top outline
+// of the line. It covers that outline where it stands (moved down by one outline, above the line).
+// `--alone`: nothing under it (collapsed section), the tab stands on a rule.
 // <div class="section-rule"><h2 class="section-tab text-heading">…</h2> [summary]</div>
 // ---------------------------------------------------------------------------
 
@@ -1243,7 +1243,6 @@ select.input {
   align-items: flex-end;
   flex-wrap: wrap;
   gap: var(--space-200) var(--space-400);
-  padding-left: calc(2 * var(--radius-300));
   margin-bottom: calc(-1 * var(--stroke-border));
 
   &--alone {
@@ -1252,17 +1251,16 @@ select.input {
   }
 }
 
+// The shape of the current page of the menu (title-tab of _shapes.scss): cut top left corner,
+// rounded top right one, a rounded step down to the line. A little more room on the left for the cut
 .section-tab {
-  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--space-200);
   margin: 0;
-  padding: var(--space-200) var(--space-400);
-  border-radius: var(--radius-300) var(--radius-300) 0 0;
-  background: var(--color-on-background);
+  padding: var(--space-200) var(--space-400) var(--space-200) calc(var(--space-400) + var(--space-100));
   color: var(--color-surface);
-  @include shapes.liquid-feet(var(--color-on-background));
+  @include shapes.title-tab(var(--color-on-background));
 }
 
 // ---------------------------------------------------------------------------

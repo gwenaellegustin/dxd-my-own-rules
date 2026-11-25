@@ -134,3 +134,51 @@ $_fold: 0.35;
     background: radial-gradient(circle at 100% 0, transparent calc(#{$radius} - 0.5px), #{$color} #{$radius});
   }
 }
+
+// ---- Title tab ----------------------------------------------------------------
+// Title standing on a line or a rule (sections of a worksheet), with the shape of the current page
+// of the menu: its top left corner cut on the diagonal (folds slightly rounded), its top right
+// corner rounded. Its left side goes on the left edge of what it stands on; on the right it steps
+// down to the line in a slope whose two folds are rounded (no angle): it flows into the line.
+// Drawn by the ::before of the tab (position: relative), behind its content, wider than it by the
+// step on the right: clipping the tab itself would cut its focus ring.
+@mixin title-tab($color) {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    // Step: down by $step, out by $step (45°), then its rounded fold flows into the line
+    $step: var(--radius-300);
+    $fold: calc(0.35 * #{$step});
+    $cut: var(--corner-cut);
+    $round: var(--radius-200);
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: $color;
+    pointer-events: none;
+    // Without shape(): the top right corner rounded, no step
+    border-radius: 0 $round 0 0;
+
+    @supports (clip-path: shape(from 0 0, line to 100% 0)) {
+      right: calc(-1 * (#{$step} + #{$fold}));
+      border-radius: 0;
+      clip-path: shape(
+        from 0 100%,
+        line to 0 calc(1.35 * #{$cut}),
+        curve to calc(0.247 * #{$cut}) calc(0.753 * #{$cut}) with 0 #{$cut},
+        line to calc(0.753 * #{$cut}) calc(0.247 * #{$cut}),
+        curve to calc(1.35 * #{$cut}) 0 with #{$cut} 0,
+        line to calc(100% - #{$step} - #{$fold} - #{$round}) 0,
+        curve to calc(100% - #{$step} - #{$fold}) #{$round} with calc(100% - #{$step} - #{$fold}) 0,
+        line to calc(100% - #{$step} - #{$fold}) calc(100% - #{$step} - #{$fold}),
+        curve to calc(100% - #{$step} - 0.293 * #{$fold}) calc(100% - #{$step} + 0.707 * #{$fold})
+          with calc(100% - #{$step} - #{$fold}) calc(100% - #{$step}),
+        line to calc(100% - 1.707 * #{$fold}) calc(100% - 0.707 * #{$fold}),
+        curve to 100% 100% with calc(100% - #{$fold}) 100%,
+        close
+      );
+    }
+  }
+}

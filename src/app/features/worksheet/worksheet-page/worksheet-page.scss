@@ -66,9 +66,9 @@
     margin-top: calc(-1 * var(--stroke-border));
     border-radius: 0;
 
+    // Under the title tab on the left: only its top right corner is rounded
     &:first-child {
       margin-top: 0;
-      border-top-left-radius: var(--radius-300);
       border-top-right-radius: var(--radius-300);
     }
 
