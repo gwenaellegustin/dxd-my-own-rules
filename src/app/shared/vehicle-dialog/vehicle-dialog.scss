@@ -45,36 +45,9 @@
   transition: transform var(--transition-fast);
 }
 
-// Upload area shown when the vehicle has no registration document yet
+// No document yet: global .drop-zone (styles.scss), as high as a photo
 .registration__upload {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-200);
   min-height: var(--registration-upload-height);
-  padding: var(--space-400);
-  border: var(--stroke-strong) dashed var(--color-on-background);
-  border-radius: var(--radius-200);
-  color: var(--color-on-background);
-  text-align: center;
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
-
-  &:hover,
-  &--over {
-    background: var(--color-line);
-  }
-
-  // The file input is visually hidden: show the focus on the area
-  &:has(input:focus-visible) {
-    outline: var(--stroke-strong) solid var(--color-on-background);
-    outline-offset: var(--space-050);
-  }
-
-  app-icon {
-    color: var(--color-on-background);
-  }
 }
 
 // The note stays small so the document keeps the space (it scrolls inside after a few lines)

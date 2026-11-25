@@ -36,28 +36,7 @@
 
 // Car / motorcycle switch: global .segmented (styles.scss)
 
-.tabs {
-  display: flex;
-  gap: var(--space-400);
-  border-bottom: var(--stroke-border) solid var(--color-on-background);
-}
-
-.tabs__tab {
-  padding: var(--space-200) 0;
-  margin-bottom: calc(-1 * var(--stroke-border));
-  border-bottom: var(--stroke-strong) solid transparent;
-  color: var(--color-on-background-soft);
-
-  &:hover {
-    color: var(--color-on-background);
-  }
-
-  &--active {
-    border-bottom-color: var(--color-on-background);
-    color: var(--color-on-background);
-    font-weight: var(--font-weight-strong);
-  }
-}
+// Tabs: global .tabs (styles.scss)
 
 // The preview has the spacing of the worksheet page
 .panel,

@@ -6,6 +6,14 @@ import { ICON_NAMES, Icon, IconName, IconSize } from '../../shared/icon/icon';
 import { VehicleLogo } from '../../shared/vehicle-logo/vehicle-logo';
 import { isDesktop } from '../../core/utils/breakpoints';
 import { TokenPanel } from './token-panel/token-panel';
+import { Combobox } from '../../shared/combobox/combobox';
+import { Clearable } from '../../shared/clearable/clearable';
+import { DateFilter } from '../../shared/date-filter/date-filter';
+import { HideableField } from '../invoice/hideable-field/hideable-field';
+import { TranscriptChangeCard } from '../../layout/transcript-change/transcript-change';
+import { TranscriptChange } from '../../core/models/transcript.model';
+import { WorksheetStore } from '../../core/services/worksheet.store';
+import { WorksheetSettingsStore } from '../../core/services/worksheet-settings.store';
 
 const STATUS_FAMILIES = ['info', 'success', 'error'] as const;
 
@@ -94,13 +102,27 @@ const ICON_GROUPS: { id: string; icons: IconName[] }[] = [
  */
 @Component({
   selector: 'app-design-system-page',
-  imports: [NgTemplateOutlet, TranslatePipe, Icon, VehicleLogo, TokenPanel],
+  imports: [
+    NgTemplateOutlet,
+    TranslatePipe,
+    Icon,
+    VehicleLogo,
+    TokenPanel,
+    Combobox,
+    Clearable,
+    DateFilter,
+    HideableField,
+    TranscriptChangeCard,
+  ],
   templateUrl: './design-system-page.html',
   styleUrl: './design-system-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DesignSystemPage {
   protected readonly ds = inject(DesignTokensService);
+  // Real data for the transcript changes (a worksheet and one of its lines)
+  private readonly worksheets = inject(WorksheetStore);
+  private readonly settings = inject(WorksheetSettingsStore);
 
   private readonly tokens = this.ds.tokens;
   /** Icons by role; an icon not classified yet is shown in "Others" */
@@ -109,20 +131,65 @@ export class DesignSystemPage {
     { id: 'other', icons: ICON_NAMES.filter((n) => !ICON_GROUPS.some((g) => g.icons.includes(n))) },
   ].filter((group) => group.icons.length > 0);
 
-  /** Buttons shown in each state (`is-hover` gives the hover look without the pointer) */
+  /**
+   * Buttons shown in each state (`is-hover` gives the hover look without the pointer).
+   * `key`: text of the button (and name of the row, unless `row` is set); `lead`: small icon
+   * before the text; `withIcon`: same button as the row above, shown with its icon ("+ icon"
+   * row); `icon`: button with only an icon, at the size of the icon rule (medium, large in a
+   * main icon button).
+   */
   protected readonly buttonStates = ['normal', 'hover', 'disabled'] as const;
-  protected readonly buttonVariants: { key: string; cls: string; icon?: IconName; iconSize?: IconSize }[] = [
+  protected readonly buttonVariants: {
+    key: string;
+    row?: string;
+    cls: string;
+    lead?: IconName;
+    withIcon?: boolean;
+    icon?: IconName;
+    iconSize?: IconSize;
+  }[] = [
     { key: 'primary', cls: 'button button--primary' },
+    { key: 'primary', cls: 'button button--primary', lead: 'send', withIcon: true },
     { key: 'secondary', cls: 'button' },
-    { key: 'danger', cls: 'button button--danger' },
-    { key: 'subtle', cls: 'button-subtle' },
+    { key: 'secondary', cls: 'button', lead: 'pdf', withIcon: true },
+    // Red only to confirm a deletion (the delete buttons of the pages are secondary)
+    { key: 'danger', row: 'deleteConfirm', cls: 'button button--danger' },
+    // Always with an icon in the app (add a line, a rule, a vehicle…)
+    { key: 'subtle', cls: 'button-subtle', lead: 'plus-circle' },
     { key: 'icon', cls: 'icon-button', icon: 'settings', iconSize: 'medium' },
     { key: 'iconPrimary', cls: 'icon-button icon-button--primary', icon: 'check', iconSize: 'large' },
   ];
   protected readonly menuStates = ['normal', 'hover', 'selected'] as const;
   protected readonly vehicleStates = ['shown', 'hidden', 'hover'] as const;
   protected readonly rowStates = ['normal', 'hover'] as const;
+  protected readonly sideCardStates = ['normal', 'hover', 'selected', 'cardDone'] as const;
   protected readonly iconSizes = ['small', 'medium', 'large', 'xlarge'] as const;
+
+  /** Samples of the controls: they work, but change nothing in the app */
+  protected readonly segmentedValue = signal<'car' | 'motorcycle'>('car');
+  protected readonly tabValue = signal(1);
+  protected readonly comboValue = signal('');
+  protected readonly comboOptions = ['Fabrice Favre', 'Matthieu Berclaz', 'Patrice Petit'];
+  protected readonly dateValue = signal<string | null>(null);
+  protected readonly noteHidden = signal(false);
+  protected readonly noteText = signal('Sans les bougies');
+
+  /** Two changes of an answer, on the first worksheet: a value, and a line planned → done */
+  protected readonly changeSamples = computed<TranscriptChange[]>(() => {
+    const worksheet = this.worksheets.worksheets()[0];
+    const lineKey = this.settings.allSections()[0]?.lines.find((line) => line.titleKey)?.titleKey;
+    if (!worksheet || !lineKey) return [];
+    const target = { type: 'worksheet' as const, id: worksheet.id };
+    return [
+      { target, area: '', labelKey: 'worksheet.kilometers', before: "61'000", after: "61'240" },
+      { target, area: '', labelKey: lineKey, before: '', after: '', statusBefore: 'planned', statusAfter: 'done' },
+    ];
+  });
+
+  constructor() {
+    this.worksheets.load();
+    this.settings.load();
+  }
 
   /** Colors: one family per status (text, background, border) */
   protected readonly statusFamilies = STATUS_FAMILIES.map((id) => ({

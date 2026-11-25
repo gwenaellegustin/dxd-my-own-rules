@@ -88,8 +88,8 @@
       } @else {
         <!-- No document yet: drop a photo or click to choose one (kept in memory, no backend yet) -->
         <label
-          class="registration__upload"
-          [class.registration__upload--over]="dragOver()"
+          class="drop-zone registration__upload"
+          [class.drop-zone--over]="dragOver()"
           (dragover)="$event.preventDefault(); dragOver.set(true)"
           (dragleave)="dragOver.set(false)"
           (drop)="onDrop($event)"

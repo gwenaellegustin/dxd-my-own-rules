@@ -1211,3 +1211,178 @@ select.input {
     color: var(--color-success);
   }
 }
+
+// ---------------------------------------------------------------------------
+// Tabs (worksheet settings): the current one is underlined
+// ---------------------------------------------------------------------------
+
+.tabs {
+  display: flex;
+  gap: var(--space-400);
+  border-bottom: var(--stroke-border) solid var(--color-on-background);
+}
+
+.tabs__tab {
+  padding: var(--space-200) 0;
+  margin-bottom: calc(-1 * var(--stroke-border));
+  border-bottom: var(--stroke-strong) solid transparent;
+  color: var(--color-on-background-soft);
+
+  &:hover,
+  &.is-hover {
+    color: var(--color-on-background);
+  }
+
+  &--active {
+    border-bottom-color: var(--color-on-background);
+    color: var(--color-on-background);
+    font-weight: var(--font-weight-strong);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Link chips: link to a client or a vehicle (shopping list)
+// ---------------------------------------------------------------------------
+
+// Link to the client / vehicle: small grey pill
+.link-chip {
+  display: inline-flex;
+  align-items: center;
+  font: inherit;
+  cursor: pointer;
+  gap: var(--space-100);
+  padding: var(--space-050) var(--space-200);
+  border-radius: var(--radius-200);
+  background: var(--color-background);
+  color: var(--color-on-background-soft);
+  font-size: var(--font-size-small);
+  text-decoration: none;
+
+  &:hover,
+  &.is-hover {
+    background: var(--color-line);
+    color: var(--color-on-background);
+  }
+}
+
+.link-chip__logo {
+  --icon-size-xlarge: var(--icon-size-small);
+}
+
+// ---------------------------------------------------------------------------
+// Drop zone: drop a file or click to choose one (registration photo)
+// ---------------------------------------------------------------------------
+
+.drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-200);
+  padding: var(--space-400);
+  border: var(--stroke-strong) dashed var(--color-on-background);
+  border-radius: var(--radius-200);
+  color: var(--color-on-background);
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+
+  &:hover,
+  &.is-hover,
+  &--over {
+    background: var(--color-line);
+  }
+
+  // The file input is visually hidden: show the focus on the area
+  &:has(input:focus-visible) {
+    outline: var(--stroke-strong) solid var(--color-on-background);
+    outline-offset: var(--space-050);
+  }
+
+  app-icon {
+    color: var(--color-on-background);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Transcript messages: what was said (bubble), the answer, an answer not applied (problem)
+// ---------------------------------------------------------------------------
+
+.message {
+  display: flex;
+  border-radius: var(--radius-200);
+}
+
+// "AI Chat -> User message": what was said, a chat bubble on the right with its time above.
+// Each exchange (what was said + the answer) is separated from the next one by a larger space.
+.message--user {
+  flex-direction: column;
+  align-items: flex-end;
+  padding-left: var(--space-800);
+
+  &:not(:first-of-type) {
+    margin-top: var(--space-400);
+  }
+}
+
+.message__bubble {
+  position: relative;
+  padding: var(--space-100) var(--space-200);
+  background: var(--color-surface);
+  border: var(--stroke-strong) solid var(--color-on-background);
+  border-radius: var(--radius-200) var(--radius-200) 0 var(--radius-200);
+
+  // Tail of the bubble, bottom right
+  &::after {
+    content: '';
+    position: absolute;
+    right: calc(var(--stroke-strong) * -1);
+    bottom: calc(var(--space-200) * -1);
+    width: var(--space-200);
+    height: var(--space-200);
+    background: var(--color-on-background);
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+  }
+}
+
+.message__time {
+  padding: 0 var(--space-100);
+  color: var(--color-on-background-soft);
+}
+
+// "AI Chat -> Chat Response": right under what was said (small space)
+.message--assistant {
+  align-items: flex-start;
+  gap: var(--space-200);
+  margin-top: var(--space-100);
+  color: var(--color-on-background);
+
+  p {
+    color: var(--color-on-background);
+  }
+}
+
+.message__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+// Answer the assistant could not apply: light red, to be checked (Ok button)
+.message--problem {
+  padding: var(--space-400);
+  background: var(--color-error-bg);
+  border: var(--stroke-border) solid var(--color-error-line);
+}
+
+.message__no-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-100);
+}
+
+.message__validate {
+  align-self: flex-end;
+}

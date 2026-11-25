@@ -68,29 +68,7 @@
   gap: var(--space-100);
 }
 
-// Link to the client / vehicle: small grey pill
-.link-chip {
-  display: inline-flex;
-  align-items: center;
-  font: inherit;
-  cursor: pointer;
-  gap: var(--space-100);
-  padding: var(--space-050) var(--space-200);
-  border-radius: var(--radius-200);
-  background: var(--color-background);
-  color: var(--color-on-background-soft);
-  font-size: var(--font-size-small);
-  text-decoration: none;
-
-  &:hover {
-    background: var(--color-line);
-    color: var(--color-on-background);
-  }
-}
-
-.link-chip__logo {
-  --icon-size-xlarge: var(--icon-size-small);
-}
+// Links to the client / vehicle: global .link-chip (styles.scss)
 
 // New item form: one row when there is room, wraps otherwise
 .add {

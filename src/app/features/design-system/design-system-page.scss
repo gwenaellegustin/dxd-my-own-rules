@@ -359,12 +359,14 @@ $icon-item-width: 96px; // icon with its name under it
   color: var(--color-on-background-soft);
 }
 
-// Buttons in each state: one row per kind, one column per state
+// Buttons in each state: one row per kind, one column per state. A column is never narrower
+// than its buttons, so they never overlap (scrolls only if the tile is narrower than the table)
 .states {
   display: grid;
-  grid-template-columns: auto repeat(3, minmax(0, 1fr));
+  grid-template-columns: max-content repeat(3, minmax(max-content, 1fr));
   align-items: center;
-  gap: var(--space-200) var(--space-400);
+  gap: var(--space-200);
+  overflow-x: auto;
 }
 
 .states__row {
@@ -377,6 +379,64 @@ $icon-item-width: 96px; // icon with its name under it
   flex-direction: column;
   gap: var(--space-100);
   min-width: 0;
+}
+
+// Vehicle cards: two per row (shown, hidden / hover, add). Each card fills its sample, so the
+// "Add" tile is as tall as the vehicle next to it, like on the client page
+.vehicle-tiles {
+  @include bp.area-from(bp.$width-sm, ds) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  > .state-sample > .vehicle-tile {
+    flex: 1;
+  }
+}
+
+// Cards of the side panels: two per row, as wide as in a panel at most
+.side-cards {
+  display: grid;
+  gap: var(--space-200);
+
+  @include bp.area-from(bp.$width-sm, ds) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+// A component under its name and use (instead of on the right)
+.spec--stacked {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+// Transcript: the messages on the background colour, as in the panel
+.transcript-sample {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+  padding: var(--space-200);
+  background: var(--color-background);
+  border-radius: var(--radius-200);
+}
+
+// A dropdown menu shown in place (not floating under a button)
+.menu-sample {
+  position: static;
+  align-self: start;
+}
+
+// Option not chosen: its check keeps the room, hidden (as in the sort menu)
+.menu-sample__unchecked {
+  visibility: hidden;
+}
+
+// A box that scrolls, to show the scrollbar
+.scroll-sample {
+  height: calc(4 * var(--control-height));
+  overflow-y: auto;
+  padding: var(--space-200);
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-200);
 }
 
 // Icon sizes: an example of each use above its name, value and use
@@ -412,6 +472,17 @@ $icon-item-width: 96px; // icon with its name under it
   &--done {
     background: var(--color-success-bg);
   }
+}
+
+// Dialog shown in the tile, centred on the colour of the backdrop (as over the page)
+.dialog-sample {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-400);
+  background: var(--overlay-backdrop);
+  border-radius: var(--radius-200);
 }
 
 // Dialog shown in the tile instead of floating over the page
