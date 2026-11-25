@@ -5,19 +5,6 @@
         <h1 class="text-heading">{{ 'designSystem.title' | translate }}</h1>
         <p class="text-secondary">{{ 'designSystem.intro' | translate }}</p>
       </div>
-      <button
-        type="button"
-        class="button"
-        [attr.aria-expanded]="panelOpen()"
-        aria-controls="token-panel"
-        (click)="panelOpen.set(!panelOpen())"
-      >
-        <app-icon name="edit" size="small" />
-        {{ 'designSystem.panel.toggle' | translate }}
-        @if (ds.changedCount()) {
-          <span class="problem-badge">{{ ds.changedCount() }}</span>
-        }
-      </button>
     </header>
 
     <!-- Bento grid: one tile per theme, side by side -->
@@ -586,116 +573,9 @@
   </div>
 </div>
 
-<!-- Token editor -->
+<!-- Token editor: a side panel like the others (rail when collapsed) -->
 @if (panelOpen()) {
-  <aside class="panel" id="token-panel" [attr.aria-label]="'designSystem.panel.title' | translate">
-    <div class="panel__head">
-      <div class="panel__title">
-        <h2 class="text-subheading">{{ 'designSystem.panel.title' | translate }}</h2>
-        <button
-          type="button"
-          class="icon-button"
-          [attr.aria-label]="'designSystem.panel.close' | translate"
-          (click)="panelOpen.set(false)"
-        >
-          <app-icon name="close" size="large" />
-        </button>
-      </div>
-      <div class="search">
-        <app-icon name="search" size="small" />
-        <input
-          class="input"
-          type="search"
-          [placeholder]="'designSystem.panel.filter' | translate"
-          [attr.aria-label]="'designSystem.panel.filter' | translate"
-          [value]="filter()"
-          (input)="filter.set($any($event.target).value)"
-        />
-      </div>
-    </div>
-
-    <div class="panel__scroll">
-      @for (group of panelGroups(); track group.id) {
-        <details
-          class="group"
-          [open]="(group.id !== 'sizes' && group.id !== 'layers') || !!filter()"
-        >
-          <summary class="group__title">
-            <app-icon name="chevron-right" size="small" class="group__chevron" />
-            {{ 'designSystem.groups.' + group.id | translate }}
-            <span class="text-small text-secondary">{{ group.tokens.length }}</span>
-          </summary>
-          @for (token of group.tokens; track token.name) {
-            <!-- A derived token (made from others) is shown but not edited -->
-            <div class="token" [class.token--changed]="ds.isChanged(token)">
-              <label class="token__name text-small" [for]="'token' + token.name">{{
-                token.name
-              }}</label>
-              @let usage = usageKey(token.name) | translate;
-              @if (usage !== usageKey(token.name)) {
-                <span class="usage">{{ usage }}</span>
-              }
-              <div class="token__control">
-                @if (isColor(token)) {
-                  <input
-                    class="token__picker"
-                    type="color"
-                    tabindex="-1"
-                    aria-hidden="true"
-                    [value]="colorPickerValue(token)"
-                    (input)="ds.set(token, $any($event.target).value)"
-                  />
-                }
-                <input
-                  class="input"
-                  type="text"
-                  spellcheck="false"
-                  [id]="'token' + token.name"
-                  [value]="ds.value(token)"
-                  [disabled]="token.derived"
-                  [attr.title]="token.derived ? ('designSystem.panel.derived' | translate) : null"
-                  (change)="ds.set(token, $any($event.target).value)"
-                />
-                @if (!token.derived) {
-                  <button
-                    type="button"
-                    class="icon-button"
-                    [disabled]="!ds.isChanged(token)"
-                    [attr.aria-label]="
-                      'designSystem.panel.reset' | translate: { value: token.defaultValue }
-                    "
-                    [attr.title]="
-                      'designSystem.panel.reset' | translate: { value: token.defaultValue }
-                    "
-                    (click)="ds.reset(token)"
-                  >
-                    <app-icon name="undo" size="medium" />
-                  </button>
-                }
-              </div>
-            </div>
-          }
-        </details>
-      } @empty {
-        <p class="text-secondary">{{ 'designSystem.panel.noMatch' | translate }}</p>
-      }
-    </div>
-
-    <div class="panel__foot">
-      <span class="text-small text-secondary panel__count">
-        {{ 'designSystem.panel.changed' | translate: { count: ds.changedCount() } }}
-      </span>
-      <button type="button" class="button" [disabled]="!ds.changedCount()" (click)="ds.resetAll()">
-        {{ 'designSystem.panel.resetAll' | translate }}
-      </button>
-      <button
-        type="button"
-        class="button button--primary"
-        [disabled]="!ds.changedCount()"
-        (click)="copyChanges()"
-      >
-        {{ (copied() ? 'designSystem.panel.copied' : 'designSystem.panel.copy') | translate }}
-      </button>
-    </div>
-  </aside>
+  <!-- Tablet: clicking outside the open panel closes it -->
+  <div class="backdrop" (click)="panelOpen.set(false)"></div>
 }
+<app-token-panel [open]="panelOpen()" (openChange)="panelOpen.set($event)" />

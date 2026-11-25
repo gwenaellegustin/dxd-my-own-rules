@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-import {
-  DesignToken,
-  DesignTokensService,
-  TOKEN_GROUPS,
-} from '../../core/services/design-tokens.service';
+import { DesignToken, DesignTokensService } from '../../core/services/design-tokens.service';
 import { ICON_NAMES, Icon, IconName } from '../../shared/icon/icon';
 import { VehicleLogo } from '../../shared/vehicle-logo/vehicle-logo';
+import { TokenPanel } from './token-panel/token-panel';
 
 /** Below this width the token panel overlays the page (see _breakpoints.scss) */
 const DESKTOP_QUERY = '(min-width: 1200px)';
@@ -91,7 +88,6 @@ const ICON_GROUPS: { id: string; icons: IconName[] }[] = [
   },
 ];
 
-const HEX_COLOR = /^#([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 
 /**
  * Design system (only reachable by its URL, /design-system): every token and the shared
@@ -100,7 +96,7 @@ const HEX_COLOR = /^#([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
  */
 @Component({
   selector: 'app-design-system-page',
-  imports: [NgTemplateOutlet, TranslatePipe, Icon, VehicleLogo],
+  imports: [NgTemplateOutlet, TranslatePipe, Icon, VehicleLogo, TokenPanel],
   templateUrl: './design-system-page.html',
   styleUrl: './design-system-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -149,36 +145,6 @@ export class DesignSystemPage {
   }));
 
   protected readonly panelOpen = signal(matchMedia(DESKTOP_QUERY).matches);
-
-  /** Panel: tokens whose name contains the filter, by group */
-  protected readonly filter = signal('');
-  protected readonly panelGroups = computed(() => {
-    const query = this.filter().trim().toLowerCase();
-    return TOKEN_GROUPS.map((id) => ({
-      id,
-      tokens: this.tokens.filter((t) => t.group === id && t.name.includes(query)),
-    })).filter((group) => group.tokens.length > 0);
-  });
-
-  protected readonly copied = signal(false);
-
-  protected isColor(token: DesignToken): boolean {
-    return HEX_COLOR.test(this.ds.value(token));
-  }
-
-  /** <input type="color"> only takes #rrggbb */
-  protected colorPickerValue(token: DesignToken): string {
-    const hex = this.ds.value(token).slice(1);
-    const rgb = hex.length <= 4 ? [...hex.slice(0, 3)].map((c) => c + c).join('') : hex.slice(0, 6);
-    return '#' + rgb.toLowerCase();
-  }
-
-  protected copyChanges(): void {
-    navigator.clipboard?.writeText(this.ds.changesAsCss()).then(() => {
-      this.copied.set(true);
-      setTimeout(() => this.copied.set(false), 2000);
-    });
-  }
 
   /** Translation key of "when is this token used" (designSystem.usage, by name without "--") */
   protected usageKey(name: string): string {

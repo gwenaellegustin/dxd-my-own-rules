@@ -2,20 +2,14 @@
   <aside
     class="panel"
     [attr.aria-label]="'transcript.title' | translate"
-    [style.--transcript-width.px]="transcript.width()"
+    [style.--panel-chosen-width.px]="widths.width('transcript')"
   >
     <!-- Drag (or arrow keys) to change the width of the panel; double click: default width -->
     <div
-      class="resize"
-      role="separator"
-      tabindex="0"
-      aria-orientation="vertical"
-      [attr.aria-label]="'transcript.resize' | translate"
-      [attr.title]="'transcript.resize' | translate"
-      (pointerdown)="startResize($event)"
-      (dblclick)="resetWidth()"
-      (keydown.arrowleft)="resizeBy(16)"
-      (keydown.arrowright)="resizeBy(-16)"
+      appPanelResize="transcript"
+      side="right"
+      [attr.aria-label]="'common.resizePanel' | translate"
+      [attr.title]="'common.resizePanel' | translate"
     ></div>
     <div class="panel__head">
       <button type="button" class="panel__title" [attr.aria-expanded]="true" (click)="openChange.emit(false)">

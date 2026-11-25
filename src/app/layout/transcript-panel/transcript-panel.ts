@@ -19,6 +19,8 @@ import { TranscriptChangeCard } from '../transcript-change/transcript-change';
 import { DateFilter } from '../../shared/date-filter/date-filter';
 import { HighlightService } from '../../core/services/highlight.service';
 import { TranscriptService } from '../../core/services/transcript.service';
+import { PanelWidthService } from '../../core/services/panel-width.service';
+import { PanelResize } from '../../shared/panel-resize/panel-resize';
 
 interface TranscriptDay {
   date: string;
@@ -33,7 +35,7 @@ interface TranscriptDay {
  */
 @Component({
   selector: 'app-transcript-panel',
-  imports: [DatePipe, TranslatePipe, Icon, Clearable, TranscriptChangeCard, DateFilter],
+  imports: [DatePipe, TranslatePipe, Icon, Clearable, TranscriptChangeCard, DateFilter, PanelResize],
   templateUrl: './transcript-panel.html',
   styleUrl: './transcript-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,44 +50,9 @@ export class TranscriptPanel {
 
   private readonly highlight = inject(HighlightService);
   protected readonly transcript = inject(TranscriptService);
+  protected readonly widths = inject(PanelWidthService);
 
   protected readonly query = signal('');
-
-  /** Drag of the left edge: the panel is on the right, so moving left makes it wider */
-  protected startResize(event: PointerEvent): void {
-    const handle = event.currentTarget as HTMLElement;
-    const panel = handle.parentElement!;
-    const startX = event.clientX;
-    const startWidth = panel.getBoundingClientRect().width;
-    handle.setPointerCapture(event.pointerId);
-    event.preventDefault();
-    const move = (e: PointerEvent) => this.transcript.setWidth(this.clamp(panel, startWidth + startX - e.clientX));
-    const end = () => {
-      handle.removeEventListener('pointermove', move);
-      handle.removeEventListener('pointerup', end);
-      handle.removeEventListener('pointercancel', end);
-    };
-    handle.addEventListener('pointermove', move);
-    handle.addEventListener('pointerup', end);
-    handle.addEventListener('pointercancel', end);
-  }
-
-  protected resizeBy(delta: number): void {
-    const panel = this.scroller()?.nativeElement.closest<HTMLElement>('.panel');
-    if (panel) this.transcript.setWidth(this.clamp(panel, panel.getBoundingClientRect().width + delta));
-  }
-
-  protected resetWidth(): void {
-    this.transcript.setWidth(null);
-  }
-
-  /** Between the min / max width tokens */
-  private clamp(panel: HTMLElement, width: number): number {
-    const style = getComputedStyle(panel);
-    const min = parseFloat(style.getPropertyValue('--transcript-min-width')) || 0;
-    const max = parseFloat(style.getPropertyValue('--transcript-max-width')) || width;
-    return Math.min(max, Math.max(min, width));
-  }
 
   protected show(change: TranscriptChange): void {
     this.highlight.show(change.target, change.area);

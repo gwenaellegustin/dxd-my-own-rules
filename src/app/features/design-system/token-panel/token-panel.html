@@ -1,0 +1,124 @@
+@if (open()) {
+  <aside
+    class="panel"
+    id="token-panel"
+    [attr.aria-label]="'designSystem.panel.title' | translate"
+    [style.--panel-chosen-width.px]="widths.width('tokens')"
+  >
+    <!-- Drag (or arrow keys) to change the width of the panel; double click: default width -->
+    <div
+      appPanelResize="tokens"
+      side="right"
+      [attr.aria-label]="'common.resizePanel' | translate"
+      [attr.title]="'common.resizePanel' | translate"
+    ></div>
+    <div class="panel__head">
+      <button type="button" class="panel__title" [attr.aria-expanded]="true" (click)="openChange.emit(false)">
+        <span class="icon-button icon-button--primary"><app-icon name="right-panel-close" size="large" /></span>
+        <h2 class="text-heading">{{ 'designSystem.panel.title' | translate }}</h2>
+        @if (ds.changedCount(); as count) {
+          <span class="problem-badge" [attr.aria-label]="'designSystem.panel.changed' | translate: { count }">{{
+            count
+          }}</span>
+        }
+        <span class="visually-hidden">{{ 'common.collapse' | translate }}</span>
+      </button>
+
+      <div class="search">
+        <app-clearable>
+          <input
+            #clearTarget
+            type="search"
+            class="input"
+            [placeholder]="'designSystem.panel.filter' | translate"
+            [attr.aria-label]="'designSystem.panel.filter' | translate"
+            [value]="filter()"
+            (input)="filter.set($any($event.target).value)"
+          />
+        </app-clearable>
+        <app-icon name="search" size="small" />
+      </div>
+    </div>
+
+    <div class="panel__scroll">
+      @for (group of groups(); track group.id) {
+        <details class="group" [open]="(group.id !== 'sizes' && group.id !== 'layers') || !!filter()">
+          <summary class="group__title">
+            <span class="text-subheading">{{ 'designSystem.groups.' + group.id | translate }}</span>
+            <span class="text-small text-secondary">{{ group.tokens.length }}</span>
+            <app-icon name="chevron-down" size="small" class="group__chevron" />
+          </summary>
+          @for (token of group.tokens; track token.name) {
+            <!-- A derived token (made from others) is shown but not edited -->
+            <div class="token" [class.token--changed]="ds.isChanged(token)">
+              <label class="token__name text-small" [for]="'token' + token.name">{{ token.name }}</label>
+              @let usage = usageKey(token.name) | translate;
+              @if (usage !== usageKey(token.name)) {
+                <span class="usage">{{ usage }}</span>
+              }
+              <div class="token__control">
+                @if (isColor(token)) {
+                  <input
+                    class="token__picker"
+                    type="color"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    [value]="colorPickerValue(token)"
+                    (input)="ds.set(token, $any($event.target).value)"
+                  />
+                }
+                <input
+                  class="input"
+                  type="text"
+                  spellcheck="false"
+                  [id]="'token' + token.name"
+                  [value]="ds.value(token)"
+                  [disabled]="token.derived"
+                  [attr.title]="token.derived ? ('designSystem.panel.derived' | translate) : null"
+                  (change)="ds.set(token, $any($event.target).value)"
+                />
+                @if (!token.derived) {
+                  <button
+                    type="button"
+                    class="icon-button"
+                    [disabled]="!ds.isChanged(token)"
+                    [attr.aria-label]="'designSystem.panel.reset' | translate: { value: token.defaultValue }"
+                    [attr.title]="'designSystem.panel.reset' | translate: { value: token.defaultValue }"
+                    (click)="ds.reset(token)"
+                  >
+                    <app-icon name="undo" />
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </details>
+      } @empty {
+        <p class="text-secondary">{{ 'designSystem.panel.noMatch' | translate }}</p>
+      }
+    </div>
+
+    <div class="panel__foot">
+      <span class="text-small text-secondary panel__count">
+        {{ 'designSystem.panel.changed' | translate: { count: ds.changedCount() } }}
+      </span>
+      <button type="button" class="button" [disabled]="!ds.changedCount()" (click)="ds.resetAll()">
+        {{ 'designSystem.panel.resetAll' | translate }}
+      </button>
+      <button type="button" class="button button--primary" [disabled]="!ds.changedCount()" (click)="copyChanges()">
+        {{ (copied() ? 'designSystem.panel.copied' : 'designSystem.panel.copy') | translate }}
+      </button>
+    </div>
+  </aside>
+} @else {
+  <button type="button" class="rail" [attr.aria-expanded]="false" (click)="openChange.emit(true)">
+    <span class="icon-button icon-button--primary"><app-icon name="edit" size="large" /></span>
+    <span class="rail__label text-heading">{{ 'designSystem.panel.title' | translate }}</span>
+    <!-- Under the vertical title: number of changed tokens -->
+    @if (ds.changedCount(); as count) {
+      <span class="problem-badge" [attr.aria-label]="'designSystem.panel.changed' | translate: { count }">{{
+        count
+      }}</span>
+    }
+  </button>
+}

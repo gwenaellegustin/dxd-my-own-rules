@@ -1,5 +1,16 @@
 @if (open()) {
-  <aside class="panel" [attr.aria-label]="titleKey() | translate">
+  <aside
+    class="panel"
+    [attr.aria-label]="titleKey() | translate"
+    [style.--panel-chosen-width.px]="widths.width('sidebar')"
+  >
+    <!-- Drag (or arrow keys) to change the width of the panel; double click: default width -->
+    <div
+      appPanelResize="sidebar"
+      side="left"
+      [attr.aria-label]="'common.resizePanel' | translate"
+      [attr.title]="'common.resizePanel' | translate"
+    ></div>
     <div class="panel__head">
       <button type="button" class="panel__title" [attr.aria-expanded]="true" (click)="openChange.emit(false)">
         <h2 class="text-heading">{{ titleKey() | translate }}</h2>

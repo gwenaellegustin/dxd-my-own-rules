@@ -1,7 +1,6 @@
 @use 'breakpoints' as bp;
 
 // Sizes of this page only (the samples), not part of the app's visual language
-$panel-width: 360px;
 $sample-size: 32px; // radius / effect boxes, color dots
 $status-sample-size: 48px;
 $chip-size: 12px;
@@ -10,12 +9,17 @@ $icon-item-width: 96px; // icon with its name under it
 $medium-width: 640px; // tiles side by side (2 per row)
 $wide-width: 1000px; // bento layout (12 columns)
 
-// The page fills the main area: content on the left, token panel on the right
+// The page fills the main area: content on the left, token panel on the right (phones: the
+// panel's rail above the content)
 :host {
   position: relative;
   flex: 1;
   min-height: 0;
   display: flex;
+
+  @include bp.mobile {
+    flex-direction: column;
+  }
 }
 
 .content {
@@ -401,151 +405,24 @@ $wide-width: 1000px; // bento layout (12 columns)
   max-width: 100%;
 }
 
-// ---- Token panel -----------------------------------------------------------
+// ---- Token panel (TokenPanel) ------------------------------------------------
 
-.panel {
-  flex: none;
-  width: $panel-width;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  background: var(--color-surface);
-  border-left: var(--stroke-border) solid var(--color-on-background);
+// Tablets: behind the open panel; a click closes it (same as the backdrop of PanelsLayout)
+.backdrop {
+  display: none;
 
-  // Tablets: over the page, like the other side panels
   @include bp.tablet-down {
+    display: block;
     position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    z-index: var(--z-overlay);
-    box-shadow: var(--shadow-overlay);
+    inset: 0;
+    z-index: calc(var(--z-overlay) - 1);
+    background: var(--overlay-backdrop);
   }
+}
 
+// Phones: the rail is a toolbar above the page, as on the other pages
+app-token-panel {
   @include bp.mobile {
-    left: 0;
-    width: auto;
-    border-left: 0;
-  }
-}
-
-.panel__head {
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-200);
-  padding: var(--space-400);
-  border-bottom: var(--stroke-border) solid var(--color-line);
-}
-
-.panel__title {
-  display: flex;
-  align-items: center;
-  gap: var(--space-200);
-
-  h2 {
-    flex: 1;
-  }
-}
-
-.panel__scroll {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding: var(--space-200) var(--space-400);
-}
-
-.panel__foot {
-  flex: none;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-200);
-  padding: var(--space-400);
-  border-top: var(--stroke-border) solid var(--color-line);
-}
-
-.panel__count {
-  flex: 1;
-}
-
-.group {
-  border-bottom: var(--stroke-border) solid var(--color-line);
-
-  &:last-child {
-    border-bottom: 0;
-  }
-}
-
-.group__title {
-  display: flex;
-  align-items: center;
-  gap: var(--space-200);
-  padding: var(--space-200) 0;
-  font-family: var(--font-heading);
-  cursor: pointer;
-  list-style: none;
-
-  &::-webkit-details-marker {
-    display: none;
-  }
-}
-
-.group__chevron {
-  .group[open] & {
-    transform: rotate(90deg);
-  }
-}
-
-.token {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-100);
-  padding-bottom: var(--space-200);
-}
-
-.token__name {
-  color: var(--color-on-background-soft);
-  overflow-wrap: anywhere;
-
-  // Changed value: the name stands out
-  .token--changed & {
-    color: var(--color-on-background);
-    font-weight: var(--font-weight-strong);
-  }
-}
-
-.token__control {
-  display: flex;
-  align-items: center;
-  gap: var(--space-200);
-
-  .input {
-    flex: 1;
-  }
-}
-
-// Colour picker: a square swatch the size of the field
-.token__picker {
-  flex: none;
-  width: var(--control-height);
-  height: var(--control-height);
-  padding: 0;
-  border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
-  background: none;
-  cursor: pointer;
-  overflow: hidden;
-
-  &::-webkit-color-swatch-wrapper {
-    padding: 0;
-  }
-
-  &::-webkit-color-swatch {
-    border: 0;
-  }
-
-  &::-moz-color-swatch {
-    border: 0;
+    order: -1;
   }
 }

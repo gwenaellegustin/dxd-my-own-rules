@@ -30,7 +30,8 @@
     "cancel": "Cancel",
     "close": "Close",
     "sortBy": "Sort by",
-    "save": "Save"
+    "save": "Save",
+    "resizePanel": "Drag to resize the panel (double click: default width)"
   },
   "worksheets": {
     "title": "Worksheets",
@@ -113,7 +114,6 @@
     "noAction": "No action done",
     "validate": "Mark as read",
     "shoppingList": "Shopping list",
-    "resize": "Drag to resize the panel (double click: default width)",
     "filterDate": "Show one day",
     "clearDate": "Show every day",
     "nothingThatDay": "Nothing was said that day.",
@@ -420,9 +420,7 @@
       "listRowsUsage": "Client page: open worksheets and invoices of the client; a click opens it. Grey: paid invoice (same for the cards of the side panel: invoiced worksheet, paid invoice)."
     },
     "panel": {
-      "toggle": "Edit the tokens",
       "title": "Tokens",
-      "close": "Close the panel",
       "filter": "Filter the tokens",
       "reset": "Back to the default value ({{value}})",
       "resetAll": "Reset all",
@@ -471,7 +469,11 @@
       "stroke-strong": "Focus ring, selected card, active tab, element shown from a transcript change, resize handle, drop area (dashed).",
       "opacity-disabled": "Disabled buttons and fields, checkboxes of done lines, hidden invoice text.",
       "shadow-overlay": "Menus, dialogs and panels shown over the page.",
-      "overlay-backdrop": "Behind a dialog, or an open panel on small screens."
+      "overlay-backdrop": "Behind a dialog, or an open panel on small screens.",
+      "panel-width": "Width of an open side panel (left sidebar, transcript, tokens).",
+      "panel-min-width": "Narrowest width when a side panel is resized by dragging its edge.",
+      "panel-max-width": "Widest width when a side panel is resized by dragging its edge.",
+      "z-raised": "Above the next elements: head of a side panel over its list."
     },
     "states": {
       "normal": "Normal",

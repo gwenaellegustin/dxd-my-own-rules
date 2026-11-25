@@ -1,0 +1,117 @@
+@use 'side-panel';
+
+// Same panel as the left sidebar and the transcript: rail, head, width, resize handle, overlay
+@include side-panel.side-panel(right);
+
+// The list on the background colour, like the other side panels; head and foot on the surface
+.panel {
+  background: var(--color-background);
+}
+
+// The badge (changed tokens) follows the title, as in the transcript
+.panel__title h2 {
+  flex: 0 1 auto;
+}
+
+.panel__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+  padding: var(--space-400);
+}
+
+.panel__foot {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-400);
+  background: var(--color-surface);
+  border-top: var(--stroke-border) solid var(--color-on-background);
+}
+
+.panel__count {
+  flex: 1;
+}
+
+// A group of tokens: collapsible title like the sections of a worksheet (title, then the arrow,
+// turned when the group is closed)
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+.group__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.group__chevron {
+  transition: transform var(--transition-fast);
+
+  .group:not([open]) & {
+    transform: rotate(-90deg);
+  }
+}
+
+.token {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+  padding-bottom: var(--space-200);
+}
+
+.token__name {
+  color: var(--color-on-background-soft);
+  overflow-wrap: anywhere;
+
+  // Changed value: the name stands out
+  .token--changed & {
+    color: var(--color-on-background);
+    font-weight: var(--font-weight-strong);
+  }
+}
+
+.token__control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-200);
+
+  .input {
+    flex: 1;
+  }
+}
+
+// Colour picker: a square swatch the size of the field
+.token__picker {
+  flex: none;
+  width: var(--control-height);
+  height: var(--control-height);
+  padding: 0;
+  border: var(--stroke-border) solid var(--color-on-background);
+  border-radius: var(--radius-200);
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  &::-webkit-color-swatch {
+    border: 0;
+  }
+
+  &::-moz-color-swatch {
+    border: 0;
+  }
+}

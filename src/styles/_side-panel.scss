@@ -1,9 +1,12 @@
-// Shared styles for the two collapsible side panels
-// (left "Worksheets" sidebar and right "Transcript" panel).
+// Shared styles for the collapsible side panels (left sidebar of worksheets / invoices /
+// clients, transcript, tokens of the design system page).
 //
-// Desktop  : the panel sits inline (300px) or collapses to a 76px rail.
+// Desktop  : the panel sits inline (--panel-width, or the width chosen by dragging its inner
+//            edge: .resize, see PanelResize) or collapses to a rail.
 // Tablet   : the rail always stays inline; the open panel overlays the work area.
 // Mobile   : the rails become a toolbar above the work area; the panel is full screen.
+//
+// The chosen width is given to the panel as --panel-chosen-width (PanelWidthService).
 @use 'breakpoints' as bp;
 
 @mixin side-panel($side: left) {
@@ -35,7 +38,11 @@
   }
 
   .panel {
-    width: var(--panel-width);
+    // Desktop: the width chosen by dragging the inner edge, between the min / max tokens
+    position: relative;
+    width: var(--panel-chosen-width, var(--panel-width));
+    min-width: var(--panel-min-width);
+    max-width: var(--panel-max-width);
     display: flex;
     flex-direction: column;
     min-height: 0;
@@ -47,7 +54,12 @@
       bottom: 0;
       #{$side}: 0;
       z-index: var(--z-overlay);
-      box-shadow: var(--shadow-overlay);
+      width: var(--panel-width);
+      min-width: 0;
+      // Over the work area the panel is wider than the rail: it needs its own border on the
+      // work-area side (the border of :host only runs along the rail). No shadow: the backdrop
+      // already sets it apart, and a shadow next to the border looks doubled
+      border-#{$border-side}: var(--stroke-border) solid var(--color-on-background);
     }
 
     @include bp.mobile {
@@ -56,16 +68,45 @@
       left: 0;
       right: 0;
       width: auto;
+      max-width: none;
+      border: 0;
     }
   }
 
+  // Handle on the inner edge (PanelResize): a line shows on hover / focus. Desktop only
+  .resize {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    #{$border-side}: calc(var(--resize-handle-width) / -2);
+    z-index: var(--z-sticky);
+    width: var(--resize-handle-width);
+    cursor: col-resize;
+    touch-action: none;
+
+    &:hover,
+    &:focus-visible {
+      outline: none;
+      background: linear-gradient(var(--color-on-background), var(--color-on-background)) center /
+        var(--stroke-strong) 100% no-repeat;
+    }
+
+    @include bp.tablet-down {
+      display: none;
+    }
+  }
+
+  // Shadow under the head: the list scrolls under it (above the list, which comes after it)
   .panel__head {
+    position: relative;
+    z-index: var(--z-raised);
     flex: none;
     display: flex;
     flex-direction: column;
     gap: var(--space-200);
     padding: var(--space-400);
     background: var(--color-surface);
+    box-shadow: var(--shadow-panel-head);
   }
 
   .panel__title {

@@ -30,7 +30,8 @@
     "cancel": "Annuler",
     "close": "Fermer",
     "sortBy": "Trier par",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "resizePanel": "Glisser pour redimensionner le panneau (double clic : largeur par défaut)"
   },
   "worksheets": {
     "title": "Fiches de travail",
@@ -113,7 +114,6 @@
     "noAction": "Aucune action effectuée",
     "validate": "Marqué comme lu",
     "shoppingList": "Liste d’achats",
-    "resize": "Glisser pour redimensionner le panneau (double clic : largeur par défaut)",
     "filterDate": "Afficher un jour",
     "clearDate": "Afficher tous les jours",
     "nothingThatDay": "Rien n’a été dit ce jour-là.",
@@ -420,9 +420,7 @@
       "listRowsUsage": "Page client : fiches ouvertes et factures du client ; un clic l’ouvre. Gris : facture payée (de même pour les cartes du panneau latéral : fiche facturée, facture payée)."
     },
     "panel": {
-      "toggle": "Modifier les tokens",
       "title": "Tokens",
-      "close": "Fermer le panneau",
       "filter": "Filtrer les tokens",
       "reset": "Revenir à la valeur par défaut ({{value}})",
       "resetAll": "Tout réinitialiser",
@@ -471,7 +469,11 @@
       "stroke-strong": "Anneau de focus, carte sélectionnée, onglet actif, élément montré depuis une modification du transcript, poignée de redimensionnement, zone de dépôt (pointillés).",
       "opacity-disabled": "Boutons et champs désactivés, cases des lignes faites, texte masqué de la facture.",
       "shadow-overlay": "Menus, boîtes de dialogue et panneaux affichés par-dessus la page.",
-      "overlay-backdrop": "Derrière une boîte de dialogue, ou un panneau ouvert sur petit écran."
+      "overlay-backdrop": "Derrière une boîte de dialogue, ou un panneau ouvert sur petit écran.",
+      "panel-width": "Largeur d’un panneau latéral ouvert (panneau de gauche, transcript, tokens).",
+      "panel-min-width": "Largeur minimale quand on redimensionne un panneau latéral en tirant son bord.",
+      "panel-max-width": "Largeur maximale quand on redimensionne un panneau latéral en tirant son bord.",
+      "z-raised": "Au-dessus des éléments suivants : en-tête d’un panneau latéral au-dessus de sa liste."
     },
     "states": {
       "normal": "Normal",

@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, input, model, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, model, output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Icon, IconName } from '../icon/icon';
 import { Clearable } from '../clearable/clearable';
 import { VehicleLogo } from '../vehicle-logo/vehicle-logo';
 import { Dropdown } from '../dropdown/dropdown';
+import { PanelResize } from '../panel-resize/panel-resize';
+import { PanelWidthService } from '../../core/services/panel-width.service';
 
 /** One card of the list: a vehicle and its client (a worksheet, an invoice…) */
 export interface VehicleCard {
@@ -54,7 +56,7 @@ export interface VehicleCardGroup {
  */
 @Component({
   selector: 'app-vehicle-sidebar',
-  imports: [DatePipe, TranslatePipe, Icon, Clearable, VehicleLogo, Dropdown],
+  imports: [DatePipe, TranslatePipe, Icon, Clearable, VehicleLogo, Dropdown, PanelResize],
   templateUrl: './vehicle-sidebar.html',
   styleUrl: './vehicle-sidebar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,6 +84,8 @@ export class VehicleSidebar {
   readonly openChange = output<boolean>();
 
   protected readonly query = signal('');
+  /** Width chosen by dragging the right edge, kept from one page to the other */
+  protected readonly widths = inject(PanelWidthService);
 
 
 

@@ -3,10 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ApiService } from '../api/api.service';
 import { API_ENDPOINTS } from '../api/api.config';
 import { TranscriptMessage } from '../models/transcript.model';
-import { readPreference, writePreference } from '../utils/local-storage';
 import { LanguageService } from './language.service';
-
-const WIDTH_KEY = 'transcriptWidth';
 
 @Injectable({ providedIn: 'root' })
 export class TranscriptService {
@@ -35,16 +32,6 @@ export class TranscriptService {
    * panel). Null until the panel was scrolled: it then opens on today.
    */
   scrollTop: number | null = null;
-
-  /** Width of the open panel (px) chosen by dragging its edge; null = default width. Remembered. */
-  readonly width = signal<number | null>(Number(readPreference(WIDTH_KEY)) || null);
-
-  /** `null`: back to the default width */
-  setWidth(width: number | null): void {
-    const rounded = width === null ? null : Math.round(width);
-    this.width.set(rounded);
-    writePreference(WIDTH_KEY, rounded === null ? null : String(rounded));
-  }
 
   /** Problem answers already seen and validated by the user (kept in memory) */
   private readonly validated = signal<ReadonlySet<string>>(new Set());
