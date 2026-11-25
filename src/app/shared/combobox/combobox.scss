@@ -40,6 +40,11 @@
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
+
+  // Slides down a little when it opens, like the dropdown menus (keyframes in styles.scss)
+  @media (prefers-reduced-motion: no-preference) {
+    animation: menu-in var(--transition-fast);
+  }
 }
 
 .combobox__option {

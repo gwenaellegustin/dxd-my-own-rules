@@ -1379,3 +1379,43 @@ select.input {
 .message__validate {
   align-self: flex-end;
 }
+
+// ---------------------------------------------------------------------------
+// Popups open smoothly: a dialog rises a little and fades in over its fading backdrop; a
+// dropdown menu or a list of suggestions slides down a little from its button
+// ---------------------------------------------------------------------------
+
+@media (prefers-reduced-motion: no-preference) {
+  .dialog[open] {
+    animation: dialog-in var(--transition-panel);
+
+    &::backdrop {
+      animation: popup-backdrop-in var(--transition-panel);
+    }
+  }
+
+  .dropdown-menu {
+    animation: menu-in var(--transition-fast);
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-400)) scale(0.98);
+  }
+}
+
+@keyframes popup-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+// Also used by the list of the combobox (combobox.scss)
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-100)));
+  }
+}
