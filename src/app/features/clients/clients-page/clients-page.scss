@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 // The page is only a wrapper: the shared layout is the element that fills the screen
 :host {
   display: contents;
@@ -39,7 +41,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-400);
 
-  @container work-area (max-width: 480px) {
+  @include bp.area-below(bp.$width-xs) {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -52,7 +54,7 @@
   grid-column: span 2;
 
   // Single column: no span, or it would add an implicit column
-  @container work-area (max-width: 480px) {
+  @include bp.area-below(bp.$width-xs) {
     grid-column: auto;
   }
 }

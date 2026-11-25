@@ -1,4 +1,5 @@
 @use 'tokens';
+@use 'breakpoints' as bp;
 
 // ---------------------------------------------------------------------------
 // Base
@@ -8,6 +9,12 @@
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+// Desktop width for TypeScript (core/utils/breakpoints.ts), from the single scale of
+// _breakpoints.scss. On <html>, not :root, so the design system page does not list it as a token
+html {
+  --breakpoint-desktop: #{bp.$width-lg};
 }
 
 // The page always has exactly the size of the screen: only the app's own areas scroll (work
@@ -645,7 +652,7 @@ button {
     background: var(--color-background);
   }
 
-  @container work-area (max-width: 480px) {
+  @include bp.area-below(bp.$width-xs) {
     flex-wrap: wrap;
   }
 }

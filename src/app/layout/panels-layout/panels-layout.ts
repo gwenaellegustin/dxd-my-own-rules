@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 import { TranscriptService } from '../../core/services/transcript.service';
 import { TranscriptPanel } from '../transcript-panel/transcript-panel';
-
-/** Below this width the side panels overlay the work area (see _breakpoints.scss) */
-const DESKTOP_QUERY = '(min-width: 1200px)';
+import { isDesktop } from '../../core/utils/breakpoints';
 
 /**
  * Page layout shared by the worksheet and invoice pages:
@@ -32,7 +30,8 @@ export class PanelsLayout {
   /** The side panel on the left (a page without a list, e.g. the shopping list, has none) */
   readonly withSidebar = input(true);
 
-  private readonly isDesktop = () => matchMedia(DESKTOP_QUERY).matches;
+  /** Below the desktop width the side panels overlay the work area */
+  private readonly isDesktop = isDesktop;
   readonly sidebarOpen = signal(this.isDesktop());
   /** Shared by every page (see TranscriptService.open) */
   readonly transcriptOpen = this.transcript.open;

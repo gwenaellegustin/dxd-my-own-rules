@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 :host {
   display: flex;
   flex-direction: column;
@@ -31,7 +33,7 @@
   align-items: center;
   gap: var(--space-400);
 
-  @container work-area (max-width: 560px) {
+  @include bp.area-below(bp.$width-sm) {
     flex-direction: column;
     align-items: stretch;
     gap: var(--space-200);

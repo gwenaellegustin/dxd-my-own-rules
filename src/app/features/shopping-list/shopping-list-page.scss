@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 // The page is only a wrapper: the shared layout is the element that fills the screen
 :host {
   display: contents;
@@ -101,13 +103,13 @@
   border: var(--stroke-border) dashed var(--color-on-background);
   border-radius: var(--radius-200);
 
-  @container work-area (max-width: 720px) {
+  @include bp.area-below(bp.$width-sm) {
     grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
   }
 }
 
 .add__submit {
-  @container work-area (max-width: 720px) {
+  @include bp.area-below(bp.$width-sm) {
     grid-column: 1 / -1;
   }
 }

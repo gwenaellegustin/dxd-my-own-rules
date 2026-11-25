@@ -4,10 +4,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DesignToken, DesignTokensService } from '../../core/services/design-tokens.service';
 import { ICON_NAMES, Icon, IconName, IconSize } from '../../shared/icon/icon';
 import { VehicleLogo } from '../../shared/vehicle-logo/vehicle-logo';
+import { isDesktop } from '../../core/utils/breakpoints';
 import { TokenPanel } from './token-panel/token-panel';
-
-/** Below this width the token panel overlays the page (see _breakpoints.scss) */
-const DESKTOP_QUERY = '(min-width: 1200px)';
 
 const STATUS_FAMILIES = ['info', 'success', 'error'] as const;
 
@@ -145,7 +143,8 @@ export class DesignSystemPage {
     kind: token.name.split('-')[2] as 'stroke' | 'opacity' | 'shadow' | 'overlay',
   }));
 
-  protected readonly panelOpen = signal(matchMedia(DESKTOP_QUERY).matches);
+  /** Token panel: open on desktop, collapsed to its rail on smaller screens */
+  protected readonly panelOpen = signal(isDesktop());
 
   /** Translation key of "when is this token used" (designSystem.usage, by name without "--") */
   protected usageKey(name: string): string {

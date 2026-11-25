@@ -1,8 +1,16 @@
-// Breakpoints cannot be CSS custom properties (media queries don't support them),
-// so they live here as SCSS variables. Use with: @use 'breakpoints' as bp;
+// One width scale for every layout rule: media queries (the window) and container queries (an
+// area of the page, e.g. the work area). Breakpoints cannot be CSS custom properties (queries
+// don't support them), so they live here as SCSS variables. Use with: @use 'breakpoints' as bp;
+// The desktop width is also given to TypeScript (--breakpoint-desktop on <html>, see styles.scss
+// and core/utils/breakpoints.ts), so it is only defined here.
 
-$mobile-max: 639px; // phones
-$tablet-max: 1199px; // tablets & small laptops: side panels overlay the work area
+$width-xs: 480px; // very narrow area: the parts of a row wrap
+$width-sm: 640px; // narrow (phone width): lines and tables stack, one tile per row
+$width-md: 900px; // medium: two columns become one
+$width-lg: 1200px; // desktop: the side panels sit next to the work area
+
+$mobile-max: $width-sm - 1px; // phones
+$tablet-max: $width-lg - 1px; // tablets & small laptops: side panels overlay the work area
 
 @mixin mobile {
   @media (max-width: $mobile-max) {
@@ -12,6 +20,20 @@ $tablet-max: 1199px; // tablets & small laptops: side panels overlay the work ar
 
 @mixin tablet-down {
   @media (max-width: $tablet-max) {
+    @content;
+  }
+}
+
+// An area (named container) narrower than $width
+@mixin area-below($width, $container: work-area) {
+  @container #{$container} (max-width: #{$width - 1px}) {
+    @content;
+  }
+}
+
+// An area (named container) at least $width wide
+@mixin area-from($width, $container: work-area) {
+  @container #{$container} (min-width: #{$width}) {
     @content;
   }
 }

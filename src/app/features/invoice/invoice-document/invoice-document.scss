@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 // The invoice is a "sheet of paper" centred in the work area
 .invoice {
   display: flex;
@@ -11,7 +13,7 @@
   border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
 
-  @container work-area (max-width: 560px) {
+  @include bp.area-below(bp.$width-sm) {
     padding: var(--space-400);
   }
 
@@ -175,7 +177,7 @@
   }
 
   // Narrow work area: the description takes the full row, the numbers go under it
-  @container work-area (max-width: 560px) {
+  @include bp.area-below(bp.$width-sm) {
     thead th:not(.items__description) {
       display: none;
     }
@@ -252,7 +254,7 @@
 }
 
 // Narrow work area: the inputs share the width of their column
-@container work-area (max-width: 560px) {
+@include bp.area-below(bp.$width-sm) {
   .items__field,
   .items__input {
     width: 100%;
@@ -308,7 +310,7 @@
   gap: var(--space-400);
   min-height: var(--invoice-observation-min-height);
 
-  @container work-area (max-width: 560px) {
+  @include bp.area-below(bp.$width-sm) {
     flex-direction: column;
     gap: var(--space-100);
   }

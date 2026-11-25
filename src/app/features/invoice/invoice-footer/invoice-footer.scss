@@ -1,3 +1,5 @@
+@use 'breakpoints' as bp;
+
 // Footer of the paper invoice: car | slogan | motorbike on a line, contact details under it
 // (contact + workshop on the left, website in the middle, email + office on the right)
 .footer {
@@ -14,7 +16,7 @@
     break-inside: avoid;
   }
 
-  @container work-area (max-width: 560px) {
+  @include bp.area-below(bp.$width-sm) {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-200);
   }
@@ -52,7 +54,7 @@
 .footer__office {
   text-align: right;
 
-  @container work-area (max-width: 560px) {
+  @include bp.area-below(bp.$width-sm) {
     text-align: left;
   }
 }

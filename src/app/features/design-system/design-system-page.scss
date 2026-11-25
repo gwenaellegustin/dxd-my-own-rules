@@ -6,8 +6,6 @@ $status-sample-size: 48px;
 $chip-size: 12px;
 $code-font: ui-monospace, 'Cascadia Mono', Consolas, monospace; // variable names only
 $icon-item-width: 96px; // icon with its name under it
-$medium-width: 640px; // tiles side by side (2 per row)
-$wide-width: 1000px; // bento layout (12 columns)
 
 // The page fills the main area: content on the left, token panel on the right (phones: the
 // panel's rail above the content)
@@ -75,7 +73,7 @@ $wide-width: 1000px; // bento layout (12 columns)
   border-radius: var(--radius-200);
 }
 
-@container ds (min-width: #{$medium-width}) {
+@include bp.area-from(bp.$width-sm, ds) {
   .tile {
     grid-column: span 6;
   }
@@ -87,7 +85,7 @@ $wide-width: 1000px; // bento layout (12 columns)
   }
 }
 
-@container ds (min-width: #{$wide-width}) {
+@include bp.area-from(bp.$width-lg, ds) {
   @each $span in 3, 4, 5, 6, 7, 8, 12 {
     .tile--#{$span} {
       grid-column: span $span;
@@ -162,7 +160,7 @@ $wide-width: 1000px; // bento layout (12 columns)
   display: grid;
   gap: var(--space-400);
 
-  @container ds (min-width: #{$wide-width}) {
+  @include bp.area-from(bp.$width-lg, ds) {
     grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
   }
 }
@@ -183,7 +181,7 @@ $wide-width: 1000px; // bento layout (12 columns)
     gap: var(--space-400);
     align-items: start;
 
-    @container ds (min-width: #{$medium-width}) {
+    @include bp.area-from(bp.$width-sm, ds) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
