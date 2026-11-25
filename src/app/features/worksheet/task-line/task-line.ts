@@ -7,10 +7,12 @@ import {
   OnInit,
   afterNextRender,
   computed,
+  effect,
   inject,
   input,
   output,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -28,6 +30,13 @@ const DOUBLE_CLICK_DELAY = 250;
 const CONTROLS = 'input, textarea, select, button, label, a';
 
 /**
+ * A new colour spreads from where the line was pressed if it changes within this time (a click
+ * on the line toggles "Planned" after DOUBLE_CLICK_DELAY); later changes (undo, transcript,
+ * keyboard) keep the plain colour transition
+ */
+const REVEAL_WINDOW = 800;
+
+/**
  * "Line" component of the Figma file (component set "Line", node 3007:6666).
  *
  * Behaviour reproduced from the Figma prototype interactions:
@@ -38,7 +47,8 @@ const CONTROLS = 'input, textarea, select, button, label, a';
  * - "Planned" and "Done" toggle independently and never hide the note.
  * - A click on the line itself (not on a field, an option or a button) toggles "Planned", a
  *   double click toggles "Done".
- * - Background: default → Planned (planned only) → Done (done, with or without planned).
+ * - Background: default → Planned (planned only) → Done (done, with or without planned). Changed
+ *   by a click, the new colour spreads from where the line was pressed.
  */
 @Component({
   selector: 'app-task-line',
@@ -54,6 +64,8 @@ const CONTROLS = 'input, textarea, select, button, label, a';
     '(click)': 'onLineClick($event)',
     '(dblclick)': 'onLineDoubleClick($event)',
     '(mousedown)': 'keepWordsUnselected($event)',
+    '(pointerdown)': 'rememberPress($event)',
+    '(animationend)': 'endReveal($event)',
   },
 })
 export class TaskLine implements OnInit {
@@ -113,8 +125,60 @@ export class TaskLine implements OnInit {
   /** "Planned" before the first click, to restore it if that click turns out to start a double click */
   private plannedBeforeClick: boolean | null = null;
 
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  /** Colour of the line */
+  private readonly tone = computed(() => (this.state().done ? 'done' : this.state().planned ? 'planned' : 'none'));
+  /** Last press on the line: where (in the line) and when, with the size of the line then */
+  private lastPress: { x: number; y: number; width: number; height: number; at: number } | null = null;
+  /** The two classes of the spreading colour alternate, so a new change restarts it */
+  private revealClass: 'line--reveal-a' | 'line--reveal-b' = 'line--reveal-b';
+
   constructor() {
     inject(DestroyRef).onDestroy(() => clearTimeout(this.pendingPlanned));
+    let previousTone: string | undefined;
+    effect(() => {
+      const tone = this.tone();
+      const changed = previousTone !== undefined && tone !== previousTone;
+      previousTone = tone;
+      if (changed) untracked(() => this.revealFromPress());
+    });
+  }
+
+  /** Where the line is pressed (on the line, a checkbox, an option…): the new colour starts there */
+  protected rememberPress(event: PointerEvent): void {
+    const rect = this.host.getBoundingClientRect();
+    this.lastPress = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+      width: rect.width,
+      height: rect.height,
+      at: Date.now(),
+    };
+  }
+
+  /**
+   * The colour just changed: if the line was pressed a moment ago, a circle of the new colour grows
+   * from there until it covers the line (the background itself changes at the end, see the styles)
+   */
+  private revealFromPress(): void {
+    const press = this.lastPress;
+    this.lastPress = null;
+    if (!press || Date.now() - press.at > REVEAL_WINDOW) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Distance to the farthest corner: the circle then covers the whole line
+    const radius = Math.hypot(Math.max(press.x, press.width - press.x), Math.max(press.y, press.height - press.y));
+    this.host.style.setProperty('--reveal-x', `${press.x}px`);
+    this.host.style.setProperty('--reveal-y', `${press.y}px`);
+    this.host.style.setProperty('--reveal-r', `${Math.ceil(radius)}px`);
+    this.host.classList.remove(this.revealClass);
+    this.revealClass = this.revealClass === 'line--reveal-a' ? 'line--reveal-b' : 'line--reveal-a';
+    this.host.classList.add(this.revealClass);
+  }
+
+  /** The circle covers the line, whose background now has the new colour */
+  protected endReveal(event: AnimationEvent): void {
+    if (event.target !== this.host || event.pseudoElement !== '::before') return;
+    this.host.classList.remove('line--reveal-a', 'line--reveal-b');
   }
 
   /** One click on the line itself: "Planned" (after a short wait, in case it is a double click) */

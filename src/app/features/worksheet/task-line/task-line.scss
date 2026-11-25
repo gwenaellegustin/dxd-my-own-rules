@@ -1,6 +1,11 @@
 @use 'breakpoints' as bp;
 
 :host {
+  // Colour of the line (to do, planned, done), also used by the spreading colour below
+  --line-bg: var(--color-surface);
+  // Containing block and stacking context of the spreading colour (under the content)
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   gap: var(--space-100);
@@ -8,7 +13,7 @@
   // The title starts where the text of an "Other" line does (its field: line padding + field
   // border + field padding), so the texts of both kinds of lines are aligned
   padding-left: calc(var(--space-400) + var(--stroke-border) + var(--space-400));
-  background: var(--color-surface);
+  background: var(--line-bg);
   border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
   transition: background-color var(--transition-fast);
@@ -21,11 +26,58 @@
 }
 
 :host(.line--planned) {
-  background: var(--color-info-bg);
+  --line-bg: var(--color-info-bg);
 }
 
 :host(.line--done) {
-  background: var(--color-success-bg);
+  --line-bg: var(--color-success-bg);
+}
+
+// Colour changed by a click (TaskLine.revealFromPress): a circle of the new colour grows from
+// where the line was pressed (--reveal-x / -y) until it covers the line (--reveal-r); the
+// background keeps the old colour until then, and takes the new one when the circle is complete.
+// Two classes with the same animation: switching from one to the other restarts it.
+:host(.line--reveal-a),
+:host(.line--reveal-b) {
+  transition: background-color 0s var(--transition-reveal);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--line-bg);
+    pointer-events: none;
+  }
+}
+
+:host(.line--reveal-a)::before {
+  animation: line-reveal-a var(--transition-reveal) both;
+}
+
+:host(.line--reveal-b)::before {
+  animation: line-reveal-b var(--transition-reveal) both;
+}
+
+@keyframes line-reveal-a {
+  from {
+    clip-path: circle(0 at var(--reveal-x) var(--reveal-y));
+  }
+
+  to {
+    clip-path: circle(var(--reveal-r) at var(--reveal-x) var(--reveal-y));
+  }
+}
+
+@keyframes line-reveal-b {
+  from {
+    clip-path: circle(0 at var(--reveal-x) var(--reveal-y));
+  }
+
+  to {
+    clip-path: circle(var(--reveal-r) at var(--reveal-x) var(--reveal-y));
+  }
 }
 
 .line__first {

@@ -131,6 +131,7 @@
   --overlay-backdrop: rgb(0 0 0 / 0.32);
   --transition-fast: 120ms ease; // hover, open / close
   --transition-panel: 200ms ease-out; // a side panel or a dialog opened (and the backdrop behind it)
+  --transition-reveal: 400ms ease-out; // new colour of a line, spreading from where it was pressed
 
   // ---- Stacking -----------------------------------------------------------
   --z-raised: 1; // above the next elements (head of a side panel over its list)
