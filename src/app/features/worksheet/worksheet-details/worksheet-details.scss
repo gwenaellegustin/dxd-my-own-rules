@@ -93,38 +93,8 @@
   color: var(--color-error);
 }
 
-// Damage tool selector: 0 or 1 tool active; the active one marks the diagram on click
+// Damage tool selector (global .segmented): 0 or 1 tool active; the active one marks the
+// diagram on click. Centred under the diagram
 .damage__legend {
-  display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: var(--space-200);
-}
-
-.damage__legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-100);
-  padding: var(--space-050) var(--space-200);
-  border-radius: var(--radius-200);
-  color: var(--color-on-background);
-
-  // Only the marker uses the damage color, the label keeps the text color
-  app-icon {
-    color: var(--color-on-background-faint);
-  }
-
-  &:hover {
-    background: var(--color-line);
-  }
-
-  &--active,
-  &--active:hover {
-    background: var(--color-on-background);
-    color: var(--color-surface);
-
-    app-icon {
-      color: var(--color-surface);
-    }
-  }
 }

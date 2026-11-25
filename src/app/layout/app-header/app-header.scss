@@ -48,34 +48,10 @@
   }
 }
 
-// EN | FR segmented switch
+// EN | FR switch: global .segmented (styles.scss), kept on one line
 .language {
   flex: none;
-  display: flex;
-  padding: var(--space-050);
-  border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
-}
-
-.language__option {
-  min-width: var(--avatar-size);
-  padding: var(--space-100) var(--space-200);
-  border-radius: var(--radius-100);
-  font-size: var(--font-size-small);
-  line-height: var(--line-height-single);
-  color: var(--color-on-background-soft);
-  transition: background-color var(--transition-fast);
-
-  &:hover {
-    background: var(--color-line);
-  }
-
-  &--active,
-  &--active:hover {
-    background: var(--color-on-background);
-    color: var(--color-surface);
-    font-weight: var(--font-weight-strong);
-  }
+  flex-wrap: nowrap;
 }
 
 .account__trigger {

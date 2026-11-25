@@ -102,12 +102,12 @@
     }
   </div>
 
-  <figcaption class="damage__legend" role="radiogroup" [attr.aria-label]="'damage.tools' | translate">
+  <figcaption class="segmented damage__legend" role="radiogroup" [attr.aria-label]="'damage.tools' | translate">
     @for (item of legend; track item.type) {
       <button
         type="button"
-        class="damage__legend-item"
-        [class.damage__legend-item--active]="activeDamage() === item.type"
+        class="segmented__option"
+        [class.segmented__option--active]="activeDamage() === item.type"
         role="radio"
         [attr.aria-checked]="activeDamage() === item.type"
         [disabled]="locked()"

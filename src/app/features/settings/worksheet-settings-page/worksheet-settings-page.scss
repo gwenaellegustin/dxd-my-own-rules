@@ -32,36 +32,7 @@
   gap: var(--space-400);
 }
 
-// Car / motorcycle switch (same look as the EN / FR switch of the header)
-.segmented {
-  display: inline-flex;
-  gap: var(--space-100);
-  padding: var(--space-100);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
-}
-
-.segmented__option {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-200);
-  padding: var(--space-200) var(--space-200);
-  border-radius: var(--radius-100);
-  color: var(--color-on-background-soft);
-  transition: background-color var(--transition-fast);
-
-  &:hover {
-    background: var(--color-line);
-  }
-
-  &--active,
-  &--active:hover {
-    background: var(--color-on-background);
-    color: var(--color-surface);
-    font-weight: var(--font-weight-strong);
-  }
-}
+// Car / motorcycle switch: global .segmented (styles.scss)
 
 .tabs {
   display: flex;

@@ -75,12 +75,12 @@
       <div class="dropdown-menu__item account__language">
         <app-icon name="language" size="small" />
         <span id="account-language">{{ 'account.language' | translate }}</span>
-        <div class="language" role="group" aria-labelledby="account-language">
+        <div class="segmented language" role="group" aria-labelledby="account-language">
           @for (lang of language.languages; track lang) {
             <button
               type="button"
-              class="language__option"
-              [class.language__option--active]="language.current() === lang"
+              class="segmented__option"
+              [class.segmented__option--active]="language.current() === lang"
               [attr.aria-pressed]="language.current() === lang"
               [attr.aria-label]="'languages.' + lang | translate"
               (click)="language.use(lang)"
