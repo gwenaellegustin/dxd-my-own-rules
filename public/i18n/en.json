@@ -468,7 +468,6 @@
       "stroke-border": "Outline of every element and field.",
       "stroke-strong": "Focus ring, selected card, active tab, element shown from a transcript change, resize handle, drop area (dashed).",
       "opacity-disabled": "Disabled buttons and fields, checkboxes of done lines, hidden invoice text.",
-      "shadow-overlay": "Menus, dialogs and panels shown over the page.",
       "overlay-backdrop": "Behind a dialog, or an open panel on small screens.",
       "panel-width": "Width of an open side panel (left sidebar, transcript, tokens).",
       "panel-min-width": "Narrowest width when a side panel is resized by dragging its edge.",

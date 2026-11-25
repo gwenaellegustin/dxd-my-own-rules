@@ -35,8 +35,8 @@ const GROUP_PATTERNS: [TokenGroup, RegExp][] = [
   ['layers', /^--z-/],
 ];
 
-/** Tokens left out of the design system page (motion: not documented there) */
-const HIDDEN = /^--transition-/;
+/** Tokens left out of the design system page (motion and shadows: not documented there for now) */
+const HIDDEN = /^--(transition|shadow)-/;
 
 const STORAGE_KEY = 'design-tokens';
 

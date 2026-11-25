@@ -74,12 +74,12 @@
             <!-- Removed from the draft: done on Save, Cancel keeps the photo -->
             <button
               type="button"
-              class="icon-button registration__remove"
+              class="icon-button icon-button--primary registration__remove"
               [attr.aria-label]="'registration.removeImage' | translate"
               [attr.title]="'registration.removeImage' | translate"
               (click)="removeImage()"
             >
-              <app-icon name="delete" />
+              <app-icon name="delete" size="large" />
             </button>
           }
         </div>

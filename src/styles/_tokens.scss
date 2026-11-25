@@ -123,11 +123,10 @@
   --registration-note-max-height: 120px;
   --registration-zoom: 2.5;
 
-  // ---- Elevation & motion -------------------------------------------------
-  --shadow-overlay: 4px 4px 0 rgb(0 0 0 / 0.35); // hard offset shadow, retro
+  // ---- Elevation & motion (not in the design system page for now) ---------
   --shadow-panel-head: 0 2px 6px rgb(0 0 0 / 0.2); // under the head of the side panels (the list scrolls under it)
   --overlay-backdrop: rgb(0 0 0 / 0.32);
-  --transition-fast: 120ms ease; // hover, open / close (not in the design system page)
+  --transition-fast: 120ms ease; // hover, open / close
 
   // ---- Stacking -----------------------------------------------------------
   --z-raised: 1; // above the next elements (head of a side panel over its list)

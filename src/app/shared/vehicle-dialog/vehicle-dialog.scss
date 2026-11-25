@@ -8,17 +8,11 @@
   max-width: 100%;
 }
 
-// On the photo: a light background keeps it readable on any image
+// On the photo: a main (black) icon button, readable on any image
 .registration__remove {
   position: absolute;
   top: var(--space-200);
   right: var(--space-200);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-overlay);
-
-  &:hover {
-    background: var(--color-line);
-  }
 }
 
 .registration__viewer {

@@ -712,7 +712,6 @@ button {
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
-  box-shadow: var(--shadow-overlay);
 
   &--start {
     left: 0;
@@ -952,7 +951,6 @@ select.input {
   border-radius: var(--radius-200);
   background: var(--color-surface);
   color: var(--color-on-background);
-  box-shadow: var(--shadow-overlay);
 
   &::backdrop {
     background: var(--overlay-backdrop);

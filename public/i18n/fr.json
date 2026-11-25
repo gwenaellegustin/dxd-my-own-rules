@@ -468,7 +468,6 @@
       "stroke-border": "Contour de tous les éléments et champs.",
       "stroke-strong": "Anneau de focus, carte sélectionnée, onglet actif, élément montré depuis une modification du transcript, poignée de redimensionnement, zone de dépôt (pointillés).",
       "opacity-disabled": "Boutons et champs désactivés, cases des lignes faites, texte masqué de la facture.",
-      "shadow-overlay": "Menus, boîtes de dialogue et panneaux affichés par-dessus la page.",
       "overlay-backdrop": "Derrière une boîte de dialogue, ou un panneau ouvert sur petit écran.",
       "panel-width": "Largeur d’un panneau latéral ouvert (panneau de gauche, transcript, tokens).",
       "panel-min-width": "Largeur minimale quand on redimensionne un panneau latéral en tirant son bord.",
