@@ -267,10 +267,10 @@
         </div>
       </section>
 
-      <!-- Fields & chips -->
+      <!-- Fields -->
       <section class="tile tile--5" aria-labelledby="ds-fields">
         <h2 class="tile__title" id="ds-fields">
-          {{ 'designSystem.components.fieldsAndChips' | translate }}
+          {{ 'designSystem.components.fields' | translate }}
         </h2>
         <div class="fields">
           <label class="field">
@@ -322,26 +322,111 @@
               />
             </span>
           </label>
-        </div>
-        <div class="row">
-          <label class="choice"
-            ><input type="checkbox" checked />
-            {{ 'designSystem.samples.checkbox' | translate }}</label
-          >
-          <label class="choice"
-            ><input type="checkbox" /> {{ 'designSystem.samples.checkbox' | translate }}</label
-          >
-          <label class="choice">
-            <input type="radio" name="ds-radio" checked />
-            {{ 'designSystem.samples.radio' | translate }}
+          <div class="field">
+            <span class="field__label">{{ 'designSystem.samples.combobox' | translate }}</span>
+            <app-combobox [value]="comboValue()" [options]="comboOptions" (valueChange)="comboValue.set($event)" />
+            <span class="usage">{{ 'designSystem.samples.comboboxUsage' | translate }}</span>
+          </div>
+          <label class="field">
+            <span class="field__label">{{ 'designSystem.samples.clearable' | translate }}</span>
+            <app-clearable>
+              <input #clearTarget class="input" type="text" value="Matthieu Berclaz" />
+            </app-clearable>
+            <span class="usage">{{ 'designSystem.samples.clearableUsage' | translate }}</span>
           </label>
-          <label class="choice"
-            ><input type="radio" name="ds-radio" />
-            {{ 'designSystem.samples.radio' | translate }}</label
-          >
+          <div class="field">
+            <span class="field__label">{{ 'designSystem.samples.hideableField' | translate }}</span>
+            <app-hideable-field
+              [hidden]="noteHidden()"
+              [empty]="!noteText()"
+              (hiddenChange)="noteHidden.set($event)"
+              (remove)="noteText.set('')"
+            >
+              <textarea
+                class="textarea textarea--single-line"
+                rows="1"
+                [value]="noteText()"
+                (input)="noteText.set($any($event.target).value)"
+              ></textarea>
+            </app-hideable-field>
+            <span class="usage">{{ 'designSystem.samples.hideableFieldUsage' | translate }}</span>
+          </div>
         </div>
-        <!-- Chips: named by colour family (the same chip serves several statuses) -->
-        <hr class="tile__rule" />
+      </section>
+
+      <!-- Choices: checkbox (several), radio button (one), segmented control (one among a few) -->
+      <section class="tile tile--7" aria-labelledby="ds-choices">
+        <h2 class="tile__title" id="ds-choices">{{ 'designSystem.components.choices' | translate }}</h2>
+        <div class="spec spec--stacked">
+          <span class="spec__name">
+            <span class="text-strong">{{ 'designSystem.samples.checkbox' | translate }}</span>
+            <span class="usage">{{ 'designSystem.samples.checkboxUsage' | translate }}</span>
+          </span>
+          <div class="row">
+            <label class="choice">
+              <input type="checkbox" checked />
+              {{ 'line.planned' | translate }}
+            </label>
+            <label class="choice">
+              <input type="checkbox" />
+              {{ 'line.done' | translate }}
+            </label>
+          </div>
+        </div>
+        <div class="spec spec--stacked">
+          <span class="spec__name">
+            <span class="text-strong">{{ 'designSystem.samples.radio' | translate }}</span>
+            <span class="usage">{{ 'designSystem.samples.radioUsage' | translate }}</span>
+          </span>
+          <div class="row">
+            <label class="choice">
+              <input type="radio" name="ds-radio" checked />
+              {{ 'designSystem.samples.option' | translate: { number: 1 } }}
+            </label>
+            <label class="choice">
+              <input type="radio" name="ds-radio" />
+              {{ 'designSystem.samples.option' | translate: { number: 2 } }}
+            </label>
+          </div>
+        </div>
+        <div class="spec spec--stacked">
+          <span class="spec__name">
+            <span class="text-strong">{{ 'designSystem.samples.segmented' | translate }}</span>
+            <span class="usage">{{ 'designSystem.samples.segmentedUsage' | translate }}</span>
+          </span>
+          <div class="segmented" role="radiogroup" [attr.aria-label]="'designSystem.samples.segmented' | translate">
+            <button
+              type="button"
+              role="radio"
+              class="segmented__option"
+              [class.segmented__option--active]="segmentedValue() === 'car'"
+              [attr.aria-checked]="segmentedValue() === 'car'"
+              (click)="segmentedValue.set('car')"
+            >
+              <app-icon name="car" size="small" />
+              {{ 'registration.kinds.car' | translate }}
+            </button>
+            <button
+              type="button"
+              role="radio"
+              class="segmented__option"
+              [class.segmented__option--active]="segmentedValue() === 'motorcycle'"
+              [attr.aria-checked]="segmentedValue() === 'motorcycle'"
+              (click)="segmentedValue.set('motorcycle')"
+            >
+              <app-icon name="motorcycle" size="small" />
+              {{ 'registration.kinds.motorcycle' | translate }}
+            </button>
+            <button type="button" class="segmented__option is-hover">
+              {{ 'designSystem.states.hover' | translate }}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chips: named by colour family (the same chip serves several statuses) -->
+      <section class="tile tile--5" aria-labelledby="ds-chips">
+        <h2 class="tile__title" id="ds-chips">{{ 'designSystem.components.chips' | translate }}</h2>
         <div class="spec">
           <span class="spec__name">
             <span class="text-strong">{{ 'designSystem.samples.statusChips' | translate }}</span>
@@ -392,7 +477,7 @@
         <div class="line line--done">{{ 'designSystem.samples.lineDone' | translate }}</div>
       </section>
 
-      <!-- Main menu: one page in each state -->
+      <!-- Menu: a page of the main menu in each state, then the tabs -->
       <section class="tile tile--4" aria-labelledby="ds-menu">
         <h2 class="tile__title" id="ds-menu">{{ 'designSystem.components.menu' | translate }}</h2>
         @for (state of menuStates; track state) {
@@ -420,6 +505,27 @@
             <span class="problem-badge">3</span>
           </span>
         </div>
+        <hr class="tile__rule" />
+        <div class="spec spec--stacked">
+          <span class="spec__name">
+            <span class="text-strong">{{ 'designSystem.samples.tabs' | translate }}</span>
+            <span class="usage">{{ 'designSystem.samples.tabsUsage' | translate }}</span>
+          </span>
+          <div class="tabs" role="tablist">
+            @for (tab of [1, 2, 3]; track tab) {
+              <button
+                type="button"
+                role="tab"
+                class="tabs__tab"
+                [class.tabs__tab--active]="tabValue() === tab"
+                [attr.aria-selected]="tabValue() === tab"
+                (click)="tabValue.set(tab)"
+              >
+                {{ 'designSystem.samples.tab' | translate: { number: tab } }}
+              </button>
+            }
+          </div>
+        </div>
       </section>
 
       <!-- Dialog (shown in place instead of floating) -->
@@ -445,6 +551,98 @@
                   {{ 'designSystem.samples.confirm' | translate }}
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cards of the side panels: states, with counts, with a status chip -->
+      <section class="tile tile--6" aria-labelledby="ds-side-cards">
+        <h2 class="tile__title" id="ds-side-cards">
+          {{ 'designSystem.components.sideCards' | translate }}
+        </h2>
+        <p class="usage">{{ 'designSystem.samples.sideCardsUsage' | translate }}</p>
+        <div class="side-cards">
+          @for (state of sideCardStates; track state) {
+            <div class="state-sample">
+              <span class="text-small text-secondary">{{ 'designSystem.states.' + state | translate }}</span>
+              <div
+                class="side-card"
+                [class.is-hover]="state === 'hover'"
+                [class.side-card--selected]="state === 'selected'"
+                [class.side-card--done]="state === 'cardDone'"
+              >
+                <app-vehicle-logo vehicle="Bus" kind="car" />
+                <span class="side-card__body">
+                  <span class="side-card__title">Bus - Matthieu Berclaz</span>
+                  <span class="side-card__date">24.11.2026</span>
+                </span>
+              </div>
+            </div>
+          }
+          <div class="state-sample">
+            <span class="text-small text-secondary">{{ 'designSystem.states.count' | translate }}</span>
+            <div class="side-card">
+              <app-icon name="person" size="xlarge" />
+              <span class="side-card__body">
+                <span class="side-card__title">Matthieu Berclaz</span>
+                <span class="side-card__subtitle">1142 Pampigny</span>
+                <span class="side-card__badges">
+                  <span class="count-badge"><app-icon name="tool" size="small" /> 1</span>
+                  <span class="count-badge count-badge--alert"><app-icon name="send" size="small" /> 1</span>
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="state-sample">
+            <span class="text-small text-secondary">{{ 'designSystem.states.withChip' | translate }}</span>
+            <div class="side-card">
+              <app-vehicle-logo vehicle="Bus" kind="car" />
+              <span class="side-card__body">
+                <span class="side-card__title">{{ 'invoice.number' | translate: { number: 2261024 } }}</span>
+                <span class="side-card__subtitle">Bus - Matthieu Berclaz</span>
+                <span class="side-card__date">24.10.2026</span>
+                <span class="side-card__badges">
+                  <span class="status-chip status-chip--overdue">{{ 'invoice.status.overdue' | translate }}</span>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transcript: what was said, the answer and its changes, an answer not applied -->
+      <section class="tile tile--6" aria-labelledby="ds-transcript">
+        <h2 class="tile__title" id="ds-transcript">{{ 'designSystem.components.transcript' | translate }}</h2>
+        <p class="usage">{{ 'designSystem.samples.transcriptUsage' | translate }}</p>
+        <div class="transcript-sample">
+          <div class="message message--user">
+            <time class="message__time text-small">09:12</time>
+            <p class="message__bubble">{{ 'designSystem.samples.userMessage' | translate }}</p>
+          </div>
+          <div class="message message--assistant">
+            <div class="message__body">
+              <p>{{ 'designSystem.samples.assistantMessage' | translate }}</p>
+              @for (change of changeSamples(); track $index) {
+                <app-transcript-change [change]="change" />
+              }
+            </div>
+          </div>
+          <div class="message message--user">
+            <time class="message__time text-small">09:20</time>
+            <p class="message__bubble">{{ 'designSystem.samples.userMessage2' | translate }}</p>
+          </div>
+          <div class="message message--assistant message--problem">
+            <div class="message__body">
+              <p class="message__no-action text-small text-strong">
+                <app-icon name="close" size="small" />
+                {{ 'transcript.noAction' | translate }}
+              </p>
+              <p>{{ 'designSystem.samples.problemMessage' | translate }}</p>
+              <button type="button" class="button message__validate">
+                <app-icon name="mark-read" size="small" />
+                {{ 'transcript.validate' | translate }}
+              </button>
             </div>
           </div>
         </div>
@@ -563,275 +761,10 @@
       </section>
 
       <!-- Icons -->
-      <!-- Cards of the side panels: states, with counts, with a status chip -->
-      <section class="tile tile--5" aria-labelledby="ds-side-cards">
-        <h2 class="tile__title" id="ds-side-cards">
-          {{ 'designSystem.components.sideCards' | translate }}
-        </h2>
-        <p class="usage">{{ 'designSystem.samples.sideCardsUsage' | translate }}</p>
-        <div class="side-cards">
-          @for (state of sideCardStates; track state) {
-            <div class="state-sample">
-              <span class="text-small text-secondary">{{ 'designSystem.states.' + state | translate }}</span>
-              <div
-                class="side-card"
-                [class.is-hover]="state === 'hover'"
-                [class.side-card--selected]="state === 'selected'"
-                [class.side-card--done]="state === 'cardDone'"
-              >
-                <app-vehicle-logo vehicle="Bus" kind="car" />
-                <span class="side-card__body">
-                  <span class="side-card__title">Bus - Matthieu Berclaz</span>
-                  <span class="side-card__date">24.11.2026</span>
-                </span>
-              </div>
-            </div>
-          }
-          <div class="state-sample">
-            <span class="text-small text-secondary">{{ 'designSystem.states.count' | translate }}</span>
-            <div class="side-card">
-              <app-icon name="person" size="xlarge" />
-              <span class="side-card__body">
-                <span class="side-card__title">Matthieu Berclaz</span>
-                <span class="side-card__subtitle">1142 Pampigny</span>
-                <span class="side-card__badges">
-                  <span class="count-badge"><app-icon name="tool" size="small" /> 1</span>
-                  <span class="count-badge count-badge--alert"><app-icon name="send" size="small" /> 1</span>
-                </span>
-              </span>
-            </div>
-          </div>
-          <div class="state-sample">
-            <span class="text-small text-secondary">{{ 'designSystem.states.withChip' | translate }}</span>
-            <div class="side-card">
-              <app-vehicle-logo vehicle="Bus" kind="car" />
-              <span class="side-card__body">
-                <span class="side-card__title">{{ 'invoice.number' | translate: { number: 2261024 } }}</span>
-                <span class="side-card__subtitle">Bus - Matthieu Berclaz</span>
-                <span class="side-card__date">24.10.2026</span>
-                <span class="side-card__badges">
-                  <span class="status-chip status-chip--overdue">{{ 'invoice.status.overdue' | translate }}</span>
-                </span>
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Controls: segmented control, tabs, list with suggestions, fields with buttons -->
-      <section class="tile tile--7" aria-labelledby="ds-controls">
-        <h2 class="tile__title" id="ds-controls">{{ 'designSystem.components.controls' | translate }}</h2>
-        <div class="spec spec--stacked">
-          <span class="spec__name">
-            <span class="text-strong">{{ 'designSystem.samples.segmented' | translate }}</span>
-            <span class="usage">{{ 'designSystem.samples.segmentedUsage' | translate }}</span>
-          </span>
-          <div class="segmented" role="radiogroup" [attr.aria-label]="'designSystem.samples.segmented' | translate">
-            <button
-              type="button"
-              role="radio"
-              class="segmented__option"
-              [class.segmented__option--active]="segmentedValue() === 'car'"
-              [attr.aria-checked]="segmentedValue() === 'car'"
-              (click)="segmentedValue.set('car')"
-            >
-              <app-icon name="car" size="small" />
-              {{ 'registration.kinds.car' | translate }}
-            </button>
-            <button
-              type="button"
-              role="radio"
-              class="segmented__option"
-              [class.segmented__option--active]="segmentedValue() === 'motorcycle'"
-              [attr.aria-checked]="segmentedValue() === 'motorcycle'"
-              (click)="segmentedValue.set('motorcycle')"
-            >
-              <app-icon name="motorcycle" size="small" />
-              {{ 'registration.kinds.motorcycle' | translate }}
-            </button>
-            <button type="button" class="segmented__option is-hover">
-              {{ 'designSystem.states.hover' | translate }}
-            </button>
-          </div>
-        </div>
-        <div class="spec spec--stacked">
-          <span class="spec__name">
-            <span class="text-strong">{{ 'designSystem.samples.tabs' | translate }}</span>
-            <span class="usage">{{ 'designSystem.samples.tabsUsage' | translate }}</span>
-          </span>
-          <div class="tabs" role="tablist">
-            @for (tab of [1, 2, 3]; track tab) {
-              <button
-                type="button"
-                role="tab"
-                class="tabs__tab"
-                [class.tabs__tab--active]="tabValue() === tab"
-                [attr.aria-selected]="tabValue() === tab"
-                (click)="tabValue.set(tab)"
-              >
-                {{ 'designSystem.samples.tab' | translate: { number: tab } }}
-              </button>
-            }
-          </div>
-        </div>
-        <div class="fields">
-          <div class="field">
-            <span class="field__label">{{ 'designSystem.samples.combobox' | translate }}</span>
-            <app-combobox [value]="comboValue()" [options]="comboOptions" (valueChange)="comboValue.set($event)" />
-            <span class="usage">{{ 'designSystem.samples.comboboxUsage' | translate }}</span>
-          </div>
-          <label class="field">
-            <span class="field__label">{{ 'designSystem.samples.clearable' | translate }}</span>
-            <app-clearable>
-              <input #clearTarget class="input" type="text" value="Matthieu Berclaz" />
-            </app-clearable>
-            <span class="usage">{{ 'designSystem.samples.clearableUsage' | translate }}</span>
-          </label>
-          <div class="field">
-            <span class="field__label">{{ 'designSystem.samples.hideableField' | translate }}</span>
-            <app-hideable-field
-              [hidden]="noteHidden()"
-              [empty]="!noteText()"
-              (hiddenChange)="noteHidden.set($event)"
-              (remove)="noteText.set('')"
-            >
-              <textarea
-                class="textarea textarea--single-line"
-                rows="1"
-                [value]="noteText()"
-                (input)="noteText.set($any($event.target).value)"
-              ></textarea>
-            </app-hideable-field>
-            <span class="usage">{{ 'designSystem.samples.hideableFieldUsage' | translate }}</span>
-          </div>
-          <div class="field">
-            <span class="field__label">{{ 'designSystem.samples.dateFilter' | translate }}</span>
-            <span class="row">
-              <app-date-filter labelKey="transcript.filterDate" [(value)]="dateValue" />
-              @if (dateValue(); as date) {
-                <button type="button" class="filter-chip" (click)="dateValue.set(null)">
-                  <app-icon name="calendar" size="small" />
-                  {{ date }}
-                  <app-icon name="close" size="small" />
-                </button>
-              }
-            </span>
-            <span class="usage">{{ 'designSystem.samples.dateFilterUsage' | translate }}</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Transcript: what was said, the answer and its changes, an answer not applied -->
-      <section class="tile tile--5" aria-labelledby="ds-transcript">
-        <h2 class="tile__title" id="ds-transcript">{{ 'designSystem.components.transcript' | translate }}</h2>
-        <p class="usage">{{ 'designSystem.samples.transcriptUsage' | translate }}</p>
-        <div class="transcript-sample">
-          <div class="message message--user">
-            <time class="message__time text-small">09:12</time>
-            <p class="message__bubble">{{ 'designSystem.samples.userMessage' | translate }}</p>
-          </div>
-          <div class="message message--assistant">
-            <div class="message__body">
-              <p>{{ 'designSystem.samples.assistantMessage' | translate }}</p>
-              @for (change of changeSamples(); track $index) {
-                <app-transcript-change [change]="change" />
-              }
-            </div>
-          </div>
-          <div class="message message--user">
-            <time class="message__time text-small">09:20</time>
-            <p class="message__bubble">{{ 'designSystem.samples.userMessage2' | translate }}</p>
-          </div>
-          <div class="message message--assistant message--problem">
-            <div class="message__body">
-              <p class="message__no-action text-small text-strong">
-                <app-icon name="close" size="small" />
-                {{ 'transcript.noAction' | translate }}
-              </p>
-              <p>{{ 'designSystem.samples.problemMessage' | translate }}</p>
-              <button type="button" class="button message__validate">
-                <app-icon name="mark-read" size="small" />
-                {{ 'transcript.validate' | translate }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Menus, side panels, highlight, drop zone, scrollbar -->
-      <section class="tile tile--7" aria-labelledby="ds-patterns">
-        <h2 class="tile__title" id="ds-patterns">{{ 'designSystem.components.patterns' | translate }}</h2>
-        <div class="spec spec--stacked">
-          <span class="spec__name">
-            <span class="text-strong">{{ 'designSystem.samples.menus' | translate }}</span>
-            <span class="usage">{{ 'designSystem.samples.menusUsage' | translate }}</span>
-          </span>
-          <div class="dropdown-menu menu-sample" role="menu">
-            <p class="dropdown-menu__title text-small text-secondary">{{ 'common.sortBy' | translate }}</p>
-            <button type="button" role="menuitemradio" class="dropdown-menu__item" aria-checked="true">
-              <app-icon name="check" size="small" />
-              {{ 'designSystem.samples.option' | translate: { number: 1 } }}
-            </button>
-            <button type="button" role="menuitemradio" class="dropdown-menu__item" aria-checked="false">
-              <app-icon name="check" size="small" class="menu-sample__unchecked" />
-              {{ 'designSystem.samples.option' | translate: { number: 2 } }}
-            </button>
-            <button type="button" role="menuitem" class="dropdown-menu__item dropdown-menu__item--active">
-              <app-icon name="settings" size="small" />
-              {{ 'designSystem.samples.currentItem' | translate }}
-            </button>
-          </div>
-        </div>
-        <div class="spec spec--stacked">
-          <span class="spec__name">
-            <span class="text-strong">{{ 'designSystem.samples.sidePanels' | translate }}</span>
-            <span class="usage">{{ 'designSystem.samples.sidePanelsUsage' | translate }}</span>
-          </span>
-          <span class="row">
-            <button type="button" class="button" aria-controls="token-panel" (click)="panelOpen.set(!panelOpen())">
-              <app-icon [name]="panelOpen() ? 'right-panel-close' : 'edit'" size="small" />
-              {{ (panelOpen() ? 'designSystem.samples.foldPanel' : 'designSystem.samples.unfoldPanel') | translate }}
-            </button>
-          </span>
-        </div>
-        <div class="spec spec--stacked">
-          <span class="spec__name">
-            <span class="text-strong">{{ 'designSystem.samples.highlight' | translate }}</span>
-            <span class="usage">{{ 'designSystem.samples.highlightUsage' | translate }}</span>
-          </span>
-          <div class="list-row is-highlighted">
-            <app-vehicle-logo vehicle="Bus" kind="car" [lifted]="true" />
-            <span class="list-row__main">
-              <span class="text-strong">Bus</span>
-              <span class="text-secondary">24.11.2026</span>
-            </span>
-          </div>
-        </div>
-        <div class="spec spec--stacked">
-          <span class="spec__name">
-            <span class="text-strong">{{ 'designSystem.samples.dropZone' | translate }}</span>
-            <span class="usage">{{ 'designSystem.samples.dropZoneUsage' | translate }}</span>
-          </span>
-          <div class="drop-zone">
-            <app-icon name="upload" size="xlarge" />
-            <span>{{ 'registration.upload' | translate }}</span>
-          </div>
-        </div>
-        <div class="spec spec--stacked">
-          <span class="spec__name">
-            <span class="text-strong">{{ 'designSystem.samples.scrollbar' | translate }}</span>
-            <span class="usage">{{ 'designSystem.samples.scrollbarUsage' | translate }}</span>
-          </span>
-          <div class="scroll-sample">
-            @for (n of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; track n) {
-              <p>{{ 'designSystem.samples.dialogText' | translate }}</p>
-            }
-          </div>
-        </div>
-      </section>
-
       <section class="tile tile--12" aria-labelledby="ds-icons">
         <h2 class="tile__title" id="ds-icons">{{ 'designSystem.groups.icons' | translate }}</h2>
+        <!-- Where the icons come from -->
+        <p class="usage">{{ 'designSystem.samples.iconSource' | translate }}</p>
         <!-- One size per use: the rule, with an example of each -->
         <p class="usage">{{ 'designSystem.samples.iconRule' | translate }}</p>
         <div class="icon-sizes">
@@ -847,7 +780,7 @@
                   }
                   @case ('medium') {
                     <button type="button" class="icon-button" [attr.aria-label]="'designSystem.samples.icon' | translate">
-                      <app-icon name="settings" />
+                      <app-icon name="note" />
                     </button>
                   }
                   @case ('large') {
@@ -856,7 +789,7 @@
                       class="icon-button icon-button--primary"
                       [attr.aria-label]="'designSystem.samples.iconPrimary' | translate"
                     >
-                      <app-icon name="check" size="large" />
+                      <app-icon name="left-panel-close" size="large" />
                     </button>
                   }
                   @case ('xlarge') {

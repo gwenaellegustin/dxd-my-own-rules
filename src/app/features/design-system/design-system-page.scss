@@ -419,26 +419,6 @@ $icon-item-width: 96px; // icon with its name under it
   border-radius: var(--radius-200);
 }
 
-// A dropdown menu shown in place (not floating under a button)
-.menu-sample {
-  position: static;
-  align-self: start;
-}
-
-// Option not chosen: its check keeps the room, hidden (as in the sort menu)
-.menu-sample__unchecked {
-  visibility: hidden;
-}
-
-// A box that scrolls, to show the scrollbar
-.scroll-sample {
-  height: calc(4 * var(--control-height));
-  overflow-y: auto;
-  padding: var(--space-200);
-  border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
-}
-
 // Icon sizes: an example of each use above its name, value and use
 .icon-sizes {
   display: grid;

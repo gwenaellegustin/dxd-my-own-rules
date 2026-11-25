@@ -8,7 +8,6 @@ import { isDesktop } from '../../core/utils/breakpoints';
 import { TokenPanel } from './token-panel/token-panel';
 import { Combobox } from '../../shared/combobox/combobox';
 import { Clearable } from '../../shared/clearable/clearable';
-import { DateFilter } from '../../shared/date-filter/date-filter';
 import { HideableField } from '../invoice/hideable-field/hideable-field';
 import { TranscriptChangeCard } from '../../layout/transcript-change/transcript-change';
 import { TranscriptChange } from '../../core/models/transcript.model';
@@ -52,6 +51,7 @@ const ICON_GROUPS: { id: string; icons: IconName[] }[] = [
     id: 'actions',
     icons: [
       'plus-circle',
+      'note',
       'edit',
       'delete',
       'close',
@@ -83,7 +83,6 @@ const ICON_GROUPS: { id: string; icons: IconName[] }[] = [
       'cart',
       'transcript',
       'registration',
-      'note',
       'calendar',
       'settings',
       'language',
@@ -110,7 +109,6 @@ const ICON_GROUPS: { id: string; icons: IconName[] }[] = [
     TokenPanel,
     Combobox,
     Clearable,
-    DateFilter,
     HideableField,
     TranscriptChangeCard,
   ],
@@ -156,8 +154,8 @@ export class DesignSystemPage {
     { key: 'danger', row: 'deleteConfirm', cls: 'button button--danger' },
     // Always with an icon in the app (add a line, a rule, a vehicle…)
     { key: 'subtle', cls: 'button-subtle', lead: 'plus-circle' },
-    { key: 'icon', cls: 'icon-button', icon: 'settings', iconSize: 'medium' },
-    { key: 'iconPrimary', cls: 'icon-button icon-button--primary', icon: 'check', iconSize: 'large' },
+    { key: 'icon', cls: 'icon-button', icon: 'note', iconSize: 'medium' },
+    { key: 'iconPrimary', cls: 'icon-button icon-button--primary', icon: 'left-panel-close', iconSize: 'large' },
   ];
   protected readonly menuStates = ['normal', 'hover', 'selected'] as const;
   protected readonly vehicleStates = ['shown', 'hidden', 'hover'] as const;
@@ -170,7 +168,6 @@ export class DesignSystemPage {
   protected readonly tabValue = signal(1);
   protected readonly comboValue = signal('');
   protected readonly comboOptions = ['Fabrice Favre', 'Matthieu Berclaz', 'Patrice Petit'];
-  protected readonly dateValue = signal<string | null>(null);
   protected readonly noteHidden = signal(false);
   protected readonly noteText = signal('Sans les bougies');
 
