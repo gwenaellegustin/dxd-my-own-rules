@@ -1,9 +1,11 @@
 @use 'side-panel';
+@use 'fluid';
 
 @include side-panel.side-panel(left);
 
+// The cards lie on the grid of circles (the head stays on the surface)
 .panel {
-  background: var(--color-background);
+  @include fluid.circle-grid;
 }
 
 .panel__scroll {

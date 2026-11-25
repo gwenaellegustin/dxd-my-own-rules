@@ -90,7 +90,7 @@
 // A line of the preview: the worksheet line as it will look (not editable), selectable and draggable
 .preview-line {
   position: relative;
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 
   &[role='button'] {
     cursor: grab;
@@ -140,7 +140,7 @@
   display: grid;
   place-content: center;
   background: var(--color-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   color: var(--color-on-background);
   opacity: 0;
 

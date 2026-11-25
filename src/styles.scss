@@ -1,5 +1,6 @@
 @use 'tokens';
 @use 'breakpoints' as bp;
+@use 'fluid';
 
 // ---------------------------------------------------------------------------
 // Base
@@ -15,6 +16,8 @@
 // _breakpoints.scss. On <html>, not :root, so the design system page does not list it as a token
 html {
   --breakpoint-desktop: #{bp.$width-lg};
+  // Necks of ink between stacked cards (see the ink-joins mixin of _fluid.scss)
+  @include fluid.ink-joins-mask;
 }
 
 // The page always has exactly the size of the screen: only the app's own areas scroll (work
@@ -41,7 +44,8 @@ body {
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-body);
   color: var(--color-on-background);
-  background: var(--color-background);
+  @include fluid.circle-grid;
+  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -86,16 +90,14 @@ button {
 // ---------------------------------------------------------------------------
 
 .text-heading {
-  font-family: var(--font-heading);
+  @include fluid.heading-font;
   font-size: var(--font-size-heading);
-  font-weight: var(--font-weight-regular);
   line-height: var(--line-height-heading);
 }
 
 .text-subheading {
-  font-family: var(--font-heading);
+  @include fluid.heading-font;
   font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-regular);
   line-height: var(--line-height-heading);
 }
 
@@ -238,9 +240,11 @@ button {
   }
 }
 
-// Height follows the content (see AutoGrow directive): no scrollbar, no resize handle
+// Height follows the content (see AutoGrow directive): no scrollbar, no resize handle. Several
+// lines: the corners of a container, not a capsule
 .textarea {
   display: block;
+  border-radius: var(--radius-300);
   min-height: var(--textarea-height);
   line-height: var(--line-height-body);
   overflow: hidden;
@@ -442,20 +446,18 @@ button {
   }
 }
 
-// Main menu entry (one per page, see MainNav): title font (Bungee has a single weight, so the
-// current page is not bold)
+// Main menu entry (one per page, see MainNav): a capsule, in the title font
 .pill {
   position: relative;
   flex: none;
   display: inline-flex;
   align-items: center;
   gap: var(--space-200);
-  padding: var(--space-200);
+  padding: var(--space-200) var(--space-400);
   border-radius: var(--radius-200);
   color: var(--color-on-background);
-  font-family: var(--font-heading);
-  font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-regular);
+  @include fluid.heading-font;
+  font-size: var(--font-size-medium);
   line-height: var(--line-height-single);
   text-decoration: none;
   white-space: nowrap;
@@ -535,7 +537,7 @@ button {
   padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   color: var(--color-on-background);
   user-select: none;
   transition: background-color var(--transition-fast);
@@ -629,7 +631,7 @@ button {
   padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   color: var(--color-on-background);
   text-decoration: none;
   transition: background-color var(--transition-fast);
@@ -647,6 +649,12 @@ button {
 
   @include bp.area-below(bp.$width-xs) {
     flex-wrap: wrap;
+  }
+
+  // Joined to the next row by necks of ink (fluid look)
+  &:has(+ .list-row) {
+    position: relative;
+    @include fluid.ink-joins;
   }
 }
 
@@ -674,7 +682,7 @@ button {
   text-align: left;
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   color: var(--color-on-background);
   transition: background-color var(--transition-fast);
 
@@ -695,6 +703,12 @@ button {
   &:hover,
   &.is-hover {
     background: var(--color-neutral);
+  }
+
+  // Joined to the next card of its group by drops of ink (fluid look)
+  &:has(+ .side-card) {
+    position: relative;
+    @include fluid.ink-joins;
   }
 }
 
@@ -751,7 +765,7 @@ button {
 .is-highlighted {
   outline: var(--stroke-strong) solid var(--color-on-background);
   outline-offset: var(--space-100);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   transition: outline-color var(--transition-fast);
 }
 
@@ -819,7 +833,7 @@ button {
   gap: var(--space-100);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 
   &--start {
     left: 0;
@@ -1056,7 +1070,7 @@ select.input {
   max-height: calc(100dvh - var(--space-800));
   padding: 0;
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   background: var(--color-surface);
   color: var(--color-on-background);
 
@@ -1274,7 +1288,7 @@ select.input {
   gap: var(--space-200);
   padding: var(--space-400);
   border: var(--stroke-strong) dashed var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   color: var(--color-on-background);
   text-align: center;
   cursor: pointer;
@@ -1303,7 +1317,7 @@ select.input {
 
 .message {
   display: flex;
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 }
 
 // "AI Chat -> User message": what was said, a chat bubble on the right with its time above.
@@ -1323,7 +1337,7 @@ select.input {
   padding: var(--space-100) var(--space-200);
   background: var(--color-surface);
   border: var(--stroke-strong) solid var(--color-on-background);
-  border-radius: var(--radius-200) var(--radius-200) 0 var(--radius-200);
+  border-radius: var(--radius-300) var(--radius-300) 0 var(--radius-300);
 
   // Tail of the bubble, bottom right
   &::after {

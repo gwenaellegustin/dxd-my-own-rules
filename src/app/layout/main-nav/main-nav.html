@@ -1,5 +1,11 @@
-<!-- Tablet / desktop: one pill per page -->
-<nav class="pills" [attr.aria-label]="'nav.label' | translate">
+<!-- Tablet / desktop: one pill per page, the two drops of the current page behind them (see MainNav) -->
+<nav #bar class="pills" [class.pills--drops]="place()" [attr.aria-label]="'nav.label' | translate">
+  @if (place(); as pill) {
+    <span class="drops" [class.drops--animated]="animated()" aria-hidden="true">
+      <span class="drop drop--front" [style.left.px]="pill.left" [style.width.px]="pill.width"></span>
+      <span class="drop drop--back" [style.left.px]="pill.left" [style.width.px]="pill.width"></span>
+    </span>
+  }
   @for (item of items; track item.path) {
     <ng-container *ngTemplateOutlet="link; context: { $implicit: item, cls: 'pill' }" />
   }
@@ -40,9 +46,18 @@
     (click)="close?.close()"
   >
     <app-icon [name]="item.icon" size="small" />
-    {{ item.labelKey | translate }}
+    <span class="pill__label">{{ item.labelKey | translate }}</span>
     @if (item.badge?.(); as count) {
       <span class="problem-badge badge" [attr.aria-label]="'nav.badgeCount' | translate: { count }">{{ count }}</span>
     }
   </a>
 </ng-template>
+
+<!-- Metaball filter of the drops: blurred, then cut again at about half opacity, so two drops close
+     to each other join with a neck -->
+<svg class="drops-filter" aria-hidden="true" focusable="false">
+  <filter id="nav-drops" x="-20%" y="-60%" width="140%" height="220%">
+    <feGaussianBlur stdDeviation="5" />
+    <feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" />
+  </filter>
+</svg>

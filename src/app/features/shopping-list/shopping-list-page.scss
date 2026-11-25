@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'fluid';
 
 // The page is only a wrapper: the shared layout is the element that fills the screen
 :host {
@@ -21,7 +22,13 @@
   gap: var(--space-200);
 }
 
-// One item: ordered checkbox, quantity × label, links, delete
+// One item: ordered checkbox, quantity × label, links, delete. Joined to the next item of the
+// day by necks of ink (fluid look)
+.item:has(+ .item) {
+  position: relative;
+  @include fluid.ink-joins;
+}
+
 .item {
   display: flex;
   align-items: center;
@@ -29,7 +36,7 @@
   padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   cursor: pointer;
   user-select: none;
   transition: border-color var(--transition-fast);
@@ -79,7 +86,7 @@
   padding: var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) dashed var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 
   @include bp.area-below(bp.$width-sm) {
     grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);

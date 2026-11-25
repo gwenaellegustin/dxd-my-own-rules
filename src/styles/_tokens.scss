@@ -1,19 +1,21 @@
 // ---------------------------------------------------------------------------
 // Design tokens — single source of truth for the visual language.
 //
-// Retro / brutalist look: grey page, white elements outlined in black, slightly
-// rounded corners, Bungee titles and DM Sans text. Every component reads these
-// variables, none hard-codes them.
+// Fluid look: a paper page ruled with a grid of circles (see the circle-grid mixin of
+// _fluid.scss); the elements are drawn on it in black with the geometry of the circles —
+// capsules, round buttons, corners of the radius of a circle — and the stacked ones flow into
+// each other like drops of ink. A plain grotesque (Inter) for every text, in contrast.
+// Every component reads these variables, none hard-codes them.
 // ---------------------------------------------------------------------------
 
 :root {
   // ---- Colors: neutrals ---------------------------------------------------
-  --color-background: #ebebeb; // every background area (page, panels, groups), chips, read-only fields, done cards and rows
+  --color-background: #f3f2ee; // paper: every background area (page, panels, groups), chips, read-only fields, done cards and rows
   --color-on-background: #000000; // text, icons, outlines, dark buttons, focus ring
   --color-on-background-soft: #3a3a3a; // secondary text, hover of dark buttons
   --color-on-background-faint: #9e9e9e; // placeholders
   --color-surface: #ffffff; // elements (cards, panels, header, dialogs), text on dark buttons
-  --color-neutral: #cfcfcf; // grey background: hover, selected item, notices, scrollbar thumb; dividers inside an element
+  --color-neutral: #e3e1da; // grey background: hover, selected item, notices, scrollbar thumb; dividers inside an element
 
   // ---- Colors: status -----------------------------------------------------
   // Info = planned line, open invoice; success = done line, paid invoice; error = problems,
@@ -37,17 +39,20 @@
   --scrollbar-button-size: 20px; // length of an arrow button along the scrollbar
 
   // ---- Typography ---------------------------------------------------------
-  --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  // Titles and main menu. Bungee only exists in capitals and in one weight (regular)
-  --font-heading: 'Bungee', 'DM Sans', system-ui, sans-serif;
+  // One plain grotesque for everything: the titles only differ by their size and weight. Inter
+  // has optical sizes: the large titles get its tighter display design by themselves
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-heading: 'Inter', system-ui, sans-serif;
 
   --font-size-small: 14px;
   --font-size-medium: 16px;
   --font-size-subheading: 20px;
-  --font-size-heading: 24px;
+  --font-size-heading: 28px;
 
   --font-weight-regular: 400;
   --font-weight-strong: 600;
+  --font-weight-heading: 500;
+  --font-tracking-heading: -0.02em; // titles set a little tighter
 
   --line-height-single: 1;
   --line-height-body: 1.4;
@@ -62,11 +67,18 @@
   --space-800: 32px; // separate areas: sections of a page, columns of a layout
 
   // ---- Radius -------------------------------------------------------------
-  // Slightly rounded corners everywhere, like the Bungee titles; only real circles (radio
-  // buttons, logo) are round
-  --radius-100: 2px; // small parts inside a control (checkbox, switch option, list option)
-  --radius-200: 4px; // default: cards, fields, buttons, chips, menus, dialogs, images, chat bubbles
+  // The geometry of the circles of the grid: controls are capsules, icon buttons are round, the
+  // corners of the larger elements are arcs of a circle of the grid
+  --radius-100: 4px; // small parts inside a control (checkbox, list option)
+  --radius-200: 999px; // controls: capsules (fields on one line, buttons, chips, badges, menu items)
+  --radius-300: calc(var(--grid-size) / 2); // containers: cards, lines, text areas, menus, dialogs, images
   --radius-circle: 50%;
+
+  // ---- Grid of circles and ink joins (see _fluid.scss) ---------------------
+  --grid-size: 32px; // diameter of the circles of the background grid
+  // Stacked cards are joined near their corners by necks of ink, this wide where they meet the
+  // cards (narrower in the middle: the gap between the cards is taken from it)
+  --join-size: 14px;
 
   // ---- Strokes ------------------------------------------------------------
   --stroke-border: 1px;
@@ -132,6 +144,10 @@
   --transition-fast: 120ms ease; // hover, open / close
   --transition-panel: 200ms ease-out; // a side panel or a dialog opened (and the backdrop behind it)
   --transition-reveal: 400ms ease-out; // new colour of a line, spreading from where it was pressed
+  // Current page of the menu moving to another page: two drops, the front one quicker; while they
+  // are close they stay joined by a neck (metaball), then they merge again
+  --transition-drop-front: 380ms cubic-bezier(0.6, 0, 0.3, 1);
+  --transition-drop-back: 560ms cubic-bezier(0.6, 0, 0.3, 1);
 
   // ---- Stacking -----------------------------------------------------------
   --z-raised: 1; // above the next elements (head of a side panel over its list)

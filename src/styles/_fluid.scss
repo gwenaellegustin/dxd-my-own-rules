@@ -1,0 +1,93 @@
+// ---------------------------------------------------------------------------
+// Fluid look: grid of circles, title typography, ink joins. Use with: @use 'fluid';
+// ---------------------------------------------------------------------------
+
+// ---- Grid of circles --------------------------------------------------------
+// Background of every area: circles side by side (--grid-size wide), joined where they touch by
+// a small liquid fillet, like drops. One circle per tile of the image; the fillets at the 4
+// points where it touches its neighbours are drawn half in each tile. An image cannot read CSS
+// variables: change $grid-color together with --color-background.
+$grid-color: '%23d3cfc5';
+
+@function _circle-grid($color) {
+  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15.5' fill='none' stroke='#{$color}'/%3E%3Cpath fill='#{$color}' d='M30.62 9.5A16 16 0 0 1 30.62 22.5Q32 18.73 33.38 22.5A16 16 0 0 1 33.38 9.5Q32 13.27 30.62 9.5ZM22.5 30.62A16 16 0 0 1 9.5 30.62Q13.27 32 9.5 33.38A16 16 0 0 1 22.5 33.38Q18.73 32 22.5 30.62ZM1.38 22.5A16 16 0 0 1 1.38 9.5Q0 13.27 -1.38 9.5A16 16 0 0 1 -1.38 22.5Q0 18.73 1.38 22.5ZM9.5 1.38A16 16 0 0 1 22.5 1.38Q18.73 0 22.5 -1.38A16 16 0 0 1 9.5 -1.38Q13.27 0 9.5 1.38Z'/%3E%3C/svg%3E");
+}
+
+// The grid scrolls with the content of the area
+@mixin circle-grid {
+  background: _circle-grid($grid-color) 0 0 / var(--grid-size) var(--grid-size) repeat local,
+    var(--color-background);
+}
+
+// ---- Titles -----------------------------------------------------------------
+// The same plain grotesque as the text, larger, medium weight, set a little tighter
+@mixin heading-font {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--font-tracking-heading);
+}
+
+// ---- Ink joins --------------------------------------------------------------
+// Stacked elements (cards of a side panel, lines of a worksheet) are joined by necks of ink across
+// the gap between them, like drops that touch: one near each side, where the rounded corner meets
+// the straight edge. A neck is --join-size wide where it meets the cards and narrower in the
+// middle; its hollow sides are circles touching both cards, so it flows into their outlines.
+//
+// The mask of the necks is long: it is written once, as --ink-joins-mask on <html> (styles.scss,
+// not :root, so the design system page does not list it as a token), and each use reads it.
+// Gap: --space-200, corners: --radius-300, outlines: --stroke-border.
+@mixin ink-joins-mask {
+  $r: var(--radius-300);
+  $gap: var(--space-200);
+  $border: var(--stroke-border);
+  $half: calc(var(--join-size) / 2);
+  $hollow: calc(#{$gap} / 2);
+  // From the middle of the element's bottom corners to the middle of the next one's top corners
+  $mid: calc(#{$r} + #{$gap} / 2);
+  $next: calc(2 * #{$r} + #{$gap});
+  $left-x: calc(#{$r} - #{$half});
+  $right-x: calc(100% - #{$r} - #{$half});
+  // In order: the hollow sides of the two necks; never over the rounded corners of the two
+  // elements; only across the gap (and over the two outlines); only near the two sides. No comment
+  // inside the value: Sass copies a custom property as it is
+  --ink-joins-mask:
+    radial-gradient(circle at #{$left-x} #{$mid}, transparent calc(#{$hollow} - 0.5px), #000 calc(#{$hollow} + 0.5px)),
+    radial-gradient(circle at calc(#{$r} + #{$half}) #{$mid}, transparent calc(#{$hollow} - 0.5px), #000 calc(#{$hollow} + 0.5px)),
+    radial-gradient(circle at #{$right-x} #{$mid}, transparent calc(#{$hollow} - 0.5px), #000 calc(#{$hollow} + 0.5px)),
+    radial-gradient(circle at calc(100% - #{$r} + #{$half}) #{$mid}, transparent calc(#{$hollow} - 0.5px), #000 calc(#{$hollow} + 0.5px)),
+    radial-gradient(circle at #{$r} 0, transparent calc(#{$r} - 0.5px), #000 calc(#{$r} + 0.5px)),
+    radial-gradient(circle at #{$r} #{$next}, transparent calc(#{$r} - 0.5px), #000 calc(#{$r} + 0.5px)),
+    radial-gradient(circle at calc(100% - #{$r}) 0, transparent calc(#{$r} - 0.5px), #000 calc(#{$r} + 0.5px)),
+    radial-gradient(circle at calc(100% - #{$r}) #{$next}, transparent calc(#{$r} - 0.5px), #000 calc(#{$r} + 0.5px)),
+    linear-gradient(
+      transparent calc(#{$r} - #{$border}),
+      #000 calc(#{$r} - #{$border}) calc(#{$r} + #{$gap} + #{$border}),
+      transparent calc(#{$r} + #{$gap} + #{$border})
+    ),
+    linear-gradient(
+      90deg,
+      transparent #{$left-x},
+      #000 #{$left-x} calc(#{$r} + #{$half}),
+      transparent calc(#{$r} + #{$half}) #{$right-x},
+      #000 #{$right-x} calc(100% - #{$r} + #{$half}),
+      transparent calc(100% - #{$r} + #{$half})
+    );
+}
+
+// Put it on an element followed by the next one of the stack (--space-200 below it): it draws
+// both necks with its ::after. The element must be its pseudo-element's containing block
+// (position: relative).
+@mixin ink-joins {
+  &::after {
+    content: '';
+    position: absolute;
+    left: calc(-1 * var(--stroke-border));
+    right: calc(-1 * var(--stroke-border));
+    top: calc(100% + var(--stroke-border) - var(--radius-300));
+    height: calc(2 * var(--radius-300) + var(--space-200));
+    background: var(--color-on-background);
+    pointer-events: none;
+    mask-image: var(--ink-joins-mask);
+    mask-composite: intersect;
+  }
+}

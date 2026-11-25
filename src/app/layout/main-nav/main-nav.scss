@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'fluid';
 
 // The pages, on the left (the free space of the header is after back / forward; on phones,
 // where back / forward are hidden, after the pages)
@@ -13,6 +14,8 @@
 }
 
 .pills {
+  // The drops are placed in it (MainNav measures the pills from its edges)
+  position: relative;
   min-width: 0;
   display: flex;
   align-items: center;
@@ -27,12 +30,64 @@
   }
 }
 
+// Black capsule of the current page: two drops in a layer with the metaball filter (the filter
+// works on the whole layer, so the pills and their text stay sharp above it). The front drop
+// is quicker: on the way they stretch, split, and merge again on the new pill
+.drops {
+  position: absolute;
+  inset: 0;
+  filter: url(#nav-drops);
+  pointer-events: none;
+}
+
+.drop {
+  position: absolute;
+  top: var(--space-100);
+  bottom: var(--space-100);
+  border-radius: var(--radius-200);
+  background: var(--color-on-background);
+
+  @media (prefers-reduced-motion: no-preference) {
+    .drops--animated &--front {
+      transition:
+        left var(--transition-drop-front),
+        width var(--transition-drop-front);
+    }
+
+    .drops--animated &--back {
+      transition:
+        left var(--transition-drop-back),
+        width var(--transition-drop-back);
+    }
+  }
+}
+
+.drops-filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+// The current page has the drops behind it: its own background (global .pill) stays off. The
+// icon and the name of every pill invert exactly where the drops cover them (difference with
+// white: black on the header, white on the drops), also while the drops flow (the red badge
+// keeps its colours)
+.pills--drops .pill {
+  &--active {
+    background: none;
+  }
+
+  app-icon,
+  .pill__label {
+    color: var(--color-surface);
+    mix-blend-mode: difference;
+  }
+}
+
 // The pill of a page is global (styles.scss: .pill). Phones: the pages of the dropdown menu use
-// the title font too (Bungee has a single weight, so the current page is not bold)
+// the title font too
 .dropdown-menu__item {
-  font-family: var(--font-heading);
-  font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-regular);
+  @include fluid.heading-font;
 }
 
 // Number of items (e.g. shopping list): the red badge of the transcript (.problem-badge), inside

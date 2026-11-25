@@ -68,12 +68,12 @@
 .damage__diagram {
   position: relative;
   background: var(--color-surface);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
 
   // Rounded like the cards (on the image itself: the marks near the edges are not clipped)
   img {
     display: block;
-    border-radius: var(--radius-200);
+    border-radius: var(--radius-300);
     width: 100%;
     aspect-ratio: 348 / 246;
     object-fit: cover;

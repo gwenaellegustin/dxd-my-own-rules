@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'fluid';
 
 :host {
   // Colour of the line (to do, planned, done), also used by the spreading colour below
@@ -15,8 +16,13 @@
   padding-left: calc(var(--space-400) + var(--stroke-border) + var(--space-400));
   background: var(--line-bg);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  border-radius: var(--radius-300);
   transition: background-color var(--transition-fast);
+}
+
+// Joined to the next line of its section by drops of ink (fluid look)
+:host(:has(+ app-task-line)) {
+  @include fluid.ink-joins;
 }
 
 // "Other" lines start with their text field: on the left, the same space as above and below it,
