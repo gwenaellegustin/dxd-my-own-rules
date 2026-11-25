@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'fluid';
 
 // The page scrolls inside the main area (the window itself never scrolls); like the work area of
 // the other pages, it is the `work-area` container the task lines adapt to
@@ -6,7 +7,7 @@
   flex: 1;
   min-height: 0;
   overflow-y: scroll; // always shown, like the work area of the other pages
-  background: var(--color-background);
+  // Transparent: the grid behind the app shows through (GridBackdrop)
   container: work-area / inline-size;
 }
 
@@ -51,6 +52,17 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-200);
+}
+
+// Like the worksheet: the title is a tab standing right on the first line
+.section {
+  gap: 0;
+}
+
+.section__title {
+  @include fluid.section-tab;
+  align-self: flex-start;
+  margin: 0 0 calc(-1 * var(--stroke-border)) calc(2 * var(--radius-300));
 }
 
 // Lines tab: editor of the selected line | the worksheet preview; stacked when the page is narrow

@@ -1,21 +1,19 @@
 // ---------------------------------------------------------------------------
-// Fluid look: grid of circles, title typography, ink joins. Use with: @use 'fluid';
+// Fluid look: grid lines, title typography, ink joins. Use with: @use 'fluid';
 // ---------------------------------------------------------------------------
 
-// ---- Grid of circles --------------------------------------------------------
-// Background of every area: circles side by side (--grid-size wide), joined where they touch by
-// a small liquid fillet, like drops. One circle per tile of the image; the fillets at the 4
-// points where it touches its neighbours are drawn half in each tile. An image cannot read CSS
-// variables: change $grid-color together with --color-background.
-$grid-color: '%23d3cfc5';
-
-@function _circle-grid($color) {
-  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15.5' fill='none' stroke='#{$color}'/%3E%3Cpath fill='#{$color}' d='M30.62 9.5A16 16 0 0 1 30.62 22.5Q32 18.73 33.38 22.5A16 16 0 0 1 33.38 9.5Q32 13.27 30.62 9.5ZM22.5 30.62A16 16 0 0 1 9.5 30.62Q13.27 32 9.5 33.38A16 16 0 0 1 22.5 33.38Q18.73 32 22.5 30.62ZM1.38 22.5A16 16 0 0 1 1.38 9.5Q0 13.27 -1.38 9.5A16 16 0 0 1 -1.38 22.5Q0 18.73 1.38 22.5ZM9.5 1.38A16 16 0 0 1 22.5 1.38Q18.73 0 22.5 -1.38A16 16 0 0 1 9.5 -1.38Q13.27 0 9.5 1.38Z'/%3E%3C/svg%3E");
-}
-
-// The grid scrolls with the content of the area
-@mixin circle-grid {
-  background: _circle-grid($grid-color) 0 0 / var(--grid-size) var(--grid-size) repeat local,
+// ---- Grid -------------------------------------------------------------------
+// The grid of the background is drawn behind the whole app by GridBackdrop (layout/grid-backdrop):
+// plain lines, --grid-columns squares across the window, and the fluid effects where the elements
+// lie on it. The areas it shows through are transparent. This mixin is for an area that covers
+// another one (side panel open over the page on tablets and phones): the same lines, without the
+// effects.
+@mixin grid-lines {
+  background:
+    linear-gradient(90deg, var(--color-outline) var(--stroke-border), transparent var(--stroke-border)) 0 0 /
+      var(--grid-size) var(--grid-size) repeat fixed,
+    linear-gradient(var(--color-outline) var(--stroke-border), transparent var(--stroke-border)) 0 0 /
+      var(--grid-size) var(--grid-size) repeat fixed,
     var(--color-background);
 }
 
@@ -28,55 +26,45 @@ $grid-color: '%23d3cfc5';
 }
 
 // ---- Ink joins --------------------------------------------------------------
-// Stacked elements (cards of a side panel, lines of a worksheet) are joined by necks of ink across
-// the gap between them, like drops that touch: one near each side, where the rounded corner meets
-// the straight edge. A neck is --join-size wide where it meets the cards and narrower in the
-// middle; its hollow sides are circles touching both cards, so it flows into their outlines.
+// The "ink" is the colour of the outlines and of the grid (--color-outline): the joins merge with
+// both.
+// Stacked elements (cards of a side panel, lines of a worksheet), --space-200 apart, are joined at
+// their corners only (no ink across their width): on each side an X between the bottom corner of
+// one and the top corner of the next, like between the round ends of two elements side by side.
+// Its four tips are where the corners start rounding; between them its sides are hollow: along the
+// two corners, and across the outer side and the gap a circle through two tips (sagging 3/8 of the
+// half chord outside, 1/2 across the gap).
 //
-// The mask of the necks is long: it is written once, as --ink-joins-mask on <html> (styles.scss,
-// not :root, so the design system page does not list it as a token), and each use reads it.
+// The mask is long: it is written once, as --ink-joins-mask on <html> (styles.scss, not :root, so
+// the design system page does not list it as a token), and each use reads it.
 // Gap: --space-200, corners: --radius-300, outlines: --stroke-border.
 @mixin ink-joins-mask {
   $r: var(--radius-300);
   $gap: var(--space-200);
-  $border: var(--stroke-border);
-  $half: calc(var(--join-size) / 2);
-  $hollow: calc(#{$gap} / 2);
-  // From the middle of the element's bottom corners to the middle of the next one's top corners
-  $mid: calc(#{$r} + #{$gap} / 2);
   $next: calc(2 * #{$r} + #{$gap});
-  $left-x: calc(#{$r} - #{$half});
-  $right-x: calc(100% - #{$r} - #{$half});
-  // In order: the hollow sides of the two necks; never over the rounded corners of the two
-  // elements; only across the gap (and over the two outlines); only near the two sides. No comment
-  // inside the value: Sass copies a custom property as it is
+  // Outer side: half chord (from the tip of a corner to the tip of the next one) and the circle
+  // through both tips with a sag of 3/8 of it: radius 1.521 c, centre 1.146 c outside
+  $outer: calc(#{$r} + #{$gap} / 2);
+  // Across the gap: half chord, sag 1/2: radius 1.25 c, centre 0.75 c inside
+  $inner: calc(#{$gap} / 2);
+  // Layers (all intersected): the hollow outer sides, the hollows across the gap, never inside the
+  // four rounded corners, only near the two sides. No comment inside the value: Sass copies a
+  // custom property as it is
   --ink-joins-mask:
-    radial-gradient(circle at #{$left-x} #{$mid}, transparent calc(#{$hollow} - 0.5px), #000 calc(#{$hollow} + 0.5px)),
-    radial-gradient(circle at calc(#{$r} + #{$half}) #{$mid}, transparent calc(#{$hollow} - 0.5px), #000 calc(#{$hollow} + 0.5px)),
-    radial-gradient(circle at #{$right-x} #{$mid}, transparent calc(#{$hollow} - 0.5px), #000 calc(#{$hollow} + 0.5px)),
-    radial-gradient(circle at calc(100% - #{$r} + #{$half}) #{$mid}, transparent calc(#{$hollow} - 0.5px), #000 calc(#{$hollow} + 0.5px)),
+    radial-gradient(circle at calc(-1.146 * #{$outer}) #{$outer}, transparent calc(1.521 * #{$outer} - 0.5px), #000 calc(1.521 * #{$outer} + 0.5px)),
+    radial-gradient(circle at calc(100% + 1.146 * #{$outer}) #{$outer}, transparent calc(1.521 * #{$outer} - 0.5px), #000 calc(1.521 * #{$outer} + 0.5px)),
+    radial-gradient(circle at calc(#{$r} + 0.75 * #{$inner}) #{$outer}, transparent calc(1.25 * #{$inner} - 0.5px), #000 calc(1.25 * #{$inner} + 0.5px)),
+    radial-gradient(circle at calc(100% - #{$r} - 0.75 * #{$inner}) #{$outer}, transparent calc(1.25 * #{$inner} - 0.5px), #000 calc(1.25 * #{$inner} + 0.5px)),
     radial-gradient(circle at #{$r} 0, transparent calc(#{$r} - 0.5px), #000 calc(#{$r} + 0.5px)),
     radial-gradient(circle at #{$r} #{$next}, transparent calc(#{$r} - 0.5px), #000 calc(#{$r} + 0.5px)),
     radial-gradient(circle at calc(100% - #{$r}) 0, transparent calc(#{$r} - 0.5px), #000 calc(#{$r} + 0.5px)),
     radial-gradient(circle at calc(100% - #{$r}) #{$next}, transparent calc(#{$r} - 0.5px), #000 calc(#{$r} + 0.5px)),
-    linear-gradient(
-      transparent calc(#{$r} - #{$border}),
-      #000 calc(#{$r} - #{$border}) calc(#{$r} + #{$gap} + #{$border}),
-      transparent calc(#{$r} + #{$gap} + #{$border})
-    ),
-    linear-gradient(
-      90deg,
-      transparent #{$left-x},
-      #000 #{$left-x} calc(#{$r} + #{$half}),
-      transparent calc(#{$r} + #{$half}) #{$right-x},
-      #000 #{$right-x} calc(100% - #{$r} + #{$half}),
-      transparent calc(100% - #{$r} + #{$half})
-    );
+    linear-gradient(90deg, #000 #{$r}, transparent #{$r} calc(100% - #{$r}), #000 calc(100% - #{$r}));
 }
 
-// Put it on an element followed by the next one of the stack (--space-200 below it): it draws
-// both necks with its ::after. The element must be its pseudo-element's containing block
-// (position: relative).
+// Put it on an element followed by the next one of the stack (--space-200 below it): it draws the
+// two X with its ::after, from the middle of its bottom corners to the middle of the next one's
+// top corners. The element must be its pseudo-element's containing block (position: relative).
 @mixin ink-joins {
   &::after {
     content: '';
@@ -85,9 +73,79 @@ $grid-color: '%23d3cfc5';
     right: calc(-1 * var(--stroke-border));
     top: calc(100% + var(--stroke-border) - var(--radius-300));
     height: calc(2 * var(--radius-300) + var(--space-200));
-    background: var(--color-on-background);
+    background: var(--color-outline);
     pointer-events: none;
     mask-image: var(--ink-joins-mask);
     mask-composite: intersect;
+  }
+}
+
+// Capsules side by side in a row (count badges of a card, buttons of a dialog), $height high and
+// $gap apart: joined by ink between their round ends, hollow on all four sides (an X): along the
+// round ends, and at the top and bottom a circle through the tips, sagging half way to the middle.
+// On a capsule followed by the next one; it draws with its ::after.
+@mixin capsule-joins($height, $gap, $border: var(--stroke-border)) {
+  position: relative;
+
+  &::after {
+    $r: calc(#{$height} / 2);
+    content: '';
+    position: absolute;
+    top: calc(-1 * #{$border});
+    left: calc(100% + #{$border} - #{$r});
+    width: calc(#{$height} + #{$gap});
+    height: $height;
+    background: var(--color-outline);
+    pointer-events: none;
+    $c: calc((#{$height} + #{$gap}) / 2);
+    mask-image:
+      radial-gradient(circle at 0 50%, transparent calc(#{$r} - 0.5px), #000 calc(#{$r} + 0.5px)),
+      radial-gradient(circle at 100% 50%, transparent calc(#{$r} - 0.5px), #000 calc(#{$r} + 0.5px)),
+      radial-gradient(circle at 50% calc(-0.75 * #{$c}), transparent calc(1.25 * #{$c} - 0.5px), #000 calc(1.25 * #{$c} + 0.5px)),
+      radial-gradient(circle at 50% calc(100% + 0.75 * #{$c}), transparent calc(1.25 * #{$c} - 0.5px), #000 calc(1.25 * #{$c} + 0.5px));
+    mask-composite: intersect;
+  }
+}
+
+// ---- Title tab ----------------------------------------------------------------
+// Title of a section of a worksheet: a tab in the colour of the outlines, standing right on the
+// first line of the section (it covers the top outline of the line where it stands), its feet
+// flowing into that outline. The page places it: indented by at least its feet, and moved down by
+// one outline so it stands on the line.
+@mixin section-tab {
+  position: relative;
+  z-index: var(--z-raised);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-200);
+  margin: 0;
+  padding: var(--space-200) var(--space-400);
+  border-radius: var(--radius-300) var(--radius-300) 0 0;
+  background: var(--color-outline);
+  color: var(--color-surface);
+  @include liquid-feet(var(--color-outline));
+}
+
+// Feet of a tab (position: relative) standing on an outline of the same colour: hollow curves
+// joining it to the outline on both sides, drawn with its pseudo-elements
+@mixin liquid-feet($color, $radius: var(--radius-300)) {
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: $radius;
+    height: $radius;
+    pointer-events: none;
+  }
+
+  &::before {
+    right: 100%;
+    background: radial-gradient(circle at 0 0, transparent calc(#{$radius} - 0.5px), #{$color} #{$radius});
+  }
+
+  &::after {
+    left: 100%;
+    background: radial-gradient(circle at 100% 0, transparent calc(#{$radius} - 0.5px), #{$color} #{$radius});
   }
 }

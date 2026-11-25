@@ -1,12 +1,7 @@
 @use 'side-panel';
-@use 'fluid';
 
 @include side-panel.side-panel(left);
 
-// The cards lie on the grid of circles (the head stays on the surface)
-.panel {
-  @include fluid.circle-grid;
-}
 
 .panel__scroll {
   display: flex;

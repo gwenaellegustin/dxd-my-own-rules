@@ -13,7 +13,7 @@
   gap: var(--space-100);
   padding: var(--space-400);
   background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-300);
   color: var(--color-on-background);
   text-align: left;
@@ -140,7 +140,7 @@
   place-content: center;
   width: calc(var(--icon-size-small) + 2 * var(--space-100));
   height: calc(var(--icon-size-small) + 2 * var(--space-100));
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-200);
   background: var(--color-surface);
   color: var(--color-on-background);

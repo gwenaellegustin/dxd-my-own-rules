@@ -30,7 +30,7 @@ public/
                    registration/ (vehicle registration documents)
 src/
   styles/          _tokens.scss (CSS variables), _breakpoints.scss, _side-panel.scss,
-                   _fluid.scss (grid of circles, title font, ink joins)
+                   _fluid.scss (grid lines, title font, ink joins)
   styles.scss      base styles and shared form controls
   app/
     core/          models, API access, services, utils (names, saved preferences)
@@ -38,7 +38,8 @@ src/
                      rules), invoices, clients, shopping list, transcript
                    - client activity (counts and last date of each client), highlight (shows
                      the element a transcript change refers to)
-    layout/        header, main navigation (pills / mobile menu), panels layout
+    layout/        header, main navigation (pills / mobile menu), grid of the background
+                   (lines and the effects of the elements lying on it), panels layout
                    (left panel | work area | transcript), transcript panel and change cards
     shared/        icon, vehicle logo, vehicle sidebar (cards list, search, sort), vehicle info
                    dialog, modal dialog, dropdown menu, money pipe, form helpers

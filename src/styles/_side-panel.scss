@@ -8,6 +8,7 @@
 //
 // The chosen width is given to the panel as --panel-chosen-width (PanelWidthService).
 @use 'breakpoints' as bp;
+@use 'fluid';
 
 @mixin side-panel($side: left) {
   $border-side: right;
@@ -49,8 +50,7 @@
     flex: none;
     display: flex;
     min-height: 0;
-    background: var(--color-surface);
-    border-#{$border-side}: var(--stroke-border) solid var(--color-on-background);
+    border-#{$border-side}: var(--stroke-border) solid var(--color-outline);
 
     @include bp.tablet-down {
       // The rail keeps its full width: the border is added outside (else the rail overflows the
@@ -62,7 +62,7 @@
     @include bp.mobile {
       width: auto;
       border: 0;
-      border-bottom: var(--stroke-border) solid var(--color-on-background);
+      border-bottom: var(--stroke-border) solid var(--color-outline);
     }
   }
 
@@ -75,9 +75,11 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
-    background: var(--color-surface);
 
+    // Over the page (tablets, phones): opaque, with the lines of the grid. Desktop: transparent,
+    // its cards lie on the grid behind the app (GridBackdrop)
     @include bp.tablet-down {
+      @include fluid.grid-lines;
       position: absolute;
       top: 0;
       bottom: 0;
@@ -88,7 +90,7 @@
       // Over the work area the panel is wider than the rail: it needs its own border on the
       // work-area side (the border of :host only runs along the rail). No shadow: the backdrop
       // already sets it apart, and a shadow next to the border looks doubled
-      border-#{$border-side}: var(--stroke-border) solid var(--color-on-background);
+      border-#{$border-side}: var(--stroke-border) solid var(--color-outline);
     }
 
     @include bp.mobile {
@@ -158,6 +160,7 @@
 
   .rail {
     width: var(--rail-width);
+    background: var(--color-surface);
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -49,7 +49,7 @@
           <div class="worksheet-preview" [attr.aria-label]="'settings.preview' | translate" role="group">
             @for (section of tpl.sections; track section.id) {
               <section class="section" [attr.aria-labelledby]="'preview-' + section.id">
-                <h2 class="text-heading" [id]="'preview-' + section.id">{{ section.titleKey | translate }}</h2>
+                <h2 class="section__title text-heading" [id]="'preview-' + section.id">{{ section.titleKey | translate }}</h2>
                 <div class="section__lines">
                   @for (line of section.lines; track line.id; let i = $index; let last = $last) {
                     <!-- "Other" lines are fixed: always last, not editable, not movable -->

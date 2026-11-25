@@ -1,3 +1,5 @@
+@use 'fluid';
+
 // The page is only a wrapper: the shared layout is the element that fills the screen
 :host {
   display: contents;
@@ -19,30 +21,47 @@
   padding: var(--space-400);
 }
 
+// The title stands right on the first line (no space between them)
 .section {
   display: flex;
   flex-direction: column;
-  gap: var(--space-200);
 }
 
 .section__heading {
   margin: 0;
 }
 
+// The title is a tab (fluid.section-tab) standing on the first line: indented by two corners (room
+// for its left foot), moved down by one outline so it covers the top outline of the line. Collapsed
+// section: nothing to stand on, a tab rounded all around, the summary next to it
 .section__header {
+  position: relative;
+  z-index: var(--z-raised);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   flex-wrap: wrap;
-  gap: var(--space-200);
+  gap: var(--space-200) var(--space-400);
+  padding-left: calc(2 * var(--radius-300));
+  margin-bottom: calc(-1 * var(--stroke-border));
+
+  .section--collapsed & {
+    align-items: center;
+    margin-bottom: 0;
+  }
 }
 
 .section__toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-200);
-  padding: var(--space-100) 0;
-  border-radius: var(--radius-100);
+  @include fluid.section-tab;
   text-align: left;
+
+  .section--collapsed & {
+    border-radius: var(--radius-300);
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
 }
 
 .section__chevron {

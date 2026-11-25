@@ -23,7 +23,7 @@
 }
 
 // One item: ordered checkbox, quantity × label, links, delete. Joined to the next item of the
-// day by necks of ink (fluid look)
+// day at their corners (fluid look)
 .item:has(+ .item) {
   position: relative;
   @include fluid.ink-joins;
@@ -35,7 +35,7 @@
   gap: var(--space-200);
   padding: var(--space-400);
   background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-300);
   cursor: pointer;
   user-select: none;
@@ -85,7 +85,7 @@
   gap: var(--space-200);
   padding: var(--space-400);
   background: var(--color-surface);
-  border: var(--stroke-border) dashed var(--color-on-background);
+  border: var(--stroke-border) dashed var(--color-outline);
   border-radius: var(--radius-300);
 
   @include bp.area-below(bp.$width-sm) {

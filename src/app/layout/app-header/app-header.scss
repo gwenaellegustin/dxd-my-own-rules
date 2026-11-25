@@ -10,7 +10,7 @@
   height: var(--header-height);
   padding: var(--space-400);
   background: var(--color-surface);
-  border-bottom: var(--stroke-border) solid var(--color-on-background);
+  border-bottom: var(--stroke-border) solid var(--color-outline);
 
   @include bp.mobile {
     gap: var(--space-200);

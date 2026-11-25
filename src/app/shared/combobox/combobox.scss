@@ -38,7 +38,7 @@
   padding: var(--space-100);
   list-style: none;
   background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-300);
 
   // Slides down a little when it opens, like the dropdown menus (keyframes in styles.scss)

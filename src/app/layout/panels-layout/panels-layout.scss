@@ -1,5 +1,4 @@
 @use 'breakpoints' as bp;
-@use 'fluid';
 
 :host {
   position: relative;
@@ -53,8 +52,7 @@
   // Scrollbar always shown: the content keeps its width whether it scrolls or not, so it does
   // not move when another worksheet / invoice is selected
   overflow-y: scroll;
-  // Grid of circles, scrolling with the content
-  @include fluid.circle-grid;
+  // Transparent: the grid behind the app shows through (GridBackdrop)
   // Children adapt to the space left by the side panels, not to the viewport
   container: work-area / inline-size;
 

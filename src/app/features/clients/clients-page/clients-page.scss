@@ -37,11 +37,12 @@
   background: var(--color-neutral);
 }
 
-// Three columns: name (2) + rate (1), street (3), postcode (1) + city (2)
+// Three columns: name (2) + rate (1), street (3), postcode (1) + city (2). The fields of a row are
+// grouped (--space-200 apart, like those of a worksheet): the grid joins them with ink
 .client-fields {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-400);
+  gap: var(--space-400) var(--space-200);
 
   @include bp.area-below(bp.$width-xs) {
     grid-template-columns: minmax(0, 1fr);

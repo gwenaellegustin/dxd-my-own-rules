@@ -1,7 +1,6 @@
 @use 'side-panel';
 
 @use 'breakpoints' as bp;
-@use 'fluid';
 
 @include side-panel.side-panel(right);
 
@@ -12,7 +11,6 @@
   flex-direction: column;
   gap: var(--space-200);
   padding: var(--space-200);
-  @include fluid.circle-grid;
 }
 
 // Today fills the scroll area: opened at the bottom, "Today" is at the top of the panel and the

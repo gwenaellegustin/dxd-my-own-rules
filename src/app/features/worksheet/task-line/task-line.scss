@@ -15,12 +15,12 @@
   // border + field padding), so the texts of both kinds of lines are aligned
   padding-left: calc(var(--space-400) + var(--stroke-border) + var(--space-400));
   background: var(--line-bg);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-300);
   transition: background-color var(--transition-fast);
 }
 
-// Joined to the next line of its section by drops of ink (fluid look)
+// Joined to the next line of its section at their corners (fluid look)
 :host(:has(+ app-task-line)) {
   @include fluid.ink-joins;
 }

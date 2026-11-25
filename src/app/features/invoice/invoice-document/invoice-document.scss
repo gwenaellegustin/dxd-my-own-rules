@@ -10,7 +10,7 @@
   margin-inline: auto;
   padding: var(--space-800);
   background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-300);
 
   @include bp.area-below(bp.$width-sm) {

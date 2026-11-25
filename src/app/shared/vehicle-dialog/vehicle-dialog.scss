@@ -39,7 +39,7 @@
     calc(100dvh - var(--registration-chrome-height))
   );
   object-fit: contain;
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-300);
   user-select: none;
   transition: transform var(--transition-fast);

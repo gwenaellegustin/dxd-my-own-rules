@@ -16,7 +16,7 @@
 // _breakpoints.scss. On <html>, not :root, so the design system page does not list it as a token
 html {
   --breakpoint-desktop: #{bp.$width-lg};
-  // Necks of ink between stacked cards (see the ink-joins mixin of _fluid.scss)
+  // Ink between stacked cards (see the ink-joins mixin of _fluid.scss)
   @include fluid.ink-joins-mask;
 }
 
@@ -44,7 +44,8 @@ body {
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-body);
   color: var(--color-on-background);
-  @include fluid.circle-grid;
+  // Paper; the grid is drawn over it by GridBackdrop
+  background: var(--color-background);
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
 }
@@ -124,7 +125,10 @@ button {
   min-width: 0;
 }
 
+// Indented like the text inside the field: the label lines up with it, and leaves the line of the
+// grid that runs along the edge of the fields
 .field__label {
+  padding-inline: var(--space-400);
   font-size: var(--font-size-medium);
 }
 
@@ -134,7 +138,7 @@ button {
   min-width: 0;
   padding: var(--space-200) var(--space-400);
   background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-200);
   color: var(--color-on-background);
   font-size: var(--font-size-medium);
@@ -285,7 +289,7 @@ button {
     display: grid;
     place-content: center;
     background: var(--color-surface);
-    border: var(--stroke-border) solid var(--color-on-background);
+    border: var(--stroke-border) solid var(--color-outline);
     cursor: pointer;
   }
 
@@ -379,7 +383,7 @@ button {
   gap: var(--space-200);
   min-height: var(--control-height);
   padding: var(--space-200) var(--space-400);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-200);
   background: var(--color-surface);
   color: var(--color-on-background);
@@ -536,7 +540,7 @@ button {
   gap: var(--space-200);
   padding: var(--space-400);
   background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-300);
   color: var(--color-on-background);
   user-select: none;
@@ -613,7 +617,7 @@ button {
   place-content: center;
   width: var(--checkbox-size);
   height: var(--checkbox-size);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-100);
 
   .vehicle-tile--checked & {
@@ -630,7 +634,7 @@ button {
   gap: var(--space-200);
   padding: var(--space-400);
   background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-300);
   color: var(--color-on-background);
   text-decoration: none;
@@ -651,7 +655,7 @@ button {
     flex-wrap: wrap;
   }
 
-  // Joined to the next row by necks of ink (fluid look)
+  // Joined to the next row at their corners (fluid look)
   &:has(+ .list-row) {
     position: relative;
     @include fluid.ink-joins;
@@ -681,7 +685,7 @@ button {
   padding: var(--space-400);
   text-align: left;
   background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-300);
   color: var(--color-on-background);
   transition: background-color var(--transition-fast);
@@ -705,7 +709,7 @@ button {
     background: var(--color-neutral);
   }
 
-  // Joined to the next card of its group by drops of ink (fluid look)
+  // Joined to the next card of its group at their corners (fluid look)
   &:has(+ .side-card) {
     position: relative;
     @include fluid.ink-joins;
@@ -786,10 +790,12 @@ button {
   line-height: var(--line-height-single);
 }
 
-// Count with an icon (client cards of the side panel): grey, blue (open invoices), red (sent)
+// Count with an icon (client cards of the side panel): grey, blue (open invoices), red (sent).
+// The counts of a card are grouped: joined by ink between their round ends
 .count-badge {
   display: inline-flex;
   align-items: center;
+  height: var(--badge-size);
   gap: var(--space-050);
   padding: var(--space-050) var(--space-200) var(--space-050) var(--space-100);
   border: var(--stroke-border) solid transparent;
@@ -813,6 +819,10 @@ button {
     border-color: var(--color-error-line);
     color: var(--color-error);
   }
+
+  &:has(+ .count-badge) {
+    @include fluid.capsule-joins(var(--badge-size), var(--space-100));
+  }
 }
 
 // Dropdown menus (see the Dropdown directive): account, mobile navigation, sort
@@ -832,7 +842,7 @@ button {
   flex-direction: column;
   gap: var(--space-100);
   background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-300);
 
   &--start {
@@ -1069,7 +1079,7 @@ select.input {
   width: min(var(--dialog-width), calc(100vw - var(--space-800)));
   max-height: calc(100dvh - var(--space-800));
   padding: 0;
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-outline);
   border-radius: var(--radius-300);
   background: var(--color-surface);
   color: var(--color-on-background);
@@ -1114,13 +1124,18 @@ select.input {
   font-weight: var(--font-weight-strong);
 }
 
-// Buttons on the right (the optional count on the left takes the free space)
+// Buttons on the right (the optional count on the left takes the free space). Grouped: joined by
+// ink between their round ends
 .dialog__actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: var(--space-200);
+
+  .button:has(+ .button) {
+    @include fluid.capsule-joins(var(--control-height), var(--space-200));
+  }
 }
 
 .dialog__count {
@@ -1226,7 +1241,7 @@ select.input {
 .tabs {
   display: flex;
   gap: var(--space-400);
-  border-bottom: var(--stroke-border) solid var(--color-on-background);
+  border-bottom: var(--stroke-border) solid var(--color-outline);
 }
 
 .tabs__tab {
@@ -1287,7 +1302,7 @@ select.input {
   justify-content: center;
   gap: var(--space-200);
   padding: var(--space-400);
-  border: var(--stroke-strong) dashed var(--color-on-background);
+  border: var(--stroke-strong) dashed var(--color-outline);
   border-radius: var(--radius-300);
   color: var(--color-on-background);
   text-align: center;
@@ -1336,7 +1351,7 @@ select.input {
   position: relative;
   padding: var(--space-100) var(--space-200);
   background: var(--color-surface);
-  border: var(--stroke-strong) solid var(--color-on-background);
+  border: var(--stroke-strong) solid var(--color-outline);
   border-radius: var(--radius-300) var(--radius-300) 0 var(--radius-300);
 
   // Tail of the bubble, bottom right
@@ -1347,7 +1362,7 @@ select.input {
     bottom: calc(var(--space-200) * -1);
     width: var(--space-200);
     height: var(--space-200);
-    background: var(--color-on-background);
+    background: var(--color-outline);
     clip-path: polygon(0 0, 100% 0, 100% 100%);
   }
 }
