@@ -204,7 +204,7 @@ button {
 
   .input {
     position: relative;
-    padding-right: calc(var(--space-400) * 2 + var(--icon-size-small));
+    padding-right: calc(var(--space-200) + var(--field-button-size) + var(--space-200));
 
     &::-webkit-calendar-picker-indicator {
       position: absolute;
@@ -216,9 +216,10 @@ button {
     }
   }
 
+  // Centred where the button of a field is (see <app-clearable>), like the other field icons
   > app-icon {
     position: absolute;
-    right: var(--space-400);
+    right: calc(var(--space-200) + (var(--field-button-size) - var(--icon-size-small)) / 2);
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
@@ -966,10 +967,10 @@ select.input {
   padding-block: 0;
   padding-right: calc(var(--space-200) + var(--field-button-size) + var(--space-100));
   background-image: $select-arrow;
-  // Same size as an <app-icon> glyph (drawn 1.2 × its size, see Icon), centred like the ✕
+  // Same size as a small <app-icon> glyph (drawn 1.2 × its size, see Icon), centred like the ✕
   background-position: right
-    calc(var(--space-200) + (var(--field-button-size) - var(--icon-size-medium) * 1.2) / 2) center;
-  background-size: calc(var(--icon-size-medium) * 1.2);
+    calc(var(--space-200) + (var(--field-button-size) - var(--icon-size-small) * 1.2) / 2) center;
+  background-size: calc(var(--icon-size-small) * 1.2);
   background-repeat: no-repeat;
   cursor: pointer;
 

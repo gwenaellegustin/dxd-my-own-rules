@@ -3,19 +3,27 @@
   display: block;
 }
 
+// The arrow is a button inside the field: same place and size as the clear / hide buttons
+// (see <app-clearable>), so the icons of every field line up
 .combobox__input {
-  padding-right: calc(var(--space-400) * 2 + var(--icon-size-small));
+  padding-right: calc(var(--space-200) + var(--field-button-size) + var(--space-200));
 }
 
 .combobox__toggle {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: calc(var(--space-400) * 2 + var(--icon-size-small));
-  height: var(--control-height);
+  top: calc(var(--control-height) / 2);
+  right: var(--space-200);
+  transform: translateY(-50%);
+  width: var(--field-button-size);
+  height: var(--field-button-size);
   display: grid;
   place-content: center;
+  border-radius: var(--radius-200);
   color: var(--color-on-background);
+
+  &:hover {
+    background: var(--color-line);
+  }
 }
 
 .combobox__list {
