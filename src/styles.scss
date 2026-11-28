@@ -1268,15 +1268,12 @@ select.input {
 // ---------------------------------------------------------------------------
 
 .section-rule {
-  // Height of the tab (one line of title): its slope on the right is as wide
-  --title-tab-height: calc(var(--font-size-heading) * var(--line-height-heading) + 2 * var(--space-200));
   position: relative;
   z-index: var(--z-raised);
   display: flex;
   align-items: flex-end;
   flex-wrap: wrap;
-  // What follows the tab (summary of a collapsed section) starts after its slope, then a small space
-  gap: var(--space-200) calc(var(--title-tab-height) + var(--space-400));
+  gap: var(--space-200) var(--space-400);
   margin-bottom: calc(-1 * var(--stroke-border));
 
   &--alone {
@@ -1285,8 +1282,8 @@ select.input {
   }
 }
 
-// Title tab (title-tab of _shapes.scss): cut top left corner like the menu, a slope with the same
-// angle and folds down to the line on the right. On one line (its height is fixed). A little more room on the left for the cut
+// The shape of the current page of the menu (title-tab of _shapes.scss): cut top left corner,
+// rounded top right one, a rounded step down to the line. A little more room on the left for the cut
 .section-tab {
   display: inline-flex;
   align-items: center;
@@ -1294,7 +1291,6 @@ select.input {
   margin: 0;
   padding: var(--space-200) var(--space-400) var(--space-200) calc(var(--space-400) + var(--space-100));
   color: var(--color-surface);
-  white-space: nowrap;
   @include shapes.title-tab(var(--color-on-background));
 }
 
