@@ -46,7 +46,9 @@ import { Icon } from '../icon/icon';
 
     .active,
     .active:hover {
-      background: var(--color-on-background);
+      background: var(--gloss-paint);
+      border-color: transparent;
+      box-shadow: var(--shadow-raised-small);
       color: var(--color-surface);
     }
   `,

@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'bodywork';
 
 // The page is only a wrapper: the shared layout is the element that fills the screen
 :host {
@@ -27,20 +28,20 @@
   align-items: center;
   gap: var(--space-200);
   padding: var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised;
   border-radius: var(--radius-200);
   cursor: pointer;
   user-select: none;
-  transition: border-color var(--transition-fast);
+  transition: background-color var(--transition-fast);
 
   &:hover {
-    border-color: var(--color-on-background);
+    @include bodywork.lit;
   }
 
   // Ordered: same green as a done line, label struck through
-  &--ordered {
-    background: var(--color-success-bg);
+  &--ordered,
+  &--ordered:hover {
+    background-color: var(--color-success-bg);
 
     .item__label {
       color: var(--color-on-background-soft);
@@ -77,8 +78,8 @@
   align-items: end;
   gap: var(--space-200);
   padding: var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) dashed var(--color-on-background);
+  // A hollow in the body, where a new item will come (like "Add a vehicle")
+  @include bodywork.pressed;
   border-radius: var(--radius-200);
 
   @include bp.area-below(bp.$width-sm) {

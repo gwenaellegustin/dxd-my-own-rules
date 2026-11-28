@@ -1,0 +1,74 @@
+// Neumorphism in brushed stainless steel, like the body of a car (see _tokens.scss): the shapes
+// every element is made of. Use with: @use 'bodywork';
+//
+// body     : the steel of an area (page, side panels, work area), brushed
+// raised   : stands out of the body (cards, lines, buttons, menus): sheen, reflections, no border
+// low      : stands out less (done items): the same, with smaller reflections
+// pressed  : moulded into the body (fields, chosen card, pressed button)
+// flat     : flush with the body, no relief (read-only fields)
+// lit      : catches more light (hover of a raised element)
+// painted  : dark polished steel (main buttons, current page, chosen option)
+//
+// The areas themselves (header, side panels, work area) are plates with rounded corners on a dark
+// ground, apart by a gap (see App, PanelsLayout): no line is drawn between them.
+//
+// Cards and buttons keep a transparent border: no line is drawn, the layout keeps its sizes.
+
+@mixin body($color: var(--color-background)) {
+  background-color: $color;
+  background-image: var(--texture-steel);
+}
+
+@mixin raised($shadow: var(--shadow-raised)) {
+  background-color: var(--color-surface);
+  background-image: var(--gloss-surface);
+  border: var(--stroke-border) solid transparent;
+  box-shadow: $shadow;
+}
+
+@mixin low {
+  @include raised(var(--shadow-raised-small));
+}
+
+@mixin pressed($shadow: var(--shadow-pressed)) {
+  background-color: var(--color-background);
+  background-image: var(--texture-steel);
+  border: var(--stroke-border) solid transparent;
+  box-shadow: $shadow;
+}
+
+@mixin flat {
+  background-color: var(--color-background);
+  background-image: var(--texture-steel);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+@mixin lit {
+  background-color: color-mix(in srgb, var(--color-surface) 40%, var(--color-highlight));
+}
+
+@mixin painted($shadow: var(--shadow-raised-small)) {
+  background: var(--gloss-paint);
+  border-color: transparent;
+  box-shadow: $shadow;
+  color: var(--color-surface);
+}
+
+// Red parts: a tail light, with its glow
+@mixin tail-light {
+  background: var(--gloss-error);
+  border-color: transparent;
+  box-shadow: var(--shadow-glow-error);
+  color: var(--color-surface);
+}
+
+// A divider inside an element: a faint line, the light on the edge under it
+@mixin divider($side: bottom) {
+  $light: 0 1px 0;
+  @if $side == top {
+    $light: inset 0 1px 0;
+  }
+  border-#{$side}: var(--stroke-border) solid color-mix(in srgb, var(--color-seam) 20%, transparent);
+  box-shadow: $light var(--color-highlight);
+}

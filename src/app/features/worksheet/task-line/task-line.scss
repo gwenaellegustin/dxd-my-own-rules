@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'bodywork';
 
 :host {
   // Colour of the line (to do, planned, done), also used by the spreading colour below
@@ -13,8 +14,9 @@
   // The title starts where the text of an "Other" line does (its field: line padding + field
   // border + field padding), so the texts of both kinds of lines are aligned
   padding-left: calc(var(--space-400) + var(--stroke-border) + var(--space-400));
-  background: var(--line-bg);
-  border: var(--stroke-border) solid var(--color-on-background);
+  // Stands out of the body (bodywork.raised), in the colour of its state
+  @include bodywork.raised;
+  background-color: var(--line-bg);
   border-radius: var(--radius-200);
   transition: background-color var(--transition-fast);
 }
@@ -47,7 +49,7 @@
     inset: 0;
     z-index: -1;
     border-radius: inherit;
-    background: var(--line-bg);
+    background: var(--gloss-surface), var(--line-bg);
     pointer-events: none;
   }
 }

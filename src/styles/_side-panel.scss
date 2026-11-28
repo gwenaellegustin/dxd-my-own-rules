@@ -8,6 +8,7 @@
 //
 // The chosen width is given to the panel as --panel-chosen-width (PanelWidthService).
 @use 'breakpoints' as bp;
+@use 'bodywork';
 
 @mixin side-panel($side: left) {
   $border-side: right;
@@ -49,20 +50,16 @@
     flex: none;
     display: flex;
     min-height: 0;
-    background: var(--color-surface);
-    border-#{$border-side}: var(--stroke-border) solid var(--color-on-background);
+    @include bodywork.body(var(--color-surface));
+    // A plate with rounded corners on the dark ground, apart from the work area by the gap
+    border-radius: var(--radius-seam);
 
     @include bp.tablet-down {
-      // The rail keeps its full width: the border is added outside (else the rail overflows the
-      // window by 1px and the whole page scrolls)
-      box-sizing: content-box;
       width: var(--rail-width);
     }
 
     @include bp.mobile {
       width: auto;
-      border: 0;
-      border-bottom: var(--stroke-border) solid var(--color-on-background);
     }
   }
 
@@ -75,7 +72,9 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
-    background: var(--color-surface);
+    @include bodywork.body(var(--color-surface));
+    // Same corners as the plate (its head, list and foot follow them)
+    border-radius: inherit;
 
     @include bp.tablet-down {
       position: absolute;
@@ -85,20 +84,19 @@
       z-index: var(--z-overlay);
       width: var(--panel-width);
       min-width: 0;
-      // Over the work area the panel is wider than the rail: it needs its own border on the
-      // work-area side (the border of :host only runs along the rail). No shadow: the backdrop
-      // already sets it apart, and a shadow next to the border looks doubled
-      border-#{$border-side}: var(--stroke-border) solid var(--color-on-background);
+      // Over the work area, wider than the rail: a plate floating above the page
+      box-shadow: var(--shadow-floating);
     }
 
+    // Under the header, the whole width, with the gap around it like the other plates
     @include bp.mobile {
       position: fixed;
-      top: var(--header-height);
-      left: 0;
-      right: 0;
+      top: calc(var(--header-height) + 2 * var(--stroke-seam));
+      left: var(--stroke-seam);
+      right: var(--stroke-seam);
+      bottom: var(--stroke-seam);
       width: auto;
       max-width: none;
-      border: 0;
     }
   }
 
@@ -107,7 +105,8 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    #{$border-side}: calc(var(--resize-handle-width) / -2);
+    // In the middle of the gap next to the panel
+    #{$border-side}: calc(-1 * (var(--stroke-seam) + var(--resize-handle-width)) / 2);
     z-index: var(--z-sticky);
     width: var(--resize-handle-width);
     cursor: col-resize;
@@ -116,7 +115,7 @@
     &:hover,
     &:focus-visible {
       outline: none;
-      background: linear-gradient(var(--color-on-background), var(--color-on-background)) center /
+      background: linear-gradient(var(--color-paint), var(--color-paint)) center /
         var(--stroke-strong) 100% no-repeat;
     }
 
@@ -134,8 +133,11 @@
     flex-direction: column;
     gap: var(--space-200);
     padding: var(--space-400);
-    background: var(--color-surface);
+    background-color: var(--color-surface);
+    background-image: var(--gloss-surface);
     box-shadow: var(--shadow-panel-head);
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
   }
 
   .panel__title {
@@ -150,10 +152,13 @@
     }
   }
 
+  // The bottom corners of the plate clip the list
   .panel__scroll {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
   }
 
   .rail {

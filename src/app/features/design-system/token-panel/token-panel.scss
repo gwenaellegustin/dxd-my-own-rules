@@ -1,11 +1,12 @@
 @use 'side-panel';
+@use 'bodywork';
 
 // Same panel as the left sidebar and the transcript: rail, head, width, resize handle, overlay
 @include side-panel.side-panel(right);
 
 // The list on the background colour, like the other side panels; head and foot on the surface
 .panel {
-  background: var(--color-background);
+  @include bodywork.body;
 }
 
 // The badge (changed tokens) follows the title, as in the transcript
@@ -27,8 +28,12 @@
   align-items: center;
   gap: var(--space-200);
   padding: var(--space-400);
-  background: var(--color-surface);
-  border-top: var(--stroke-border) solid var(--color-on-background);
+  background-color: var(--color-surface);
+  background-image: var(--gloss-surface);
+  @include bodywork.divider(top);
+  // The bottom corners of the plate
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
 }
 
 .panel__count {
@@ -96,10 +101,9 @@
   flex: none;
   width: var(--control-height);
   height: var(--control-height);
-  padding: 0;
-  border: var(--stroke-border) solid var(--color-on-background);
+  padding: var(--space-100);
+  @include bodywork.pressed;
   border-radius: var(--radius-200);
-  background: none;
   cursor: pointer;
   overflow: hidden;
 
@@ -109,9 +113,11 @@
 
   &::-webkit-color-swatch {
     border: 0;
+    border-radius: var(--radius-100);
   }
 
   &::-moz-color-swatch {
     border: 0;
+    border-radius: var(--radius-100);
   }
 }

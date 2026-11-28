@@ -29,7 +29,8 @@ public/
   images/          logo.png (header), car damage diagram exported from Figma,
                    registration/ (vehicle registration documents)
 src/
-  styles/          _tokens.scss (CSS variables), _breakpoints.scss, _side-panel.scss
+  styles/          _tokens.scss (CSS variables), _bodywork.scss (neumorphic shapes), _breakpoints.scss,
+                   _side-panel.scss
   styles.scss      base styles and shared form controls
   app/
     core/          models, API access, services, utils (names, saved preferences)
@@ -52,8 +53,13 @@ src/
 ## Conventions
 
 - **Design tokens** — all colors, spacing, typography and sizes are CSS variables in
-  `src/styles/_tokens.scss`. The current values are a greyscale wireframe: change them there to
-  apply the final colors, components never hard-code values.
+  `src/styles/_tokens.scss`: change them there, components never hard-code values. The look is
+  neumorphic, in brushed stainless steel and greyscale (colours only for the statuses): elements
+  have no border and stand out of the page or are moulded into it by their reflections
+  (`--shadow-*`, `--gloss-*`, `--texture-steel`), done items stand out less, areas are separated
+  as plates with rounded corners on a dark ground.
+  The shapes (`raised`, `pressed`, `flat`, `painted`, `seam`…) are mixins of
+  `src/styles/_bodywork.scss`.
 - **Menus**: the `appDropdown` directive (`shared/dropdown/`) opens / closes a menu (outside click,
   Escape); style it with the global `.dropdown-menu` classes.
 - **Preferences** (language, transcript width) are saved in the browser with `readPreference` /

@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'bodywork';
 
 // Sizes of this page only (the samples), not part of the app's visual language
 $sample-size: 32px; // radius / effect boxes, color dots
@@ -16,6 +17,8 @@ $page-max-width: 1400px;
   flex: 1;
   min-height: 0;
   display: flex;
+  // The plates (content, token panel) apart by the gap, on the dark ground (App)
+  gap: var(--stroke-seam);
 
   @include bp.mobile {
     flex-direction: column;
@@ -26,9 +29,11 @@ $page-max-width: 1400px;
   flex: 1;
   min-width: 0;
   overflow-y: scroll; // always shown, like the work area of the other pages
-  background: var(--color-background);
+  @include bodywork.body;
   // The tiles adapt to the space left by the panel, not to the window
   container: ds / inline-size;
+  // A plate with rounded corners (the content scrolls inside them)
+  border-radius: var(--radius-seam);
 }
 
 .page {
@@ -70,8 +75,7 @@ $page-max-width: 1400px;
   gap: var(--space-200);
   min-width: 0;
   padding: var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised;
   border-radius: var(--radius-200);
 }
 
@@ -99,7 +103,7 @@ $page-max-width: 1400px;
   margin-bottom: var(--space-100);
   font-family: var(--font-heading);
   font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-heading);
   line-height: var(--line-height-heading);
 }
 
@@ -107,13 +111,15 @@ $page-max-width: 1400px;
   width: 100%;
   margin: 0;
   border: 0;
-  border-top: var(--stroke-border) solid var(--color-neutral);
+  @include bodywork.divider;
 }
 
-// One spec per row: name, value, sample on the right
+// One spec per row: name, value, sample on the right. A long value (shadows, gloss) wraps in at
+// most 40% of the row, so the name keeps its room
 .spec {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) fit-content(40%) auto;
+  overflow-wrap: anywhere;
   align-items: center;
   gap: var(--space-200);
   min-height: var(--control-height);
@@ -173,8 +179,8 @@ $page-max-width: 1400px;
   flex-direction: column;
   gap: var(--space-200);
   padding: var(--space-400);
-  background: var(--color-background);
-  border: var(--stroke-border) solid var(--color-on-background);
+  // The background is the body (a hollow in the tile), the surface an element standing out of it
+  @include bodywork.pressed;
   border-radius: var(--radius-200);
 
   // Inks on the left, the surface card next to them
@@ -189,7 +195,7 @@ $page-max-width: 1400px;
   }
 
   &--surface {
-    background: var(--color-surface);
+    @include bodywork.raised;
   }
 }
 
@@ -237,6 +243,7 @@ $page-max-width: 1400px;
   width: $status-sample-size;
   font-family: var(--font-heading);
   font-size: var(--font-size-subheading);
+  font-weight: var(--font-weight-heading);
   text-align: center;
 }
 
@@ -282,6 +289,13 @@ $page-max-width: 1400px;
   border: var(--stroke-border) solid;
   border-radius: var(--radius-200);
   font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading);
+
+  // Bodywork colours: the colour itself, standing out of the tile
+  &--body {
+    border: 0;
+    box-shadow: var(--shadow-raised-small);
+  }
 }
 
 .status__value {
@@ -299,30 +313,30 @@ $page-max-width: 1400px;
   flex: none;
   width: $chip-size;
   height: $chip-size;
-  border: var(--stroke-border) solid var(--color-on-background);
+  border: var(--stroke-border) solid var(--color-shade);
   border-radius: var(--radius-100);
 }
 
 // ---- Samples (spacing, radius, effects) -----------------------------------------
 
 .space-sample {
-  background: var(--color-on-background);
+  background: var(--gloss-paint);
 }
 
+// Stands out of the tile, so its corners show (radius); a shadow sample replaces its shadow
 .box-sample {
   width: $sample-size;
   height: $sample-size;
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised(var(--shadow-raised-small));
 
   &--filled {
-    background: var(--color-on-background);
+    background: var(--gloss-paint);
   }
 }
 
 .line-sample {
   width: $sample-size;
-  background: var(--color-on-background);
+  background: var(--color-seam);
 }
 
 // ---- Components ------------------------------------------------------------------
@@ -419,7 +433,7 @@ $page-max-width: 1400px;
   flex-direction: column;
   gap: var(--space-200);
   padding: var(--space-200);
-  background: var(--color-background);
+  @include bodywork.pressed;
   border-radius: var(--radius-200);
 }
 
@@ -445,16 +459,15 @@ $page-max-width: 1400px;
 // Lines of a worksheet: to do, planned, done
 .line {
   padding: var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised;
   border-radius: var(--radius-200);
 
   &--planned {
-    background: var(--color-info-bg);
+    background-color: var(--color-info-bg);
   }
 
   &--done {
-    background: var(--color-success-bg);
+    background-color: var(--color-success-bg);
   }
 }
 

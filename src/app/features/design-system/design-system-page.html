@@ -96,6 +96,22 @@
                 </span>
               </div>
             }
+            <!-- Bodywork: the colour itself, then its name, value and use -->
+            @for (token of bodyColors; track token.name) {
+              <div class="status">
+                <span
+                  class="status__sample status__sample--body"
+                  [style.background]="'var(' + token.name + ')'"
+                ></span>
+                <span class="status__text">
+                  <span class="status__value text-small">
+                    <code class="var-name">{{ token.name }}</code>
+                    <span class="text-secondary">{{ ds.value(token) }}</span>
+                  </span>
+                  <span class="usage">{{ usageKey(token.name) | translate }}</span>
+                </span>
+              </div>
+            }
           </div>
         </div>
       </section>
@@ -197,6 +213,18 @@
                   <span
                     class="box-sample"
                     [style.box-shadow]="'var(' + effect.token.name + ')'"
+                  ></span>
+                }
+                @case ('gloss') {
+                  <span
+                    class="box-sample"
+                    [style.background]="'var(' + effect.token.name + ')'"
+                  ></span>
+                }
+                @case ('texture') {
+                  <span
+                    class="box-sample"
+                    [style.background-image]="'var(' + effect.token.name + ')'"
                   ></span>
                 }
                 @case ('overlay') {

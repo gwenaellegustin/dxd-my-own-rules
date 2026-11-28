@@ -8,7 +8,7 @@
   max-width: 100%;
 }
 
-// On the photo: a main (black) icon button, readable on any image
+// On the photo: a main (painted) icon button, readable on any image
 .registration__remove {
   position: absolute;
   top: var(--space-200);
@@ -39,8 +39,8 @@
     calc(100dvh - var(--registration-chrome-height))
   );
   object-fit: contain;
-  border: var(--stroke-border) solid var(--color-on-background);
   border-radius: var(--radius-200);
+  box-shadow: var(--shadow-raised-small);
   user-select: none;
   transition: transform var(--transition-fast);
 }

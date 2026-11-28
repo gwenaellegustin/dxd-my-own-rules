@@ -1,3 +1,5 @@
+@use 'bodywork';
+
 // A change: a card that opens the worksheet / invoice on the changed element
 :host {
   position: relative;
@@ -12,18 +14,14 @@
   flex-direction: column;
   gap: var(--space-100);
   padding: var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised;
   border-radius: var(--radius-200);
   color: var(--color-on-background);
   text-align: left;
-  transition:
-    border-color var(--transition-fast),
-    background-color var(--transition-fast);
+  transition: background-color var(--transition-fast);
 
   &:hover {
-    border-color: var(--color-on-background);
-    background: var(--color-neutral);
+    @include bodywork.lit;
 
     .change__show {
       color: var(--color-on-background);
@@ -92,12 +90,14 @@
 }
 
 // The card takes the background of the line in the worksheet once changed (planned / done)
-.change--planned {
-  background: var(--color-info-bg);
+.change--planned,
+.change--planned:hover {
+  background-color: var(--color-info-bg);
 }
 
-.change--done {
-  background: var(--color-success-bg);
+.change--done,
+.change--done:hover {
+  background-color: var(--color-success-bg);
 }
 
 .change__after {
@@ -140,17 +140,19 @@
   place-content: center;
   width: calc(var(--icon-size-small) + 2 * var(--space-100));
   height: calc(var(--icon-size-small) + 2 * var(--space-100));
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised(var(--shadow-raised-small));
   border-radius: var(--radius-200);
-  background: var(--color-surface);
   color: var(--color-on-background);
   transition:
-    border-color var(--transition-fast),
-    background-color var(--transition-fast);
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 
   &:hover {
-    border-color: var(--color-on-background);
-    background: var(--color-neutral);
+    @include bodywork.lit;
+  }
+
+  &:active:not(:disabled) {
+    @include bodywork.pressed;
   }
 
   &:disabled {
@@ -158,8 +160,7 @@
     cursor: default;
 
     &:hover {
-      border-color: var(--color-on-background);
-      background: var(--color-surface);
+      background-color: var(--color-surface);
     }
   }
 }

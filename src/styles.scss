@@ -1,5 +1,6 @@
 @use 'tokens';
 @use 'breakpoints' as bp;
+@use 'bodywork';
 
 // ---------------------------------------------------------------------------
 // Base
@@ -15,6 +16,12 @@
 // _breakpoints.scss. On <html>, not :root, so the design system page does not list it as a token
 html {
   --breakpoint-desktop: #{bp.$width-lg};
+}
+
+// TEMPORARY (texture switch of the header): no brushed steel texture. On <html>, like :root, so
+// the reflections made from the texture (--gloss-*) follow
+html.no-texture {
+  --texture-steel: none;
 }
 
 // The page always has exactly the size of the screen: only the app's own areas scroll (work
@@ -41,7 +48,7 @@ body {
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-body);
   color: var(--color-on-background);
-  background: var(--color-background);
+  @include bodywork.body;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -68,7 +75,7 @@ button {
 }
 
 :focus-visible {
-  outline: var(--stroke-strong) solid var(--color-on-background);
+  outline: var(--stroke-strong) solid var(--color-paint);
   outline-offset: var(--space-050);
 }
 
@@ -88,14 +95,14 @@ button {
 .text-heading {
   font-family: var(--font-heading);
   font-size: var(--font-size-heading);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-heading);
   line-height: var(--line-height-heading);
 }
 
 .text-subheading {
   font-family: var(--font-heading);
   font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-heading);
   line-height: var(--line-height-heading);
 }
 
@@ -131,8 +138,8 @@ button {
   width: 100%;
   min-width: 0;
   padding: var(--space-200) var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  // Moulded into the body (bodywork.pressed)
+  @include bodywork.pressed;
   border-radius: var(--radius-200);
   color: var(--color-on-background);
   font-size: var(--font-size-medium);
@@ -144,14 +151,15 @@ button {
 
   &:focus-visible {
     outline: none;
-    border-color: var(--color-on-background);
-    // Inset: drawn inside the border, so a scrolling container (dialog, panel) never clips it
-    box-shadow: inset 0 0 0 var(--stroke-border) var(--color-on-background);
+    // Inset: drawn inside the field, so a scrolling container (dialog, panel) never clips it
+    box-shadow:
+      var(--shadow-pressed),
+      inset 0 0 0 var(--stroke-strong) var(--color-paint);
   }
 
-  // Read-only (e.g. invoiced worksheet): greyed, the text stays readable
+  // Read-only (e.g. invoiced worksheet): flush with the body, the text stays readable
   &:disabled {
-    background: var(--color-background);
+    @include bodywork.flat;
     color: var(--color-on-background);
     cursor: default;
   }
@@ -280,8 +288,9 @@ button {
     margin: 0;
     display: grid;
     place-content: center;
-    background: var(--color-surface);
-    border: var(--stroke-border) solid var(--color-on-background);
+    @include bodywork.pressed(var(--shadow-pressed-small));
+    // Small hollow: a faint line around it, so an empty box is seen at once
+    border-color: var(--color-shade);
     cursor: pointer;
   }
 
@@ -289,8 +298,7 @@ button {
     border-radius: var(--radius-100);
 
     &:checked {
-      background-color: var(--color-on-background);
-      border-color: var(--color-on-background);
+      @include bodywork.painted(none);
 
       // Material Symbols "check" ligature
       &::after {
@@ -312,7 +320,8 @@ button {
       width: calc(var(--checkbox-size) / 2);
       height: calc(var(--checkbox-size) / 2);
       border-radius: var(--radius-circle);
-      background: var(--color-on-background);
+      background: var(--gloss-paint);
+      box-shadow: var(--shadow-raised-small);
     }
   }
 }
@@ -320,23 +329,36 @@ button {
 // ---------------------------------------------------------------------------
 // Buttons
 // ---------------------------------------------------------------------------
-// `.is-hover` gives the hover look without the pointer (states shown in the design system page)
+// `.is-hover` gives the hover look without the pointer (states shown in the design system page).
+// A button stands out of the body; pressed, it goes into it. Painted buttons catch more light on
+// hover; the red ones (delete) glow like a tail light.
 
+$transition-relief:
+  background-color var(--transition-fast),
+  box-shadow var(--transition-fast),
+  filter var(--transition-fast);
+
+// Icon alone: no relief until hovered, then it comes out of the body
 .icon-button {
   flex: none;
   display: inline-grid;
   place-content: center;
   width: var(--control-height);
   height: var(--control-height);
+  border: var(--stroke-border) solid transparent;
   border-radius: var(--radius-200);
   color: var(--color-on-background);
   // Icons are font glyphs: an <a class="icon-button"> must not underline them
   text-decoration: none;
-  transition: background-color var(--transition-fast);
+  transition: $transition-relief;
 
   &:hover,
   &.is-hover {
-    background: var(--color-neutral);
+    @include bodywork.raised(var(--shadow-raised-small));
+  }
+
+  &:active:not(:disabled) {
+    @include bodywork.pressed;
   }
 
   // Nothing to do (e.g. no edit to undo): faded, no hover effect
@@ -346,23 +368,29 @@ button {
 
     &:hover {
       background: none;
+      border-color: transparent;
+      box-shadow: none;
     }
   }
 
   &--primary {
     width: calc(var(--control-height) + var(--space-100));
     height: calc(var(--control-height) + var(--space-100));
-    background: var(--color-on-background);
-    border: var(--stroke-border) solid var(--color-on-background);
-    color: var(--color-surface);
+    @include bodywork.painted;
 
     &:hover,
     &.is-hover {
-      background: var(--color-on-background-soft);
+      @include bodywork.painted(var(--shadow-raised));
+      filter: brightness(1.12);
+    }
+
+    &:active:not(:disabled) {
+      @include bodywork.painted(var(--shadow-pressed));
     }
 
     &:disabled:hover {
-      background: var(--color-on-background);
+      @include bodywork.painted;
+      filter: none;
     }
   }
 }
@@ -375,27 +403,34 @@ button {
   gap: var(--space-200);
   min-height: var(--control-height);
   padding: var(--space-200) var(--space-400);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised(var(--shadow-raised-small));
   border-radius: var(--radius-200);
-  background: var(--color-surface);
   color: var(--color-on-background);
   line-height: var(--line-height-single);
-  transition: background-color var(--transition-fast);
+  transition: $transition-relief;
 
   // No hover effect on a disabled button
   &:hover:not(:disabled),
   &.is-hover {
-    background: var(--color-neutral);
+    @include bodywork.lit;
+    box-shadow: var(--shadow-raised);
+  }
+
+  &:active:not(:disabled) {
+    @include bodywork.pressed;
   }
 
   &--primary {
-    border-color: var(--color-on-background);
-    background: var(--color-on-background);
-    color: var(--color-surface);
+    @include bodywork.painted;
 
     &:hover:not(:disabled),
     &.is-hover {
-      background: var(--color-on-background-soft);
+      @include bodywork.painted(var(--shadow-raised));
+      filter: brightness(1.12);
+    }
+
+    &:active:not(:disabled) {
+      @include bodywork.painted(var(--shadow-pressed));
     }
   }
 
@@ -404,16 +439,19 @@ button {
     cursor: default;
   }
 
-  // Destructive action (delete)
+  // Destructive action (delete): a tail light, deeper red on hover
   &--danger {
-    border-color: var(--color-error);
-    background: var(--color-error);
-    color: var(--color-surface);
+    @include bodywork.tail-light;
 
-    // Darker red, mixed from the error colour
     &:hover:not(:disabled),
     &.is-hover {
-      background: var(--color-error-hover);
+      @include bodywork.tail-light;
+      filter: brightness(0.9);
+    }
+
+    &:active:not(:disabled) {
+      @include bodywork.tail-light;
+      box-shadow: var(--shadow-pressed);
     }
   }
 }
@@ -424,15 +462,20 @@ button {
   justify-content: center;
   gap: var(--space-200);
   padding: var(--space-200);
+  border: var(--stroke-border) solid transparent;
   border-radius: var(--radius-200);
   color: var(--color-on-background);
   line-height: var(--line-height-single);
-  transition: background-color var(--transition-fast);
+  transition: $transition-relief;
 
   // No hover effect on a disabled button
   &:hover:not(:disabled),
   &.is-hover {
-    background: var(--color-neutral);
+    @include bodywork.raised(var(--shadow-raised-small));
+  }
+
+  &:active:not(:disabled) {
+    @include bodywork.pressed;
   }
 
   // Faded, like the other buttons
@@ -442,35 +485,34 @@ button {
   }
 }
 
-// Main menu entry (one per page, see MainNav): title font (Bungee has a single weight, so the
-// current page is not bold)
+// Main menu entry (one per page, see MainNav): title font. Stands out of the header when hovered
 .pill {
   position: relative;
   flex: none;
   display: inline-flex;
   align-items: center;
   gap: var(--space-200);
-  padding: var(--space-200);
+  padding: var(--space-200) var(--space-400);
+  border: var(--stroke-border) solid transparent;
   border-radius: var(--radius-200);
   color: var(--color-on-background);
   font-family: var(--font-heading);
   font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-heading);
   line-height: var(--line-height-single);
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color var(--transition-fast);
+  transition: $transition-relief;
 
   &:hover,
   &.is-hover {
-    background: var(--color-neutral);
+    @include bodywork.raised(var(--shadow-raised-small));
   }
 
-  // Current page: dark pill, like the selected language (EN / FR)
+  // Current page: painted, like the selected language (EN / FR)
   &--active,
   &--active:hover {
-    background: var(--color-on-background);
-    color: var(--color-surface);
+    @include bodywork.painted;
   }
 }
 
@@ -491,19 +533,19 @@ button {
   align-items: center;
   gap: var(--space-100);
   padding: var(--space-050) var(--space-200);
+  border: var(--stroke-border) solid transparent;
   border-radius: var(--radius-200);
   color: var(--color-on-background);
-  transition: background-color var(--transition-fast);
+  transition: $transition-relief;
 
   &:hover,
   &.is-hover {
-    background: var(--color-neutral);
+    @include bodywork.raised(var(--shadow-raised-small));
   }
 
   &--active,
   &--active:hover {
-    background: var(--color-on-background);
-    color: var(--color-surface);
+    @include bodywork.painted;
   }
 
   &:disabled {
@@ -512,6 +554,8 @@ button {
 
     &:hover {
       background: none;
+      border-color: transparent;
+      box-shadow: none;
     }
   }
 }
@@ -533,20 +577,19 @@ button {
   align-items: center;
   gap: var(--space-200);
   padding: var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised;
   border-radius: var(--radius-200);
   color: var(--color-on-background);
   user-select: none;
-  transition: background-color var(--transition-fast);
+  transition: $transition-relief;
 
   &:hover,
   &.is-hover {
-    background: var(--color-neutral);
+    @include bodywork.lit;
   }
 
   &:has(input:focus-visible) {
-    outline: var(--stroke-strong) solid var(--color-on-background);
+    outline: var(--stroke-strong) solid var(--color-paint);
     outline-offset: var(--space-050);
   }
 
@@ -559,33 +602,29 @@ button {
     }
   }
 
-  // Shown: strong border (like the selected card of the side panel)
-  &--checked {
-    border: var(--stroke-strong) solid var(--color-on-background);
-    padding: calc(var(--space-400) - var(--stroke-strong) + var(--stroke-border));
+  // Shown: pressed into the body (like the selected card of the side panel)
+  &--checked,
+  &--checked:hover,
+  &--checked.is-hover {
+    @include bodywork.pressed;
   }
 
-  // "Add a vehicle": a dashed tile
+  // "Add a vehicle": a hollow in the body, where a vehicle will come
   &--add {
     justify-content: center;
     min-height: var(--control-height);
-    border-style: dashed;
+    @include bodywork.pressed;
     color: var(--color-on-background);
     font: inherit;
     cursor: pointer;
   }
 }
 
-// Vehicle info, new worksheet: one above the other on the right of the tile. The tile itself
-// turns grey on hover: the buttons take a darker grey so they stand out from it
+// Vehicle info, new worksheet: one above the other on the right of the tile
 .vehicle-tile__buttons {
   flex: none;
   display: flex;
   flex-direction: column;
-
-  .icon-button:not(:disabled):hover {
-    background: var(--color-neutral);
-  }
 }
 
 .vehicle-tile__toggle {
@@ -611,13 +650,11 @@ button {
   place-content: center;
   width: var(--checkbox-size);
   height: var(--checkbox-size);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.pressed(var(--shadow-pressed-small));
   border-radius: var(--radius-100);
 
   .vehicle-tile--checked & {
-    background: var(--color-on-background);
-    border-color: var(--color-on-background);
-    color: var(--color-surface);
+    @include bodywork.painted(none);
   }
 }
 
@@ -627,22 +664,21 @@ button {
   align-items: center;
   gap: var(--space-200);
   padding: var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised;
   border-radius: var(--radius-200);
   color: var(--color-on-background);
   text-decoration: none;
-  transition: background-color var(--transition-fast);
+  transition: $transition-relief;
 
-  &:hover,
-  &.is-hover {
-    background: var(--color-neutral);
+  // Finished (paid invoice): less raised, like the finished cards of the side panel
+  &--done {
+    @include bodywork.low;
   }
 
-  // Finished (paid invoice): light grey, like the finished cards of the side panel; same hover
-  // as the other rows (the :hover rule above wins over it)
-  &--done {
-    background: var(--color-background);
+  // Same hover for every row (after the state above, so it wins over it)
+  &:hover,
+  &.is-hover {
+    @include bodywork.lit;
   }
 
   @include bp.area-below(bp.$width-xs) {
@@ -672,29 +708,34 @@ button {
   width: 100%;
   padding: var(--space-400);
   text-align: left;
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised;
   border-radius: var(--radius-200);
   color: var(--color-on-background);
-  transition: background-color var(--transition-fast);
+  transition: $transition-relief;
 
-  // Finished (invoiced worksheet, paid invoice): light grey
+  // Finished (invoiced worksheet, paid invoice): less raised
   &--done {
-    background: var(--color-background);
+    @include bodywork.low;
   }
 
-  // The item currently displayed: white with a strong border, like a checked vehicle tile
-  // (even when it is done)
-  &--selected {
-    background: var(--color-surface);
-    border: var(--stroke-strong) solid var(--color-on-background);
-    padding: calc(var(--space-400) - var(--stroke-strong) + var(--stroke-border));
-  }
-
-  // Same hover for every card (after the states above, so it wins over them)
+  // Same hover for every card (after the state above, so it wins over it)
   &:hover,
   &.is-hover {
-    background: var(--color-neutral);
+    @include bodywork.lit;
+  }
+
+  // The item currently displayed: dark polished steel, like the current page of the menu (even
+  // when it is done or hovered); its texts and logo take the light colour
+  &--selected,
+  &--selected:hover,
+  &--selected.is-hover {
+    @include bodywork.painted(var(--shadow-raised));
+
+    .side-card__title,
+    .side-card__subtitle,
+    .side-card__date {
+      color: var(--color-surface);
+    }
   }
 }
 
@@ -749,7 +790,7 @@ button {
 
 // Element shown from a transcript change (HighlightService): a strong border around it
 .is-highlighted {
-  outline: var(--stroke-strong) solid var(--color-on-background);
+  outline: var(--stroke-strong) solid var(--color-paint);
   outline-offset: var(--space-100);
   border-radius: var(--radius-200);
   transition: outline-color var(--transition-fast);
@@ -764,8 +805,7 @@ button {
   height: var(--badge-size);
   padding: 0 var(--space-100);
   border-radius: var(--radius-200);
-  background: var(--color-error);
-  color: var(--color-surface);
+  @include bodywork.tail-light;
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-strong);
   font-variant-numeric: tabular-nums;
@@ -817,8 +857,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: var(--space-100);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised(var(--shadow-floating));
   border-radius: var(--radius-200);
 
   &--start {
@@ -847,9 +886,10 @@ button {
     background: var(--color-neutral);
   }
 
-  // Current choice / page
+  // Current choice / page: in the colour of the paint
   &--active {
     background: var(--color-neutral);
+    color: var(--color-paint);
     font-weight: var(--font-weight-strong);
   }
 }
@@ -860,7 +900,7 @@ button {
 // standard properties are kept for Firefox only: in Chrome they would disable the WebKit styles.
 @supports not selector(::-webkit-scrollbar) {
   * {
-    scrollbar-color: var(--color-neutral) transparent;
+    scrollbar-color: var(--color-shade) transparent;
   }
 }
 
@@ -870,8 +910,8 @@ button {
   @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 4.5l4.5 6.5h-9z' fill='#{$color}' transform='rotate(#{$rotation} 8 8)'/%3E%3C/svg%3E");
 }
 
-$scrollbar-arrow-color: '%23000000'; // --color-on-background
-$scrollbar-arrow-color-hover: '%233a3a3a'; // --color-on-background-soft
+$scrollbar-arrow-color: '%2326282b'; // --color-on-background
+$scrollbar-arrow-color-hover: '%235d6065'; // --color-on-background-soft
 
 ::-webkit-scrollbar {
   width: var(--scrollbar-size);
@@ -884,7 +924,7 @@ $scrollbar-arrow-color-hover: '%233a3a3a'; // --color-on-background-soft
 
 ::-webkit-scrollbar-thumb {
   // The transparent border leaves a margin around the thumb
-  background: var(--color-neutral) padding-box;
+  background: var(--color-shade) padding-box;
   border: var(--space-050) solid transparent;
   border-radius: var(--radius-200);
 
@@ -960,7 +1000,7 @@ $scrollbar-arrow-color-hover: '%233a3a3a'; // --color-on-background-soft
 // fields is (see Clearable), so both line up in a form.
 // Material "keyboard_arrow_down" in --color-on-background: an image cannot read CSS variables, update its
 // fill (%23 = #) together with that colour.
-$select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cpath fill='%23000000' d='M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
+$select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cpath fill='%2326282b' d='M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
 
 select.input {
   appearance: none;
@@ -992,11 +1032,11 @@ select.input {
   gap: var(--space-100);
   padding: var(--space-050) var(--space-200);
   border-radius: var(--radius-200);
-  background: var(--color-background);
+  @include bodywork.raised(var(--shadow-raised-small));
   font-size: var(--font-size-small);
 
   &:hover {
-    background: var(--color-neutral);
+    @include bodywork.lit;
   }
 }
 
@@ -1055,9 +1095,8 @@ select.input {
   width: min(var(--dialog-width), calc(100vw - var(--space-800)));
   max-height: calc(100dvh - var(--space-800));
   padding: 0;
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised(var(--shadow-floating));
   border-radius: var(--radius-200);
-  background: var(--color-surface);
   color: var(--color-on-background);
 
   &::backdrop {
@@ -1137,6 +1176,12 @@ select.input {
     display: none !important;
   }
 
+  // No reflections on paper
+  * {
+    box-shadow: none !important;
+    background-image: none !important;
+  }
+
   // The app fills the screen and scrolls inside: let the content flow over the pages instead
   html,
   body,
@@ -1209,10 +1254,11 @@ select.input {
 // Tabs (worksheet settings): the current one is underlined
 // ---------------------------------------------------------------------------
 
+// The row of tabs sits on a divider; the current one is underlined in the colour of the paint
 .tabs {
   display: flex;
   gap: var(--space-400);
-  border-bottom: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.divider;
 }
 
 .tabs__tab {
@@ -1227,8 +1273,8 @@ select.input {
   }
 
   &--active {
-    border-bottom-color: var(--color-on-background);
-    color: var(--color-on-background);
+    border-bottom-color: var(--color-paint);
+    color: var(--color-paint);
     font-weight: var(--font-weight-strong);
   }
 }
@@ -1246,14 +1292,14 @@ select.input {
   gap: var(--space-100);
   padding: var(--space-050) var(--space-200);
   border-radius: var(--radius-200);
-  background: var(--color-background);
+  @include bodywork.raised(var(--shadow-raised-small));
   color: var(--color-on-background-soft);
   font-size: var(--font-size-small);
   text-decoration: none;
 
   &:hover,
   &.is-hover {
-    background: var(--color-neutral);
+    @include bodywork.lit;
     color: var(--color-on-background);
   }
 }
@@ -1273,22 +1319,26 @@ select.input {
   justify-content: center;
   gap: var(--space-200);
   padding: var(--space-400);
-  border: var(--stroke-strong) dashed var(--color-on-background);
+  // A hollow in the body, outlined by a dashed line
+  background-color: var(--color-background);
+  border: var(--stroke-strong) dashed var(--color-on-background-faint);
+  box-shadow: var(--shadow-pressed);
   border-radius: var(--radius-200);
   color: var(--color-on-background);
   text-align: center;
   cursor: pointer;
-  transition: background-color var(--transition-fast);
+  transition: $transition-relief;
 
   &:hover,
   &.is-hover,
   &--over {
-    background: var(--color-neutral);
+    background-color: var(--color-neutral);
+    border-color: var(--color-paint);
   }
 
   // The file input is visually hidden: show the focus on the area
   &:has(input:focus-visible) {
-    outline: var(--stroke-strong) solid var(--color-on-background);
+    outline: var(--stroke-strong) solid var(--color-paint);
     outline-offset: var(--space-050);
   }
 
@@ -1318,22 +1368,22 @@ select.input {
   }
 }
 
+// In dark polished steel, like the main buttons
 .message__bubble {
   position: relative;
   padding: var(--space-100) var(--space-200);
-  background: var(--color-surface);
-  border: var(--stroke-strong) solid var(--color-on-background);
+  @include bodywork.painted;
   border-radius: var(--radius-200) var(--radius-200) 0 var(--radius-200);
 
-  // Tail of the bubble, bottom right
+  // Tail of the bubble, bottom right: the dark bottom of the paint
   &::after {
     content: '';
     position: absolute;
-    right: calc(var(--stroke-strong) * -1);
+    right: 0;
     bottom: calc(var(--space-200) * -1);
     width: var(--space-200);
     height: var(--space-200);
-    background: var(--color-on-background);
+    background: color-mix(in srgb, var(--color-paint) 65%, black);
     clip-path: polygon(0 0, 100% 0, 100% 100%);
   }
 }
@@ -1367,7 +1417,7 @@ select.input {
 .message--problem {
   padding: var(--space-400);
   background: var(--color-error-bg);
-  border: var(--stroke-border) solid var(--color-error-line);
+  box-shadow: var(--shadow-raised-small);
 }
 
 .message__no-action {

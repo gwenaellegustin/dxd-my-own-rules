@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { Location, UpperCasePipe } from '@angular/common';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -10,6 +10,7 @@ import { MainNav } from '../main-nav/main-nav';
 import { Dropdown } from '../../shared/dropdown/dropdown';
 import { UserService } from '../../core/services/user.service';
 import { UndoService } from '../../core/services/undo.service';
+import { readPreference, writePreference } from '../../core/utils/local-storage';
 
 /** Navigation API (Chromium): tells whether there is a page to go back / forward to */
 interface NavigationHistory {
@@ -41,7 +42,20 @@ export class AppHeader {
   protected readonly canGoBack = signal(true);
   protected readonly canGoForward = signal(true);
 
+  /**
+   * TEMPORARY, to compare: brushed steel texture shown or not (class .no-texture on <html>, see
+   * styles.scss), remembered in this browser
+   */
+  protected readonly texture = signal(readPreference('texture') !== 'off');
+
+  protected toggleTexture(): void {
+    this.texture.update((shown) => !shown);
+    writePreference('texture', this.texture() ? null : 'off');
+  }
+
   constructor() {
+    effect(() => document.documentElement.classList.toggle('no-texture', !this.texture()));
+
     inject(Router)
       .events.pipe(
         filter((event) => event instanceof NavigationEnd),

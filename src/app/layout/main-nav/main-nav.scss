@@ -28,11 +28,11 @@
 }
 
 // The pill of a page is global (styles.scss: .pill). Phones: the pages of the dropdown menu use
-// the title font too (Bungee has a single weight, so the current page is not bold)
+// the title font too
 .dropdown-menu__item {
   font-family: var(--font-heading);
   font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-heading);
 }
 
 // Number of items (e.g. shopping list): the red badge of the transcript (.problem-badge), inside

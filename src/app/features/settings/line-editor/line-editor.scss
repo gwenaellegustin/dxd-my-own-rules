@@ -1,9 +1,10 @@
+@use 'bodywork';
+
 // Editor of the selected line, as a card
 :host {
   display: flex;
   padding: var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised;
   border-radius: var(--radius-200);
 }
 
@@ -32,7 +33,7 @@
   flex-direction: column;
   gap: var(--space-200);
   padding: var(--space-200);
-  background: var(--color-background);
+  @include bodywork.pressed;
   border-radius: var(--radius-200);
 }
 
@@ -57,7 +58,7 @@
     width: var(--checkbox-size);
     height: var(--checkbox-size);
     margin: 0;
-    accent-color: var(--color-on-background);
+    accent-color: var(--color-paint);
   }
 }
 

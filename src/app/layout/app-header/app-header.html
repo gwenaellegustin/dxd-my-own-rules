@@ -25,6 +25,17 @@
   </button>
 </div>
 
+<!-- TEMPORARY: shows / hides the brushed steel texture, to compare (see AppHeader.texture) -->
+<button
+  type="button"
+  class="button-subtle texture-toggle"
+  [attr.aria-pressed]="texture()"
+  [attr.title]="'header.texture' | translate"
+  (click)="toggleTexture()"
+>
+  {{ 'header.texture' | translate }}: {{ (texture() ? 'header.on' : 'header.off') | translate }}
+</button>
+
 <!-- Right: undo / redo (edits of the whole app), then the user menu (settings, language) -->
 <div class="tools" role="group" [attr.aria-label]="'header.edits' | translate">
   <button

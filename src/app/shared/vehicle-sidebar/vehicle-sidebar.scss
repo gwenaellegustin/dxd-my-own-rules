@@ -1,9 +1,10 @@
 @use 'side-panel';
+@use 'bodywork';
 
 @include side-panel.side-panel(left);
 
 .panel {
-  background: var(--color-background);
+  @include bodywork.body;
 }
 
 .panel__scroll {

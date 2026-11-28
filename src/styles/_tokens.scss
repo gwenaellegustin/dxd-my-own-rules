@@ -1,19 +1,31 @@
 // ---------------------------------------------------------------------------
 // Design tokens — single source of truth for the visual language.
 //
-// Retro / brutalist look: grey page, white elements outlined in black, slightly
-// rounded corners, Bungee titles and DM Sans text. Every component reads these
-// variables, none hard-codes them.
+// Neumorphism in brushed stainless steel, like the body of a car: greyscale only (colours are
+// kept for the statuses). The elements are moulded in the same steel as the page and stand out of
+// it by their reflections only (light on the top left, shade on the bottom right), with no
+// border; the less important ones (done) are less raised. The areas (header, side panels, work
+// area) are plates with rounded corners on a dark ground, apart by a gap. Main actions are in dark polished
+// steel, delete buttons and alerts glow like a tail light. Rounded corners, Exo 2 titles and
+// DM Sans text. Every component reads these variables, none hard-codes them.
 // ---------------------------------------------------------------------------
 
 :root {
   // ---- Colors: neutrals ---------------------------------------------------
-  --color-background: #ebebeb; // every background area (page, panels, groups), chips, read-only fields, done cards and rows
-  --color-on-background: #000000; // text, icons, outlines, dark buttons, focus ring
-  --color-on-background-soft: #3a3a3a; // secondary text, hover of dark buttons
-  --color-on-background-faint: #9e9e9e; // placeholders
-  --color-surface: #ffffff; // elements (cards, panels, header, dialogs), text on dark buttons
-  --color-neutral: #cfcfcf; // grey background: hover, selected item, notices, scrollbar thumb; dividers inside an element
+  --color-background: #e2e3e5; // every background area (page, panels, groups), fields, hollows
+  --color-on-background: #26282b; // text, icons
+  --color-on-background-soft: #5d6065; // secondary text
+  --color-on-background-faint: #9da0a5; // placeholders
+  --color-surface: #ebecee; // elements (cards, panels, header, dialogs), text on dark steel buttons
+  --color-neutral: #d4d5d8; // hover of the items of a list, selected item, notices
+
+  // ---- Colors: bodywork ---------------------------------------------------
+  // The reflections of the elements are mixed from the highlight (light side) and the shade (dark
+  // side). The areas are separate plates on a dark ground, apart by a gap
+  --color-paint: #3b3d41; // dark polished steel: main buttons, current page, chosen option, checked boxes, focus ring
+  --color-highlight: #ffffff; // light side of the reflections
+  --color-shade: #a8aaaf; // dark side of the reflections, scrollbar thumb
+  --color-seam: #2a2b2e; // the dark ground under the areas, seen in the gaps (and, faint, dividers inside an element)
 
   // ---- Colors: status -----------------------------------------------------
   // Info = planned line, open invoice; success = done line, paid invoice; error = problems,
@@ -29,7 +41,6 @@
   --color-success-line: color-mix(in srgb, var(--color-success) 32%, var(--color-surface));
   --color-error-bg: color-mix(in srgb, var(--color-error) 12%, var(--color-surface));
   --color-error-line: color-mix(in srgb, var(--color-error) 32%, var(--color-surface));
-  --color-error-hover: color-mix(in srgb, var(--color-error) 80%, var(--color-on-background)); // hover of the red buttons
 
   // Scrollbars: wide enough to be grabbed with the mouse, thumb on a transparent track,
   // arrow buttons at both ends
@@ -38,8 +49,8 @@
 
   // ---- Typography ---------------------------------------------------------
   --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  // Titles and main menu. Bungee only exists in capitals and in one weight (regular)
-  --font-heading: 'Bungee', 'DM Sans', system-ui, sans-serif;
+  // Titles and main menu: a rounded, slightly stretched face, like the badges of a car
+  --font-heading: 'Exo 2', 'DM Sans', system-ui, sans-serif;
 
   --font-size-small: 14px;
   --font-size-medium: 16px;
@@ -48,6 +59,7 @@
 
   --font-weight-regular: 400;
   --font-weight-strong: 600;
+  --font-weight-heading: 600; // titles and main menu (--font-heading)
 
   --line-height-single: 1;
   --line-height-body: 1.4;
@@ -62,22 +74,84 @@
   --space-800: 32px; // separate areas: sections of a page, columns of a layout
 
   // ---- Radius -------------------------------------------------------------
-  // Slightly rounded corners everywhere, like the Bungee titles; only real circles (radio
+  // Soft, moulded corners everywhere, like the curves of a car body; only real circles (radio
   // buttons, logo) are round
-  --radius-100: 2px; // small parts inside a control (checkbox, switch option, list option)
-  --radius-200: 4px; // default: cards, fields, buttons, chips, menus, dialogs, images, chat bubbles
+  --radius-100: 6px; // small parts inside a control (checkbox, switch option, list option)
+  --radius-200: 14px; // default: cards, fields, buttons, chips, menus, dialogs, images, chat bubbles
+  --radius-seam: 20px; // corners of the areas (header, side panels, work area): plates on the dark ground
   --radius-circle: 50%;
 
   // ---- Strokes ------------------------------------------------------------
-  --stroke-border: 1px;
-  --stroke-strong: 2px; // focus ring, selection, active tab, highlight, drop area (dashed)
+  --stroke-border: 1px; // dividers inside an element
+  --stroke-seam: 8px; // gap between the areas (header, side panels, work area) and around them
+  --stroke-strong: 2px; // focus ring, active tab, highlight, drop area (dashed)
   --opacity-disabled: 0.5;
+
+  // ---- Reflections (neumorphism) ------------------------------------------
+  // An element stands out of the body: highlight on the top left, shade on the bottom right; a
+  // less important one (done) stands out less; a field or a pressed element is moulded into it
+  // (the same, inside)
+  --shadow-raised:
+    -5px -5px 12px var(--color-highlight),
+    5px 5px 12px color-mix(in srgb, var(--color-shade) 75%, transparent);
+  --shadow-raised-small:
+    -2px -2px 5px var(--color-highlight),
+    2px 2px 5px color-mix(in srgb, var(--color-shade) 75%, transparent);
+  --shadow-floating:
+    -8px -8px 20px color-mix(in srgb, var(--color-highlight) 80%, transparent),
+    10px 12px 28px color-mix(in srgb, var(--color-shade) 90%, transparent);
+  --shadow-pressed:
+    inset 3px 3px 6px color-mix(in srgb, var(--color-shade) 80%, transparent),
+    inset -3px -3px 6px var(--color-highlight);
+  // Small parts: checkbox, radio button
+  --shadow-pressed-small:
+    inset 2px 2px 3px color-mix(in srgb, var(--color-shade) 80%, transparent),
+    inset -2px -2px 3px var(--color-highlight);
+  // Glow around what alerts, like a tail light (delete buttons, problem badges)
+  --shadow-glow-error: 0 0 12px color-mix(in srgb, var(--color-error) 55%, transparent);
+  // Brushed stainless steel: fine horizontal streaks, light and dark, over every area and element
+  // (a tile of noise stretched sideways; %23 = #)
+  --texture-steel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.003 0.7' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1.6 0 0 0 -0.3 1.6 0 0 0 -0.3 1.6 0 0 0 -0.3 0 0 0 0 0.07'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E");
+  // Sheen of the steel on the elements: light on the top left, a soft shade at the bottom right,
+  // over the brushed texture
+  --gloss-surface:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-highlight) 65%, transparent) 0%,
+      transparent 45%,
+      transparent 65%,
+      color-mix(in srgb, var(--color-shade) 25%, transparent) 100%
+    ),
+    var(--texture-steel);
+  // Dark polished steel (main buttons, current page, chosen option): the light runs across it in
+  // a diagonal streak, darker at the bottom, like the body of a car
+  --gloss-paint:
+    linear-gradient(
+      115deg,
+      transparent 35%,
+      color-mix(in srgb, var(--color-highlight) 22%, transparent) 48%,
+      transparent 62%
+    ),
+    var(--texture-steel),
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-paint) 70%, var(--color-highlight)) 0%,
+      var(--color-paint) 45%,
+      color-mix(in srgb, var(--color-paint) 65%, black) 100%
+    );
+  // Red parts (delete buttons, problem badges): a tail light, bright at the top, deep at the bottom
+  --gloss-error: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--color-error) 75%, var(--color-highlight)) 0%,
+    var(--color-error) 45%,
+    color-mix(in srgb, var(--color-error) 70%, black) 100%
+  );
 
   // ---- Sizes --------------------------------------------------------------
   // One size per use (see the Icons section of the design system page)
   --icon-size-small: 16px; // next to a text: text buttons, menus, fields, chips, badges, links
   --icon-size-medium: 20px; // alone in an icon button (and an icon alone at the end of a row)
-  --icon-size-large: 24px; // alone in a main (black) icon button
+  --icon-size-large: 24px; // alone in a main (painted) icon button
   --icon-size-xlarge: 32px; // stands for the item: vehicle logo, client card, photo to add
 
   --control-height: 40px;
@@ -127,9 +201,10 @@
   --registration-note-max-height: 120px;
   --registration-zoom: 2.5;
 
-  // ---- Elevation & motion (not in the design system page for now) ---------
-  --shadow-panel-head: 0 2px 6px rgb(0 0 0 / 0.2); // under the head of the side panels (the list scrolls under it)
-  --overlay-backdrop: rgb(0 0 0 / 0.32);
+  // ---- Elevation & motion (motion not in the design system page for now) --
+  // Under the head of the side panels (the list scrolls under it)
+  --shadow-panel-head: 0 4px 8px color-mix(in srgb, var(--color-shade) 60%, transparent);
+  --overlay-backdrop: color-mix(in srgb, var(--color-on-background) 35%, transparent);
   --transition-fast: 120ms ease; // hover, open / close
   --transition-panel: 200ms ease-out; // a side panel or a dialog opened (and the backdrop behind it)
   --transition-reveal: 400ms ease-out; // new colour of a line, spreading from where it was pressed

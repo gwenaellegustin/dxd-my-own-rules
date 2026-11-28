@@ -1,3 +1,5 @@
+@use 'bodywork';
+
 :host {
   position: relative;
   display: block;
@@ -37,8 +39,7 @@
   margin: 0;
   padding: var(--space-100);
   list-style: none;
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised(var(--shadow-floating));
   border-radius: var(--radius-200);
 
   // Slides down a little when it opens, like the dropdown menus (keyframes in styles.scss)

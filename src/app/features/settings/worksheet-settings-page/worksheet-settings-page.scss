@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'bodywork';
 
 // The page scrolls inside the main area (the window itself never scrolls); like the work area of
 // the other pages, it is the `work-area` container the task lines adapt to
@@ -6,7 +7,9 @@
   flex: 1;
   min-height: 0;
   overflow-y: scroll; // always shown, like the work area of the other pages
-  background: var(--color-background);
+  @include bodywork.body;
+  // A plate with rounded corners on the dark ground (the content scrolls inside them)
+  border-radius: var(--radius-seam);
   container: work-area / inline-size;
 }
 
@@ -98,12 +101,12 @@
 
   &[role='button']:hover,
   &:focus-visible {
-    outline: var(--stroke-strong) solid var(--color-on-background);
+    outline: var(--stroke-strong) solid var(--color-paint);
   }
 
   &--selected,
   &--selected:hover {
-    outline: var(--stroke-strong) solid var(--color-on-background);
+    outline: var(--stroke-strong) solid var(--color-paint);
   }
 
   // Dragging: the dragged line is dimmed, a bar shows where it goes (in the gap)
@@ -118,7 +121,7 @@
     left: 0;
     right: 0;
     height: var(--stroke-strong);
-    background: var(--color-on-background);
+    background: var(--color-paint);
   }
 
   // In the middle of the gap above / under the line

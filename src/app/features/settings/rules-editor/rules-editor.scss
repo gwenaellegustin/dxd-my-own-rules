@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'bodywork';
 
 :host {
   display: flex;
@@ -32,8 +33,7 @@
 }
 
 .card {
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
+  @include bodywork.raised;
   border-radius: var(--radius-200);
 }
 
@@ -46,12 +46,17 @@
   text-align: left;
 
   &:hover {
-    outline: var(--stroke-strong) solid var(--color-on-background);
+    @include bodywork.lit;
   }
 
+  // Dark polished steel, like the selected card of a side panel
   &--selected,
   &--selected:hover {
-    outline: var(--stroke-strong) solid var(--color-on-background);
+    @include bodywork.painted(var(--shadow-raised));
+
+    .text-secondary {
+      color: var(--color-surface);
+    }
   }
 }
 
@@ -161,11 +166,11 @@
 
   // Colour of the state the rule gives, as in the worksheet: planned (blue) or done (green)
   &--checked {
-    background: var(--color-info-bg);
+    background-color: var(--color-info-bg);
   }
 
   &--checked.plan-line--done {
-    background: var(--color-success-bg);
+    background-color: var(--color-success-bg);
   }
 
   > input {
@@ -173,6 +178,6 @@
     width: var(--checkbox-size);
     height: var(--checkbox-size);
     margin: 0;
-    accent-color: var(--color-on-background);
+    accent-color: var(--color-paint);
   }
 }

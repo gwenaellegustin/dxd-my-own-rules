@@ -1,10 +1,13 @@
 @use 'breakpoints' as bp;
+@use 'bodywork';
 
 :host {
   position: relative;
   flex: 1;
   min-height: 0;
   display: flex;
+  // The plates (side panels, work area) apart by the gap, on the dark ground (App)
+  gap: var(--stroke-seam);
 
   // Mobile: the two collapsed rails form a toolbar above the work area
   @include bp.mobile {
@@ -52,9 +55,11 @@
   // Scrollbar always shown: the content keeps its width whether it scrolls or not, so it does
   // not move when another worksheet / invoice is selected
   overflow-y: scroll;
-  background: var(--color-background);
+  @include bodywork.body;
   // Children adapt to the space left by the side panels, not to the viewport
   container: work-area / inline-size;
+  // A plate with rounded corners (the content scrolls inside them)
+  border-radius: var(--radius-seam);
 
   @include bp.mobile {
     grid-area: main;

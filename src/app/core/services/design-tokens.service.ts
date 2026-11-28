@@ -31,12 +31,12 @@ const GROUP_PATTERNS: [TokenGroup, RegExp][] = [
   ['typography', /^--(font|line-height)-/],
   ['radius', /^--radius-/],
   ['spacing', /^--space-/],
-  ['effects', /^--(stroke|opacity|shadow|overlay)-/],
+  ['effects', /^--(stroke|opacity|shadow|gloss|texture|overlay)-/],
   ['layers', /^--z-/],
 ];
 
-/** Tokens left out of the design system page (motion and shadows: not documented there for now) */
-const HIDDEN = /^--(transition|shadow)-/;
+/** Tokens left out of the design system page (motion: not documented there for now) */
+const HIDDEN = /^--transition-/;
 
 const STORAGE_KEY = 'design-tokens';
 

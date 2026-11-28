@@ -195,6 +195,10 @@ export class DesignSystemPage {
     id,
     tokens: this.tokens.filter((t) => t.name.startsWith(`--color-${id}`)),
   }));
+  /** Colours of the bodywork: paint, and what the reflections and the seams are mixed from */
+  protected readonly bodyColors = this.tokens.filter((t) =>
+    /^--color-(paint|highlight|shade|seam)$/.test(t.name),
+  );
   /** Text / icon colours, shown on the background and on a surface */
   protected readonly inks = this.tokens.filter((t) => t.name.startsWith('--color-on-background'));
 
@@ -203,10 +207,16 @@ export class DesignSystemPage {
   protected readonly textStyles = TEXT_STYLES;
   protected readonly spaces = this.byGroup('spacing');
   protected readonly radii = this.byGroup('radius');
-  /** Strokes, opacity, shadows, backdrop, motion: each kind has its own sample */
+  /** Strokes, opacity, reflections (shadows, gloss), steel texture, backdrop: each kind has its own sample */
   protected readonly effects = this.byGroup('effects').map((token) => ({
     token,
-    kind: token.name.split('-')[2] as 'stroke' | 'opacity' | 'shadow' | 'overlay',
+    kind: token.name.split('-')[2] as
+      | 'stroke'
+      | 'opacity'
+      | 'shadow'
+      | 'gloss'
+      | 'texture'
+      | 'overlay',
   }));
 
   /** Token panel: open on desktop, collapsed to its rail on smaller screens */
