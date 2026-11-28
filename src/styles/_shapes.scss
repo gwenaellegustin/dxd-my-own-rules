@@ -44,59 +44,77 @@ $_corners: (
   bl: (x: 0%, y: 100%, in: (-1, 0), out: (0, -1)),
 );
 
-// Share of the cut used to round each fold of the diagonal
+// Share of the cut used by default to round each fold of the diagonal
 $_fold: 0.35;
+$_k: math.div(1, math.sqrt(2));
 
 @function _round($n) {
   @return math.div(math.round($n * 1000), 1000);
 }
 
-// One coordinate: the corner's, moved by $factor × $length
-@function _coord($base, $factor, $length) {
-  @if $factor == 0 {
+// One coordinate: the corner's, moved by the sum of the terms ($factor × $length)
+@function _coord($base, $terms) {
+  $sum: '';
+  @each $term in $terms {
+    $factor: list.nth($term, 1);
+    @if $factor != 0 {
+      $sum: $sum + ' + #{_round($factor)} * #{list.nth($term, 2)}';
+    }
+  }
+  @if $sum == '' {
     @return $base;
   }
-  @if $base == 0% {
-    @return string.unquote('calc(#{_round($factor)} * #{$length})');
-  }
-  @return string.unquote('calc(#{$base} + #{_round($factor)} * #{$length})');
+  @return string.unquote('calc(#{$base}#{$sum})');
 }
 
-// Point near a corner: $a × $length along the edge reaching it, $b × $length along the edge leaving it
-@function _point($corner, $a, $b, $length) {
+// Point near a corner: the sum of terms ($a, $b, $length): $a × $length along the edge reaching
+// it, $b × $length along the edge leaving it
+@function _point($corner, $terms...) {
   $c: map.get($_corners, $corner);
   $in: map.get($c, in);
   $out: map.get($c, out);
-  $dx: $a * list.nth($in, 1) + $b * list.nth($out, 1);
-  $dy: $a * list.nth($in, 2) + $b * list.nth($out, 2);
-  @return '#{_coord(map.get($c, x), $dx, $length)} #{_coord(map.get($c, y), $dy, $length)}';
+  $xs: ();
+  $ys: ();
+  @each $term in $terms {
+    $a: list.nth($term, 1);
+    $b: list.nth($term, 2);
+    $length: list.nth($term, 3);
+    $xs: list.append($xs, ($a * list.nth($in, 1) + $b * list.nth($out, 1), $length), comma);
+    $ys: list.append($ys, ($a * list.nth($in, 2) + $b * list.nth($out, 2), $length), comma);
+  }
+  @return '#{_coord(map.get($c, x), $xs)} #{_coord(map.get($c, y), $ys)}';
 }
 
 // Point where the outline leaves a corner (start of the next edge)
-@function _exit($corner, $cut, $radius, $is-cut) {
+@function _exit($corner, $cut, $fold, $radius, $is-cut) {
   @if $is-cut {
-    @return _point($corner, 0, 1 + $_fold, $cut);
+    @return _point($corner, (0, 1, $cut), (0, 1, $fold));
   }
-  @return _point($corner, 0, 1, $radius);
+  @return _point($corner, (0, 1, $radius));
 }
 
-// Commands drawing one corner, from the edge that reaches it to the edge that leaves it
-@function _corner($corner, $cut, $radius, $is-cut) {
+// Commands drawing one corner, from the edge that reaches it to the edge that leaves it. A cut
+// corner: the diagonal from $cut before the corner to $cut after it, each fold rounded over
+// $fold on both sides
+@function _corner($corner, $cut, $fold, $radius, $is-cut) {
   @if not $is-cut {
-    @return 'line to #{_point($corner, -1, 0, $radius)}, curve to #{_point($corner, 0, 1, $radius)} with #{_point($corner, 0, 0, $radius)}';
+    @return 'line to #{_point($corner, (-1, 0, $radius))}, curve to #{_point($corner, (0, 1, $radius))} with #{_point($corner, (0, 0, $radius))}';
   }
-  $d: $_fold * math.div(1, math.sqrt(2));
-  @return 'line to #{_point($corner, -1 - $_fold, 0, $cut)}, ' +
-    'curve to #{_point($corner, -1 + $d, $d, $cut)} with #{_point($corner, -1, 0, $cut)}, ' +
-    'line to #{_point($corner, -$d, 1 - $d, $cut)}, ' +
-    'curve to #{_point($corner, 0, 1 + $_fold, $cut)} with #{_point($corner, 0, 1, $cut)}';
+  @return 'line to #{_point($corner, (-1, 0, $cut), (-1, 0, $fold))}, ' +
+    'curve to #{_point($corner, (-1, 0, $cut), ($_k, $_k, $fold))} with #{_point($corner, (-1, 0, $cut))}, ' +
+    'line to #{_point($corner, (0, 1, $cut), (-$_k, -$_k, $fold))}, ' +
+    'curve to #{_point($corner, (0, 1, $cut), (0, 1, $fold))} with #{_point($corner, (0, 1, $cut))}';
 }
 
-@function broken-shape($cut-corners: tl br, $cut: var(--corner-cut), $radius: var(--radius-200)) {
+// $fold: length rounded on each side of a fold (by default 35% of the cut)
+@function broken-shape($cut-corners: tl br, $cut: var(--corner-cut), $radius: var(--radius-200), $fold: null) {
+  @if $fold == null {
+    $fold: calc(#{$_fold} * #{$cut});
+  }
   $first: tl;
-  $path: 'from #{_exit($first, $cut, $radius, list.index($cut-corners, $first) != null)}';
+  $path: 'from #{_exit($first, $cut, $fold, $radius, list.index($cut-corners, $first) != null)}';
   @each $corner in (tr, br, bl, tl) {
-    $path: $path + ', ' + _corner($corner, $cut, $radius, list.index($cut-corners, $corner) != null);
+    $path: $path + ', ' + _corner($corner, $cut, $fold, $radius, list.index($cut-corners, $corner) != null);
   }
   @return string.unquote('shape(#{$path}, close)');
 }
@@ -136,33 +154,35 @@ $_fold: 0.35;
 }
 
 // ---- Title tab ----------------------------------------------------------------
-// Title standing on a line or a rule (sections of a worksheet), with the shape of the current page
-// of the menu: its top left corner cut on the diagonal (folds slightly rounded), its top right
-// corner rounded. Its left side goes on the left edge of what it stands on; on the right it steps
-// down to the line in a slope whose two folds are rounded (no angle): it flows into the line.
+// Title standing on a line or a rule (sections of a worksheet). Its left side goes on the left edge
+// of what it stands on, its top left corner cut on the diagonal like the current page of the menu.
+// On the right, like the cards of a race schedule, it comes down to the line in one slope with the
+// same angle and the same folds as that cut: 45°, folds rounded over 35% of --corner-cut.
+// The tab must be --title-tab-height high (the slope is as wide as the tab is high).
 // Drawn by the ::before of the tab (position: relative), behind its content, wider than it by the
-// step on the right: clipping the tab itself would cut its focus ring.
+// slope: clipping the tab itself would cut its focus ring.
 @mixin title-tab($color) {
   position: relative;
   isolation: isolate;
+  height: var(--title-tab-height);
 
   &::before {
-    // Step: down by $step, out by $step (45°), then its rounded fold flows into the line
-    $step: var(--radius-300);
-    $fold: calc(0.35 * #{$step});
     $cut: var(--corner-cut);
-    $round: var(--radius-200);
+    $fold: calc(0.35 * #{$cut});
+    $slope: var(--title-tab-height);
+    // Where the top edge meets the slope (the tab's own right edge)
+    $top: calc(100% - #{$slope} - #{$fold});
     content: '';
     position: absolute;
     inset: 0;
     z-index: -1;
     background: $color;
     pointer-events: none;
-    // Without shape(): the top right corner rounded, no step
-    border-radius: 0 $round 0 0;
+    // Without shape(): the top right corner rounded, no slope
+    border-radius: 0 var(--radius-200) 0 0;
 
     @supports (clip-path: shape(from 0 0, line to 100% 0)) {
-      right: calc(-1 * (#{$step} + #{$fold}));
+      right: calc(-1 * (#{$slope} + #{$fold}));
       border-radius: 0;
       clip-path: shape(
         from 0 100%,
@@ -170,14 +190,71 @@ $_fold: 0.35;
         curve to calc(0.247 * #{$cut}) calc(0.753 * #{$cut}) with 0 #{$cut},
         line to calc(0.753 * #{$cut}) calc(0.247 * #{$cut}),
         curve to calc(1.35 * #{$cut}) 0 with #{$cut} 0,
-        line to calc(100% - #{$step} - #{$fold} - #{$round}) 0,
-        curve to calc(100% - #{$step} - #{$fold}) #{$round} with calc(100% - #{$step} - #{$fold}) 0,
-        line to calc(100% - #{$step} - #{$fold}) calc(100% - #{$step} - #{$fold}),
-        curve to calc(100% - #{$step} - 0.293 * #{$fold}) calc(100% - #{$step} + 0.707 * #{$fold})
-          with calc(100% - #{$step} - #{$fold}) calc(100% - #{$step}),
-        line to calc(100% - 1.707 * #{$fold}) calc(100% - 0.707 * #{$fold}),
+        line to calc(#{$top} - #{$fold}) 0,
+        curve to calc(#{$top} + 0.707 * #{$fold}) calc(0.707 * #{$fold}) with #{$top} 0,
+        line to calc(100% - #{$fold} - 0.707 * #{$fold}) calc(100% - 0.707 * #{$fold}),
         curve to 100% 100% with calc(100% - #{$fold}) 100%,
         close
+      );
+    }
+  }
+}
+
+// ---- Cards ------------------------------------------------------------------
+// Cards (side panel, rows, vehicle tiles, shopping items): the corners of the current page of the
+// menu — top left and bottom right cut on the diagonal (--corner-cut, folds slightly rounded), the
+// two others rounded — outline included. Drawn in two layers behind the content: ::before in the
+// colour of the outline, ::after in the fill, inset by the outline. The fill is the exact offset
+// of the outline's shape, so the outline keeps one width all around: its cut is shorter by
+// width × (2 − √2) (the diagonal stays one width away), its folds by width × tan 22.5° (each fold
+// turns 45°: parallel curves), its rounded corners by the width.
+// The card sets --card-fill, --card-line and --card-stroke (its states change them, not its
+// background or border); its transparent border keeps the place of the outline. Browsers without
+// shape(): rounded cards.
+@mixin cut-card($radius: var(--radius-300)) {
+  --card-fill: var(--color-surface);
+  --card-line: var(--color-on-background);
+  --card-stroke: var(--stroke-border);
+  position: relative;
+  isolation: isolate;
+  border: var(--card-stroke) solid transparent;
+  border-radius: $radius;
+  background: none;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  &::before {
+    inset: calc(-1 * var(--card-stroke));
+    border-radius: $radius;
+    background: var(--card-line);
+  }
+
+  &::after {
+    inset: 0;
+    border-radius: calc(#{$radius} - var(--card-stroke));
+    background: var(--card-fill);
+    transition: background-color var(--transition-fast);
+  }
+
+  @supports (clip-path: shape(from 0 0, line to 100% 0)) {
+    &::before {
+      border-radius: 0;
+      clip-path: broken-shape(tl br, var(--corner-cut), $radius);
+    }
+
+    &::after {
+      border-radius: 0;
+      clip-path: broken-shape(
+        tl br,
+        calc(var(--corner-cut) - 0.586 * var(--card-stroke)),
+        calc(#{$radius} - var(--card-stroke)),
+        calc(#{$_fold} * var(--corner-cut) - 0.414 * var(--card-stroke))
       );
     }
   }

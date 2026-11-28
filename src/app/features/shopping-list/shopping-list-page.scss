@@ -1,4 +1,5 @@
 @use 'breakpoints' as bp;
+@use 'shapes';
 
 // The page is only a wrapper: the shared layout is the element that fills the screen
 :host {
@@ -21,26 +22,19 @@
   gap: var(--space-200);
 }
 
-// One item: ordered checkbox, quantity × label, links, delete
+// One item: ordered checkbox, quantity × label, links, delete. The corners of the menu (cut-card)
 .item {
+  @include shapes.cut-card;
   display: flex;
   align-items: center;
   gap: var(--space-200);
   padding: var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-300);
   cursor: pointer;
   user-select: none;
-  transition: border-color var(--transition-fast);
-
-  &:hover {
-    border-color: var(--color-on-background);
-  }
 
   // Ordered: same green as a done line, label struck through
   &--ordered {
-    background: var(--color-success-bg);
+    --card-fill: var(--color-success-bg);
 
     .item__label {
       color: var(--color-on-background-soft);

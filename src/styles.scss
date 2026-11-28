@@ -150,7 +150,9 @@ app-header *,
   padding: var(--space-200) var(--space-400);
   background: var(--color-surface);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  // Very round: a capsule on one line (a text area keeps that roundness on several lines)
+  border-radius: var(--radius-pill);
+  corner-shape: round;
   color: var(--color-on-background);
   font-size: var(--font-size-medium);
 
@@ -255,9 +257,11 @@ app-header *,
   }
 }
 
-// Height follows the content (see AutoGrow directive): no scrollbar, no resize handle
+// Height follows the content (see AutoGrow directive): no scrollbar, no resize handle. Its
+// corners have the roundness of a field on one line
 .textarea {
   display: block;
+  border-radius: calc(var(--control-height) / 2);
   min-height: var(--textarea-height);
   line-height: var(--line-height-body);
   overflow: hidden;
@@ -347,7 +351,9 @@ app-header *,
   place-content: center;
   width: var(--control-height);
   height: var(--control-height);
-  border-radius: var(--radius-200);
+  // Buttons: rounded with a continuous curve (squircle), not cut
+  border-radius: var(--radius-300);
+  corner-shape: squircle;
   color: var(--color-on-background);
   // Icons are font glyphs: an <a class="icon-button"> must not underline them
   text-decoration: none;
@@ -395,7 +401,9 @@ app-header *,
   min-height: var(--control-height);
   padding: var(--space-200) var(--space-400);
   border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-200);
+  // Buttons: rounded with a continuous curve (squircle), not cut
+  border-radius: var(--radius-300);
+  corner-shape: squircle;
   background: var(--color-surface);
   color: var(--color-on-background);
   line-height: var(--line-height-single);
@@ -443,7 +451,9 @@ app-header *,
   justify-content: center;
   gap: var(--space-200);
   padding: var(--space-200);
-  border-radius: var(--radius-200);
+  // Buttons: rounded with a continuous curve (squircle), not cut
+  border-radius: var(--radius-300);
+  corner-shape: squircle;
   color: var(--color-on-background);
   line-height: var(--line-height-single);
   transition: background-color var(--transition-fast);
@@ -557,21 +567,19 @@ app-header *,
   gap: var(--space-200);
 }
 
+// The corners of the menu (cut-card of _shapes.scss): states change --card-fill / -line / -stroke
 .vehicle-tile {
+  @include shapes.cut-card;
   display: flex;
   align-items: center;
   gap: var(--space-200);
   padding: var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-300);
   color: var(--color-on-background);
   user-select: none;
-  transition: background-color var(--transition-fast);
 
   &:hover,
   &.is-hover {
-    background: var(--color-neutral);
+    --card-fill: var(--color-neutral);
   }
 
   &:has(input:focus-visible) {
@@ -590,18 +598,26 @@ app-header *,
 
   // Shown: strong border (like the selected card of the side panel)
   &--checked {
-    border: var(--stroke-strong) solid var(--color-on-background);
+    --card-stroke: var(--stroke-strong);
     padding: calc(var(--space-400) - var(--stroke-strong) + var(--stroke-border));
   }
 
-  // "Add a vehicle": a dashed tile
+  // "Add a vehicle": a dashed tile (a dashed outline cannot be drawn in layers: a real border,
+  // rounded)
   &--add {
     justify-content: center;
     min-height: var(--control-height);
-    border-style: dashed;
+    border: var(--stroke-border) dashed var(--color-on-background);
+    corner-shape: round;
+    background: var(--card-fill);
     color: var(--color-on-background);
     font: inherit;
     cursor: pointer;
+
+    &::before,
+    &::after {
+      display: none;
+    }
   }
 }
 
@@ -650,28 +666,25 @@ app-header *,
   }
 }
 
-// One worksheet or invoice: a link to it
+// One worksheet or invoice: a link to it. The corners of the menu (cut-card of _shapes.scss)
 .list-row {
+  @include shapes.cut-card;
   display: flex;
   align-items: center;
   gap: var(--space-200);
   padding: var(--space-400);
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-300);
   color: var(--color-on-background);
   text-decoration: none;
-  transition: background-color var(--transition-fast);
 
-  &:hover,
-  &.is-hover {
-    background: var(--color-neutral);
+  // Finished (paid invoice): light grey, like the finished cards of the side panel
+  &--done {
+    --card-fill: var(--color-background);
   }
 
-  // Finished (paid invoice): light grey, like the finished cards of the side panel; same hover
-  // as the other rows (the :hover rule above wins over it)
-  &--done {
-    background: var(--color-background);
+  // Same hover as the other rows (after the state above, so it wins over it)
+  &:hover,
+  &.is-hover {
+    --card-fill: var(--color-neutral);
   }
 
   @include bp.area-below(bp.$width-xs) {
@@ -694,36 +707,34 @@ app-header *,
 
 // One item of a side panel (worksheet, invoice, client): logo or icon, title, second line, date,
 // counts or a status chip. `.is-hover` gives the hover look (design system page)
+// The corners of the menu (cut-card of _shapes.scss): states change --card-fill / -stroke
 .side-card {
+  @include shapes.cut-card;
   display: flex;
   align-items: flex-start;
   gap: var(--space-200);
   width: 100%;
   padding: var(--space-400);
   text-align: left;
-  background: var(--color-surface);
-  border: var(--stroke-border) solid var(--color-on-background);
-  border-radius: var(--radius-300);
   color: var(--color-on-background);
-  transition: background-color var(--transition-fast);
 
   // Finished (invoiced worksheet, paid invoice): light grey
   &--done {
-    background: var(--color-background);
+    --card-fill: var(--color-background);
   }
 
   // The item currently displayed: white with a strong border, like a checked vehicle tile
   // (even when it is done)
   &--selected {
-    background: var(--color-surface);
-    border: var(--stroke-strong) solid var(--color-on-background);
+    --card-fill: var(--color-surface);
+    --card-stroke: var(--stroke-strong);
     padding: calc(var(--space-400) - var(--stroke-strong) + var(--stroke-border));
   }
 
   // Same hover for every card (after the states above, so it wins over them)
   &:hover,
   &.is-hover {
-    background: var(--color-neutral);
+    --card-fill: var(--color-neutral);
   }
 }
 
@@ -1257,12 +1268,15 @@ select.input {
 // ---------------------------------------------------------------------------
 
 .section-rule {
+  // Height of the tab (one line of title): its slope on the right is as wide
+  --title-tab-height: calc(var(--font-size-heading) * var(--line-height-heading) + 2 * var(--space-200));
   position: relative;
   z-index: var(--z-raised);
   display: flex;
   align-items: flex-end;
   flex-wrap: wrap;
-  gap: var(--space-200) var(--space-400);
+  // What follows the tab (summary of a collapsed section) starts after its slope, then a small space
+  gap: var(--space-200) calc(var(--title-tab-height) + var(--space-400));
   margin-bottom: calc(-1 * var(--stroke-border));
 
   &--alone {
@@ -1271,8 +1285,8 @@ select.input {
   }
 }
 
-// The shape of the current page of the menu (title-tab of _shapes.scss): cut top left corner,
-// rounded top right one, a rounded step down to the line. A little more room on the left for the cut
+// Title tab (title-tab of _shapes.scss): cut top left corner like the menu, a slope with the same
+// angle and folds down to the line on the right. On one line (its height is fixed). A little more room on the left for the cut
 .section-tab {
   display: inline-flex;
   align-items: center;
@@ -1280,6 +1294,7 @@ select.input {
   margin: 0;
   padding: var(--space-200) var(--space-400) var(--space-200) calc(var(--space-400) + var(--space-100));
   color: var(--color-surface);
+  white-space: nowrap;
   @include shapes.title-tab(var(--color-on-background));
 }
 
