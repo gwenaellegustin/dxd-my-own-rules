@@ -48,6 +48,8 @@ export interface VehicleCardGroup {
   /** Translation key of the group heading; the first group (open items) has none in the design */
   titleKey: string | null;
   cards: VehicleCard[];
+  /** Done items (invoiced worksheets, paid invoices): a chevron opens the group, closed at first */
+  collapsible?: boolean;
 }
 
 /**
@@ -93,18 +95,30 @@ export class VehicleSidebar {
   /** Width chosen by dragging the right edge, kept from one page to the other */
   protected readonly widths = inject(PanelWidthService);
 
+  /** Collapsible groups opened (true) or closed (false) by their chevron, by group id */
+  private readonly toggled = signal<Record<string, boolean>>({});
 
-
-  /** Groups filtered by the search; empty groups are hidden */
+  /**
+   * Groups filtered by the search; empty groups are hidden. A collapsible group is closed at
+   * first, but open while searching or when it holds the card shown, so neither is ever hidden;
+   * its chevron decides once used.
+   */
   protected readonly visibleGroups = computed(() => {
     const query = this.query().trim().toLowerCase();
+    const toggled = this.toggled();
     return this.groups()
-      .map((group) => ({
-        ...group,
-        cards: group.cards.filter((card) => !query || searchText(card).includes(query)),
-      }))
+      .map((group) => {
+        const cards = group.cards.filter((card) => !query || searchText(card).includes(query));
+        const holdsSelected = cards.some((card) => card.id === this.selectedId());
+        const expanded = !group.collapsible || (toggled[group.id] ?? (!!query || holdsSelected));
+        return { ...group, cards, expanded };
+      })
       .filter((group) => group.cards.length > 0);
   });
+
+  protected toggleGroup(id: string, expanded: boolean): void {
+    this.toggled.update((toggled) => ({ ...toggled, [id]: !expanded }));
+  }
 }
 
 /** What the search looks in: vehicle, client, title and second line */

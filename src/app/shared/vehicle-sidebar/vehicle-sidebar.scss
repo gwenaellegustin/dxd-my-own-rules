@@ -20,6 +20,32 @@
   gap: var(--space-200);
 }
 
+// Title of a collapsible group (done items): title, count, then the arrow, turned when the group
+// is closed (like the sections of a worksheet)
+.group__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-200);
+  padding: var(--space-100) 0;
+  border-radius: var(--radius-100);
+  font: inherit;
+  text-align: left;
+}
+
+.group__count {
+  font-family: var(--font-body);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-regular);
+}
+
+.group__chevron {
+  transition: transform var(--transition-fast);
+
+  [aria-expanded='false'] > & {
+    transform: rotate(-90deg);
+  }
+}
+
 .sort__check--hidden {
   visibility: hidden;
 }

@@ -70,7 +70,12 @@ export class WorksheetPage {
       }));
     return [
       { id: 'open', titleKey: null, cards: cards(byStatus.open) },
-      { id: 'invoiced', titleKey: 'worksheets.groups.invoiced', cards: cards(byStatus.invoiced) },
+      {
+        id: 'invoiced',
+        titleKey: 'worksheets.groups.invoiced',
+        cards: cards(byStatus.invoiced),
+        collapsible: true,
+      },
     ];
   });
 

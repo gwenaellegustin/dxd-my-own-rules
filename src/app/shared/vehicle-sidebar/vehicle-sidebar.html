@@ -81,9 +81,25 @@
       @for (group of visibleGroups(); track group.id) {
         <section class="group">
           @if (group.titleKey) {
-            <h3 class="text-subheading">{{ group.titleKey | translate }}</h3>
+            @if (group.collapsible) {
+              <!-- Done items: the title opens / closes the group (closed at first), with its count -->
+              <h3 class="text-subheading">
+                <button
+                  type="button"
+                  class="group__toggle"
+                  [attr.aria-expanded]="group.expanded"
+                  (click)="toggleGroup(group.id, group.expanded)"
+                >
+                  {{ group.titleKey | translate }}
+                  <span class="group__count text-secondary">{{ group.cards.length }}</span>
+                  <app-icon name="chevron-down" size="small" class="group__chevron" />
+                </button>
+              </h3>
+            } @else {
+              <h3 class="text-subheading">{{ group.titleKey | translate }}</h3>
+            }
           }
-          @for (card of group.cards; track card.id) {
+          @for (card of group.expanded ? group.cards : []; track card.id) {
             <button
               type="button"
               class="side-card"

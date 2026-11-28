@@ -331,7 +331,7 @@ button {
 // ---------------------------------------------------------------------------
 // `.is-hover` gives the hover look without the pointer (states shown in the design system page).
 // A button stands out of the body; pressed, it goes into it. Painted buttons catch more light on
-// hover; the red ones (delete) glow like a tail light.
+// hover; the red ones (delete) are a tail light.
 
 $transition-relief:
   background-color var(--transition-fast),
@@ -713,11 +713,6 @@ $transition-relief:
   color: var(--color-on-background);
   transition: $transition-relief;
 
-  // Finished (invoiced worksheet, paid invoice): less raised
-  &--done {
-    @include bodywork.low;
-  }
-
   // Same hover for every card (after the state above, so it wins over it)
   &:hover,
   &.is-hover {
@@ -805,7 +800,7 @@ $transition-relief:
   height: var(--badge-size);
   padding: 0 var(--space-100);
   border-radius: var(--radius-200);
-  @include bodywork.tail-light;
+  @include bodywork.tail-light(none);
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-strong);
   font-variant-numeric: tabular-nums;

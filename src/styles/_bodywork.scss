@@ -55,11 +55,11 @@
   color: var(--color-surface);
 }
 
-// Red parts: a tail light, with its glow
-@mixin tail-light {
+// Red parts: a tail light, no glow around it ($shadow: the relief, like the other buttons)
+@mixin tail-light($shadow: var(--shadow-raised-small)) {
   background: var(--gloss-error);
   border-color: transparent;
-  box-shadow: var(--shadow-glow-error);
+  box-shadow: $shadow;
   color: var(--color-surface);
 }
 

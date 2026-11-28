@@ -6,7 +6,7 @@
 // it by their reflections only (light on the top left, shade on the bottom right), with no
 // border; the less important ones (done) are less raised. The areas (header, side panels, work
 // area) are plates with rounded corners on a dark ground, apart by a gap. Main actions are in dark polished
-// steel, delete buttons and alerts glow like a tail light. Rounded corners, Exo 2 titles and
+// steel, delete buttons and alerts are red like a tail light. Rounded corners, Exo 2 titles and
 // DM Sans text. Every component reads these variables, none hard-codes them.
 // ---------------------------------------------------------------------------
 
@@ -91,9 +91,10 @@
   // An element stands out of the body: highlight on the top left, shade on the bottom right; a
   // less important one (done) stands out less; a field or a pressed element is moulded into it
   // (the same, inside)
+  // Raised is the exact inverse of pressed: the same light and shade, outside instead of inside
   --shadow-raised:
-    -5px -5px 12px var(--color-highlight),
-    5px 5px 12px color-mix(in srgb, var(--color-shade) 75%, transparent);
+    -3px -3px 6px var(--color-highlight),
+    3px 3px 6px color-mix(in srgb, var(--color-shade) 80%, transparent);
   --shadow-raised-small:
     -2px -2px 5px var(--color-highlight),
     2px 2px 5px color-mix(in srgb, var(--color-shade) 75%, transparent);
@@ -107,8 +108,6 @@
   --shadow-pressed-small:
     inset 2px 2px 3px color-mix(in srgb, var(--color-shade) 80%, transparent),
     inset -2px -2px 3px var(--color-highlight);
-  // Glow around what alerts, like a tail light (delete buttons, problem badges)
-  --shadow-glow-error: 0 0 12px color-mix(in srgb, var(--color-error) 55%, transparent);
   // Brushed stainless steel: fine horizontal streaks, light and dark, over every area and element
   // (a tile of noise stretched sideways; %23 = #)
   --texture-steel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.003 0.7' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1.6 0 0 0 -0.3 1.6 0 0 0 -0.3 1.6 0 0 0 -0.3 0 0 0 0 0.07'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E");
